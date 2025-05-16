@@ -1,9 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
+
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
+
 import org.jetbrains.annotations.Nullable;
 
 public class CompoundKey extends BaseKey {

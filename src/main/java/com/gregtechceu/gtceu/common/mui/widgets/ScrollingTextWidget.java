@@ -2,10 +2,12 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import net.minecraft.util.FormattedCharSequence;
+
 import org.jetbrains.annotations.Nullable;
 
 public class ScrollingTextWidget extends TextWidget {

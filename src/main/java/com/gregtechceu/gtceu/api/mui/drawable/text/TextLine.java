@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
@@ -37,7 +38,8 @@ public class TextLine implements ITextLine {
     @Override
     public Object getHoveringElement(Font font, int x, int y) {
         if (y < lastY || y > lastY + getHeight(font)) return null;
-        if (x < lastX || x > lastX + getWidth()) return Boolean.FALSE; // not hovering, but we know that nothing else is hovered either
+        if (x < lastX || x > lastX + getWidth()) return Boolean.FALSE; // not hovering, but we know that nothing else is
+                                                                       // hovered either
         return this.text;
     }
 }

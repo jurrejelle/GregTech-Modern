@@ -3,11 +3,13 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 import com.gregtechceu.gtceu.api.mui.base.IPacketWriter;
 import com.gregtechceu.gtceu.common.network.GTNetwork;
 import com.gregtechceu.gtceu.common.network.packets.ui.SyncHandlerPacket;
-import io.netty.buffer.Unpooled;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -134,8 +136,7 @@ public abstract class SyncHandler {
      *
      * @param init if this method is being called the first time.
      */
-    public void detectAndSendChanges(boolean init) {
-    }
+    public void detectAndSendChanges(boolean init) {}
 
     /**
      * @return the key that belongs to this sync handler
@@ -167,7 +168,8 @@ public abstract class SyncHandler {
         if (!syncHandler.isValid()) {
             throw new IllegalStateException();
         }
-        GTNetwork.NETWORK.sendToPlayer(new SyncHandlerPacket(panel, syncHandler.getKey(), buffer), (ServerPlayer) syncHandler.syncManager.getPlayer());
+        GTNetwork.NETWORK.sendToPlayer(new SyncHandlerPacket(panel, syncHandler.getKey(), buffer),
+                (ServerPlayer) syncHandler.syncManager.getPlayer());
     }
 
     public static void sendToServer(String panel, FriendlyByteBuf buffer, SyncHandler syncHandler) {

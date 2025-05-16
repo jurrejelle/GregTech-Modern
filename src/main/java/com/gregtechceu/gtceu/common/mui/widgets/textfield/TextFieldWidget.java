@@ -4,8 +4,6 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.value.IStringValue;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTextFieldTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.MathUtils;
@@ -13,6 +11,9 @@ import com.gregtechceu.gtceu.api.mui.utils.ParseResult;
 import com.gregtechceu.gtceu.api.mui.value.StringValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.ValueSyncHandler;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParsePosition;
@@ -67,7 +68,8 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
 
     @Override
     public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        if (syncHandler instanceof IStringValue<?> iStringValue && syncHandler instanceof ValueSyncHandler<?> valueSyncHandler) {
+        if (syncHandler instanceof IStringValue<?> iStringValue &&
+                syncHandler instanceof ValueSyncHandler<?> valueSyncHandler) {
             this.stringValue = iStringValue;
             valueSyncHandler.setChangeListener(() -> {
                 markTooltipDirty();
@@ -99,7 +101,8 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
 
     @Override
     public void drawForeground(ModularGuiContext context) {
-        if (hasTooltip() && getScrollData().isScrollBarActive(getScrollArea()) && isHoveringFor(getTooltip().getShowUpTimer())) {
+        if (hasTooltip() && getScrollData().isScrollBarActive(getScrollArea()) &&
+                isHoveringFor(getTooltip().getShowUpTimer())) {
             getTooltip().draw(getContext());
         }
     }
@@ -143,7 +146,8 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
         } else {
             throw new IllegalStateException("TextFieldWidget can only have one line!");
         }
-        this.stringValue.setStringValue(this.numbers ? format.parse(getText(), new ParsePosition(0)).toString() : getText());
+        this.stringValue
+                .setStringValue(this.numbers ? format.parse(getText(), new ParsePosition(0)).toString() : getText());
     }
 
     @Override

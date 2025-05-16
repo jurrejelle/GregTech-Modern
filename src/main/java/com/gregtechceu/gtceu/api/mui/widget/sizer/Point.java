@@ -7,9 +7,11 @@ public final class Point {
 
     public static final Point ZERO = new Point(0, 0);
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public int x;
-    @Getter @Setter
+    @Getter
+    @Setter
     public int y;
 
     public Point() {
@@ -29,11 +31,13 @@ public final class Point {
         return new Point(this.x + x, this.y + y);
     }
 
-    public boolean isIn(Rectangle rect) {
-        return x >= rect.getX()
-                && y >= rect.getY()
-                && x < rect.getX() + rect.getWidth()
-                && y < rect.getY() + rect.getHeight();
+    public void setLocation(int x, int y) {
+        this.setX(x);
+        this.setY(y);
     }
 
+    public boolean isIn(Rectangle rect) {
+        return x >= rect.getX() && y >= rect.getY() && x < rect.getX() + rect.getWidth() &&
+                y < rect.getY() + rect.getHeight();
+    }
 }

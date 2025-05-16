@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiAction;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +31,9 @@ public class InteractableIcon extends DelegateIcon implements Interactable {
     }
 
     public void playClickSound() {
-        //if (this.playClickSound) {
+        // if (this.playClickSound) {
         Interactable.playButtonClickSound();
-        //}
+        // }
     }
 
     @Override

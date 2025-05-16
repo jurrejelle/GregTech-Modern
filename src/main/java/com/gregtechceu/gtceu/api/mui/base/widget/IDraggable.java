@@ -2,13 +2,14 @@ package com.gregtechceu.gtceu.api.mui.base.widget;
 
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewport;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
+import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
 import com.gregtechceu.gtceu.api.mui.widget.DraggableWidget;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
-import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.gui.GuiGraphics;
+
 import org.jetbrains.annotations.Nullable;
 
 /**

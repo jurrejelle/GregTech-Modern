@@ -4,20 +4,23 @@ import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
-import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
-import lombok.Getter;
+import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
  * A gui context contains various properties like screen size, mouse position, last clicked button etc.
  * It also is a matrix/pose stack.
- * A default instance can be obtained using {@link #getDefault()}, which can be used in {@link IDrawable IDrawables} for example.
+ * A default instance can be obtained using {@link #getDefault()}, which can be used in {@link IDrawable IDrawables} for
+ * example.
  * That instance is automatically updated at all times (except when no UI is currently open).
  */
 public class GuiContext extends GuiViewportStack {

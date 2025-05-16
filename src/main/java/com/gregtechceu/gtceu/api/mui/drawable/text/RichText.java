@@ -1,13 +1,13 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.*;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +172,8 @@ public class RichText implements IDrawable, IRichTextBuilder<RichText> {
         this.cachedText = renderer.compileAndDraw(context, this.elements);
     }
 
-    public void setupRenderer(TextRenderer renderer, int x, int y, float width, float height, int color, boolean shadow) {
+    public void setupRenderer(TextRenderer renderer, int x, int y, float width, float height, int color,
+                              boolean shadow) {
         renderer.setPos(x, y);
         renderer.setScale(this.scale);
         renderer.setColor(this.color != null ? this.color : color);

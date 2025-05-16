@@ -1,6 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IInterpolation;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -8,6 +13,7 @@ import java.util.List;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoublePredicate;
 
+@Accessors(chain = true)
 public class Animator {
 
     private static final List<Animator> activeAnimators = new ArrayList<>();
@@ -17,13 +23,19 @@ public class Animator {
         activeAnimators.removeIf(Animator::tick);
     }
 
+    @Getter
     private final int duration;
+    @Getter
     private int progress;
     private int dir = 0;
+    @Getter
     private float min = 0, max = 1;
+    @Getter
     private float value;
     private final IInterpolation interpolation;
+    @Setter
     private DoublePredicate callback;
+    @Setter
     private DoubleConsumer endCallback;
 
     public Animator(int duration, IInterpolation interpolation) {
@@ -31,21 +43,12 @@ public class Animator {
         this.interpolation = interpolation;
     }
 
+    @Tolerate
     public Animator setCallback(DoubleConsumer callback) {
         this.callback = val -> {
             callback.accept(val);
             return false;
         };
-        return this;
-    }
-
-    public Animator setCallback(DoublePredicate callback) {
-        this.callback = callback;
-        return this;
-    }
-
-    public Animator setEndCallback(DoubleConsumer endCallback) {
-        this.endCallback = endCallback;
         return this;
     }
 
@@ -83,26 +86,6 @@ public class Animator {
 
     public boolean isRunningBackwards() {
         return this.dir < 0 && this.progress > 0;
-    }
-
-    public double getValue() {
-        return this.value;
-    }
-
-    public int getDuration() {
-        return this.duration;
-    }
-
-    public int getProgress() {
-        return this.progress;
-    }
-
-    public double getMin() {
-        return this.min;
-    }
-
-    public double getMax() {
-        return this.max;
     }
 
     private boolean tick() {

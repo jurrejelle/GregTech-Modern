@@ -9,15 +9,14 @@ import com.gregtechceu.gtceu.api.mui.drawable.Icon;
 import com.gregtechceu.gtceu.api.mui.drawable.IconRenderer;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextIcon;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
-import com.gregtechceu.gtceu.client.mui.component.DrawableTooltipComponent;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Either;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.client.mui.component.DrawableTooltipComponent;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.locale.Language;
@@ -28,6 +27,10 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Either;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -107,22 +110,23 @@ public class Tooltip {
                 })
                 .collect(Collectors.toList());
 
-        var gatherEvent = new RenderTooltipEvent.GatherComponents(stack, screen.width, screen.height, textLines, this.maxWidth);
+        var gatherEvent = new RenderTooltipEvent.GatherComponents(stack, screen.width, screen.height, textLines,
+                this.maxWidth);
         if (MinecraftForge.EVENT_BUS.post(gatherEvent)) return; // canceled
         this.maxWidth = gatherEvent.getMaxWidth();
         textLines = gatherEvent.getTooltipElements();
         List<ClientTooltipComponent> components = textLines.stream()
                 .map(either -> either.map(
-                        text -> ClientTooltipComponent.create(text instanceof Component ? ((Component) text).getVisualOrderText() : Language.getInstance().getVisualOrder(text)),
-                        ClientTooltipComponent::create
-                ))
+                        text -> ClientTooltipComponent.create(text instanceof Component ?
+                                ((Component) text).getVisualOrderText() : Language.getInstance().getVisualOrder(text)),
+                        ClientTooltipComponent::create))
                 .toList();
 
         RenderTooltipEvent.Pre event = new RenderTooltipEvent.Pre(stack, context.getGraphics(),
                 mouseX, mouseY, screen.width, screen.height,
                 TextRenderer.getFont(), components, DefaultTooltipPositioner.INSTANCE);
         if (MinecraftForge.EVENT_BUS.post(event)) return; // canceled
-        //lines = event.getLines();
+        // lines = event.getLines();
         mouseX = event.getX();
         mouseY = event.getY();
         int screenWidth = event.getScreenWidth(), screenHeight = event.getScreenHeight();
@@ -135,7 +139,7 @@ public class Tooltip {
         renderer.setSimulate(true);
         renderer.setPos(0, 0);
 
-        //List<IIcon> icons = renderer.measureStringLines(this.lines);
+        // List<IIcon> icons = renderer.measureStringLines(this.lines);
         renderer.draw(context, this.lines);
 
         Rectangle area = determineTooltipArea(context, this.lines, renderer, screenWidth, screenHeight, mouseX, mouseY);
@@ -144,28 +148,33 @@ public class Tooltip {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
 
-        GuiDraw.drawTooltipBackground(context.getGraphics(), stack, components, area.x, area.y, area.width, area.height);
+        GuiDraw.drawTooltipBackground(context.getGraphics(), stack, components, area.x, area.y, area.width,
+                area.height);
 
-        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y, TextRenderer.getFont(), area.width, area.height));
+        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y,
+        // TextRenderer.getFont(), area.width, area.height));
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         renderer.setSimulate(false);
-        //renderer.setAlignment(Alignment.TopLeft, area.width, area.height);
+        // renderer.setAlignment(Alignment.TopLeft, area.width, area.height);
         renderer.setPos(area.x, area.y);
         renderer.draw(context, this.lines);
 
-        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, area.x, area.y, TextRenderer.getFont(), area.width, area.height));
+        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, area.x, area.y,
+        // TextRenderer.getFont(), area.width, area.height));
     }
 
-    public Rectangle determineTooltipArea(GuiContext context, List<IDrawable> lines, IconRenderer renderer, int screenWidth, int screenHeight, int mouseX, int mouseY) {
+    public Rectangle determineTooltipArea(GuiContext context, List<IDrawable> lines, IconRenderer renderer,
+                                          int screenWidth, int screenHeight, int mouseX, int mouseY) {
         int width = (int) renderer.getLastWidth();
         int height = (int) renderer.getLastHeight();
 
         RichTooltip.Pos pos = this.pos;
         if (pos == null) {
-            pos = context.isMuiContext() ? context.getMuiContext().getScreen().getCurrentTheme().getTooltipPosOverride() : null;
-            if (pos == null) pos = ModularUIConfig.tooltipPos;
+            pos = context.isMuiContext() ?
+                    context.getMuiContext().getScreen().getCurrentTheme().getTooltipPosOverride() : null;
+            if (pos == null) pos = ConfigHolder.INSTANCE.client.ui.tooltipPos;
         }
         if (pos == RichTooltip.Pos.FIXED) {
             return new Rectangle(this.x, this.y, width, height);
@@ -228,7 +237,8 @@ public class Tooltip {
             RichTooltip.Pos pos1 = pos;
             if (pos == RichTooltip.Pos.VERTICAL) {
                 int bottomSpace = screenHeight - area.ey();
-                pos1 = bottomSpace < height + padding && bottomSpace < area.y ? RichTooltip.Pos.ABOVE : RichTooltip.Pos.BELOW;
+                pos1 = bottomSpace < height + padding && bottomSpace < area.y ? RichTooltip.Pos.ABOVE :
+                        RichTooltip.Pos.BELOW;
             }
 
             if (pos1 == RichTooltip.Pos.BELOW) {
@@ -274,7 +284,8 @@ public class Tooltip {
 
             if (pos == RichTooltip.Pos.HORIZONTAL && !usedMoreSpaceSide) {
                 int rightSpace = screenWidth - area.ex();
-                pos1 = rightSpace < width + padding && rightSpace < area.x ? RichTooltip.Pos.LEFT : RichTooltip.Pos.RIGHT;
+                pos1 = rightSpace < width + padding && rightSpace < area.x ? RichTooltip.Pos.LEFT :
+                        RichTooltip.Pos.RIGHT;
             }
 
             if (pos1 == RichTooltip.Pos.RIGHT) {

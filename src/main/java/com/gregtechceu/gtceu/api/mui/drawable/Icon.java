@@ -3,14 +3,16 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Box;
-import com.google.gson.JsonObject;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.google.gson.JsonObject;
 
 /**
  * A {@link IDrawable} wrapper with a fixed size and an alignment.
@@ -138,10 +140,10 @@ public class Icon implements IIcon, IJsonSerializable<Icon> {
     public void loadFromJson(JsonObject json) {
         this.width = (json.has("autoWidth") || json.has("autoSize")) &&
                 JsonHelper.getBoolean(json, true, "autoWidth", "autoSize") ? 0 :
-                JsonHelper.getInt(json, 0, "width", "w", "size");
+                        JsonHelper.getInt(json, 0, "width", "w", "size");
         this.height = (json.has("autoHeight") || json.has("autoSize")) &&
                 JsonHelper.getBoolean(json, true, "autoHeight", "autoSize") ? 0 :
-                JsonHelper.getInt(json, 0, "height", "h", "size");
+                        JsonHelper.getInt(json, 0, "height", "h", "size");
         this.alignment = JsonHelper.deserialize(json, Alignment.class, Alignment.Center, "alignment", "align");
         this.margin.all(JsonHelper.getInt(json, 0, "margin"));
         if (json.has("marginHorizontal")) {

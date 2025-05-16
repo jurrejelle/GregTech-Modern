@@ -2,9 +2,9 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 public class HueBar implements IDrawable {
 

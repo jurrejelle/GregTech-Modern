@@ -1,9 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
-import lombok.Getter;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +59,8 @@ public class LangKey extends BaseKey {
             return this.component;
         }
         this.time = ClientScreenHandler.getTicks();
-        this.component = Component.translatable(Objects.requireNonNull(this.keySupplier.get()), this.argsSupplier.get());
+        this.component = Component.translatable(Objects.requireNonNull(this.keySupplier.get()),
+                this.argsSupplier.get());
         return component;
     }
 
@@ -70,7 +73,8 @@ public class LangKey extends BaseKey {
         Object[] args = this.argsSupplier.get();
         if (args == null || args.length == 0) return super.getFormatted(parentFormatting);
         String text = Objects.requireNonNull(this.keySupplier.get());
-        Component formatted = FontRenderHelper.formatArgs(args, FormattingState.merge(parentFormatting, getFormatting()), text, true);
+        Component formatted = FontRenderHelper.formatArgs(args,
+                FormattingState.merge(parentFormatting, getFormatting()), text, true);
         return FontRenderHelper.format(getFormatting(), parentFormatting, formatted);
     }
 }

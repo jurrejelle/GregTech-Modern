@@ -1,10 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
-import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.api.mui.theme.ThemeAPI;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetThemeParser;
 import com.gregtechceu.gtceu.api.mui.utils.JsonBuilder;
+import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

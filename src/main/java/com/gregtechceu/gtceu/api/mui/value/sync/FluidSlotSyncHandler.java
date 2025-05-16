@@ -3,17 +3,19 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.utils.FluidTankHandler;
 import com.gregtechceu.gtceu.api.mui.utils.MouseData;
+
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.SoundAction;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,14 +129,17 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         if (mouseData.mouseButton() == 0 && this.canFillSlot) {
             boolean performedTransfer = false;
             for (int i = 0; i < maxAttempts; i++) {
-                FluidActionResult result = FluidUtil.tryEmptyContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null, false);
+                FluidActionResult result = FluidUtil.tryEmptyContainer(currentStack, this.fluidHandler,
+                        Integer.MAX_VALUE, null, false);
                 ItemStack remainingStack = result.getResult();
-                if (!result.isSuccess() || (currentStack.getCount() > 1 && !remainingStack.isEmpty() && !player.getInventory().add(remainingStack))) {
+                if (!result.isSuccess() || (currentStack.getCount() > 1 && !remainingStack.isEmpty() &&
+                        !player.getInventory().add(remainingStack))) {
                     player.drop(remainingStack, true);
-                    break; //do not continue if we can't add resulting container into inventory
+                    break; // do not continue if we can't add resulting container into inventory
                 }
 
-                remainingStack = FluidUtil.tryEmptyContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null, true).result;
+                remainingStack = FluidUtil.tryEmptyContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null,
+                        true).result;
                 if (currentStack.getCount() == 1) {
                     currentStack = remainingStack;
                 } else {
@@ -156,13 +161,16 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         if (mouseData.mouseButton() == 1 && this.canDrainSlot && !currentFluid.isEmpty()) {
             boolean performedTransfer = false;
             for (int i = 0; i < maxAttempts; i++) {
-                FluidActionResult result = FluidUtil.tryFillContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null, false);
+                FluidActionResult result = FluidUtil.tryFillContainer(currentStack, this.fluidHandler,
+                        Integer.MAX_VALUE, null, false);
                 ItemStack remainingStack = result.getResult();
-                if (!result.isSuccess() || (currentStack.getCount() > 1 && !remainingStack.isEmpty() && !player.getInventory().add(remainingStack))) {
-                    break; //do not continue if we can't add resulting container into inventory
+                if (!result.isSuccess() || (currentStack.getCount() > 1 && !remainingStack.isEmpty() &&
+                        !player.getInventory().add(remainingStack))) {
+                    break; // do not continue if we can't add resulting container into inventory
                 }
 
-                remainingStack = FluidUtil.tryFillContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null, true).result;
+                remainingStack = FluidUtil.tryFillContainer(currentStack, this.fluidHandler, Integer.MAX_VALUE, null,
+                        true).result;
                 if (currentStack.getCount() == 1) {
                     currentStack = remainingStack;
                 } else {
@@ -190,7 +198,8 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         if (mouseData.mouseButton() == 0) {
             if (currentStack.isEmpty() || fluidHandlerItem == null) {
                 if (this.canDrainSlot) {
-                    this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : 1000, IFluidHandler.FluidAction.EXECUTE);
+                    this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : 1000,
+                            IFluidHandler.FluidAction.EXECUTE);
                 }
             } else {
                 FluidStack cellFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
@@ -205,7 +214,8 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
                     }
                 } else {
                     if (this.canDrainSlot) {
-                        this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : 1000, IFluidHandler.FluidAction.EXECUTE);
+                        this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : 1000,
+                                IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
@@ -261,7 +271,8 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         Player player = getSyncManager().getPlayer();
         SoundEvent sound = fluid.getFluid().getFluidType().getSound(fluid, action);
         if (sound == null) return;
-        player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), sound, SoundSource.BLOCKS, 1.0F, 1.0F);
+        player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), sound, SoundSource.BLOCKS,
+                1.0F, 1.0F);
     }
 
     public IFluidTank getFluidTank() {

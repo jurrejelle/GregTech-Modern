@@ -1,11 +1,13 @@
 package com.gregtechceu.gtceu.client.mui.screen;
 
-import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
 import com.gregtechceu.gtceu.api.mui.base.UIFactory;
+import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
 import com.gregtechceu.gtceu.api.mui.factory.GuiData;
 import com.gregtechceu.gtceu.api.mui.factory.PosGuiData;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.IntFunction;
@@ -28,7 +30,8 @@ public class UISettings {
     }
 
     /**
-     * A function for a custom {@link ModularContainerMenu} implementation. This overrides {@link UIFactory#createContainer(int)}.
+     * A function for a custom {@link ModularContainerMenu} implementation. This overrides
+     * {@link UIFactory#createContainer(int)}.
      *
      * @param containerCreator container creator function. Must return a new instance.
      */
@@ -39,7 +42,8 @@ public class UISettings {
     /**
      * Overrides the default can interact check of {@link UIFactory#canInteractWith(Player, GuiData)}.
      *
-     * @param canInteractWith function to test if a player can interact with the ui. This is called every tick while UI is open. Once this
+     * @param canInteractWith function to test if a player can interact with the ui. This is called every tick while UI
+     *                        is open. Once this
      *                        function returns false, the UI is immediately closed.
      */
     public void canInteractWith(Predicate<Player> canInteractWith) {

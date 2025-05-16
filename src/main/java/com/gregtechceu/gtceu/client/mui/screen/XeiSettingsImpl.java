@@ -5,8 +5,10 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 import com.gregtechceu.gtceu.integration.xei.XeiState;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -153,7 +155,7 @@ public class XeiSettingsImpl implements XeiSettings {
     public List<Rectangle> getAllExclusionAreas() {
         this.jeiExclusionWidgets.removeIf(widget -> !widget.isValid());
         List<Rectangle> areas = new ArrayList<>(this.jeiExclusionAreas);
-        for (Iterator<IWidget> iterator = this.jeiExclusionWidgets.iterator(); iterator.hasNext(); ) {
+        for (Iterator<IWidget> iterator = this.jeiExclusionWidgets.iterator(); iterator.hasNext();) {
             IWidget widget = iterator.next();
             if (!widget.isValid()) {
                 iterator.remove();

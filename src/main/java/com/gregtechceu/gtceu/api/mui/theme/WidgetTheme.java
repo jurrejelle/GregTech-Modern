@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.mui.theme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +31,10 @@ public class WidgetTheme {
     }
 
     public WidgetTheme(WidgetTheme parent, JsonObject json, JsonObject fallback) {
-        this.background = JsonHelper.deserializeWithFallback(json, fallback, IDrawable.class, parent.getBackground(), IThemeApi.BACKGROUND, "bg");
-        this.hoverBackground = JsonHelper.deserializeWithFallback(json, fallback, IDrawable.class, parent.getHoverBackground(), IThemeApi.HOVER_BACKGROUND, "hbg");
+        this.background = JsonHelper.deserializeWithFallback(json, fallback, IDrawable.class, parent.getBackground(),
+                IThemeApi.BACKGROUND, "bg");
+        this.hoverBackground = JsonHelper.deserializeWithFallback(json, fallback, IDrawable.class,
+                parent.getHoverBackground(), IThemeApi.HOVER_BACKGROUND, "hbg");
         this.color = JsonHelper.getColorWithFallback(json, fallback, parent.getColor(), IThemeApi.COLOR);
         this.textColor = JsonHelper.getColorWithFallback(json, fallback, parent.getTextColor(), IThemeApi.TEXT_COLOR);
         this.textShadow = JsonHelper.getBoolWithFallback(json, fallback, parent.getTextShadow(), IThemeApi.TEXT_SHADOW);

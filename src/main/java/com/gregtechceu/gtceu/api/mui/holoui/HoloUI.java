@@ -3,11 +3,13 @@ package com.gregtechceu.gtceu.api.mui.holoui;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.UISettings;
 import com.gregtechceu.gtceu.common.data.GTEntityTypes;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
@@ -45,7 +47,8 @@ public class HoloUI {
         public Builder inFrontOf(Player player, double distance, boolean fixed) {
             Vec3 look = player.getLookAngle();
             this.orientation = fixed ? ScreenOrientation.FIXED : ScreenOrientation.TO_PLAYER;
-            return at(player.getX() + look.x * distance, player.getY() + player.getEyeHeight() + look.y * distance, player.getZ() + look.z * distance);
+            return at(player.getX() + look.x * distance, player.getY() + player.getEyeHeight() + look.y * distance,
+                    player.getZ() + look.z * distance);
         }
 
         public Builder faceToPlayer() {

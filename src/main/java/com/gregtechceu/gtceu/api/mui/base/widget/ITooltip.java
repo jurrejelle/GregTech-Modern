@@ -4,8 +4,8 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.api.mui.drawable.text.StyledText;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -169,7 +169,8 @@ public interface ITooltip<W extends ITooltip<W>> {
     }
 
     /**
-     * Sets a show up timer. This is the time in ticks needed for the cursor to hover this widget for the tooltip to appear.
+     * Sets a show up timer. This is the time in ticks needed for the cursor to hover this widget for the tooltip to
+     * appear.
      *
      * @param showUpTimer show up timer in ticks
      * @return this
@@ -180,8 +181,10 @@ public interface ITooltip<W extends ITooltip<W>> {
     }
 
     /**
-     * Sets whether the tooltip should automatically update on every render tick. In most of the cases you don't need this,
-     * as ValueSyncHandler handles tooltip update for you when value is updated. However, if you don't handle differently,
+     * Sets whether the tooltip should automatically update on every render tick. In most of the cases you don't need
+     * this,
+     * as ValueSyncHandler handles tooltip update for you when value is updated. However, if you don't handle
+     * differently,
      * you either need to manually set change listener for the sync value, or set auto update to true.
      *
      * @param update true if the tooltip should automatically update
@@ -193,13 +196,14 @@ public interface ITooltip<W extends ITooltip<W>> {
     }
 
     /**
-     * Sets whether the tooltip has a title margin, which is 2px space between first and second line inserted by default.
+     * Sets whether the tooltip has a title margin, which is 2px space between first and second line inserted by
+     * default.
      *
      * @param hasTitleMargin true if the tooltip should have a title margin
      * @return this
      */
     default W tooltipHasTitleMargin(boolean hasTitleMargin) {
-        //tooltip().setHasTitleMargin(hasTitleMargin);
+        // tooltip().setHasTitleMargin(hasTitleMargin);
         return getThis();
     }
 
@@ -210,7 +214,7 @@ public interface ITooltip<W extends ITooltip<W>> {
      * @return this
      */
     default W tooltipLinePadding(int linePadding) {
-        //tooltip().setLinePadding(linePadding);
+        // tooltip().setLinePadding(linePadding);
         return getThis();
     }
 

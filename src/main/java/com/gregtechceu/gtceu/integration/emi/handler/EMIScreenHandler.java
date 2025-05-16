@@ -3,9 +3,18 @@ package com.gregtechceu.gtceu.integration.emi.handler;
 import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
+import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
 import com.gregtechceu.gtceu.utils.GTMath;
+
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
+
 import dev.emi.emi.api.EmiDragDropHandler;
 import dev.emi.emi.api.EmiExclusionArea;
 import dev.emi.emi.api.EmiStackProvider;
@@ -14,20 +23,14 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class EMIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler implements EmiExclusionArea<T>, EmiDragDropHandler<T>, EmiStackProvider<T> {
+public class EMIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler
+                             implements EmiExclusionArea<T>, EmiDragDropHandler<T>, EmiStackProvider<T> {
 
     private static final Map<Class<?>, EMIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 

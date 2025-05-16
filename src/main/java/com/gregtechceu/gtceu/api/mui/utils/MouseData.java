@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,7 +29,7 @@ public record MouseData(Dist side, int mouseButton, boolean shift, boolean ctrl,
 
     @OnlyIn(Dist.CLIENT)
     public static MouseData create(int mouse) {
-        return new MouseData(Dist.CLIENT, mouse, Interactable.hasShiftDown(), Interactable.hasControlDown(), Interactable.hasAltDown());
+        return new MouseData(Dist.CLIENT, mouse, Interactable.hasShiftDown(), Interactable.hasControlDown(),
+                Interactable.hasAltDown());
     }
-
 }

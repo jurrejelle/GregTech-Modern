@@ -6,10 +6,12 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextIcon;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+
 import org.jetbrains.annotations.NotNull;
 
 public class DrawableTooltipComponent implements ClientTooltipComponent, TooltipComponent {
@@ -58,5 +60,4 @@ public class DrawableTooltipComponent implements ClientTooltipComponent, Tooltip
 
         context.setGraphics(lastGraphics);
     }
-
 }

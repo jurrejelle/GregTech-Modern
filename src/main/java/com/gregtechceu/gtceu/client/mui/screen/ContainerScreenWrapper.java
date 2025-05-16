@@ -3,18 +3,20 @@ package com.gregtechceu.gtceu.client.mui.screen;
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class ContainerScreenWrapper extends AbstractContainerScreen<ModularContainerMenu>
-        implements IScreenWithMuiScreen, IMuiScreen {
+                                    implements IScreenWithMuiScreen, IMuiScreen {
 
     private final ModularScreen screen;
 

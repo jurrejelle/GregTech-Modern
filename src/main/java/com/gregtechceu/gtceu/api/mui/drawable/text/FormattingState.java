@@ -6,6 +6,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Unit;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -165,7 +166,9 @@ public class FormattingState {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FormattingState that = (FormattingState) o;
-        return forceDefaultColor == that.forceDefaultColor && reset == that.reset && color == that.color && underline == that.underline && italic == that.italic && bold == that.bold && strikethrough == that.strikethrough && obfuscated == that.obfuscated;
+        return forceDefaultColor == that.forceDefaultColor && reset == that.reset && color == that.color &&
+                underline == that.underline && italic == that.italic && bold == that.bold &&
+                strikethrough == that.strikethrough && obfuscated == that.obfuscated;
     }
 
     @Override
@@ -208,7 +211,8 @@ public class FormattingState {
         return appendFormat(builder, state, null);
     }
 
-    public static MutableComponent appendFormat(MutableComponent builder, @Nullable FormattingState state, @Nullable FormattingState fallback) {
+    public static MutableComponent appendFormat(MutableComponent builder, @Nullable FormattingState state,
+                                                @Nullable FormattingState fallback) {
         if (state == null) return builder;
         return state.prependText(builder, fallback);
     }

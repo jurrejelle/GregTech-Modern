@@ -4,9 +4,11 @@ import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
 import com.gregtechceu.gtceu.api.mui.base.widget.*;
 import com.gregtechceu.gtceu.client.mui.screen.*;
+
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,9 +19,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * This class contains all the info from {@link GuiContext} and additional MUI specific info like the current {@link ModularScreen},
+ * This class contains all the info from {@link GuiContext} and additional MUI specific info like the current
+ * {@link ModularScreen},
  * current hovered widget, current dragged widget, current focused widget and JEI settings.
- * An instance can only be obtained from {@link ModularScreen#getContext()}. One instance is created every time a {@link ModularScreen}
+ * An instance can only be obtained from {@link ModularScreen#getContext()}. One instance is created every time a
+ * {@link ModularScreen}
  * is created.
  */
 public class ModularGuiContext extends GuiContext {
@@ -259,7 +263,8 @@ public class ModularGuiContext extends GuiContext {
     @ApiStatus.Internal
     public void dropDraggable() {
         this.draggable.applyMatrix(this);
-        this.draggable.getElement().onDragEnd(this.draggable.getElement().canDropHere(getMouseX(), getMouseY(), this.hovered));
+        this.draggable.getElement()
+                .onDragEnd(this.draggable.getElement().canDropHere(getMouseX(), getMouseY(), this.hovered));
         this.draggable.getElement().setMoving(false);
         this.draggable.unapplyMatrix(this);
         this.draggable = null;
@@ -277,7 +282,8 @@ public class ModularGuiContext extends GuiContext {
             } else if (widget instanceof ModularPanel panel) {
                 if (panel.isDraggable()) {
                     if (!panel.flex().hasFixedSize()) {
-                        throw new IllegalStateException("Panel must have a fixed size. It can't specify left AND right or top AND bottom!");
+                        throw new IllegalStateException(
+                                "Panel must have a fixed size. It can't specify left AND right or top AND bottom!");
                     }
                     draggable = new LocatedElement<>(new DraggablePanelWrapper(panel), TransformationMatrix.EMPTY);
                 } else {
@@ -385,7 +391,8 @@ public class ModularGuiContext extends GuiContext {
         public Iterator<IGuiElement> iterator() {
             return new Iterator<>() {
 
-                private final Iterator<ModularPanel> panelIt = HoveredIterable.this.panelManager.getOpenPanels().iterator();
+                private final Iterator<ModularPanel> panelIt = HoveredIterable.this.panelManager.getOpenPanels()
+                        .iterator();
                 private Iterator<LocatedWidget> widgetIt;
 
                 @Override

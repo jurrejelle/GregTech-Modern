@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.common.data;
 
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
+
 import com.tterrag.registrate.util.entry.MenuEntry;
 
 import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
@@ -14,5 +15,4 @@ public class GTMenuTypes {
             .register();
 
     public static void init() {}
-
 }

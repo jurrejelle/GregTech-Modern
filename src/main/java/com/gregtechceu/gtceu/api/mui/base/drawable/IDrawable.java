@@ -2,11 +2,11 @@ package com.gregtechceu.gtceu.api.mui.base.drawable;
 
 import com.gregtechceu.gtceu.api.mui.drawable.DrawableStack;
 import com.gregtechceu.gtceu.api.mui.drawable.Icon;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -64,7 +64,8 @@ public interface IDrawable {
      */
     @OnlyIn(Dist.CLIENT)
     default void draw(GuiContext context, Area area, WidgetTheme widgetTheme) {
-        draw(context, area.x + area.getPadding().left, area.y + area.getPadding().top, area.paddedWidth(), area.paddedHeight(), widgetTheme);
+        draw(context, area.x + area.getPadding().left, area.y + area.getPadding().top, area.paddedWidth(),
+                area.paddedHeight(), widgetTheme);
     }
 
     /**

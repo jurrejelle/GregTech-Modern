@@ -1,9 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IDoubleSyncValue;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IStringSyncValue;
-import com.gregtechceu.gtceu.utils.NetworkUtils;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +14,8 @@ import java.util.Objects;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
-public class DoubleSyncValue extends ValueSyncHandler<Double> implements IDoubleSyncValue<Double>, IStringSyncValue<Double> {
+public class DoubleSyncValue extends ValueSyncHandler<Double>
+                             implements IDoubleSyncValue<Double>, IStringSyncValue<Double> {
 
     private final DoubleSupplier getter;
     private final DoubleConsumer setter;

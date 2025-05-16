@@ -3,9 +3,10 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.value.IBoolValue;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetThemeSelectable;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,7 +16,8 @@ import java.util.function.Consumer;
 @Accessors(fluent = true, chain = true)
 public class ToggleButton extends AbstractCycleButtonWidget<ToggleButton> {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean invertSelected = false;
 
     public ToggleButton() {

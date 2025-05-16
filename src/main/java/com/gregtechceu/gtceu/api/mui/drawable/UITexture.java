@@ -3,17 +3,19 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.Interpolations;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
 
@@ -141,17 +143,20 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
     }
 
     @Deprecated
-    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd, float vEnd) {
+    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd,
+                            float vEnd) {
         drawSubArea(x, y, width, height, uStart, vStart, uEnd, vEnd, WidgetTheme.getDefault());
     }
 
-    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd, float vEnd, WidgetTheme widgetTheme) {
+    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd,
+                            float vEnd, WidgetTheme widgetTheme) {
         if (canApplyTheme()) {
             Color.setGlColor(widgetTheme.getColor());
         } else {
             Color.setGlColorOpaque(Color.WHITE.main);
         }
-        GuiDraw.drawTexture(this.location, x, y, x + width, y + height, lerpU(uStart), lerpV(vStart), lerpU(uEnd), lerpV(vEnd));
+        GuiDraw.drawTexture(this.location, x, y, x + width, y + height, lerpU(uStart), lerpV(vStart), lerpU(uEnd),
+                lerpV(vEnd));
     }
 
     @Override
@@ -167,8 +172,10 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         }
         Builder builder = builder();
         builder.location(JsonHelper.getString(json, GTCEu.MOD_ID + ":gui/widgets/error", "location"))
-                .imageSize(JsonHelper.getInt(json, defaultImageWidth, "imageWidth", "iw"), JsonHelper.getInt(json, defaultImageHeight, "imageHeight", "ih"));
-        boolean mode1 = json.has("x") || json.has("y") || json.has("w") || json.has("h") || json.has("width") || json.has("height");
+                .imageSize(JsonHelper.getInt(json, defaultImageWidth, "imageWidth", "iw"),
+                        JsonHelper.getInt(json, defaultImageHeight, "imageHeight", "ih"));
+        boolean mode1 = json.has("x") || json.has("y") || json.has("w") || json.has("h") || json.has("width") ||
+                json.has("height");
         boolean mode2 = json.has("u0") || json.has("v0") || json.has("u1") || json.has("u1");
         if (mode1) {
             if (mode2) {
@@ -262,7 +269,8 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         }
 
         /**
-         * Set the image size. Required for {@link #tiled()}, {@link #adaptable(int, int)} and {@link #uv(int, int, int, int)}
+         * Set the image size. Required for {@link #tiled()}, {@link #adaptable(int, int)} and
+         * {@link #uv(int, int, int, int)}
          *
          * @param w image width
          * @param h image height
@@ -401,7 +409,8 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
             if (this.name == null) {
                 String[] p = texture.location.getPath().split("/");
                 p = p[p.length - 1].split("\\.");
-                this.name = texture.location.getNamespace().equals(GTCEu.MOD_ID) ? p[0] : texture.location.getNamespace() + ":" + p[0];
+                this.name = texture.location.getNamespace().equals(GTCEu.MOD_ID) ? p[0] :
+                        texture.location.getNamespace() + ":" + p[0];
                 if (DrawableSerialization.getTexture(this.name) != null) {
                     return texture;
                 }
@@ -432,11 +441,13 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
             if (this.mode == Mode.RELATIVE) {
                 if (this.u0 < 0 || this.v0 < 0 || this.u1 > 1 || this.v1 > 1)
                     throw new IllegalArgumentException("UV values must be 0 - 1");
-                if (this.bl > 0 || this.bt > 0 || this.br > 0|| this.bb > 0) {
-                    return new AdaptableUITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.canApplyTheme, this.iw, this.ih, this.bl, this.bt, this.br, this.bb, this.tiled);
+                if (this.bl > 0 || this.bt > 0 || this.br > 0 || this.bb > 0) {
+                    return new AdaptableUITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.canApplyTheme,
+                            this.iw, this.ih, this.bl, this.bt, this.br, this.bb, this.tiled);
                 }
                 if (this.tiled) {
-                    return new TiledUITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.iw, this.ih, this.canApplyTheme);
+                    return new TiledUITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.iw, this.ih,
+                            this.canApplyTheme);
                 }
                 return new UITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.canApplyTheme);
             }
@@ -445,6 +456,8 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
     }
 
     private enum Mode {
-        FULL, PIXEL, RELATIVE
+        FULL,
+        PIXEL,
+        RELATIVE
     }
 }

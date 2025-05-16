@@ -7,23 +7,21 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IVanillaSlot;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
 import com.gregtechceu.gtceu.api.mui.overlay.OverlayStack;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Animator;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.FpsCounter;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.common.mui.widgets.RichTextWidget;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ItemSlot;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.core.mixins.AbstractContainerScreenAccessor;
 import com.gregtechceu.gtceu.core.mixins.ScreenAccessor;
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -36,14 +34,18 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -267,7 +269,8 @@ public class ClientScreenHandler {
                                                int keyCode, int scanCode, int modifiers) {
         if (isPress) {
             // pressing a key
-            return inputPhase.isEarly() ? doAction(muiScreen, ms -> ms.keyPressed(keyCode, scanCode, modifiers)) : keyTyped(mcScreen, keyCode, scanCode, modifiers);
+            return inputPhase.isEarly() ? doAction(muiScreen, ms -> ms.keyPressed(keyCode, scanCode, modifiers)) :
+                    keyTyped(mcScreen, keyCode, scanCode, modifiers);
         } else {
             // releasing a key
             if (inputPhase.isEarly() && doAction(muiScreen, ms -> ms.keyReleased(keyCode, scanCode, modifiers))) {
@@ -284,11 +287,11 @@ public class ClientScreenHandler {
         if (currentScreen == null) return false;
         // debug mode C + CTRL + SHIFT + ALT
         if (keyCode == 'c' && Screen.hasControlDown() && Screen.hasShiftDown() && Screen.hasAltDown()) {
-            ModularUIConfig.guiDebugMode = !ModularUIConfig.guiDebugMode;
+            ConfigHolder.INSTANCE.dev.debugUI = !ConfigHolder.INSTANCE.dev.debugUI;
             return true;
         }
-        boolean isInventoryKey = Minecraft.getInstance().options
-                .keyInventory.isActiveAndMatches(InputConstants.getKey(keyCode, scanCode));
+        boolean isInventoryKey = Minecraft.getInstance().options.keyInventory
+                .isActiveAndMatches(InputConstants.getKey(keyCode, scanCode));
         if (keyCode == 1 || isInventoryKey) {
             if (currentScreen.getContext().hasDraggable()) {
                 currentScreen.getContext().dropDraggable();
@@ -306,7 +309,8 @@ public class ClientScreenHandler {
 
     public static void clickSlot(ModularScreen ms, Slot slot) {
         Screen screen = ms.getScreenWrapper().getWrappedScreen();
-        if (screen instanceof ScreenAccessor acc && screen instanceof IClickableGuiContainer clickableGuiContainer && checkGui(screen)) {
+        if (screen instanceof ScreenAccessor acc && screen instanceof IClickableGuiContainer clickableGuiContainer &&
+                checkGui(screen)) {
             ModularGuiContext ctx = ms.getContext();
             var buttonList = screen.children();
             try {
@@ -331,7 +335,7 @@ public class ClientScreenHandler {
     }
 
     public static boolean shouldDrawWorldBackground() {
-        return /*ModularUI.isBlurLoaded() || */Minecraft.getInstance().level == null;
+        return /* ModularUI.isBlurLoaded() || */Minecraft.getInstance().level == null;
     }
 
     public static void drawDarkBackground(Screen screen, GuiGraphics guiGraphics) {
@@ -341,11 +345,14 @@ public class ClientScreenHandler {
             int color = 0x101010;
             int startAlpha = 0xc0;
             int endAlpha = 0xd0;
-            GuiDraw.drawVerticalGradientRect(0, 0, screen.width, screen.height, Color.withAlpha(color, (int) (startAlpha * alpha)), Color.withAlpha(color, (int) (endAlpha * alpha)));
+            GuiDraw.drawVerticalGradientRect(0, 0, screen.width, screen.height,
+                    Color.withAlpha(color, (int) (startAlpha * alpha)),
+                    Color.withAlpha(color, (int) (endAlpha * alpha)));
         }
     }
 
-    public static void drawScreen(GuiGraphics graphics, ModularScreen muiScreen, Screen mcScreen, int mouseX, int mouseY, float partialTicks) {
+    public static void drawScreen(GuiGraphics graphics, ModularScreen muiScreen, Screen mcScreen, int mouseX,
+                                  int mouseY, float partialTicks) {
         if (mcScreen instanceof AbstractContainerScreen<?> container) {
             drawContainer(graphics, muiScreen, container, mouseX, mouseY, partialTicks);
         } else {
@@ -353,7 +360,8 @@ public class ClientScreenHandler {
         }
     }
 
-    public static void drawScreenInternal(GuiGraphics graphics, ModularScreen muiScreen, Screen mcScreen, int mouseX, int mouseY, float partialTicks) {
+    public static void drawScreenInternal(GuiGraphics graphics, ModularScreen muiScreen, Screen mcScreen, int mouseX,
+                                          int mouseY, float partialTicks) {
         Stencil.reset();
         Stencil.apply(muiScreen.getScreenArea(), null);
         muiScreen.drawScreen(graphics, mouseX, mouseY, partialTicks);
@@ -367,7 +375,8 @@ public class ClientScreenHandler {
         Stencil.remove();
     }
 
-    public static void drawContainer(GuiGraphics graphics, ModularScreen muiScreen, AbstractContainerScreen<?> mcScreen, int mouseX, int mouseY, float partialTicks) {
+    public static void drawContainer(GuiGraphics graphics, ModularScreen muiScreen, AbstractContainerScreen<?> mcScreen,
+                                     int mouseX, int mouseY, float partialTicks) {
         AbstractContainerScreenAccessor acc = (AbstractContainerScreenAccessor) mcScreen;
 
         Stencil.reset();
@@ -445,7 +454,8 @@ public class ClientScreenHandler {
         Stencil.remove();
     }
 
-    private static void drawItemStack(AbstractContainerScreen<?> mcScreen, GuiGraphics graphics, ItemStack stack, int x, int y, String altText) {
+    private static void drawItemStack(AbstractContainerScreen<?> mcScreen, GuiGraphics graphics, ItemStack stack, int x,
+                                      int y, String altText) {
         graphics.pose().translate(0.0F, 0.0F, 32.0F);
         // ((AbstractContainerScreenAccessor) mcScreen).setZLevel(200f);
         // ((MouseHandlerAccessor) mcScreen).getItemRender().zLevel = 200.0F;
@@ -460,15 +470,17 @@ public class ClientScreenHandler {
         // ((MouseHandlerAccessor) mcScreen).getItemRender().zLevel = 0.0F;
     }
 
-    private static void drawVanillaElements(GuiGraphics graphics, Screen mcScreen, int mouseX, int mouseY, float partialTicks) {
+    private static void drawVanillaElements(GuiGraphics graphics, Screen mcScreen, int mouseX, int mouseY,
+                                            float partialTicks) {
         for (Renderable renderable : mcScreen.renderables) {
             renderable.render(graphics, mouseX, mouseY, partialTicks);
         }
     }
 
-    public static void drawDebugScreen(GuiGraphics graphics, @Nullable ModularScreen muiScreen, @Nullable ModularScreen fallback) {
+    public static void drawDebugScreen(GuiGraphics graphics, @Nullable ModularScreen muiScreen,
+                                       @Nullable ModularScreen fallback) {
         fpsCounter.onDraw();
-        if (!ModularUIConfig.guiDebugMode) return;
+        if (!ConfigHolder.INSTANCE.dev.debugUI) return;
         if (muiScreen == null) {
             if (checkGui()) {
                 muiScreen = currentScreen;
@@ -485,7 +497,8 @@ public class ClientScreenHandler {
         int screenH = muiScreen.getScreenArea().height;
         int color = Color.argb(180, 40, 115, 220);
         int lineY = screenH - 13;
-        graphics.drawString(Minecraft.getInstance().font, "Mouse Pos: " + mouseX + ", " + mouseY, 5, lineY, color, true);
+        graphics.drawString(Minecraft.getInstance().font, "Mouse Pos: " + mouseX + ", " + mouseY, 5, lineY, color,
+                true);
         lineY -= 11;
         graphics.drawString(Minecraft.getInstance().font, "FPS: " + fpsCounter.getFps(), 5, screenH - 24, color);
         LocatedWidget locatedHovered = muiScreen.getPanelManager().getTopWidgetLocated(true);
@@ -503,11 +516,13 @@ public class ClientScreenHandler {
 
             GuiDraw.drawBorder(0, 0, area.width, area.height, color, 1f);
             if (hovered.hasParent()) {
-                GuiDraw.drawBorder(-area.rx, -area.ry, parent.getArea().width, parent.getArea().height, Color.withAlpha(color, 0.3f), 1f);
+                GuiDraw.drawBorder(-area.rx, -area.ry, parent.getArea().width, parent.getArea().height,
+                        Color.withAlpha(color, 0.3f), 1f);
             }
             graphics.pose().popPose();
             locatedHovered.unapplyMatrix(context);
-            GuiDraw.drawText(graphics, "Pos: " + area.x + ", " + area.y + "  Rel: " + area.rx + ", " + area.ry, 5, lineY, 1, color, false);
+            GuiDraw.drawText(graphics, "Pos: " + area.x + ", " + area.y + "  Rel: " + area.rx + ", " + area.ry, 5,
+                    lineY, 1, color, false);
             lineY -= 11;
             GuiDraw.drawText(graphics, "Size: " + area.width + ", " + area.height, 5, lineY, 1, color, false);
             lineY -= 11;
@@ -516,7 +531,8 @@ public class ClientScreenHandler {
                 drawSegmentLine(lineY -= 4, color);
                 lineY -= 10;
                 area = parent.getArea();
-                GuiDraw.drawText(graphics, "Parent size: " + area.width + ", " + area.height, 5, lineY, 1, color, false);
+                GuiDraw.drawText(graphics, "Parent size: " + area.width + ", " + area.height, 5, lineY, 1, color,
+                        false);
                 lineY -= 11;
                 GuiDraw.drawText(graphics, "Parent: " + parent, 5, lineY, 1, color, false);
             }
@@ -531,7 +547,10 @@ public class ClientScreenHandler {
                 if (slotWidget.isSynced()) {
                     SlotGroup slotGroup = slot.getSlotGroup();
                     boolean allowShiftTransfer = slotGroup != null && slotGroup.allowShiftTransfer();
-                    GuiDraw.drawText(graphics, "Shift-Click Priority: " + (allowShiftTransfer ? slotGroup.getShiftClickPriority() : "DISABLED"), 5, lineY, 1, color, false);
+                    GuiDraw.drawText(graphics,
+                            "Shift-Click Priority: " +
+                                    (allowShiftTransfer ? slotGroup.getShiftClickPriority() : "DISABLED"),
+                            5, lineY, 1, color, false);
                 }
             } else if (hovered instanceof RichTextWidget richTextWidget) {
                 drawSegmentLine(lineY -= 4, color);
@@ -589,6 +608,7 @@ public class ClientScreenHandler {
     }
 
     private enum InputPhase {
+
         // for mui interactions
         EARLY,
         // for mc interactions (like E and ESC)

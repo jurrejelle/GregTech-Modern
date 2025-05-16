@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
 import com.gregtechceu.gtceu.core.mixins.AbstractContainerMenuAccessor;
 import com.gregtechceu.gtceu.utils.NetworkUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
+
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -58,7 +60,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     @ApiStatus.Internal
-    public void construct(Player player, PanelSyncManager panelSyncManager, UISettings settings, String mainPanelName, GuiData guiData) {
+    public void construct(Player player, PanelSyncManager panelSyncManager, UISettings settings, String mainPanelName,
+                          GuiData guiData) {
         this.player = player;
         this.syncManager = new ModularSyncManager(this);
         this.syncManager.construct(mainPanelName, panelSyncManager);
@@ -113,7 +116,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     private void sortShiftClickSlots() {
-        this.shiftClickSlots.sort(Comparator.comparingInt(slot -> Objects.requireNonNull(slot.getSlotGroup()).getShiftClickPriority()));
+        this.shiftClickSlots.sort(
+                Comparator.comparingInt(slot -> Objects.requireNonNull(slot.getSlotGroup()).getShiftClickPriority()));
     }
 
     @Override
@@ -137,7 +141,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         if (slot.getSlotGroupName() != null) {
             SlotGroup slotGroup = getSyncManager().getSlotGroup(panelName, slot.getSlotGroupName());
             if (slotGroup == null) {
-                GTCEu.LOGGER.throwing(new IllegalArgumentException("SlotGroup '" + slot.getSlotGroupName() + "' is not registered!"));
+                GTCEu.LOGGER.throwing(
+                        new IllegalArgumentException("SlotGroup '" + slot.getSlotGroupName() + "' is not registered!"));
                 return;
             }
             slot.slotGroup(slotGroup);
@@ -156,7 +161,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     @Contract("_, null, null -> fail")
     @NotNull
     @ApiStatus.Internal
-    public SlotGroup validateSlotGroup(String panelName, @Nullable String slotGroupName, @Nullable SlotGroup slotGroup) {
+    public SlotGroup validateSlotGroup(String panelName, @Nullable String slotGroupName,
+                                       @Nullable SlotGroup slotGroup) {
         if (slotGroup != null) {
             if (getSyncManager().getSlotGroup(panelName, slotGroup.getName()) == null) {
                 throw new IllegalArgumentException("Slot group is not registered in the GUI.");
@@ -201,7 +207,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         if (slot instanceof ModularSlot modularSlot) {
             return modularSlot;
         }
-        throw new IllegalStateException("A non-ModularSlot was found, but all slots in a ModularContainer must extend ModularSlot.");
+        throw new IllegalStateException(
+                "A non-ModularSlot was found, but all slots in a ModularContainer must extend ModularSlot.");
     }
 
     public List<ModularSlot> getShiftClickSlots() {
@@ -272,7 +279,9 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                     }
                 } else if (clickedSlot.mayPickup(player)) {
                     if (heldStack.isEmpty() && !slotStack.isEmpty()) {
-                        int s = Math.min(slotStack.getCount(), slotStack.getMaxStackSize()); // checking max stack size here, probably for oversized slots
+                        int s = Math.min(slotStack.getCount(), slotStack.getMaxStackSize()); // checking max stack size
+                                                                                             // here, probably for
+                                                                                             // oversized slots
                         int toRemove = mouseButton == LEFT_MOUSE ? s : (s + 1) / 2;
                         this.setCarried(slotStack.split(toRemove));
                         clickedSlot.setByPlayer(slotStack);
@@ -295,19 +304,19 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                         }
                     } else if (heldStack.getMaxStackSize() > 1 &&
                             ItemStack.isSameItemSameTags(slotStack, heldStack) && !slotStack.isEmpty()) {
-                        int stackCount = slotStack.getCount();
+                                int stackCount = slotStack.getCount();
 
-                        if (stackCount + heldStack.getCount() <= heldStack.getMaxStackSize()) {
-                            heldStack.grow(stackCount);
-                            slotStack = clickedSlot.remove(stackCount);
+                                if (stackCount + heldStack.getCount() <= heldStack.getMaxStackSize()) {
+                                    heldStack.grow(stackCount);
+                                    slotStack = clickedSlot.remove(stackCount);
 
-                            if (slotStack.isEmpty()) {
-                                clickedSlot.setByPlayer(ItemStack.EMPTY);
+                                    if (slotStack.isEmpty()) {
+                                        clickedSlot.setByPlayer(ItemStack.EMPTY);
+                                    }
+
+                                    clickedSlot.onTake(player, this.getCarried());
+                                }
                             }
-
-                            clickedSlot.onTake(player, this.getCarried());
-                        }
-                    }
                 }
                 clickedSlot.setChanged();
             }
@@ -321,15 +330,18 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                 int j = mouseButton == 0 ? 1 : -1;
 
                 for (int k = 0; k < 2; ++k) {
-                    for (int l = i; l >= 0 && l < slots.size() && carried.getCount() < carried.getMaxStackSize(); l += j) {
+                    for (int l = i; l >= 0 && l < slots.size() &&
+                            carried.getCount() < carried.getMaxStackSize(); l += j) {
                         Slot slot1 = slots.get(l);
                         if (slot1 instanceof ModularSlot modularSlot && modularSlot.isPhantom()) continue;
 
-                        if (slot1.hasItem() && canItemQuickReplace(slot1, carried, true) && slot1.mayPickup(player) && canTakeItemForPickAll(carried, slot1)) {
+                        if (slot1.hasItem() && canItemQuickReplace(slot1, carried, true) && slot1.mayPickup(player) &&
+                                canTakeItemForPickAll(carried, slot1)) {
                             ItemStack slotItem = slot1.getItem();
 
                             if (k != 0 || slotItem.getCount() != slotItem.getMaxStackSize()) {
-                                int toRemove = Math.min(carried.getMaxStackSize() - carried.getCount(), slotItem.getCount());
+                                int toRemove = Math.min(carried.getMaxStackSize() - carried.getCount(),
+                                        slotItem.getCount());
                                 ItemStack removed = slot1.remove(toRemove);
                                 carried.grow(toRemove);
 
@@ -359,7 +371,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         }
     }
 
-    protected final void superClicked(int slotId, int mouseButton, @NotNull ClickType clickTypeIn, @NotNull Player player) {
+    protected final void superClicked(int slotId, int mouseButton, @NotNull ClickType clickTypeIn,
+                                      @NotNull Player player) {
         super.clicked(slotId, mouseButton, clickTypeIn, player);
     }
 
@@ -386,7 +399,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     protected ItemStack transferItem(ModularSlot fromSlot, ItemStack fromStack) {
-        @Nullable SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
+        @Nullable
+        SlotGroup fromSlotGroup = fromSlot.getSlotGroup();
         // in first iteration only insert into non-empty, non-phantom slots
         for (ModularSlot toSlot : getShiftClickSlots()) {
             SlotGroup slotGroup = Objects.requireNonNull(toSlot.getSlotGroup());
@@ -394,7 +408,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                 ItemStack toStack = toSlot.getItem().copy();
                 if (!fromSlot.isPhantom() && ItemHandlerHelper.canItemStacksStack(fromStack, toStack)) {
                     int j = toStack.getCount() + fromStack.getCount();
-                    int maxSize = toSlot.getMaxStackSize(fromStack);//Math.min(toSlot.getMaxStackSize(), fromStack.getMaxStackSize());
+                    int maxSize = toSlot.getMaxStackSize(fromStack);// Math.min(toSlot.getMaxStackSize(),
+                                                                    // fromStack.getMaxStackSize());
 
                     if (j <= maxSize) {
                         fromStack.setCount(0);

@@ -4,12 +4,14 @@ import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.base.widget.IDraggable;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
+import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.client.mui.screen.DraggablePanelWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
-import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+
 import net.minecraft.client.gui.GuiGraphics;
+
 import org.jetbrains.annotations.Nullable;
 
 public class DragHandle extends Widget<DragHandle> implements IDraggable {

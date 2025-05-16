@@ -1,9 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.utils.serialization;
 
 import net.minecraft.network.FriendlyByteBuf;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import org.jetbrains.annotations.NotNull;
 
 public interface IByteBufAdapter<T> extends IByteBufSerializer<T>, IByteBufDeserializer<T>, IEquals<T> {
 

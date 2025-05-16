@@ -13,5 +13,4 @@ public interface ITextLine {
     void draw(GuiContext context, Font font, float x, float y, int color, boolean shadow);
 
     Object getHoveringElement(Font font, int x, int y);
-
 }

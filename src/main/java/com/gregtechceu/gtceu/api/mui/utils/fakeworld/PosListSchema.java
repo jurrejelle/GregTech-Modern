@@ -1,8 +1,9 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+
+import lombok.Getter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,8 @@ public abstract class PosListSchema implements ISchema {
     private final Iterable<? extends BlockPos> posList;
     private BiPredicate<BlockPos, BlockInfo> renderFilter;
 
-    public PosListSchema(Level level, Iterable<? extends BlockPos> posList, BiPredicate<BlockPos, BlockInfo> renderFilter) {
+    public PosListSchema(Level level, Iterable<? extends BlockPos> posList,
+                         BiPredicate<BlockPos, BlockInfo> renderFilter) {
         this.level = level;
         this.posList = posList;
         this.renderFilter = renderFilter;

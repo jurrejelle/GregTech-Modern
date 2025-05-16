@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

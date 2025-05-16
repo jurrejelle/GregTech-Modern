@@ -2,7 +2,8 @@ package com.gregtechceu.gtceu.api.mui.base;
 
 public enum GuiAxis {
 
-    X, Y;
+    X,
+    Y;
 
     public boolean isHorizontal() {
         return this == X;

@@ -5,7 +5,8 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.HorizontalScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.VerticalScrollData;
 
-public class ScrollWidget<W extends ScrollWidget<W>> extends AbstractScrollWidget<IWidget, W> implements IParentWidget<IWidget, W> {
+public class ScrollWidget<W extends ScrollWidget<W>> extends AbstractScrollWidget<IWidget, W>
+                         implements IParentWidget<IWidget, W> {
 
     public ScrollWidget() {
         super(null, null);

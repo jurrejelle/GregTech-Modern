@@ -2,7 +2,7 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +12,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
@@ -95,7 +97,7 @@ public class ModularSyncManager {
         return this.panelSyncManagerMap.containsKey(panelName);
     }
 
-    public void receiveWidgetUpdate(String panelName, String mapKey, int id, FriendlyByteBuf buf) throws IOException {
+    public void receiveWidgetUpdate(String panelName, String mapKey, int id, FriendlyByteBuf buf) {
         getPanelSyncManager(panelName).receiveWidgetUpdate(mapKey, id, buf);
     }
 

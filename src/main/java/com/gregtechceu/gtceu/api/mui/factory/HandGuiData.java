@@ -1,9 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
-import lombok.Getter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import lombok.Getter;
 
 /**
  * See {@link GuiData} for an explanation for what this is for.
@@ -33,5 +34,4 @@ public class HandGuiData extends GuiData {
     public void setItemInUsedHand(ItemStack item) {
         getPlayer().setItemInHand(this.hand, item);
     }
-
 }

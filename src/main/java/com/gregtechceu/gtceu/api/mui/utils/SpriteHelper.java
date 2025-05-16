@@ -1,16 +1,17 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class SpriteHelper {
                 .getBlockModel(blockState).getQuads(blockState, facing, RandomSource.create(), ModelData.EMPTY, null);
     }
 
-    public static TextureAtlasSprite getBestTexture(BakedModel model, @Nullable BlockState blockState, @Nullable Direction facing) {
+    public static TextureAtlasSprite getBestTexture(BakedModel model, @Nullable BlockState blockState,
+                                                    @Nullable Direction facing) {
         List<BakedQuad> quads = model.getQuads(blockState, facing, RandomSource.create(), ModelData.EMPTY, null);
         if (quads.isEmpty()) {
-            return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
+            return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                    .apply(MissingTextureAtlasSprite.getLocation());
         } else {
             return quads.get(0).getSprite();
         }

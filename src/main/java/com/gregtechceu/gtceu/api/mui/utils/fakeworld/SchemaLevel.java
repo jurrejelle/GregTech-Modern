@@ -1,12 +1,13 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-import com.google.common.collect.AbstractIterator;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import com.google.common.collect.AbstractIterator;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,6 +96,7 @@ public class SchemaLevel extends DummyLevel implements ISchema {
     @Override
     public @NotNull Iterator<Map.Entry<BlockPos, BlockInfo>> iterator() {
         return new AbstractIterator<>() {
+
             private final ObjectListIterator<BlockPos> it = blocks.iterator();
             private final BlockInfo.Mutable info = new BlockInfo.Mutable();
             private final MutablePair<BlockPos, BlockInfo> pair = new MutablePair<>(null, this.info);
@@ -113,5 +115,4 @@ public class SchemaLevel extends DummyLevel implements ISchema {
             }
         };
     }
-
 }

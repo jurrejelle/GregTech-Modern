@@ -4,10 +4,11 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IHoverable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IRichTextBuilder;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.text.RichText;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
     public void drawForeground(ModularGuiContext context) {
         super.drawForeground(context);
         Object o = this.text.getHoveringElement(context.getFont(), context.getMouseX(), context.getMouseY());
-        //GTCEu.LOGGER.info("Mouse {}, {}", context.getMouseX(), context.getMouseY());
+        // GTCEu.LOGGER.info("Mouse {}, {}", context.getMouseX(), context.getMouseY());
         if (o instanceof IHoverable hoverable) {
             hoverable.onHover();
             RichTooltip tooltip = hoverable.getTooltip();
@@ -53,7 +54,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public @NotNull Result onMousePressed(double mouseX, double mouseY, int button) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onMousePressed(mouseY, mouseY, button);
         }
@@ -62,7 +64,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public boolean onMouseReleased(double mouseX, double mouseY, int button) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onMouseReleased(mouseX, mouseY, button);
         }
@@ -71,7 +74,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public @NotNull Result onMouseTapped(double mouseX, double mouseY, int button) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onMouseTapped(mouseX, mouseY, button);
         }
@@ -80,7 +84,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public @NotNull Result onKeyPressed(int keyCode, int scanCode, int modifiers) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onKeyPressed(keyCode, scanCode, modifiers);
         }
@@ -89,7 +94,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public boolean onKeyReleased(int keyCode, int scanCode, int modifiers) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onKeyReleased(keyCode, scanCode, modifiers);
         }
@@ -98,7 +104,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public @NotNull Result onKeyTapped(int keyCode, int scanCode, int modifiers) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onKeyTapped(keyCode, scanCode, modifiers);
         }
@@ -107,7 +114,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             return interactable.onMouseScrolled(mouseX, mouseY, delta);
         }
@@ -116,7 +124,8 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
 
     @Override
     public void onMouseDrag(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(), getContext().getMouseY());
+        Object o = this.text.getHoveringElement(getContext().getFont(), getContext().getMouseX(),
+                getContext().getMouseY());
         if (o instanceof Interactable interactable) {
             interactable.onMouseDrag(mouseX, mouseY, button, dragX, dragY);
         }

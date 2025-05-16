@@ -8,11 +8,12 @@ import com.gregtechceu.gtceu.api.mui.base.value.IEnumValue;
 import com.gregtechceu.gtceu.api.mui.base.value.IIntValue;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.value.IntValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> extends Widget<W> implements Interactable {
+public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> extends Widget<W>
+                                      implements Interactable {
 
     private int stateCount = 1;
     private IIntValue<?> intValue;
@@ -105,7 +107,8 @@ public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> e
         if (isHovering() && this.hoverBackground != null && this.hoverBackground[state] != null) {
             return this.hoverBackground[state];
         }
-        return this.background != null && this.background[state] != null ? this.background[state] : super.getCurrentBackground(theme, widgetTheme);
+        return this.background != null && this.background[state] != null ? this.background[state] :
+                super.getCurrentBackground(theme, widgetTheme);
     }
 
     @Override
@@ -114,7 +117,8 @@ public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> e
         if (isHovering() && this.hoverOverlay != null && this.hoverOverlay[state] != null) {
             return this.hoverOverlay[state];
         }
-        return this.overlay != null && this.overlay[state] != null ? this.overlay[state] : super.getCurrentOverlay(theme, widgetTheme);
+        return this.overlay != null && this.overlay[state] != null ? this.overlay[state] :
+                super.getCurrentOverlay(theme, widgetTheme);
     }
 
     @Override

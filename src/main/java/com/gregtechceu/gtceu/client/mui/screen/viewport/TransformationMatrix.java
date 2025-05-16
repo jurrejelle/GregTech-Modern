@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.client.mui.screen.viewport;
 
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewport;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -26,7 +27,8 @@ public class TransformationMatrix {
         this.wrapped = parent;
         this.viewport = parent.viewport;
         this.area = parent.area;
-        this.matrix = parentMatrix == null ? new Matrix4f(parent.getMatrix()) : parentMatrix.mul(parent.getMatrix(), new Matrix4f());
+        this.matrix = parentMatrix == null ? new Matrix4f(parent.getMatrix()) :
+                parentMatrix.mul(parent.getMatrix(), new Matrix4f());
         this.viewportMatrix = parent.viewportMatrix;
     }
 

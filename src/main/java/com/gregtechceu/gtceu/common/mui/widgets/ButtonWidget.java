@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.value.sync.InteractionSyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.SingleChildWidget;
+
 import org.jetbrains.annotations.NotNull;
 
 public class ButtonWidget<W extends ButtonWidget<W>> extends SingleChildWidget<W> implements Interactable {

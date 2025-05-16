@@ -1,9 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.theme;
 
-import com.gregtechceu.gtceu.api.mui.ModularUIConfig;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Map;
@@ -126,7 +127,7 @@ public class Theme implements ITheme {
         if (this.openCloseAnimationOverride != -1) {
             return this.openCloseAnimationOverride;
         }
-        return ModularUIConfig.panelOpenCloseAnimationTime;
+        return ConfigHolder.INSTANCE.client.ui.animationTime;
     }
 
     @Override
@@ -134,7 +135,7 @@ public class Theme implements ITheme {
         if (this.smoothProgressBarOverride != null) {
             return this.smoothProgressBarOverride;
         }
-        return ModularUIConfig.smoothProgressBar;
+        return ConfigHolder.INSTANCE.client.ui.smoothProgressBar;
     }
 
     @Override
@@ -142,6 +143,6 @@ public class Theme implements ITheme {
         if (this.tooltipPosOverride != null) {
             return this.tooltipPosOverride;
         }
-        return ModularUIConfig.tooltipPos;
+        return ConfigHolder.INSTANCE.client.ui.tooltipPos;
     }
 }

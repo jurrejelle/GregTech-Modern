@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.VerticalScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Box;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +50,13 @@ public class Grid extends AbstractScrollWidget<IWidget, Grid> implements ILayout
     }
 
     private int getElementWidth(Area area) {
-        return area.width + Math.max(area.getMargin().left, this.minElementMargin.left) + Math.max(area.getMargin().right, this.minElementMargin.right);
+        return area.width + Math.max(area.getMargin().left, this.minElementMargin.left) +
+                Math.max(area.getMargin().right, this.minElementMargin.right);
     }
 
     private int getElementHeight(Area area) {
-        return area.height + Math.max(area.getMargin().top, this.minElementMargin.top) + Math.max(area.getMargin().bottom, this.minElementMargin.bottom);
+        return area.height + Math.max(area.getMargin().top, this.minElementMargin.top) +
+                Math.max(area.getMargin().bottom, this.minElementMargin.bottom);
     }
 
     @Override
@@ -208,7 +211,8 @@ public class Grid extends AbstractScrollWidget<IWidget, Grid> implements ILayout
         return this;
     }
 
-    public <T, I extends IWidget> Grid mapTo(int rowLength, @NotNull List<T> list, @NotNull IndexedElementMapper<T, I> widgetCreator) {
+    public <T, I extends IWidget> Grid mapTo(int rowLength, @NotNull List<T> list,
+                                             @NotNull IndexedElementMapper<T, I> widgetCreator) {
         Objects.requireNonNull(widgetCreator);
         Objects.requireNonNull(list);
         return matrix(mapToMatrix(rowLength, list, widgetCreator));
@@ -297,7 +301,8 @@ public class Grid extends AbstractScrollWidget<IWidget, Grid> implements ILayout
         return getThis();
     }
 
-    public static <T, I extends IWidget> List<List<I>> mapToMatrix(int rowLength, List<T> list, IndexedElementMapper<T, I> widgetCreator) {
+    public static <T, I extends IWidget> List<List<I>> mapToMatrix(int rowLength, List<T> list,
+                                                                   IndexedElementMapper<T, I> widgetCreator) {
         return mapToMatrix(rowLength, list.size(), i -> widgetCreator.apply(i, list.get(i)));
     }
 

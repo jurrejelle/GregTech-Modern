@@ -2,12 +2,11 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.core.mixins.StringSplitterAccessor;
-import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Getter;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
@@ -18,6 +17,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -35,7 +37,7 @@ public class TextRenderer {
     protected Alignment alignment = Alignment.TopLeft;
     protected float scale = 1f;
     protected boolean shadow = false;
-    protected int color = 0;//Theme.INSTANCE.getText();
+    protected int color = 0;// Theme.INSTANCE.getText();
     protected boolean simulate;
     @Getter
     protected float lastWidth = 0, lastHeight = 0;
@@ -285,7 +287,8 @@ public class TextRenderer {
     }
 
     public List<FormattedCharSequence> wrapLine(Component line) {
-        return this.maxWidth > 0 ? getFont().split(line, (int) (this.maxWidth / this.scale)) : Collections.singletonList(line.getVisualOrderText());
+        return this.maxWidth > 0 ? getFont().split(line, (int) (this.maxWidth / this.scale)) :
+                Collections.singletonList(line.getVisualOrderText());
     }
 
     public boolean wouldFit(List<String> text) {

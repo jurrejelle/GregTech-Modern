@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.Font;
 
 public class Spacer implements ITextLine {

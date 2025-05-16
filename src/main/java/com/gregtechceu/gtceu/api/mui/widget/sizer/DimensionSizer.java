@@ -4,6 +4,8 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.ApiStatus;
@@ -30,7 +32,8 @@ public class DimensionSizer {
 
     @Getter
     private boolean posCalculated = false, sizeCalculated = false;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean marginPaddingApplied = false;
 
     public DimensionSizer(GuiAxis axis) {
@@ -218,7 +221,7 @@ public class DimensionSizer {
             } else if (this.end != null) {
                 p = calcPoint(this.end, s, relativeTo.getSize(this.axis), true) - s;
             } else {
-                p = area.getRelativePoint(this.axis) + p0/* + area.getMargin().getStart(this.axis)*/;
+                p = area.getRelativePoint(this.axis) + p0/* + area.getMargin().getStart(this.axis) */;
                 if (!this.cancelAutoMovement) {
                     moveAmount = -p0;
                 }
@@ -305,9 +308,10 @@ public class DimensionSizer {
             if (ret == this.start) this.start = null;
             if (ret == this.end) this.end = null;
             if (ret == this.size) this.size = null;
-            if (ModularUIConfig.guiDebugMode && GTCEu.isClientThread()) {
+            if (ConfigHolder.INSTANCE.dev.debugUI && GTCEu.isClientThread()) {
                 // only log on client in debug mode since its sometimes intentional
-                GTCEu.LOGGER.info("unit {} of widget {} was already used and will be overwritten with unit {}", ret.state.getText(this.axis), widget, newState.getText(this.axis));
+                GTCEu.LOGGER.info("unit {} of widget {} was already used and will be overwritten with unit {}",
+                        ret.state.getText(this.axis), widget, newState.getText(this.axis));
             }
         }
         ret.reset();

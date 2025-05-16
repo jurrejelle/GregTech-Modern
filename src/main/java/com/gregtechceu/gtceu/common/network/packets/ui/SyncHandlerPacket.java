@@ -3,12 +3,15 @@ package com.gregtechceu.gtceu.common.network.packets.ui;
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.utils.NetworkUtils;
+
 import com.lowdragmc.lowdraglib.networking.IHandlerContext;
 import com.lowdragmc.lowdraglib.networking.IPacket;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 
@@ -39,22 +42,15 @@ public class SyncHandlerPacket implements IPacket {
         if (handler.isClient()) {
             ModularScreen screen = ModularScreen.getCurrent();
             if (screen != null) {
-                try {
-                    screen.getSyncManager().receiveWidgetUpdate(this.panel, this.key, this.packet.readVarInt(), this.packet);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                screen.getSyncManager().receiveWidgetUpdate(this.panel, this.key, this.packet.readVarInt(),
+                        this.packet);
             }
         } else {
 
             AbstractContainerMenu menu = handler.getPlayer().containerMenu;
             if (menu instanceof ModularContainerMenu modularMenu) {
-                try {
-                    modularMenu.getSyncManager()
-                            .receiveWidgetUpdate(this.panel, this.key, this.packet.readVarInt(), this.packet);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                modularMenu.getSyncManager()
+                        .receiveWidgetUpdate(this.panel, this.key, this.packet.readVarInt(), this.packet);
             }
         }
     }

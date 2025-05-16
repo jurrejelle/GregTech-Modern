@@ -2,12 +2,7 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +20,13 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import java.util.List;
 
@@ -45,18 +47,29 @@ public class GuiDraw {
         drawRect(x0, y0, w, h, colorTop, colorTop, colorBottom, colorBottom);
     }
 
-    public static void drawRect(float x0, float y0, float w, float h, int colorTL, int colorTR, int colorBL, int colorBR) {
+    public static void drawRect(float x0, float y0, float w, float h, int colorTL, int colorTR, int colorBL,
+                                int colorBR) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         float x1 = x0 + w, y1 = y0 + h;
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferbuilder.vertex(x0, y0, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
-        bufferbuilder.vertex(x0, y1, 0.0f).color(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL)).endVertex();
-        bufferbuilder.vertex(x1, y1, 0.0f).color(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR)).endVertex();
-        bufferbuilder.vertex(x1, y0, 0.0f).color(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR)).endVertex();
+        bufferbuilder.vertex(x0, y0, 0.0f)
+                .color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
+                .endVertex();
+        bufferbuilder.vertex(x0, y1, 0.0f)
+                .color(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL))
+                .endVertex();
+        bufferbuilder.vertex(x1, y1, 0.0f)
+                .color(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR))
+                .endVertex();
+        bufferbuilder.vertex(x1, y0, 0.0f)
+                .color(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR))
+                .endVertex();
         tesselator.end();
         RenderSystem.disableBlend();
     }
@@ -73,17 +86,22 @@ public class GuiDraw {
         drawEllipse(x0, y0, w, h, color, color, segments);
     }
 
-    public static void drawEllipse(float x0, float y0, float w, float h, int centerColor, int outerColor, int segments) {
+    public static void drawEllipse(float x0, float y0, float w, float h, int centerColor, int outerColor,
+                                   int segments) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         float x_2 = x0 + w / 2f, y_2 = y0 + h / 2f;
         bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
         // start at center
-        bufferbuilder.vertex(x_2, y_2, 0.0f).color(Color.getRed(centerColor), Color.getGreen(centerColor), Color.getBlue(centerColor), Color.getAlpha(centerColor)).endVertex();
-        int a = Color.getAlpha(outerColor), r = Color.getRed(outerColor), g = Color.getGreen(outerColor), b = Color.getBlue(outerColor);
+        bufferbuilder.vertex(x_2, y_2, 0.0f).color(Color.getRed(centerColor), Color.getGreen(centerColor),
+                Color.getBlue(centerColor), Color.getAlpha(centerColor)).endVertex();
+        int a = Color.getAlpha(outerColor), r = Color.getRed(outerColor), g = Color.getGreen(outerColor),
+                b = Color.getBlue(outerColor);
         float incr = (float) (PI2 / segments);
         for (int i = 0; i <= segments; i++) {
             float angle = incr * i;
@@ -95,68 +113,93 @@ public class GuiDraw {
         RenderSystem.disableBlend();
     }
 
-    public static void drawRoundedRect(float x0, float y0, float w, float h, int color, int cornerRadius, int segments) {
+    public static void drawRoundedRect(float x0, float y0, float w, float h, int color, int cornerRadius,
+                                       int segments) {
         drawRoundedRect(x0, y0, w, h, color, color, color, color, cornerRadius, segments);
     }
 
-    public static void drawVerticalGradientRoundedRect(float x0, float y0, float w, float h, int colorTop, int colorBottom, int cornerRadius, int segments) {
+    public static void drawVerticalGradientRoundedRect(float x0, float y0, float w, float h, int colorTop,
+                                                       int colorBottom, int cornerRadius, int segments) {
         drawRoundedRect(x0, y0, w, h, colorTop, colorTop, colorBottom, colorBottom, cornerRadius, segments);
     }
 
-    public static void drawHorizontalGradientRoundedRect(float x0, float y0, float w, float h, int colorLeft, int colorRight, int cornerRadius, int segments) {
+    public static void drawHorizontalGradientRoundedRect(float x0, float y0, float w, float h, int colorLeft,
+                                                         int colorRight, int cornerRadius, int segments) {
         drawRoundedRect(x0, y0, w, h, colorLeft, colorRight, colorLeft, colorRight, cornerRadius, segments);
     }
 
-    public static void drawRoundedRect(float x0, float y0, float w, float h, int colorTL, int colorTR, int colorBL, int colorBR, int cornerRadius, int segments) {
+    public static void drawRoundedRect(float x0, float y0, float w, float h, int colorTL, int colorTR, int colorBL,
+                                       int colorBR, int cornerRadius, int segments) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         float x1 = x0 + w, y1 = y0 + h;
         bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
         int color = Color.average(colorBL, colorBR, colorTR, colorTL);
         // start at center
-        bufferbuilder.vertex(x0 + w / 2f, y0 + h / 2f, 0.0f).color(Color.getRed(color), Color.getGreen(color), Color.getBlue(color), Color.getAlpha(color)).endVertex();
+        bufferbuilder.vertex(x0 + w / 2f, y0 + h / 2f, 0.0f)
+                .color(Color.getRed(color), Color.getGreen(color), Color.getBlue(color), Color.getAlpha(color))
+                .endVertex();
         // left side
-        bufferbuilder.vertex(x0, y0 + cornerRadius, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
-        bufferbuilder.vertex(x0, y1 - cornerRadius, 0.0f).color(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL)).endVertex();
+        bufferbuilder.vertex(x0, y0 + cornerRadius, 0.0f)
+                .color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
+                .endVertex();
+        bufferbuilder.vertex(x0, y1 - cornerRadius, 0.0f)
+                .color(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL))
+                .endVertex();
         // bottom left corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x0 + cornerRadius - Math.cos(PI_2 / segments * i) * cornerRadius);
             float y = (float) (y1 - cornerRadius + Math.sin(PI_2 / segments * i) * cornerRadius);
-            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL)).endVertex();
+            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorBL), Color.getGreen(colorBL),
+                    Color.getBlue(colorBL), Color.getAlpha(colorBL)).endVertex();
         }
         // bottom side
-        bufferbuilder.vertex(x1 - cornerRadius, y1, 0.0f).color(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR)).endVertex();
+        bufferbuilder.vertex(x1 - cornerRadius, y1, 0.0f)
+                .color(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR))
+                .endVertex();
         // bottom right corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x1 - cornerRadius + Math.sin(PI_2 / segments * i) * cornerRadius);
             float y = (float) (y1 - cornerRadius + Math.cos(PI_2 / segments * i) * cornerRadius);
-            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR)).endVertex();
+            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorBR), Color.getGreen(colorBR),
+                    Color.getBlue(colorBR), Color.getAlpha(colorBR)).endVertex();
         }
         // right side
-        bufferbuilder.vertex(x1, y0 + cornerRadius, 0.0f).color(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR)).endVertex();
+        bufferbuilder.vertex(x1, y0 + cornerRadius, 0.0f)
+                .color(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR))
+                .endVertex();
         // top right corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x1 - cornerRadius + Math.cos(PI_2 / segments * i) * cornerRadius);
             float y = (float) (y0 + cornerRadius - Math.sin(PI_2 / segments * i) * cornerRadius);
-            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR)).endVertex();
+            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorTR), Color.getGreen(colorTR),
+                    Color.getBlue(colorTR), Color.getAlpha(colorTR)).endVertex();
         }
         // top side
-        bufferbuilder.vertex(x0 + cornerRadius, y0, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
+        bufferbuilder.vertex(x0 + cornerRadius, y0, 0.0f)
+                .color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
+                .endVertex();
         // top left corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x0 + cornerRadius - Math.sin(PI_2 / segments * i) * cornerRadius);
             float y = (float) (y0 + cornerRadius - Math.cos(PI_2 / segments * i) * cornerRadius);
-            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
+            bufferbuilder.vertex(x, y, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL),
+                    Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
         }
-        bufferbuilder.vertex(x0, y0 + cornerRadius, 0.0f).color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL)).endVertex();
+        bufferbuilder.vertex(x0, y0 + cornerRadius, 0.0f)
+                .color(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
+                .endVertex();
         tesselator.end();
         RenderSystem.disableBlend();
     }
 
-    public static void drawTexture(ResourceLocation location, float x, float y, float w, float h, int u, int v, int textureWidth, int textureHeight) {
+    public static void drawTexture(ResourceLocation location, float x, float y, float w, float h, int u, int v,
+                                   int textureWidth, int textureHeight) {
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, location);
         drawTexture(x, y, u, v, w, h, textureWidth, textureHeight);
@@ -170,7 +213,8 @@ public class GuiDraw {
     /**
      * Draw a textured quad with given UV, dimensions and custom texture size
      */
-    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH, float z) {
+    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH,
+                                   float z) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
 
@@ -179,7 +223,8 @@ public class GuiDraw {
         tesselator.end();
     }
 
-    public static void drawTexture(BufferBuilder buffer, float x, float y, int u, int v, float w, float h, int textureW, int textureH, float z) {
+    public static void drawTexture(BufferBuilder buffer, float x, float y, int u, int v, float w, float h, int textureW,
+                                   int textureH, float z) {
         float tw = 1F / textureW;
         float th = 1F / textureH;
 
@@ -189,14 +234,16 @@ public class GuiDraw {
         buffer.vertex(x, y, z).uv(u * tw, v * th).endVertex();
     }
 
-    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH, int tu, int tv) {
+    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH, int tu,
+                                   int tv) {
         drawTexture(x, y, u, v, w, h, textureW, textureH, tu, tv, 0);
     }
 
     /**
      * Draw a textured quad with given UV, dimensions and custom texture size
      */
-    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH, int tu, int tv, float z) {
+    public static void drawTexture(float x, float y, int u, int v, float w, float h, int textureW, int textureH, int tu,
+                                   int tv, float z) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
 
@@ -205,7 +252,8 @@ public class GuiDraw {
         tesselator.end();
     }
 
-    public static void drawTexture(BufferBuilder buffer, float x, float y, int u, int v, float w, float h, int textureW, int textureH, int tu, int tv, float z) {
+    public static void drawTexture(BufferBuilder buffer, float x, float y, int u, int v, float w, float h, int textureW,
+                                   int textureH, int tu, int tv, float z) {
         float tw = 1F / textureW;
         float th = 1F / textureH;
 
@@ -215,7 +263,8 @@ public class GuiDraw {
         buffer.vertex(x, y, z).uv(u * tw, v * th).endVertex();
     }
 
-    public static void drawTexture(ResourceLocation location, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1) {
+    public static void drawTexture(ResourceLocation location, float x0, float y0, float x1, float y1, float u0,
+                                   float v0, float u1, float v1) {
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, location);
         drawTexture(x0, y0, x1, y1, u0, v0, u1, v1, 0);
@@ -226,7 +275,8 @@ public class GuiDraw {
         drawTexture(x0, y0, x1, y1, u0, v0, u1, v1, 0);
     }
 
-    public static void drawTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float z) {
+    public static void drawTexture(float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1,
+                                   float z) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
 
@@ -235,21 +285,24 @@ public class GuiDraw {
         tesselator.end();
     }
 
-    public static void drawTexture(BufferBuilder buffer, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float z) {
+    public static void drawTexture(BufferBuilder buffer, float x0, float y0, float x1, float y1, float u0, float v0,
+                                   float u1, float v1, float z) {
         buffer.vertex(x0, y1, z).uv(u0, v1).endVertex();
         buffer.vertex(x1, y1, z).uv(u1, v1).endVertex();
         buffer.vertex(x1, y0, z).uv(u1, v0).endVertex();
         buffer.vertex(x0, y0, z).uv(u0, v0).endVertex();
     }
 
-    public static void drawTiledTexture(ResourceLocation location, float x, float y, float w, float h, int u, int v, int tileW, int tileH, int tw, int th, float z) {
+    public static void drawTiledTexture(ResourceLocation location, float x, float y, float w, float h, int u, int v,
+                                        int tileW, int tileH, int tw, int th, float z) {
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, location);
         drawTiledTexture(x, y, w, h, u, v, tileW, tileH, tw, th, z);
         RenderSystem.disableBlend();
     }
 
-    public static void drawTiledTexture(float x, float y, float w, float h, int u, int v, int tileW, int tileH, int tw, int th, float z) {
+    public static void drawTiledTexture(float x, float y, float w, float h, int u, int v, int tileW, int tileH, int tw,
+                                        int th, float z) {
         int countX = (((int) w - 1) / tileW) + 1;
         int countY = (((int) h - 1) / tileH) + 1;
         float fillerX = w - (countX - 1) * tileW;
@@ -274,14 +327,16 @@ public class GuiDraw {
         tesselator.end();
     }
 
-    public static void drawTiledTexture(ResourceLocation location, float x, float y, float w, float h, float u0, float v0, float u1, float v1, int textureWidth, int textureHeight, float z) {
+    public static void drawTiledTexture(ResourceLocation location, float x, float y, float w, float h, float u0,
+                                        float v0, float u1, float v1, int textureWidth, int textureHeight, float z) {
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, location);
         drawTiledTexture(x, y, w, h, u0, v0, u1, v1, textureWidth, textureHeight, z);
         RenderSystem.disableBlend();
     }
 
-    public static void drawTiledTexture(float x, float y, float w, float h, float u0, float v0, float u1, float v1, int tileWidth, int tileHeight, float z) {
+    public static void drawTiledTexture(float x, float y, float w, float h, float u0, float v0, float u1, float v1,
+                                        int tileWidth, int tileHeight, float z) {
         int countX = (((int) w - 1) / tileWidth) + 1;
         int countY = (((int) h - 1) / tileHeight) + 1;
         float fillerX = w - (countX - 1) * tileWidth;
@@ -338,7 +393,8 @@ public class GuiDraw {
         TextureAtlasSprite sprite = Minecraft.getInstance()
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
         int fluidColor = IClientFluidTypeExtensions.of(fluid).getTintColor(content);
-        graphics.setColor(Color.getRedF(fluidColor), Color.getGreenF(fluidColor), Color.getBlueF(fluidColor), Color.getAlphaF(fluidColor));
+        graphics.setColor(Color.getRedF(fluidColor), Color.getGreenF(fluidColor), Color.getBlueF(fluidColor),
+                Color.getAlphaF(fluidColor));
         drawTiledTexture(InventoryMenu.BLOCK_ATLAS, x0, y0, width, height,
                 sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(),
                 sprite.contents().width(), sprite.contents().height(), z);
@@ -349,7 +405,8 @@ public class GuiDraw {
         drawSprite(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS), sprite, x0, y0, w, h);
     }
 
-    public static void drawSprite(TextureAtlas textureMap, TextureAtlasSprite sprite, float x0, float y0, float w, float h) {
+    public static void drawSprite(TextureAtlas textureMap, TextureAtlasSprite sprite, float x0, float y0, float w,
+                                  float h) {
         RenderSystem.enableBlend();
         RenderSystem.bindTexture(textureMap.getId());
         drawTexture(x0, y0, x0 + w, y0 + h, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1());
@@ -394,7 +451,6 @@ public class GuiDraw {
      * @param shadow gradient end color
      */
     public static void drawDropShadow(int x, int y, int w, int h, int oX, int oY, int opaque, int shadow) {
-
         float a1 = Color.getAlphaF(opaque);
         float r1 = Color.getRedF(opaque);
         float g1 = Color.getGreenF(opaque);
@@ -406,7 +462,9 @@ public class GuiDraw {
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
@@ -462,7 +520,9 @@ public class GuiDraw {
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
@@ -482,7 +542,8 @@ public class GuiDraw {
         RenderSystem.disableBlend();
     }
 
-    public static void drawDropCircleShadow(int x, int y, int radius, int offset, int segments, int opaque, int shadow) {
+    public static void drawDropCircleShadow(int x, int y, int radius, int offset, int segments, int opaque,
+                                            int shadow) {
         if (offset >= radius) {
             drawDropCircleShadow(x, y, radius, segments, opaque, shadow);
 
@@ -500,7 +561,9 @@ public class GuiDraw {
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
@@ -524,10 +587,14 @@ public class GuiDraw {
             double alpha1 = i / (double) segments * Math.PI * 2 - Math.PI / 2;
             double alpha2 = (i + 1) / (double) segments * Math.PI * 2 - Math.PI / 2;
 
-            buffer.vertex(x - Math.cos(alpha2) * offset, y + Math.sin(alpha2) * offset, 0).color(r1, g1, b1, a1).endVertex();
-            buffer.vertex(x - Math.cos(alpha1) * offset, y + Math.sin(alpha1) * offset, 0).color(r1, g1, b1, a1).endVertex();
-            buffer.vertex(x - Math.cos(alpha1) * radius, y + Math.sin(alpha1) * radius, 0).color(r2, g2, b2, a2).endVertex();
-            buffer.vertex(x - Math.cos(alpha2) * radius, y + Math.sin(alpha2) * radius, 0).color(r2, g2, b2, a2).endVertex();
+            buffer.vertex(x - Math.cos(alpha2) * offset, y + Math.sin(alpha2) * offset, 0).color(r1, g1, b1, a1)
+                    .endVertex();
+            buffer.vertex(x - Math.cos(alpha1) * offset, y + Math.sin(alpha1) * offset, 0).color(r1, g1, b1, a1)
+                    .endVertex();
+            buffer.vertex(x - Math.cos(alpha1) * radius, y + Math.sin(alpha1) * radius, 0).color(r2, g2, b2, a2)
+                    .endVertex();
+            buffer.vertex(x - Math.cos(alpha2) * radius, y + Math.sin(alpha2) * radius, 0).color(r2, g2, b2, a2)
+                    .endVertex();
         }
 
         tesselator.end();
@@ -544,25 +611,27 @@ public class GuiDraw {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void drawText(GuiGraphics graphics, String text, float x, float y, float scale, int color, boolean shadow) {
+    public static void drawText(GuiGraphics graphics, String text, float x, float y, float scale, int color,
+                                boolean shadow) {
         Font font = Minecraft.getInstance().font;
         RenderSystem.disableBlend();
         graphics.pose().pushPose();
         graphics.pose().scale(scale, scale, 0f);
         float sf = 1 / scale;
-        graphics.drawString(font, text,x * sf, y * sf, color, shadow);
+        graphics.drawString(font, text, x * sf, y * sf, color, shadow);
         graphics.pose().popPose();
         RenderSystem.enableBlend();
     }
 
-    public static void drawTooltipBackground(GuiGraphics graphics, ItemStack stack, List<ClientTooltipComponent> lines, int x, int y, int textWidth, int height) {
+    public static void drawTooltipBackground(GuiGraphics graphics, ItemStack stack, List<ClientTooltipComponent> lines,
+                                             int x, int y, int textWidth, int height) {
         // TODO theme color
         int backgroundTop = 0xF0100010;
         int backgroundBottom = backgroundTop;
         int borderColorStart = 0x505000FF;
         int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
         RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, x, y,
-                TextRenderer.getFont(),backgroundTop, borderColorStart, borderColorEnd, lines);
+                TextRenderer.getFont(), backgroundTop, borderColorStart, borderColorEnd, lines);
         MinecraftForge.EVENT_BUS.post(colorEvent);
         backgroundTop = colorEvent.getBackgroundStart();
         backgroundBottom = colorEvent.getBackgroundStart();

@@ -2,8 +2,6 @@ package com.gregtechceu.gtceu.api.mui.base;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-import java.io.IOException;
-
 /**
  * A function that can write any data to an {@link FriendlyByteBuf}.
  */

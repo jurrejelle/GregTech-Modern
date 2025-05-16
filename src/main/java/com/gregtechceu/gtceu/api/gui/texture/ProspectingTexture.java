@@ -186,7 +186,7 @@ public class ProspectingTexture extends AbstractTexture {
     }
 
     @Override
-    public void load(ResourceManager resourceManager) throws IOException {}
+    public void load(ResourceManager resourceManager) {}
 
     public void setDarkMode(boolean darkMode) {
         if (this.darkMode != darkMode) {

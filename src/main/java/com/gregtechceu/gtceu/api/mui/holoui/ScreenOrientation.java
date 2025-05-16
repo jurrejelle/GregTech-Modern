@@ -8,5 +8,6 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public enum ScreenOrientation {
 
-    FIXED, TO_PLAYER
+    FIXED,
+    TO_PLAYER
 }

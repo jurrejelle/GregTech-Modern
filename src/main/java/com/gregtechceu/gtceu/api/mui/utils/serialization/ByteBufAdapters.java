@@ -1,15 +1,18 @@
 package com.gregtechceu.gtceu.api.mui.utils.serialization;
 
 import com.gregtechceu.gtceu.utils.NetworkUtils;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.world.item.ItemStack;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ByteBufAdapters {
+
     // spotless:off
     public static final IByteBufAdapter<ItemStack> ITEM_STACK = makeAdapter(FriendlyByteBuf::readItem, FriendlyByteBuf::writeItem, ItemStack::matches);
     public static final IByteBufAdapter<FluidStack> FLUID_STACK = makeMemberAdapter(FluidStack::readFromPacket, FluidStack::writeToPacket, FluidStack::isFluidStackIdentical);
@@ -24,6 +27,7 @@ public class ByteBufAdapters {
                                                      @Nullable IEquals<T> comparator) {
         final IEquals<T> tester = comparator != null ? comparator : IEquals.defaultTester();
         return new IByteBufAdapter<>() {
+
             @Override
             public T deserialize(FriendlyByteBuf buffer) {
                 return deserializer.deserialize(buffer);

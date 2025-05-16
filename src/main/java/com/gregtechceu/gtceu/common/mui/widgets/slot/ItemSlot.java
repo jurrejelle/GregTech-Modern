@@ -5,9 +5,6 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IVanillaSlot;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetSlotTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
@@ -15,14 +12,15 @@ import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.sync.ItemSlotSH;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.core.mixins.AbstractContainerScreenAccessor;
 import com.gregtechceu.gtceu.core.mixins.ScreenAccessor;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Setter;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -33,6 +31,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.UnaryOperator;
@@ -51,7 +53,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     protected UnaryOperator<ItemStack> itemHook;
 
     public ItemSlot() {
-        tooltip().setAutoUpdate(true);//.setHasTitleMargin(true);
+        tooltip().setAutoUpdate(true);// .setHasTitleMargin(true);
         tooltipBuilder(tooltip -> {
             if (!isSynced()) return;
             ItemStack stack = getSlot().getItem();
@@ -182,13 +184,15 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         AbstractContainerScreenAccessor acc = (AbstractContainerScreenAccessor) guiScreen;
         ItemStack slotStack = slotIn.getItem();
         boolean isDragPreview = false;
-        boolean flag1 = slotIn == acc.getClickedSlot() && !acc.getDraggingItem().isEmpty() && !acc.getIsSplittingStack();
+        boolean flag1 = slotIn == acc.getClickedSlot() && !acc.getDraggingItem().isEmpty() &&
+                !acc.getIsSplittingStack();
         ItemStack carried = guiScreen.getMinecraft().player.inventoryMenu.getCarried();
         int amount = -1;
         String format = null;
 
         if (!getSyncHandler().isPhantom()) {
-            if (slotIn == acc.getClickedSlot() && !acc.getDraggingItem().isEmpty() && acc.getIsSplittingStack() && !slotStack.isEmpty()) {
+            if (slotIn == acc.getClickedSlot() && !acc.getDraggingItem().isEmpty() && acc.getIsSplittingStack() &&
+                    !slotStack.isEmpty()) {
                 slotStack = slotStack.copy();
                 slotStack.setCount(slotStack.getCount() / 2);
             } else if (acc.getIsQuickCrafting() && acc.getQuickCraftSlots().contains(slotIn) && !carried.isEmpty()) {
@@ -196,10 +200,12 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
                     return;
                 }
 
-                if (AbstractContainerMenu.canItemQuickReplace(slotIn, carried, true) && getScreen().getContainer().canDragTo(slotIn)) {
+                if (AbstractContainerMenu.canItemQuickReplace(slotIn, carried, true) &&
+                        getScreen().getContainer().canDragTo(slotIn)) {
                     slotStack = carried.copy();
                     isDragPreview = true;
-                    AbstractContainerMenu.getQuickCraftPlaceCount(acc.getQuickCraftSlots(), acc.getQuickCraftingType(), slotStack);
+                    AbstractContainerMenu.getQuickCraftPlaceCount(acc.getQuickCraftSlots(), acc.getQuickCraftingType(),
+                            slotStack);
                     int k = Math.min(slotStack.getMaxStackSize(), slotIn.getMaxStackSize(slotStack));
 
                     if (slotStack.getCount() > k) {

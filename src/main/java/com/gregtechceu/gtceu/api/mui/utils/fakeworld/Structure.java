@@ -1,12 +1,13 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
+import net.minecraft.core.BlockPos;
+
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.chars.CharArrayList;
 import it.unimi.dsi.fastutil.chars.CharList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.core.BlockPos;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,6 @@ public class Structure {
 
         private final List<String[]> matrix = new ObjectArrayList<>();
         private final Char2ObjectMap<BlockInfo> map = new Char2ObjectOpenHashMap<>();
-
 
         private StaticBuilder() {
             this.map.put(' ', air());
@@ -74,6 +74,5 @@ public class Structure {
                     .mapToObj(Integer::toString)
                     .collect(Collectors.joining(",", "Predicates for character(s) ", " are missing")));
         }
-
     }
 }

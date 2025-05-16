@@ -1,12 +1,14 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -15,7 +17,8 @@ public class SidedBlockEntityGuiFactory extends AbstractUIFactory<SidedPosGuiDat
 
     public static final SidedBlockEntityGuiFactory INSTANCE = new SidedBlockEntityGuiFactory();
 
-    public <T extends BlockEntity & IGuiHolder<SidedPosGuiData>> void open(Player player, T blockEntity, Direction facing) {
+    public <T extends BlockEntity & IGuiHolder<SidedPosGuiData>> void open(Player player, T blockEntity,
+                                                                           Direction facing) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(blockEntity);
         Objects.requireNonNull(facing);
@@ -49,7 +52,8 @@ public class SidedBlockEntityGuiFactory extends AbstractUIFactory<SidedPosGuiDat
 
     @Override
     public boolean canInteractWith(Player player, SidedPosGuiData guiData) {
-        return player == guiData.getPlayer() && guiData.getBlockEntity() != null && guiData.getSquaredDistance(player) <= 64;
+        return player == guiData.getPlayer() && guiData.getBlockEntity() != null &&
+                guiData.getSquaredDistance(player) <= 64;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -83,7 +84,9 @@ public class PagedWidget<W extends PagedWidget<W>> extends Widget<W> {
 
         private void validate() {
             if (!isInitialised()) {
-                throw new IllegalStateException("PagedWidget controller does not have a valid PagedWidget! Current PagedWidget: " + this.pagedWidget);
+                throw new IllegalStateException(
+                        "PagedWidget controller does not have a valid PagedWidget! Current PagedWidget: " +
+                                this.pagedWidget);
             }
         }
 

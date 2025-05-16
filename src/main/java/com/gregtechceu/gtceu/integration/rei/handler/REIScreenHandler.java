@@ -7,12 +7,14 @@ import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
+
+import net.minecraft.client.gui.screens.Screen;
+
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import lombok.Getter;
 import me.shedaniel.rei.api.client.gui.drag.*;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZonesProvider;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -20,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler implements DraggableStackProvider<T>, ExclusionZonesProvider<T> {
+public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler
+                             implements DraggableStackProvider<T>, ExclusionZonesProvider<T> {
 
     private static final Map<Class<?>, REIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
@@ -32,6 +35,7 @@ public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
     // I have to do this mess because of conflicting comparable impls.
     @Getter
     private final DraggableStackVisitor<T> draggableVisitor = new DraggableStackVisitor<T>() {
+
         @Override
         public <R extends Screen> boolean isHandingScreen(R screen) {
             return REIScreenHandler.this.isHandingScreen(screen);
@@ -97,6 +101,7 @@ public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
             @SuppressWarnings({ "rawtypes", "unchecked" })
             var converted = ((REIStackConverter.Converter) converter).convertTo(provider);
             return new DraggableStack() {
+
                 @Override
                 public EntryStack<?> getStack() {
                     if (converted.isEmpty()) return EntryStack.empty();

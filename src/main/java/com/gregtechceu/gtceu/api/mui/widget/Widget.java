@@ -7,10 +7,6 @@ import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
 import com.gregtechceu.gtceu.api.mui.base.value.IValue;
 import com.gregtechceu.gtceu.api.mui.base.widget.*;
 import com.gregtechceu.gtceu.api.mui.factory.GuiData;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.value.sync.ModularSyncManager;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
@@ -18,6 +14,11 @@ import com.gregtechceu.gtceu.api.mui.value.sync.ValueSyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Flex;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.IUnResizeable;
+import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
+import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.ApiStatus;
@@ -33,8 +34,10 @@ import java.util.function.Predicate;
 public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITooltip<W>, ISynced<W> {
 
     // other
-    @Nullable private String debugName;
-    @Getter @Setter
+    @Nullable
+    private String debugName;
+    @Getter
+    @Setter
     private boolean enabled = true;
     // gui context
     private boolean valid = false;
@@ -49,32 +52,44 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     private IResizeable resizer = this.flex;
     // syncing
     @Getter
-    @Nullable private IValue<?> value;
-    @Nullable private String syncKey;
+    @Nullable
+    private IValue<?> value;
+    @Nullable
+    private String syncKey;
     /**
      * -- SETTER --
-     * This intended to only be used when build the main panel in methods like {@link com.gregtechceu.gtceu.api.mui.base.IGuiHolder#buildUI(GuiData, com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager, com.gregtechceu.gtceu.client.mui.screen.UISettings)}
+     * This intended to only be used when build the main panel in methods like
+     * {@link com.gregtechceu.gtceu.api.mui.base.IGuiHolder#buildUI(GuiData, com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager, com.gregtechceu.gtceu.client.mui.screen.UISettings)}
      * since it's called on server and client. Otherwise, this will not work.
      */
     @Setter
-    @Nullable private SyncHandler syncHandler;
+    @Nullable
+    private SyncHandler syncHandler;
     // rendering
     @Getter
-    @Nullable private IDrawable background = null;
+    @Nullable
+    private IDrawable background = null;
     @Getter
-    @Nullable private IDrawable overlay = null;
+    @Nullable
+    private IDrawable overlay = null;
     @Getter
-    @Nullable private IDrawable hoverBackground = null;
+    @Nullable
+    private IDrawable hoverBackground = null;
     @Getter
-    @Nullable private IDrawable hoverOverlay = null;
+    @Nullable
+    private IDrawable hoverOverlay = null;
     @Getter
-    @Nullable private RichTooltip tooltip;
+    @Nullable
+    private RichTooltip tooltip;
     @Getter
-    @Nullable private String widgetThemeOverride = null;
+    @Nullable
+    private String widgetThemeOverride = null;
     // listener
-    @Nullable private List<IGuiAction> guiActionListeners;
+    @Nullable
+    private List<IGuiAction> guiActionListeners;
     @Getter
-    @Nullable private Consumer<W> onUpdateListener;
+    @Nullable
+    private Consumer<W> onUpdateListener;
 
     // -----------------
     // === Lifecycle ===
@@ -96,7 +111,8 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
             }
         }
         if (this.value != null && this.syncKey != null) {
-            throw new IllegalStateException("Widget has a value and a sync key for a synced value. This is not allowed!");
+            throw new IllegalStateException(
+                    "Widget has a value and a sync key for a synced value. This is not allowed!");
         }
         this.valid = true;
         if (!getScreen().isClientOnly()) {
@@ -126,9 +142,11 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
         if ((this.syncKey != null || this.syncHandler != null) && !isValidSyncHandler(this.syncHandler)) {
             String type = this.syncHandler == null ? null : this.syncHandler.getClass().getName();
             this.syncHandler = null;
-            throw new IllegalStateException("SyncHandler of type " + type + " is not valid for " + getClass().getName() + ", with key " + this.syncKey);
+            throw new IllegalStateException("SyncHandler of type " + type + " is not valid for " +
+                    getClass().getName() + ", with key " + this.syncKey);
         }
-        if (this.syncHandler instanceof ValueSyncHandler<?> valueSyncHandler && valueSyncHandler.getChangeListener() == null) {
+        if (this.syncHandler instanceof ValueSyncHandler<?> valueSyncHandler &&
+                valueSyncHandler.getChangeListener() == null) {
             valueSyncHandler.setChangeListener(this::markTooltipDirty);
         }
     }
@@ -199,7 +217,8 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
 
     public IDrawable getCurrentOverlay(ITheme theme, WidgetTheme widgetTheme) {
         IDrawable hoverBackground = getHoverOverlay();
-        return hoverBackground != null && hoverBackground != IDrawable.NONE && isHovering() ? hoverBackground : getOverlay();
+        return hoverBackground != null && hoverBackground != IDrawable.NONE && isHovering() ? hoverBackground :
+                getOverlay();
     }
 
     @Override

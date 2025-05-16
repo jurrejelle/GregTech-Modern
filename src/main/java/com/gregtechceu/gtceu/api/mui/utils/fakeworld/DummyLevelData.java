@@ -1,14 +1,12 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-import lombok.Getter;
-import lombok.Setter;
-import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.storage.WritableLevelData;
-import org.jetbrains.annotations.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class DummyLevelData implements WritableLevelData {
 
@@ -60,5 +58,4 @@ public class DummyLevelData implements WritableLevelData {
     public boolean isThundering() {
         return false;
     }
-
 }

@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.mui.holoui;
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +27,8 @@ public class HoloScreenEntity extends Entity {
     private ContainerScreenWrapper wrapper;
     private ModularScreen screen;
     private final Plane3D plane3D;
-    private static final EntityDataAccessor<Byte> ORIENTATION = SynchedEntityData.defineId(HoloScreenEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> ORIENTATION = SynchedEntityData.defineId(HoloScreenEntity.class,
+            EntityDataSerializers.BYTE);
 
     public HoloScreenEntity(EntityType<? extends HoloScreenEntity> type, Level level, Plane3D plane3D) {
         super(type, level);

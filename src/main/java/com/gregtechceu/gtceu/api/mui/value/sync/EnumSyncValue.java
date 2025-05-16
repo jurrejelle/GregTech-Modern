@@ -1,9 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.value.IEnumValue;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IIntSyncValue;
-import com.gregtechceu.gtceu.utils.NetworkUtils;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,12 +88,12 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implem
 
     @Override
     public void write(FriendlyByteBuf buffer) {
-        buffer.writeEnumValue(getValue());
+        buffer.writeEnum(getValue());
     }
 
     @Override
     public void read(FriendlyByteBuf buffer) {
-        setValue(buffer.readEnumValue(this.enumClass), true, false);
+        setValue(buffer.readEnum(this.enumClass), true, false);
     }
 
     @Override

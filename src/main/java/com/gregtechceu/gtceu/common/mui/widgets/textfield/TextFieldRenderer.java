@@ -4,11 +4,7 @@ import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.PointF;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -16,6 +12,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -108,7 +110,8 @@ public class TextFieldRenderer extends TextRenderer {
         int index = (int) (y / (getFontHeight()));
         if (index < 0) return new Point();
         if (index >= measuredLines.size())
-            return new Point(getFont().width(measuredLines.get(measuredLines.size() - 1).text()), measuredLines.size() - 1);
+            return new Point(getFont().width(measuredLines.get(measuredLines.size() - 1).text()),
+                    measuredLines.size() - 1);
         Line line = measuredLines.get(index);
         x -= getStartX(line.width());
         if (line.width() <= 0) return new Point(0, index);
@@ -129,7 +132,8 @@ public class TextFieldRenderer extends TextRenderer {
                 last.setValue(pos);
                 return true;
             });
-            float charWidth = getFont().getSplitter().stringWidth(FormattedCharSequence.codepoint(c.getValue(), s.getValue())) * this.scale;
+            float charWidth = getFont().getSplitter()
+                    .stringWidth(FormattedCharSequence.codepoint(c.getValue(), s.getValue())) * this.scale;
             currentX += charWidth;
             if (currentX >= x) {
                 // dist with current letter < dist without current letter -> next letter pos
@@ -146,7 +150,8 @@ public class TextFieldRenderer extends TextRenderer {
         }
         Line line = measuredLines.get(cursorPos.y);
         float width = Math.min(getFont().getSplitter().stringWidth(line.text()), cursorPos.x);
-        return new PointF(getStartX(line.width()) + width * this.scale, getStartYOfLines(measuredLines.size()) + cursorPos.y * getFontHeight());
+        return new PointF(getStartX(line.width()) + width * this.scale,
+                getStartYOfLines(measuredLines.size()) + cursorPos.y * getFontHeight());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -187,7 +192,7 @@ public class TextFieldRenderer extends TextRenderer {
             alpha = 1f;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
-        
+
         RenderSystem.disableBlend();
         graphics.pose().pushPose();
         graphics.pose().scale(this.scale, this.scale, 0);
@@ -200,7 +205,7 @@ public class TextFieldRenderer extends TextRenderer {
         bufferbuilder.vertex(x0, y0, 0.0D).endVertex();
         tesselator.end();
         graphics.setColor(1, 1, 1, 1);
-        
+
         graphics.pose().popPose();
         RenderSystem.enableBlend();
     }

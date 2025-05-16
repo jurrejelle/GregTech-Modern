@@ -3,12 +3,11 @@ package com.gregtechceu.gtceu.api.mui.base;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
-import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
-
+import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
-
 import com.gregtechceu.gtceu.core.mixins.AbstractContainerScreenAccessor;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -91,7 +90,8 @@ public interface IMuiScreen {
 
     /**
      * Hovering widget is handled by {@link ModularGuiContext}.
-     * If it detects a slot, this method is called. Only affects {@link AbstractContainerScreen AbstractContainerScreens}.
+     * If it detects a slot, this method is called. Only affects {@link AbstractContainerScreen
+     * AbstractContainerScreens}.
      *
      * @param slot hovered slot
      */
@@ -104,7 +104,8 @@ public interface IMuiScreen {
 
     /**
      * Returns the {@link Screen} that wraps the {@link ModularScreen}.
-     * In most cases this does not need to be overridden as this interfaces should be implemented on {@link Screen Screens}.
+     * In most cases this does not need to be overridden as this interfaces should be implemented on {@link Screen
+     * Screens}.
      *
      * @return the wrapping gui screen
      */

@@ -2,7 +2,7 @@ package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
-import lombok.Getter;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +36,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
+
+import lombok.Getter;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,7 +91,8 @@ public class DummyLevel extends Level {
     }
 
     @Override
-    public void markAndNotifyBlock(BlockPos p_46605_, @Nullable LevelChunk levelchunk, BlockState blockstate, BlockState p_46606_, int p_46607_, int p_46608_) {
+    public void markAndNotifyBlock(BlockPos p_46605_, @Nullable LevelChunk levelchunk, BlockState blockstate,
+                                   BlockState p_46606_, int p_46607_, int p_46608_) {
         // NOOP - do not trigger forge events
     }
 
@@ -99,10 +102,12 @@ public class DummyLevel extends Level {
     }
 
     @Override
-    public void playSeededSound(@Nullable Player player, double x, double y, double z, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, long seed) {}
+    public void playSeededSound(@Nullable Player player, double x, double y, double z, Holder<SoundEvent> sound,
+                                SoundSource source, float volume, float pitch, long seed) {}
 
     @Override
-    public void playSeededSound(@Nullable Player player, Entity entity, Holder<SoundEvent> sound, SoundSource category, float volume, float pitch, long seed) {}
+    public void playSeededSound(@Nullable Player player, Entity entity, Holder<SoundEvent> sound, SoundSource category,
+                                float volume, float pitch, long seed) {}
 
     @Override
     public String gatherChunkSourceStats() {
@@ -128,9 +133,7 @@ public class DummyLevel extends Level {
     }
 
     @Override
-    public void destroyBlockProgress(int breakerId, BlockPos pos, int progress) {
-
-    }
+    public void destroyBlockProgress(int breakerId, BlockPos pos, int progress) {}
 
     @Override
     public RecipeManager getRecipeManager() {
@@ -144,6 +147,7 @@ public class DummyLevel extends Level {
     @Override
     protected LevelEntityGetter<Entity> getEntities() {
         return new LevelEntityGetter<>() {
+
             public @Nullable Entity get(int id) {
                 return null;
             }
@@ -156,12 +160,10 @@ public class DummyLevel extends Level {
                 return Collections.emptyList();
             }
 
-            public <U extends Entity> void get(EntityTypeTest<Entity, U> test, AbortableIterationConsumer<U> consumer) {
+            public <U extends Entity> void get(EntityTypeTest<Entity, U> test,
+                                               AbortableIterationConsumer<U> consumer) {}
 
-            }
-
-            public void get(AABB boundingBox, Consumer<Entity> consumer) {
-            }
+            public void get(AABB boundingBox, Consumer<Entity> consumer) {}
 
             public <U extends Entity> void get(EntityTypeTest<Entity, U> test, AABB bounds,
                                                AbortableIterationConsumer<U> consumer) {}

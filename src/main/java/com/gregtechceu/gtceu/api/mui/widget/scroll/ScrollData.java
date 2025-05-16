@@ -4,11 +4,13 @@ import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.utils.Animator;
 import com.gregtechceu.gtceu.api.mui.utils.Interpolation;
-import lombok.Getter;
-import lombok.Setter;
+
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ScrollData {
@@ -17,7 +19,7 @@ public abstract class ScrollData {
      * Creates scroll data which handles scrolling and scroll bar. Scrollbar is 4 pixel thick
      * and will be at the end of the cross axis (bottom/right).
      *
-     * @param axis      axis on which to scroll
+     * @param axis axis on which to scroll
      * @return new scroll data
      */
     public static ScrollData of(GuiAxis axis) {
@@ -56,7 +58,8 @@ public abstract class ScrollData {
     private final boolean axisStart;
     @Getter
     private final int thickness;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int scrollSpeed = 30;
     /**
      * Determines if scrolling of widgets below should still be canceled if this scroll view
@@ -65,10 +68,12 @@ public abstract class ScrollData {
      *
      * @return true if scrolling should be canceled even when this view hit an edge
      */
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean cancelScrollEdge = true;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int scrollSize;
     @Getter
     private int scroll;
@@ -194,7 +199,8 @@ public abstract class ScrollData {
 
     public int getScrollBarLength(ScrollArea area) {
         boolean isOtherActive = isOtherScrollBarActive(area, false);
-        int length = (int) (getVisibleSize(area, isOtherActive) * getFullVisibleSize(area, isOtherActive) / (float) this.scrollSize);
+        int length = (int) (getVisibleSize(area, isOtherActive) * getFullVisibleSize(area, isOtherActive) /
+                (float) this.scrollSize);
         return Math.max(length, 4); // min length of 4
     }
 
@@ -210,7 +216,8 @@ public abstract class ScrollData {
     }
 
     public int getScrollBarStart(ScrollArea area, int scrollBarLength, int fullVisibleSize) {
-        return ((fullVisibleSize - scrollBarLength) * getScroll()) / (getScrollSize() - getVisibleSize(area, fullVisibleSize));
+        return ((fullVisibleSize - scrollBarLength) * getScroll()) /
+                (getScrollSize() - getVisibleSize(area, fullVisibleSize));
     }
 
     public int getScrollBarStart(ScrollArea area, int scrollBarLength, boolean isOtherActive) {
@@ -228,14 +235,16 @@ public abstract class ScrollData {
     }
 
     public boolean onMouseClicked(ScrollArea area, int mainAxisPos, int crossAxisPos, int button) {
-        if (isAxisStart() ? crossAxisPos <= area.getPoint(this.axis.getOther()) + getThickness() : crossAxisPos >= area.getEndPoint(this.axis.getOther()) - getThickness()) {
+        if (isAxisStart() ? crossAxisPos <= area.getPoint(this.axis.getOther()) + getThickness() :
+                crossAxisPos >= area.getEndPoint(this.axis.getOther()) - getThickness()) {
             this.dragging = true;
             this.clickOffset = mainAxisPos;
 
             int scrollBarSize = getScrollBarLength(area);
             int start = getScrollBarStart(area, scrollBarSize, false);
             int areaStart = area.getPoint(this.axis);
-            boolean clickInsideBar = mainAxisPos >= areaStart + start && mainAxisPos <= areaStart + start + scrollBarSize;
+            boolean clickInsideBar = mainAxisPos >= areaStart + start &&
+                    mainAxisPos <= areaStart + start + scrollBarSize;
 
             if (clickInsideBar) {
                 this.clickOffset = mainAxisPos - areaStart - start; // relative click position inside bar

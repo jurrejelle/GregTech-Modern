@@ -449,6 +449,6 @@ public class ConfiguratorPanel extends WidgetGroup {
     }
 
     private static int getAnimationTime() {
-        return ConfigHolder.INSTANCE.client.animationTime;
+        return ConfigHolder.INSTANCE.client.ui.animationTime;
     }
 }

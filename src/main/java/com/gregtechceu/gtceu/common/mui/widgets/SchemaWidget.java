@@ -8,8 +8,10 @@ import com.gregtechceu.gtceu.api.mui.utils.VectorUtil;
 import com.gregtechceu.gtceu.api.mui.utils.fakeworld.ISchema;
 import com.gregtechceu.gtceu.api.mui.utils.fakeworld.SchemaRenderer;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -144,7 +146,8 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
             this.minLayer = minLayer;
             this.maxLayer = maxLayer;
             background(GuiTextures.MC_BACKGROUND);
-            overlay(IKey.dynamic(() -> currentLayer > Integer.MIN_VALUE ? Component.literal(Integer.toString(currentLayer)) : Component.literal("ALL")).scale(0.5f));
+            overlay(IKey.dynamic(() -> currentLayer > Integer.MIN_VALUE ?
+                    Component.literal(Integer.toString(currentLayer)) : Component.literal("ALL")).scale(0.5f));
 
             onMousePressed((mouseX, mouseY, button) -> {
                 if (button == 0 || button == 1) {
@@ -168,7 +171,8 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
                 }
                 return false;
             });
-            schema.setRenderFilter((blockPos, blockInfo) -> currentLayer == Integer.MIN_VALUE || currentLayer >= blockPos.getY());
+            schema.setRenderFilter(
+                    (blockPos, blockInfo) -> currentLayer == Integer.MIN_VALUE || currentLayer >= blockPos.getY());
         }
 
         public LayerButton startLayer(int start) {

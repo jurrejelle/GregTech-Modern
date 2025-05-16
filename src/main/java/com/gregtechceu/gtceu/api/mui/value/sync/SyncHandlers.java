@@ -1,16 +1,17 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
+
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 
 import java.util.function.*;
 
 public class SyncHandlers {
 
-    private SyncHandlers() {
-    }
+    private SyncHandlers() {}
 
     public static IntSyncValue intNumber(IntSupplier getter, IntConsumer setter) {
         return new IntSyncValue(getter, setter);
@@ -40,7 +41,8 @@ public class SyncHandlers {
         return new FluidSlotSyncHandler(fluidTank);
     }
 
-    public static <T extends Enum<T>> EnumSyncValue<T> enumValue(Class<T> clazz, Supplier<T> getter, Consumer<T> setter) {
+    public static <T extends Enum<T>> EnumSyncValue<T> enumValue(Class<T> clazz, Supplier<T> getter,
+                                                                 Consumer<T> setter) {
         return new EnumSyncValue<>(clazz, getter, setter);
     }
 }

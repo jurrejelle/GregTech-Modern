@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+
 import com.google.gson.JsonObject;
 
 public class WidgetSlotTheme extends WidgetTheme {
@@ -17,7 +18,8 @@ public class WidgetSlotTheme extends WidgetTheme {
 
     public WidgetSlotTheme(WidgetTheme parent, JsonObject json, JsonObject fallback) {
         super(parent, json, fallback);
-        this.slotHoverColor = JsonHelper.getColorWithFallback(json, fallback, ((WidgetSlotTheme) parent).getSlotHoverColor(), IThemeApi.SLOT_HOVER_COLOR);
+        this.slotHoverColor = JsonHelper.getColorWithFallback(json, fallback,
+                ((WidgetSlotTheme) parent).getSlotHoverColor(), IThemeApi.SLOT_HOVER_COLOR);
     }
 
     public int getSlotHoverColor() {

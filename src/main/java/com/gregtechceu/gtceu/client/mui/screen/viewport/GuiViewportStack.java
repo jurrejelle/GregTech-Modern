@@ -2,12 +2,13 @@ package com.gregtechceu.gtceu.client.mui.screen.viewport;
 
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewport;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
-import com.mojang.blaze3d.vertex.PoseStack;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,9 @@ public class GuiViewportStack implements IViewportStack {
     public void popViewport(IViewport viewport) {
         if (this.top == null || !this.top.isViewportMatrix() || this.top.getViewport() != viewport) {
             String name = this.top == null ? "null" : this.top.getViewport().toString();
-            throw new IllegalStateException("Viewports must be popped in reverse order they were pushed. Tried to pop '" + viewport + "', but last pushed is '" + name + "'.");
+            throw new IllegalStateException(
+                    "Viewports must be popped in reverse order they were pushed. Tried to pop '" + viewport +
+                            "', but last pushed is '" + name + "'.");
         }
         this.viewportStack.pop();
         updateViewport(true);
@@ -91,7 +94,8 @@ public class GuiViewportStack implements IViewportStack {
     }
 
     public void push(TransformationMatrix transformationMatrix) {
-        this.viewportStack.push(new TransformationMatrix(transformationMatrix, this.top == null ? null : this.top.getMatrix()));
+        this.viewportStack
+                .push(new TransformationMatrix(transformationMatrix, this.top == null ? null : this.top.getMatrix()));
         updateViewport(false);
         if (this.top.isViewportMatrix()) {
             this.topViewport = this.top;
@@ -158,7 +162,8 @@ public class GuiViewportStack implements IViewportStack {
 
     public void resetCurrent() {
         checkViewport();
-        Matrix4f belowTop = this.viewportStack.size() > 1 ? this.viewportStack.get(this.viewportStack.size() - 2).getMatrix() : new Matrix4f();
+        Matrix4f belowTop = this.viewportStack.size() > 1 ?
+                this.viewportStack.get(this.viewportStack.size() - 2).getMatrix() : new Matrix4f();
         this.top.getMatrix().set(belowTop);
         this.top.markDirty();
     }

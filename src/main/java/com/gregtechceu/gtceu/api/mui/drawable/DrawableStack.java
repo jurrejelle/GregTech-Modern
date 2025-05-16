@@ -2,11 +2,13 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
-import com.google.gson.JsonObject;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.google.gson.JsonObject;
 
 /**
  * A stack of {@link IDrawable} backed by an array which are drawn on top of each other.

@@ -114,7 +114,7 @@ public class PhantomSlotWidget extends SlotWidget implements IGhostIngredientTar
     }
 
     @Override
-    public boolean mayPickup(Player player) {
+    public boolean canTakeStack(Player player) {
         return false;
     }
 

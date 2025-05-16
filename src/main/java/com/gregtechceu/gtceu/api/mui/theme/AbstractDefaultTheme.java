@@ -1,8 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.theme;
 
-import com.gregtechceu.gtceu.api.mui.ModularUIConfig;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+import com.gregtechceu.gtceu.config.ConfigHolder;
 
 public abstract class AbstractDefaultTheme implements ITheme {
 
@@ -68,16 +68,17 @@ public abstract class AbstractDefaultTheme implements ITheme {
 
     @Override
     public int getOpenCloseAnimationOverride() {
-        return ModularUIConfig.panelOpenCloseAnimationTime;
+        // convert 1/60s to ms
+        return (int) (ConfigHolder.INSTANCE.client.ui.animationTime * 37.5f);
     }
 
     @Override
     public boolean getSmoothProgressBarOverride() {
-        return ModularUIConfig.smoothProgressBar;
+        return ConfigHolder.INSTANCE.client.ui.smoothProgressBar;
     }
 
     @Override
     public RichTooltip.Pos getTooltipPosOverride() {
-        return ModularUIConfig.tooltipPos;
+        return ConfigHolder.INSTANCE.client.ui.tooltipPos;
     }
 }

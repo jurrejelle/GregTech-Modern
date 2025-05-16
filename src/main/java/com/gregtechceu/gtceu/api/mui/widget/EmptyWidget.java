@@ -3,12 +3,13 @@ package com.gregtechceu.gtceu.api.mui.widget;
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Flex;
+import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
+import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import org.jetbrains.annotations.NotNull;
 
 public class EmptyWidget implements IWidget {
@@ -38,24 +39,19 @@ public class EmptyWidget implements IWidget {
     }
 
     @Override
-    public void drawBackground(ModularGuiContext context, WidgetTheme widgetTheme) {
-    }
+    public void drawBackground(ModularGuiContext context, WidgetTheme widgetTheme) {}
 
     @Override
-    public void draw(ModularGuiContext context, WidgetTheme widgetTheme) {
-    }
+    public void draw(ModularGuiContext context, WidgetTheme widgetTheme) {}
 
     @Override
-    public void drawOverlay(ModularGuiContext context, WidgetTheme widgetTheme) {
-    }
+    public void drawOverlay(ModularGuiContext context, WidgetTheme widgetTheme) {}
 
     @Override
-    public void drawForeground(ModularGuiContext context) {
-    }
+    public void drawForeground(ModularGuiContext context) {}
 
     @Override
-    public void onUpdate() {
-    }
+    public void onUpdate() {}
 
     @Override
     public Area getArea() {
@@ -73,8 +69,7 @@ public class EmptyWidget implements IWidget {
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-    }
+    public void setEnabled(boolean enabled) {}
 
     @Override
     public boolean canBeSeen(IViewportStack stack) {
@@ -82,8 +77,7 @@ public class EmptyWidget implements IWidget {
     }
 
     @Override
-    public void markTooltipDirty() {
-    }
+    public void markTooltipDirty() {}
 
     @Override
     public @NotNull IWidget getParent() {
@@ -106,8 +100,7 @@ public class EmptyWidget implements IWidget {
     }
 
     @Override
-    public void resizer(IResizeable resizer) {
-    }
+    public void resizer(IResizeable resizer) {}
 
     @Override
     public Flex getFlex() {

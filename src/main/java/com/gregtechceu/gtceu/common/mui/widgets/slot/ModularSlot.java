@@ -1,13 +1,15 @@
 package com.gregtechceu.gtceu.common.mui.widgets.slot;
 
 import com.gregtechceu.gtceu.api.mui.value.sync.ItemSlotSH;
-import com.mojang.datafixers.util.Pair;
-import lombok.Getter;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+
+import com.mojang.datafixers.util.Pair;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,7 +81,8 @@ public class ModularSlot extends SlotItemHandler {
 
     public void onSlotChangedReal(ItemStack itemStack, boolean onlyChangedAmount, boolean client, boolean init) {
         this.changeListener.onChange(itemStack, onlyChangedAmount, client, init);
-        if (!init && isInitialized()) getSyncHandler().getSyncManager().getContainer().onSlotChanged(this, itemStack, onlyChangedAmount);
+        if (!init && isInitialized())
+            getSyncHandler().getSyncManager().getContainer().onSlotChanged(this, itemStack, onlyChangedAmount);
     }
 
     @Override
@@ -204,7 +207,8 @@ public class ModularSlot extends SlotItemHandler {
     }
 
     /**
-     * Creates and sets a singleton slot group simply for the purpose of shift clicking into slots that don't belong to a group.
+     * Creates and sets a singleton slot group simply for the purpose of shift clicking into slots that don't belong to
+     * a group.
      *
      * @param shiftClickPriority determines in which group a shift clicked item should be inserted first
      */
@@ -214,7 +218,8 @@ public class ModularSlot extends SlotItemHandler {
     }
 
     /**
-     * Creates and sets a singleton slot group simply for the purpose of shift clicking into slots that don't belong to a group.
+     * Creates and sets a singleton slot group simply for the purpose of shift clicking into slots that don't belong to
+     * a group.
      */
     public ModularSlot singletonSlotGroup() {
         return singletonSlotGroup(SlotGroup.STORAGE_SLOT_PRIO);

@@ -2,8 +2,6 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-import java.io.IOException;
-
 public class CursorSlotSyncHandler extends SyncHandler {
 
     public void sync() {

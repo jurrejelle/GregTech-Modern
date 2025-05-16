@@ -5,11 +5,12 @@ import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+
+import net.minecraft.network.chat.Component;
+
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,9 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
         return REVERSE_TEXTURES.get(texture);
     }
 
-    public static <T extends IDrawable & IJsonSerializable<T>> void registerDrawableType(String id, Class<T> type, Function<@NotNull JsonObject, @NotNull T> creator) {
+    public static <
+            T extends IDrawable & IJsonSerializable<T>> void registerDrawableType(String id, Class<T> type,
+                                                                                  Function<@NotNull JsonObject, @NotNull T> creator) {
         if (DRAWABLE_TYPES.containsKey(id)) {
             throw new IllegalArgumentException("Drawable type '" + id + "' already exists!");
         }
@@ -69,7 +72,8 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
     }
 
     @Override
-    public IDrawable deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public IDrawable deserialize(JsonElement element, Type typeOfT,
+                                 JsonDeserializationContext context) throws JsonParseException {
         if (element.isJsonNull()) {
             return IDrawable.EMPTY;
         }
@@ -112,7 +116,8 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
             return key;
         }
         if (!DRAWABLE_TYPES.containsKey(type)) {
-            GTCEu.LOGGER.throwing(new JsonParseException("Drawable type '" + type + "' is either not json serializable!"));
+            GTCEu.LOGGER
+                    .throwing(new JsonParseException("Drawable type '" + type + "' is either not json serializable!"));
             return IDrawable.EMPTY;
         }
         IDrawable drawable = DRAWABLE_TYPES.get(type).apply(json);
@@ -146,7 +151,9 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
                 key = REVERSE_DRAWABLE_TYPES.get(type);
             }
             if (key == null) {
-                GTCEu.LOGGER.error("Serialization of drawable {} failed, because a key for the type could not be found!", src.getClass().getSimpleName());
+                GTCEu.LOGGER.error(
+                        "Serialization of drawable {} failed, because a key for the type could not be found!",
+                        src.getClass().getSimpleName());
                 return JsonNull.INSTANCE;
             }
             json.addProperty("type", key);

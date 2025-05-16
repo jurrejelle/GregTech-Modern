@@ -2,14 +2,16 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.function.IntConsumer;
 
@@ -75,7 +77,8 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle> {
             GuiDraw.drawRect(x0, y0, width, height, this.colorTL, this.colorTR, this.colorBL, this.colorBR);
             return;
         }
-        GuiDraw.drawRoundedRect(x0, y0, width, height, this.colorTL, this.colorTR, this.colorBL, this.colorBR, this.cornerRadius, this.cornerSegments);
+        GuiDraw.drawRoundedRect(x0, y0, width, height, this.colorTL, this.colorTR, this.colorBL, this.colorBR,
+                this.cornerRadius, this.cornerSegments);
     }
 
     @Override

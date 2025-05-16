@@ -1,15 +1,17 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.Nullable;
 
 public class AnimatedText extends StyledText {
@@ -38,7 +40,8 @@ public class AnimatedText extends StyledText {
     }
 
     private void advance() {
-        if (!this.isAnimating || (this.forward && this.currentIndex >= this.fullString.length()) || (!this.forward && this.currentIndex < 0))
+        if (!this.isAnimating || (this.forward && this.currentIndex >= this.fullString.length()) ||
+                (!this.forward && this.currentIndex < 0))
             return;
         long time = Util.getMillis();
         int amount = (int) ((time - this.timeLastDraw) / this.speed);
@@ -51,7 +54,7 @@ public class AnimatedText extends StyledText {
                 if (c == ' ') {
                     max = Math.min(this.fullString.length() - 1, max + 1);
                 }
-                //noinspection StringConcatenationInLoop
+                // noinspection StringConcatenationInLoop
                 this.currentString += c;
             }
             this.currentIndex = max;

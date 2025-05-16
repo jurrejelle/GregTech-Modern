@@ -1,8 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 

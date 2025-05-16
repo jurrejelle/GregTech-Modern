@@ -1,6 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.Entity;
@@ -11,8 +13,6 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,21 +45,24 @@ public class RenderLevel implements LevelReader {
     public BlockEntity getBlockEntity(@NotNull BlockPos pos) {
         if (this.schema == null) return this.level.getBlockEntity(pos);
         BlockInfo.Mutable.SHARED.set(this.level, pos);
-        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ? BlockInfo.Mutable.SHARED.getBlockEntity() : null;
+        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ?
+                BlockInfo.Mutable.SHARED.getBlockEntity() : null;
     }
 
     @Override
     public BlockState getBlockState(BlockPos pos) {
         if (this.schema == null) return this.level.getBlockState(pos);
         BlockInfo.Mutable.SHARED.set(this.level, pos);
-        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ? BlockInfo.Mutable.SHARED.getBlockState() : Blocks.AIR.defaultBlockState();
+        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ?
+                BlockInfo.Mutable.SHARED.getBlockState() : Blocks.AIR.defaultBlockState();
     }
 
     @Override
     public FluidState getFluidState(BlockPos pos) {
         if (this.schema == null) return this.level.getFluidState(pos);
         BlockInfo.Mutable.SHARED.set(this.level, pos);
-        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ? BlockInfo.Mutable.SHARED.getBlockState().getFluidState() : Fluids.EMPTY.defaultFluidState();
+        return this.schema.getRenderFilter().test(pos, BlockInfo.Mutable.SHARED) ?
+                BlockInfo.Mutable.SHARED.getBlockState().getFluidState() : Fluids.EMPTY.defaultFluidState();
     }
 
     @Override

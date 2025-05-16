@@ -3,12 +3,13 @@ package com.gregtechceu.gtceu.client.mui.screen;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import com.gregtechceu.gtceu.api.mui.utils.ReverseIterable;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -146,7 +147,8 @@ public class PanelManager {
         if (existing == null) {
             this.panelHandlerMap.put(panel.getName(), panelHandler);
         } else if (existing != panelHandler) {
-            GTCEu.LOGGER.error("Tried to open a panel, but a panel handler that opens the same panel already exists. Using existing panel handler!");
+            GTCEu.LOGGER.error(
+                    "Tried to open a panel, but a panel handler that opens the same panel already exists. Using existing panel handler!");
             existing.openPanel();
             return;
         }
@@ -306,6 +308,7 @@ public class PanelManager {
     }
 
     public enum State {
+
         INIT(false),
         OPEN(true),
         REOPENED(true),

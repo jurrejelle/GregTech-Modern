@@ -2,10 +2,12 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import com.gregtechceu.gtceu.api.mui.utils.MouseData;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.items.ItemHandlerHelper;
+
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -69,7 +71,8 @@ public class PhantomItemSlotSH extends ItemSlotSH {
     protected void phantomClick(MouseData mouseData, ItemStack cursorStack) {
         ItemStack slotStack = getSlot().getItem();
         ItemStack stackToPut;
-        if (!cursorStack.isEmpty() && !slotStack.isEmpty() && !ItemHandlerHelper.canItemStacksStack(cursorStack, slotStack)) {
+        if (!cursorStack.isEmpty() && !slotStack.isEmpty() &&
+                !ItemHandlerHelper.canItemStacksStack(cursorStack, slotStack)) {
             if (!isItemValid(cursorStack)) return;
             stackToPut = cursorStack.copy();
             if (mouseData.mouseButton() == 1) {

@@ -5,11 +5,12 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
 import com.gregtechceu.gtceu.api.mui.base.layout.ILayoutWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.IParentWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.AbstractScrollWidget;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.VerticalScrollData;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
@@ -21,7 +22,8 @@ import java.util.function.IntFunction;
  * @param <I> type of children (in most cases just {@link IWidget})
  * @param <W> type of this widget
  */
-public class ListWidget<I extends IWidget, W extends ListWidget<I, W>> extends AbstractScrollWidget<I, W> implements ILayoutWidget, IParentWidget<I, W> {
+public class ListWidget<I extends IWidget, W extends ListWidget<I, W>> extends AbstractScrollWidget<I, W>
+                       implements ILayoutWidget, IParentWidget<I, W> {
 
     private ScrollData scrollData;
     private IIcon childSeparator;
@@ -116,7 +118,8 @@ public class ListWidget<I extends IWidget, W extends ListWidget<I, W>> extends A
 
     public int getSeparatorSize() {
         if (this.childSeparator == null) return 0;
-        return this.scrollData.getAxis().isHorizontal() ? this.childSeparator.getWidth() : this.childSeparator.getHeight();
+        return this.scrollData.getAxis().isHorizontal() ? this.childSeparator.getWidth() :
+                this.childSeparator.getHeight();
     }
 
     public ScrollData getScrollData() {

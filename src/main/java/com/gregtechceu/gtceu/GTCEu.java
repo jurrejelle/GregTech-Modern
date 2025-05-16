@@ -140,7 +140,8 @@ public class GTCEu {
     public static class Mods {
 
         public static boolean isRecipeViewerLoaded() {
-            return isModLoaded(GTValues.MODID_JEI) || isModLoaded(GTValues.MODID_EMI) || isModLoaded(GTValues.MODID_REI);
+            return isModLoaded(GTValues.MODID_JEI) || isModLoaded(GTValues.MODID_EMI) ||
+                    isModLoaded(GTValues.MODID_REI);
         }
 
         public static boolean isJEILoaded() {

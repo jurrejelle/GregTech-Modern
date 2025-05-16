@@ -1,9 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IValueSyncHandler;
-import net.minecraft.network.FriendlyByteBuf;
 
-import java.io.IOException;
+import net.minecraft.network.FriendlyByteBuf;
 
 public abstract class ValueSyncHandler<T> extends SyncHandler implements IValueSyncHandler<T> {
 

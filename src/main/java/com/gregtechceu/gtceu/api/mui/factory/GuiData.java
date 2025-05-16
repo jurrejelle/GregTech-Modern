@@ -1,10 +1,12 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.utils.NetworkUtils;
-import lombok.Getter;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import lombok.Getter;
 
 import java.util.Objects;
 
@@ -13,7 +15,8 @@ import java.util.Objects;
  * For example, if the GUI was opened by right-clicking a BlockEntity, then this data needs a world and a block pos.
  * <p>
  * Also see {@link PosGuiData} (useful for TileEntities), {@link SidedPosGuiData} (useful for covers from GregTech) and
- * {@link HandGuiData} (useful for guis opened by interacting with an item in the players hand) for default implementations.
+ * {@link HandGuiData} (useful for guis opened by interacting with an item in the players hand) for default
+ * implementations.
  * </p>
  */
 public class GuiData {

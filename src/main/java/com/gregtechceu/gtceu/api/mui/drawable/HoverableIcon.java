@@ -3,8 +3,9 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IHoverable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
 import com.gregtechceu.gtceu.api.mui.base.widget.ITooltip;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

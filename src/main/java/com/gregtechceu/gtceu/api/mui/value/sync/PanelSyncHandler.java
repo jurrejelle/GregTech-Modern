@@ -2,14 +2,15 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.widget.ISynced;
+import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
-import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -52,7 +53,8 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
             syncToServer(0);
             return;
         }
-        if (this.syncManager != null && this.syncManager.getModularSyncManager() != getSyncManager().getModularSyncManager()) {
+        if (this.syncManager != null &&
+                this.syncManager.getModularSyncManager() != getSyncManager().getModularSyncManager()) {
             throw new IllegalStateException("Can't reopen synced panel in another screen!");
         } else if (this.syncManager == null) {
             this.syncManager = new PanelSyncManager();
@@ -110,7 +112,7 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
         if (openedPanel == null || isPanelOpen()) return;
         boolean canDispose = WidgetTree.foreachChild(openedPanel, iWidget -> {
             if (!iWidget.isValid()) return false;
-            if (iWidget instanceof ISynced<?>synced && synced.isSynced()) {
+            if (iWidget instanceof ISynced<?> synced && synced.isSynced()) {
                 return !(synced.getSyncHandler() instanceof ItemSlotSH);
             }
             return true;
@@ -119,7 +121,8 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
         // This is because we can't guarantee that the sync handlers of the new panel are the same.
         // Dynamic sync handler changing is very error-prone.
         if (!canDispose)
-            throw new UnsupportedOperationException("Can't delete cached panel if it's still open or has ItemSlot Sync Handlers!");
+            throw new UnsupportedOperationException(
+                    "Can't delete cached panel if it's still open or has ItemSlot Sync Handlers!");
 
         disposePanel();
 

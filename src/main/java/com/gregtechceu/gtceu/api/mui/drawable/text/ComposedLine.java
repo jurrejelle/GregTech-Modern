@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IHoverable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -54,7 +55,8 @@ public class ComposedLine implements ITextLine {
                 x += font.width(s);
             } else if (o instanceof IIcon icon) {
                 float drawY = getHeight(font) / 2f - icon.getHeight() / 2f;
-                icon.draw(context, (int) x, (int) (y + drawY), icon.getWidth(), icon.getHeight(), IThemeApi.get().getDefaultTheme().getFallback());
+                icon.draw(context, (int) x, (int) (y + drawY), icon.getWidth(), icon.getHeight(),
+                        IThemeApi.get().getDefaultTheme().getFallback());
                 if (icon instanceof IHoverable hoverable) {
                     hoverable.setRenderedAt((int) x, (int) (y + drawY));
                 }

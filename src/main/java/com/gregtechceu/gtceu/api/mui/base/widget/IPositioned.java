@@ -13,7 +13,7 @@ import java.util.function.DoubleSupplier;
  *
  * @param <W> widget type
  */
-@SuppressWarnings({"unused", "UnusedReturnValue"})
+@SuppressWarnings({ "unused", "UnusedReturnValue" })
 public interface IPositioned<W extends IPositioned<W>> {
 
     Flex flex();
@@ -263,7 +263,6 @@ public interface IPositioned<W extends IPositioned<W>> {
         return getThis();
     }
 
-
     default W width(int val) {
         flex().width(val, Unit.Measure.PIXEL);
         return getThis();
@@ -372,8 +371,7 @@ public interface IPositioned<W extends IPositioned<W>> {
     }
 
     default W align(Alignment alignment) {
-        return alignX(alignment.x).
-                alignY(alignment.y);
+        return alignX(alignment.x).alignY(alignment.y);
     }
 
     default W center() {

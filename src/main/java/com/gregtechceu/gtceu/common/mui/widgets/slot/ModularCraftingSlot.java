@@ -1,6 +1,5 @@
 package com.gregtechceu.gtceu.common.mui.widgets.slot;
 
-import lombok.Setter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -9,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
+
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -81,12 +82,12 @@ public class ModularCraftingSlot extends ModularSlot {
 
     @Override
     public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
-
         this.checkTakeAchievements(stack);
         ForgeHooks.setCraftingPlayer(player);
-        NonNullList<ItemStack> nonnulllist = player.level().getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, this.craftSlots, player.level());
+        NonNullList<ItemStack> nonnulllist = player.level().getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING,
+                this.craftSlots, player.level());
         ForgeHooks.setCraftingPlayer(null);
-        for(int i = 0; i < nonnulllist.size(); ++i) {
+        for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack itemstack = this.craftSlots.getItem(i);
             ItemStack itemstack1 = nonnulllist.get(i);
 

@@ -2,22 +2,24 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.Item;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,11 +36,11 @@ public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> 
     }
 
     public ItemDrawable(@NotNull Item item) {
-         setItem(item);
+        setItem(item);
     }
 
     public ItemDrawable(@NotNull Item item, int amount) {
-         setItem(item, amount);
+        setItem(item, amount);
     }
 
     public ItemDrawable(@NotNull Item item, int amount, @Nullable CompoundTag nbt) {
@@ -46,7 +48,7 @@ public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> 
     }
 
     public ItemDrawable(@NotNull Block item) {
-         setItem(item);
+        setItem(item);
     }
 
     public ItemDrawable(@NotNull Block item, int amount) {

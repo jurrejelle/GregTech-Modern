@@ -1,8 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.base.layout;
 
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import java.util.function.Predicate;
 
@@ -40,7 +40,8 @@ public interface IViewport {
     default void getSelfAt(IViewportStack stack, HoveredWidgetList widgets, int x, int y) {}
 
     /**
-     * Called during drawing twice (before children are drawn). Once with transformation of this viewport and once without
+     * Called during drawing twice (before children are drawn). Once with transformation of this viewport and once
+     * without
      *
      * @param context     gui context
      * @param transformed if transformation from this viewport is active
@@ -48,7 +49,8 @@ public interface IViewport {
     default void preDraw(ModularGuiContext context, boolean transformed) {}
 
     /**
-     * Called during drawing twice (after children are drawn). Once with transformation of this viewport and once without
+     * Called during drawing twice (after children are drawn). Once with transformation of this viewport and once
+     * without
      *
      * @param context     gui context
      * @param transformed if transformation from this viewport is active

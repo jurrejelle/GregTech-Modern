@@ -6,13 +6,15 @@ import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
+
+import net.minecraft.client.gui.screens.Screen;
+
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.gui.handlers.IScreenHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.gui.GuiProperties;
-import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JEIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler implements IGhostIngredientHandler<T>, IScreenHandler<T> {
+public class JEIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler
+                             implements IGhostIngredientHandler<T>, IScreenHandler<T> {
 
     private static final Map<Class<?>, JEIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
@@ -65,8 +68,7 @@ public class JEIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
             return new GuiProperties(
                     ScreenWrapper.class,
                     area.getX(), area.getY(), area.getWidth(), area.getHeight(),
-                    screenArea.getWidth(), screenArea.getHeight()
-            );
+                    screenArea.getWidth(), screenArea.getHeight());
         }
     }
 

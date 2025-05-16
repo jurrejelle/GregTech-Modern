@@ -4,9 +4,8 @@ import com.gregtechceu.gtceu.api.mui.base.value.sync.IServerKeyboardAction;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IServerMouseAction;
 import com.gregtechceu.gtceu.api.mui.utils.KeyboardData;
 import com.gregtechceu.gtceu.api.mui.utils.MouseData;
-import net.minecraft.network.FriendlyByteBuf;
 
-import java.io.IOException;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class InteractionSyncHandler extends SyncHandler {
 
@@ -19,8 +18,7 @@ public class InteractionSyncHandler extends SyncHandler {
     private IServerKeyboardAction keyTapped;
 
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
-    }
+    public void readOnClient(int id, FriendlyByteBuf buf) {}
 
     @Override
     public void readOnServer(int id, FriendlyByteBuf buf) {

@@ -1,13 +1,15 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
-import com.gregtechceu.gtceu.client.mui.screen.XeiSettingsImpl;
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.UISettings;
+import com.gregtechceu.gtceu.client.mui.screen.XeiSettingsImpl;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,8 +23,7 @@ import java.util.function.IntFunction;
 @OnlyIn(Dist.CLIENT)
 public class ClientGUI {
 
-    private ClientGUI() {
-    }
+    private ClientGUI() {}
 
     /**
      * Opens a modular screen on the next client tick with default jei settings.
@@ -65,7 +66,8 @@ public class ClientGUI {
      * @param jeiSettings custom jei settings
      * @param container   custom container
      */
-    public static void open(@NotNull ModularScreen screen, @NotNull XeiSettingsImpl jeiSettings, @Nullable IntFunction<ModularContainerMenu> container) {
+    public static void open(@NotNull ModularScreen screen, @NotNull XeiSettingsImpl jeiSettings,
+                            @Nullable IntFunction<ModularContainerMenu> container) {
         UISettings settings = new UISettings(jeiSettings);
         settings.customContainer(container);
         GuiManager.openScreen(screen, settings);

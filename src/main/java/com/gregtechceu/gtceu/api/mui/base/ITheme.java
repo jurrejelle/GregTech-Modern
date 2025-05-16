@@ -1,10 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetSlotTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTextFieldTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetThemeSelectable;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 
 /**
  * A theme is parsed from json and contains style information like color or background texture.

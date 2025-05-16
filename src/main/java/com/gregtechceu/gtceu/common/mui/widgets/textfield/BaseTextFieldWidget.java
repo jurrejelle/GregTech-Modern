@@ -4,18 +4,20 @@ import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.widget.IFocusedWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTextFieldTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.widget.AbstractScrollWidget;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.HorizontalScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollData;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.common.mui.widgets.VoidWidget;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyboardHandler;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
+import com.mojang.blaze3d.platform.InputConstants;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,7 +30,8 @@ import java.util.regex.Pattern;
 /**
  * The base of a text input widget. Handles mouse/InputConstants input and rendering.
  */
-public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends AbstractScrollWidget<VoidWidget, W> implements IFocusedWidget {
+public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends AbstractScrollWidget<VoidWidget, W>
+                                implements IFocusedWidget {
 
     public static final DecimalFormat format = new DecimalFormat("###.###");
 
@@ -36,7 +39,8 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
     public static final Pattern NATURAL_NUMS = Pattern.compile("[0-9]*([+\\-*/%^][0-9]*)*");
     // all positive and negative numbers
     public static final Pattern WHOLE_NUMS = Pattern.compile("-?[0-9]*([+\\-*/%^][0-9]*)*");
-    public static final Pattern DECIMALS = Pattern.compile("[0-9]*(" + getDecimalSeparator() + "[0-9]*)?([+\\-*/%^][0-9]*(" + getDecimalSeparator() + "[0-9]*)?)*");
+    public static final Pattern DECIMALS = Pattern.compile(
+            "[0-9]*(" + getDecimalSeparator() + "[0-9]*)?([+\\-*/%^][0-9]*(" + getDecimalSeparator() + "[0-9]*)?)*");
     public static final Pattern LETTERS = Pattern.compile("[a-zA-Z]*");
     public static final Pattern ANY = Pattern.compile(".*");
     private static final Pattern BASE_PATTERN = Pattern.compile("[^§]");
@@ -168,7 +172,8 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
         if (button == 1) {
             this.handler.clear();
         } else {
-            // the current transformation does not include the transformation of the children (the scroll) so we need to manually transform here
+            // the current transformation does not include the transformation of the children (the scroll) so we need to
+            // manually transform here
             int x = getContext().getMouseX() + getScrollX();
             int y = getContext().getMouseY() + getScrollY();
             this.handler.setCursor(this.renderer.getCursorPos(this.handler.getText(), x, y), true);
@@ -200,26 +205,30 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
                 }
                 return Result.SUCCESS;
             case InputConstants.KEY_ESCAPE:
-                if (ModularUIConfig.escRestoreLastText) {
+                if (ConfigHolder.INSTANCE.client.ui.escRestoreLastText) {
                     this.handler.clear();
                     this.handler.insert(this.lastText);
                 }
                 getContext().removeFocus();
                 return Result.SUCCESS;
             case InputConstants.KEY_LEFT: {
-                this.handler.moveCursorLeft((modifiers & GLFW.GLFW_MOD_CONTROL) != 0, (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
+                this.handler.moveCursorLeft((modifiers & GLFW.GLFW_MOD_CONTROL) != 0,
+                        (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
                 return Result.SUCCESS;
             }
             case InputConstants.KEY_RIGHT: {
-                this.handler.moveCursorRight((modifiers & GLFW.GLFW_MOD_CONTROL) != 0, (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
+                this.handler.moveCursorRight((modifiers & GLFW.GLFW_MOD_CONTROL) != 0,
+                        (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
                 return Result.SUCCESS;
             }
             case InputConstants.KEY_UP: {
-                this.handler.moveCursorUp((modifiers & GLFW.GLFW_MOD_CONTROL) != 0, (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
+                this.handler.moveCursorUp((modifiers & GLFW.GLFW_MOD_CONTROL) != 0,
+                        (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
                 return Result.SUCCESS;
             }
             case InputConstants.KEY_DOWN: {
-                this.handler.moveCursorDown((modifiers & GLFW.GLFW_MOD_CONTROL) != 0, (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
+                this.handler.moveCursorDown((modifiers & GLFW.GLFW_MOD_CONTROL) != 0,
+                        (modifiers & GLFW.GLFW_MOD_SHIFT) != 0);
                 return Result.SUCCESS;
             }
             case InputConstants.KEY_DELETE:
@@ -261,7 +270,8 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
         }
         if (codePoint == Character.MIN_VALUE) {
             return Result.STOP;
-        }if (BASE_PATTERN.matcher(String.valueOf(codePoint)).matches() && handler.test(String.valueOf(codePoint))) {
+        }
+        if (BASE_PATTERN.matcher(String.valueOf(codePoint)).matches() && handler.test(String.valueOf(codePoint))) {
             if (this.handler.hasTextMarked()) {
                 this.handler.delete();
             }
@@ -294,22 +304,24 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
         return getThis();
     }
 
-    /*public W setScrollBar() {
-        return setScrollBar(0);
-    }
-
-    public W setScrollBar(int posOffset) {
-        return setScrollBar(ScrollBar.defaultTextScrollBar().setPosOffset(posOffset));
-    }
-
-    public W setScrollBar(@Nullable ScrollBar scrollBar) {
-        this.scrollBar = scrollBar;
-        this.handler.setScrollBar(scrollBar);
-        if (this.scrollBar != null) {
-            this.scrollBar.setScrollType(ScrollType.HORIZONTAL, this, null);
-        }
-        return getThis();
-    }*/
+    /*
+     * public W setScrollBar() {
+     * return setScrollBar(0);
+     * }
+     * 
+     * public W setScrollBar(int posOffset) {
+     * return setScrollBar(ScrollBar.defaultTextScrollBar().setPosOffset(posOffset));
+     * }
+     * 
+     * public W setScrollBar(@Nullable ScrollBar scrollBar) {
+     * this.scrollBar = scrollBar;
+     * this.handler.setScrollBar(scrollBar);
+     * if (this.scrollBar != null) {
+     * this.scrollBar.setScrollType(ScrollType.HORIZONTAL, this, null);
+     * }
+     * return getThis();
+     * }
+     */
 
     public W setTextColor(int color) {
         this.textColor = color;

@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.ISynced;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.ParentWidget;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ItemSlot;
+
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
@@ -31,11 +32,11 @@ public class SlotGroupWidget extends ParentWidget<SlotGroupWidget> {
         return widget;
     }
 
-        /**
-         * Automatically creates and places the player inventory.
-         *
-         * @return player inventory group
-         */
+    /**
+     * Automatically creates and places the player inventory.
+     *
+     * @return player inventory group
+     */
     public static SlotGroupWidget playerInventory(SlotConsumer slotConsumer) {
         SlotGroupWidget slotGroupWidget = new SlotGroupWidget();
         slotGroupWidget.coverChildren();
@@ -57,6 +58,7 @@ public class SlotGroupWidget extends ParentWidget<SlotGroupWidget> {
     }
 
     public interface SlotConsumer {
+
         ItemSlot apply(int index, ItemSlot slot);
     }
 

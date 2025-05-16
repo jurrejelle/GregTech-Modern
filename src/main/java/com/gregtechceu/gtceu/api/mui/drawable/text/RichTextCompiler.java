@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
 import com.gregtechceu.gtceu.api.mui.drawable.DelegateIcon;
 import com.gregtechceu.gtceu.api.mui.drawable.Icon;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -78,7 +79,7 @@ public class RichTextCompiler {
                 continue;
             }
             if (!(o instanceof IIcon)) {
-                o = ((IDrawable) o).asIcon();//.size(fr.lineHeight);
+                o = ((IDrawable) o).asIcon();// .size(fr.lineHeight);
             }
             IIcon icon = (IIcon) o;
             IIcon delegate = icon;
@@ -150,7 +151,8 @@ public class RichTextCompiler {
                 // was split at line feed -> new line
                 newLine();
             }
-        } while ((l = text.indexOf('\n', k)) >= 0 || k < text.length()); // if no line feed found, check if we are at the end of the text
+        } while ((l = text.indexOf('\n', k)) >= 0 || k < text.length()); // if no line feed found, check if we are at
+                                                                         // the end of the text
     }
 
     private void newLine() {
@@ -163,7 +165,7 @@ public class RichTextCompiler {
             }
         }
         if (currentLine.isEmpty()) {
-            //lines.add(null);
+            // lines.add(null);
         } else if (currentLine.size() == 1 && currentLine.get(0) instanceof Component c) {
             lines.add(new TextLine(c, x));
             currentLine.clear();
@@ -216,7 +218,7 @@ public class RichTextCompiler {
                 int colorRGB = style.getColor().getValue();
                 for (ChatFormatting legacyColor : ChatFormatting.values()) {
                     if (!legacyColor.isColor()) continue;
-                    //noinspection DataFlowIssue
+                    // noinspection DataFlowIssue
                     if (colorRGB != legacyColor.getColor()) continue;
                     styleBuilder.append(legacyColor);
                     break;

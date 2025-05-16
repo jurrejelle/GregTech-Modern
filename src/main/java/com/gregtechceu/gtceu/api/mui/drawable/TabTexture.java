@@ -6,7 +6,8 @@ import java.util.Objects;
 
 public class TabTexture {
 
-    public static TabTexture of(UITexture texture, GuiAxis axis, boolean positive, int width, int height, int textureInset) {
+    public static TabTexture of(UITexture texture, GuiAxis axis, boolean positive, int width, int height,
+                                int textureInset) {
         Objects.requireNonNull(texture);
         UITexture sa, ma, ea, si, mi, ei;
         if (axis.isVertical()) {
@@ -41,7 +42,9 @@ public class TabTexture {
     private final GuiAxis axis;
     private final boolean positive;
 
-    public TabTexture(UITexture startActive, UITexture active, UITexture endActive, UITexture startInactive, UITexture inactive, UITexture endInactive, int width, int height, int textureInset, GuiAxis axis, boolean positive) {
+    public TabTexture(UITexture startActive, UITexture active, UITexture endActive, UITexture startInactive,
+                      UITexture inactive, UITexture endInactive, int width, int height, int textureInset, GuiAxis axis,
+                      boolean positive) {
         this.startActive = startActive;
         this.active = active;
         this.endActive = endActive;

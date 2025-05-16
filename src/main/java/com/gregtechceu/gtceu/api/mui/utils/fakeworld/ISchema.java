@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -18,5 +19,6 @@ public interface ISchema extends Iterable<Map.Entry<BlockPos, BlockInfo>> {
 
     void setRenderFilter(@Nullable BiPredicate<BlockPos, BlockInfo> renderFilter);
 
-    @Nullable BiPredicate<BlockPos, BlockInfo> getRenderFilter();
+    @Nullable
+    BiPredicate<BlockPos, BlockInfo> getRenderFilter();
 }

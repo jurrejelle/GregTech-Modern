@@ -48,7 +48,9 @@ public class ColorPickerDialog extends Dialog<Integer> {
                 .child(IKey.str("A: ").asWidget().heightRel(1f))
                 .child(createSlider(this.sliderBackgroundA)
                         .bounds(0, 255)
-                        .value(new DoubleValue.Dynamic(() -> Color.getAlpha(this.color), val -> updateColor(Color.withAlpha(this.color, (int) val))))) : null;
+                        .value(new DoubleValue.Dynamic(() -> Color.getAlpha(this.color),
+                                val -> updateColor(Color.withAlpha(this.color, (int) val))))) :
+                null;
 
         PagedWidget.Controller controller = new PagedWidget.Controller();
         child(new Column()
@@ -77,8 +79,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
                                 }, val -> {
                                     try {
                                         updateColor(Integer.decode(val));
-                                    } catch (NumberFormatException ignored) {
-                                    }
+                                    } catch (NumberFormatException ignored) {}
                                 })))
                         .child(this.preview.asWidget().background(GuiTextures.CHECKBOARD).size(10, 10).margin(1)))
                 .child(new PagedWidget<>()
@@ -114,19 +115,22 @@ public class ColorPickerDialog extends Dialog<Integer> {
                         .child(IKey.str("R: ").asWidget().heightRel(1f))
                         .child(createSlider(this.sliderBackgroundR)
                                 .bounds(0, 255)
-                                .value(new DoubleValue.Dynamic(() -> Color.getRed(this.color), val -> updateColor(Color.withRed(this.color, (int) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getRed(this.color),
+                                        val -> updateColor(Color.withRed(this.color, (int) val))))))
                 .child(new Row()
                         .widthRel(1f).height(12)
                         .child(IKey.str("G: ").asWidget().heightRel(1f))
                         .child(createSlider(this.sliderBackgroundG)
                                 .bounds(0, 255)
-                                .value(new DoubleValue.Dynamic(() -> Color.getGreen(this.color), val -> updateColor(Color.withGreen(this.color, (int) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getGreen(this.color),
+                                        val -> updateColor(Color.withGreen(this.color, (int) val))))))
                 .child(new Row()
                         .widthRel(1f).height(12)
                         .child(IKey.str("B: ").asWidget().heightRel(1f))
                         .child(createSlider(this.sliderBackgroundB)
                                 .bounds(0, 255)
-                                .value(new DoubleValue.Dynamic(() -> Color.getBlue(this.color), val -> updateColor(Color.withBlue(this.color, (int) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getBlue(this.color),
+                                        val -> updateColor(Color.withBlue(this.color, (int) val))))))
                 .childIf(alphaSlider != null, alphaSlider);
     }
 
@@ -138,19 +142,22 @@ public class ColorPickerDialog extends Dialog<Integer> {
                         .child(IKey.str("H: ").asWidget().heightRel(1f))
                         .child(createSlider(new HueBar(GuiAxis.X))
                                 .bounds(0, 360)
-                                .value(new DoubleValue.Dynamic(() -> Color.getHue(this.color), val -> updateColor(Color.withHSVHue(this.color, (float) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getHue(this.color),
+                                        val -> updateColor(Color.withHSVHue(this.color, (float) val))))))
                 .child(new Row()
                         .widthRel(1f).height(12)
                         .child(IKey.str("S: ").asWidget().heightRel(1f))
                         .child(createSlider(this.sliderBackgroundS)
                                 .bounds(0, 1)
-                                .value(new DoubleValue.Dynamic(() -> Color.getHSVSaturation(this.color), val -> updateColor(Color.withHSVSaturation(this.color, (float) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getHSVSaturation(this.color),
+                                        val -> updateColor(Color.withHSVSaturation(this.color, (float) val))))))
                 .child(new Row()
                         .widthRel(1f).height(12)
                         .child(IKey.str("V: ").asWidget().heightRel(1f))
                         .child(createSlider(this.sliderBackgroundV)
                                 .bounds(0, 1)
-                                .value(new DoubleValue.Dynamic(() -> Color.getValue(this.color), val -> updateColor(Color.withValue(this.color, (float) val))))))
+                                .value(new DoubleValue.Dynamic(() -> Color.getValue(this.color),
+                                        val -> updateColor(Color.withValue(this.color, (float) val))))))
                 .childIf(alphaSlider != null, alphaSlider);
     }
 
@@ -187,7 +194,8 @@ public class ColorPickerDialog extends Dialog<Integer> {
         this.sliderBackgroundG.setHorizontalGradient(gs, ge);
         this.sliderBackgroundB.setHorizontalGradient(bs, be);
         this.sliderBackgroundA.setHorizontalGradient(as, ae);
-        this.sliderBackgroundS.setHorizontalGradient(Color.withHSVSaturation(color, 0f), Color.withHSVSaturation(color, 1f));
+        this.sliderBackgroundS.setHorizontalGradient(Color.withHSVSaturation(color, 0f),
+                Color.withHSVSaturation(color, 1f));
         this.sliderBackgroundV.setHorizontalGradient(Color.withValue(color, 0f), Color.withValue(color, 1f));
         this.preview.setColor(this.color);
     }

@@ -7,7 +7,6 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IGuiAction;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.drawable.Rectangle;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.DoubleValue;
@@ -15,9 +14,12 @@ import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Unit;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
+import net.minecraft.util.Mth;
+
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class SliderWidget extends Widget<SliderWidget> implements Interactable {
@@ -74,11 +76,13 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
                 if (this.axis.isHorizontal()) {
                     pos -= this.stopperWidth / 2;
                     int crossAxisPos = (int) (getArea().height / 2D - this.stopperHeight / 2D);
-                    this.stopperDrawable.draw(context, pos, crossAxisPos, this.stopperWidth, this.stopperHeight, WidgetTheme.getDefault());
+                    this.stopperDrawable.draw(context, pos, crossAxisPos, this.stopperWidth, this.stopperHeight,
+                            WidgetTheme.getDefault());
                 } else {
                     pos -= this.stopperHeight / 2;
                     int crossAxisPos = (int) (getArea().width / 2D - this.stopperWidth / 2D);
-                    this.stopperDrawable.draw(context, crossAxisPos, pos, this.stopperWidth, this.stopperHeight, WidgetTheme.getDefault());
+                    this.stopperDrawable.draw(context, crossAxisPos, pos, this.stopperWidth, this.stopperHeight,
+                            WidgetTheme.getDefault());
                 }
             }
         }
@@ -135,7 +139,8 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
     }
 
     public double posToValue(int p) {
-        double v = (p - this.sliderArea.getSize(this.axis) / 2D) / (double) (getArea().getSize(this.axis) - this.sliderArea.getSize(this.axis));
+        double v = (p - this.sliderArea.getSize(this.axis) / 2D) /
+                (double) (getArea().getSize(this.axis) - this.sliderArea.getSize(this.axis));
         return v * (this.max - this.min) + this.min;
     }
 

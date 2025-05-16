@@ -2,11 +2,13 @@ package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,5 +41,4 @@ public class ScreenWrapper extends Screen implements IScreenWithMuiScreen, IMuiS
     public void setFocused(boolean focused) {
         super.setFocused(focused);
     }
-
 }

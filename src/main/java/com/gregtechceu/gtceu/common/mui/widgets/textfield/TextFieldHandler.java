@@ -1,11 +1,13 @@
 package com.gregtechceu.gtceu.common.mui.widgets.textfield;
 
+import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollArea;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
-import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollArea;
+
+import net.minecraft.network.chat.Component;
+
 import com.google.common.base.Joiner;
 import lombok.Getter;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -71,14 +73,16 @@ public class TextFieldHandler {
         if (!hasTextMarked()) {
             return this.cursor;
         }
-        return this.cursor.y > this.cursorEnd.y || (this.cursor.y == this.cursorEnd.y && this.cursor.x > this.cursorEnd.x) ? this.cursorEnd : this.cursor;
+        return this.cursor.y > this.cursorEnd.y ||
+                (this.cursor.y == this.cursorEnd.y && this.cursor.x > this.cursorEnd.x) ? this.cursorEnd : this.cursor;
     }
 
     public Point getEndCursor() {
         if (!hasTextMarked()) {
             return this.cursor;
         }
-        return this.cursor.y > this.cursorEnd.y || (this.cursor.y == this.cursorEnd.y && this.cursor.x > this.cursorEnd.x) ? this.cursor : this.cursorEnd;
+        return this.cursor.y > this.cursorEnd.y ||
+                (this.cursor.y == this.cursorEnd.y && this.cursor.x > this.cursorEnd.x) ? this.cursor : this.cursorEnd;
     }
 
     public boolean hasTextMarked() {
@@ -101,7 +105,8 @@ public class TextFieldHandler {
                 this.scrollArea.getScrollX().setScrollSize((int) (this.renderer.getLastWidth() + 0.5f));
                 if (this.scrollArea.getScrollX().isScrollBarActive(this.scrollArea)) {
                     String line = this.text.get(main.y);
-                    int scrollTo = (int) this.renderer.getPosOf(this.renderer.measureStringLines(Collections.singletonList(line)), main).x;
+                    int scrollTo = (int) this.renderer
+                            .getPosOf(this.renderer.measureStringLines(Collections.singletonList(line)), main).x;
                     scrollTo -= this.scrollArea.getScrollX().getVisibleSize(this.scrollArea) / 2;
                     if (animate) {
                         this.scrollArea.getScrollX().animateTo(this.scrollArea, scrollTo);
@@ -267,7 +272,8 @@ public class TextFieldHandler {
     }
 
     public boolean test(String text) {
-        return this.maxLines > 1 || ((this.pattern == null || this.pattern.matcher(text).matches()) && (this.maxCharacters < 0 || this.maxCharacters >= text.length()));
+        return this.maxLines > 1 || ((this.pattern == null || this.pattern.matcher(text).matches()) &&
+                (this.maxCharacters < 0 || this.maxCharacters >= text.length()));
     }
 
     public void insert(String text) {

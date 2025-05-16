@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.widget.DraggableWidget;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -152,8 +153,7 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
         }
 
         @Override
-        public void onDragEnd(boolean successful) {
-        }
+        public void onDragEnd(boolean successful) {}
 
         @Override
         public T getWidgetValue() {
@@ -184,19 +184,21 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
             return this;
         }
 
-        /*public Item<T> removeable() {
-            this.removeButton = new ButtonWidget<>()
-                    .onMousePressed(mouseButton -> this.listWidget.remove(this.index))
-                    .background(GuiTextures.CLOSE.asIcon())
-                    .width(10).heightRel(1f)
-                    .right(0);
-            return this;
-        }
-
-        public Item<T> removeable(Consumer<ButtonWidget<? extends ButtonWidget<?>>> buttonBuilder) {
-            removeable();
-            buttonBuilder.accept(this.removeButton);
-            return this;
-        }*/
+        /*
+         * public Item<T> removeable() {
+         * this.removeButton = new ButtonWidget<>()
+         * .onMousePressed(mouseButton -> this.listWidget.remove(this.index))
+         * .background(GuiTextures.CLOSE.asIcon())
+         * .width(10).heightRel(1f)
+         * .right(0);
+         * return this;
+         * }
+         * 
+         * public Item<T> removeable(Consumer<ButtonWidget<? extends ButtonWidget<?>>> buttonBuilder) {
+         * removeable();
+         * buttonBuilder.accept(this.removeButton);
+         * return this;
+         * }
+         */
     }
 }

@@ -2,10 +2,11 @@ package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
 import com.gregtechceu.gtceu.api.mui.base.UIFactory;
+import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.UISettings;
-import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

@@ -3,21 +3,23 @@ package com.gregtechceu.gtceu.api.mui.theme;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.api.mui.utils.*;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import it.unimi.dsi.fastutil.objects.*;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,12 +34,14 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
 
     public static final String THEMES_PATH = "themes.json";
     public static final FileToIdConverter THEME_LISTER = new FileToIdConverter("gtceu/themes", ".json");
-    protected static final WidgetTheme defaultdefaultWidgetTheme = new WidgetTheme(null, null, Color.WHITE.main, 0xFF404040, false);
+    protected static final WidgetTheme defaultdefaultWidgetTheme = new WidgetTheme(null, null, Color.WHITE.main,
+            0xFF404040, false);
 
     public ThemeManager() {}
 
     @Override
-    protected @NotNull Map<String, List<ResourceLocation>> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected @NotNull Map<String, List<ResourceLocation>> prepare(ResourceManager resourceManager,
+                                                                   ProfilerFiller profiler) {
         GTCEu.LOGGER.info("Reloading Themes...");
         MinecraftForge.EVENT_BUS.post(new ReloadThemeEvent.Pre());
         ThemeAPI.INSTANCE.onReload();
@@ -45,10 +49,10 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
         Map<String, List<ResourceLocation>> themes = new Object2ObjectOpenHashMap<>();
         profiler.startTick();
         List<String> themeJsonSources = new ArrayList<>();
-        for(String namespace : resourceManager.getNamespaces()) {
+        for (String namespace : resourceManager.getNamespaces()) {
             profiler.push(namespace);
 
-            for(Resource resource : resourceManager.getResourceStack(new ResourceLocation(namespace, THEMES_PATH))) {
+            for (Resource resource : resourceManager.getResourceStack(new ResourceLocation(namespace, THEMES_PATH))) {
                 profiler.push(resource.sourcePackId());
                 themeJsonSources.add(resource.sourcePackId());
 
@@ -73,7 +77,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                         loadScreenThemes(entry.getValue().getAsJsonObject());
                         continue;
                     }
-                    if (entry.getValue().isJsonObject() || entry.getValue().isJsonArray() || entry.getValue().isJsonNull()) {
+                    if (entry.getValue().isJsonObject() || entry.getValue().isJsonArray() ||
+                            entry.getValue().isJsonNull()) {
                         GTCEu.LOGGER.throwing(new JsonParseException("Theme must be a string!"));
                         continue;
                     }
@@ -108,7 +113,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
         }
         for (Map.Entry<String, List<JsonBuilder>> entry : ThemeAPI.INSTANCE.defaultThemes.entrySet()) {
             if (!themeMap.containsKey(entry.getKey())) {
-                themeMap.put(entry.getKey(), new ThemeJson(entry.getKey(), entry.getValue().stream().map(JsonBuilder::getJson).collect(Collectors.toList()), false));
+                themeMap.put(entry.getKey(), new ThemeJson(entry.getKey(),
+                        entry.getValue().stream().map(JsonBuilder::getJson).collect(Collectors.toList()), false));
             }
         }
         if (themeMap.isEmpty()) return;
@@ -125,7 +131,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
             iterator = themeMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, ThemeJson> entry = iterator.next();
-                if (ThemeAPI.DEFAULT.equals(entry.getValue().parent) || sortedThemes.containsKey(entry.getValue().parent)) {
+                if (ThemeAPI.DEFAULT.equals(entry.getValue().parent) ||
+                        sortedThemes.containsKey(entry.getValue().parent)) {
                     sortedThemes.put(entry.getKey(), entry.getValue());
                     iterator.remove();
                     changed = true;
@@ -159,17 +166,23 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 }
                 parent = themeMap.get(parent.parent);
                 if (parent == null) {
-                    GTCEu.LOGGER.error("Can't find parent '{}' for theme '{}'! All children for '{}' are therefore invalid!", theme.parent, theme.id, theme.id);
+                    GTCEu.LOGGER.error(
+                            "Can't find parent '{}' for theme '{}'! All children for '{}' are therefore invalid!",
+                            theme.parent, theme.id, theme.id);
                     invalidThemes.addAll(parents);
                     break;
                 }
                 if (parents.contains(parent)) {
-                    GTCEu.LOGGER.error("Ancestor tree for themes can't be circular! All of the following make a circle or are children of the circle: {}", parents);
+                    GTCEu.LOGGER.error(
+                            "Ancestor tree for themes can't be circular! All of the following make a circle or are children of the circle: {}",
+                            parents);
                     invalidThemes.addAll(parents);
                     break;
                 }
                 if (invalidThemes.contains(parent)) {
-                    GTCEu.LOGGER.error("Parent '{}' was found to be invalid before. All following are children of it and are therefore invalid too: {}", theme.parent, parents);
+                    GTCEu.LOGGER.error(
+                            "Parent '{}' was found to be invalid before. All following are children of it and are therefore invalid too: {}",
+                            theme.parent, parents);
                     invalidThemes.addAll(parents);
                     break;
                 }
@@ -227,10 +240,12 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
     }
 
     private static void validateJsonScreenThemes() {
-        for (ObjectIterator<Object2ObjectMap.Entry<String, String>> iterator = ThemeAPI.INSTANCE.jsonScreenThemes.object2ObjectEntrySet().fastIterator(); iterator.hasNext(); ) {
+        for (ObjectIterator<Object2ObjectMap.Entry<String, String>> iterator = ThemeAPI.INSTANCE.jsonScreenThemes
+                .object2ObjectEntrySet().fastIterator(); iterator.hasNext();) {
             Map.Entry<String, String> entry = iterator.next();
             if (!ThemeAPI.INSTANCE.hasTheme(entry.getValue())) {
-                GTCEu.LOGGER.error("Tried to register theme '{}' for screen '{}', but theme does not exist", entry.getValue(), entry.getKey());
+                GTCEu.LOGGER.error("Tried to register theme '{}' for screen '{}', but theme does not exist",
+                        entry.getValue(), entry.getKey());
                 iterator.remove();
             }
         }
@@ -247,7 +262,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
             this.id = id;
             this.override = override;
             String p = null;
-            for (ListIterator<JsonObject> iterator = jsons.listIterator(jsons.size()); iterator.hasPrevious(); ) {
+            for (ListIterator<JsonObject> iterator = jsons.listIterator(jsons.size()); iterator.hasPrevious();) {
                 JsonObject json = iterator.previous();
                 if (json.has(IThemeApi.PARENT)) {
                     p = json.get(IThemeApi.PARENT).getAsString();
@@ -260,7 +275,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
 
         private Theme deserialize() {
             if (!ThemeAPI.INSTANCE.hasTheme(this.parent)) {
-                throw new IllegalStateException(String.format("Ancestor tree was validated, but parent '%s' was still null during parsing!", this.parent));
+                throw new IllegalStateException(String.format(
+                        "Ancestor tree was validated, but parent '%s' was still null during parsing!", this.parent));
             }
             ITheme parent = ThemeAPI.INSTANCE.getTheme(this.parent);
             // merge themes defined in java and via resource pack of the same id into 1 json
@@ -295,7 +311,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                     widgetThemeJson = emptyJson;
                 }
                 parentWidgetTheme = parent.getWidgetTheme(entry.getKey());
-                widgetThemes.put(entry.getKey(), entry.getValue().parse(parentWidgetTheme, widgetThemeJson, jsonBuilder.getJson()));
+                widgetThemes.put(entry.getKey(),
+                        entry.getValue().parse(parentWidgetTheme, widgetThemeJson, jsonBuilder.getJson()));
             }
             Theme theme = new Theme(this.id, parent, widgetThemes);
             // TODO: bad implementation

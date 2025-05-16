@@ -1,10 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.widget.scroll;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.MathUtils;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -82,7 +83,8 @@ public class ScrollArea extends Area {
 
     @OnlyIn(Dist.CLIENT)
     public boolean mouseScroll(GuiContext context) {
-        return this.mouseScroll(context.getMouseX(), context.getMouseY(), context.getMouseScrollDelta(), Screen.hasShiftDown());
+        return this.mouseScroll(context.getMouseX(), context.getMouseY(), context.getMouseScrollDelta(),
+                Screen.hasShiftDown());
     }
 
     /**
@@ -165,7 +167,8 @@ public class ScrollArea extends Area {
             return;
         }
         progress = MathUtils.clamp(progress, 0f, 1f);
-        data.scrollTo(this, (int) (progress * (data.getScrollSize() - data.getVisibleSize(this) + data.getThickness())));
+        data.scrollTo(this,
+                (int) (progress * (data.getScrollSize() - data.getVisibleSize(this) + data.getThickness())));
     }
 
     public boolean isInsideScrollbarArea(int x, int y) {
@@ -195,7 +198,8 @@ public class ScrollArea extends Area {
     }
 
     public boolean isDragging() {
-        return (this.scrollX != null && this.scrollX.isDragging()) || (this.scrollY != null && this.scrollY.isDragging());
+        return (this.scrollX != null && this.scrollX.isDragging()) ||
+                (this.scrollY != null && this.scrollY.isDragging());
     }
 
     /**

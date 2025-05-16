@@ -1,6 +1,5 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,11 +29,13 @@ public class BlockPosUtil {
     }
 
     public static BlockPos getMin(BlockPos p1, BlockPos p2) {
-        return new BlockPos(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()), Math.min(p1.getZ(), p2.getZ()));
+        return new BlockPos(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()),
+                Math.min(p1.getZ(), p2.getZ()));
     }
 
     public static BlockPos getMax(BlockPos p1, BlockPos p2) {
-        return new BlockPos(Math.max(p1.getX(), p2.getX()), Math.max(p1.getY(), p2.getY()), Math.max(p1.getZ(), p2.getZ()));
+        return new BlockPos(Math.max(p1.getX(), p2.getX()), Math.max(p1.getY(), p2.getY()),
+                Math.max(p1.getZ(), p2.getZ()));
     }
 
     public static void setMin(BlockPos.MutableBlockPos p1, BlockPos p2) {
@@ -47,7 +48,8 @@ public class BlockPosUtil {
 
     public static BlockPos getCenter(BlockPos p1, BlockPos p2) {
         BlockPos min = getMin(p1, p2);
-        return new BlockPos(getXDist(p1, p2) / 2 + min.getX(), getYDist(p1, p2) / 2 + min.getY(), getYDist(p1, p2) / 2 + min.getY());
+        return new BlockPos(getXDist(p1, p2) / 2 + min.getX(), getYDist(p1, p2) / 2 + min.getY(),
+                getYDist(p1, p2) / 2 + min.getY());
     }
 
     public static Vec3 getCenterD(BlockPos p1, BlockPos p2) {
@@ -59,8 +61,10 @@ public class BlockPosUtil {
     }
 
     public static Iterable<BlockPos> getAllInside(BlockPos p1, BlockPos p2, boolean includeBorder) {
-        int x0 = Math.min(p1.getX(), p2.getX()), y0 = Math.min(p1.getY(), p2.getY()), z0 = Math.min(p1.getZ(), p2.getZ());
-        int x1 = Math.max(p1.getX(), p2.getX()), y1 = Math.max(p1.getY(), p2.getY()), z1 = Math.max(p1.getZ(), p2.getZ());
+        int x0 = Math.min(p1.getX(), p2.getX()), y0 = Math.min(p1.getY(), p2.getY()),
+                z0 = Math.min(p1.getZ(), p2.getZ());
+        int x1 = Math.max(p1.getX(), p2.getX()), y1 = Math.max(p1.getY(), p2.getY()),
+                z1 = Math.max(p1.getZ(), p2.getZ());
         if (includeBorder) {
             x0--;
             y0--;

@@ -6,8 +6,6 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetSlotTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
@@ -16,13 +14,14 @@ import com.gregtechceu.gtceu.api.mui.utils.MouseData;
 import com.gregtechceu.gtceu.api.mui.value.sync.FluidSlotSyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.integration.xei.entry.EntryList;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,13 +30,16 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.text.DecimalFormat;
 
-public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {
+public class FluidSlot extends Widget<FluidSlot>
+                       implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {
 
     public static final int DEFAULT_SIZE = 18;
     public static final String UNIT_BUCKET = "B";
@@ -59,7 +61,7 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
 
     public FluidSlot() {
         size(DEFAULT_SIZE);
-        tooltip().setAutoUpdate(true);//.setHasTitleMargin(true);
+        tooltip().setAutoUpdate(true);// .setHasTitleMargin(true);
         tooltipBuilder(tooltip -> {
             IFluidTank fluidTank = getFluidTank();
             FluidStack fluid = this.syncHandler.getValue();
@@ -69,7 +71,8 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
             if (this.syncHandler.isPhantom()) {
                 if (fluid != null) {
                     if (this.syncHandler.controlsAmount()) {
-                        tooltip.addLine(IKey.lang("modularui.fluid.phantom.amount", formatFluidTooltipAmount(fluid.getAmount()), getBaseUnit()));
+                        tooltip.addLine(IKey.lang("modularui.fluid.phantom.amount",
+                                formatFluidTooltipAmount(fluid.getAmount()), getBaseUnit()));
                     }
                 } else {
                     tooltip.addLine(IKey.lang("modularui.fluid.empty"));
@@ -79,7 +82,8 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
                 }
             } else {
                 if (fluid != null) {
-                    tooltip.addLine(IKey.lang("modularui.fluid.amount", formatFluidTooltipAmount(fluid.getAmount()), formatFluidTooltipAmount(fluidTank.getCapacity()), getBaseUnit()));
+                    tooltip.addLine(IKey.lang("modularui.fluid.amount", formatFluidTooltipAmount(fluid.getAmount()),
+                            formatFluidTooltipAmount(fluidTank.getCapacity()), getBaseUnit()));
                     addAdditionalFluidInfo(tooltip, fluid);
                 } else {
                     tooltip.addLine(IKey.lang("modularui.fluid.empty"));
@@ -187,7 +191,8 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
         }
         ItemStack cursorStack = Minecraft.getInstance().player.inventoryMenu.getCarried();
         if (this.syncHandler.isPhantom() ||
-                (!cursorStack.isEmpty() && cursorStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).isPresent())) {
+                (!cursorStack.isEmpty() &&
+                        cursorStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).isPresent())) {
             MouseData mouseData = MouseData.create(button);
             this.syncHandler.syncToServer(FluidSlotSyncHandler.SYNC_CLICK, mouseData::writeToPacket);
         }
@@ -282,7 +287,8 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
 
     @Override
     public @Nullable FluidStack castGhostIngredientIfValid(@NotNull Object ingredient) {
-        return areAncestorsEnabled() && this.syncHandler.isPhantom() && ingredient instanceof FluidStack fluidStack ? fluidStack : null;
+        return areAncestorsEnabled() && this.syncHandler.isPhantom() && ingredient instanceof FluidStack fluidStack ?
+                fluidStack : null;
     }
 
     @Override
@@ -294,5 +300,4 @@ public class FluidSlot extends Widget<FluidSlot> implements Interactable, GhostI
     public EntryList<FluidStack> getIngredients() {
         return FluidStackList.of(getFluidStack());
     }
-
 }

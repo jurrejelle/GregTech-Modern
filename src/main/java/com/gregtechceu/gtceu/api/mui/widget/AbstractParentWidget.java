@@ -2,9 +2,10 @@ package com.gregtechceu.gtceu.api.mui.widget;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
+import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.common.mui.widgets.VoidWidget;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.List;
 /**
  * A widget which can hold any amount of children.
  *
- * @param <I> type of children (in most cases just {@link IWidget}). Use {@link VoidWidget} if no children should be added.
+ * @param <I> type of children (in most cases just {@link IWidget}). Use {@link VoidWidget} if no children should be
+ *            added.
  * @param <W> type of this widget
  */
 public class AbstractParentWidget<I extends IWidget, W extends AbstractParentWidget<I, W>> extends Widget<W> {
@@ -35,7 +37,8 @@ public class AbstractParentWidget<I extends IWidget, W extends AbstractParentWid
         if (IDrawable.isVisible(getBackground()) ||
                 IDrawable.isVisible(getHoverBackground()) ||
                 IDrawable.isVisible(getHoverOverlay()) ||
-                getTooltip() != null) return true;
+                getTooltip() != null)
+            return true;
         WidgetTheme widgetTheme = getWidgetTheme(getContext().getTheme());
         if (getBackground() == null && IDrawable.isVisible(widgetTheme.getBackground())) return true;
         return getHoverBackground() == null && IDrawable.isVisible(widgetTheme.getHoverBackground());
@@ -51,7 +54,8 @@ public class AbstractParentWidget<I extends IWidget, W extends AbstractParentWid
             return false;
         }
         if (child instanceof ModularPanel) {
-            throw new IllegalArgumentException("ModularPanel should not be added as child widget; Use ModularScreen#openPanel instead");
+            throw new IllegalArgumentException(
+                    "ModularPanel should not be added as child widget; Use ModularScreen#openPanel instead");
         }
         if (!isChildValid(child)) {
             throw new IllegalArgumentException("Child '" + child + "' is not valid for parent '" + this + "'!");

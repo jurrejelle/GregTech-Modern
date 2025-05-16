@@ -6,9 +6,10 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.drawable.text.StyledText;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextIcon;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -137,7 +138,8 @@ public class IconRenderer {
     }
 
     public List<FormattedCharSequence> wrapLine(Component line, float scale) {
-        return this.maxWidth > 0 ? getFont().split(line, (int) (this.maxWidth / scale)) : Collections.singletonList(line.getVisualOrderText());
+        return this.maxWidth > 0 ? getFont().split(line, (int) (this.maxWidth / scale)) :
+                Collections.singletonList(line.getVisualOrderText());
     }
 
     protected int getStartY(int totalHeight) {

@@ -5,9 +5,11 @@ import com.gregtechceu.gtceu.api.mui.value.sync.PhantomItemSlotSH;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
-import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -2,12 +2,13 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.value.IDoubleValue;
 import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.DoubleValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import net.minecraft.util.Mth;
 
 import java.util.function.DoubleSupplier;
@@ -117,8 +118,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                 0, getArea().height - progressScaled,
                 halfWidth, progressScaled,
                 0.0f, 1.0f - progressScaled / halfHeight,
-                1.0f, 1.0f, widgetTheme
-        ); // BL, draw UP
+                1.0f, 1.0f, widgetTheme); // BL, draw UP
 
         progressScaled = subAreas[1] * halfWidth;
         this.fullTexture[1].drawSubArea(
@@ -126,8 +126,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                 progressScaled, halfHeight,
                 0.0f, 0.0f,
                 progressScaled / (halfWidth), 1.0f,
-                widgetTheme
-        ); // TL, draw RIGHT
+                widgetTheme); // TL, draw RIGHT
 
         progressScaled = subAreas[2] * halfHeight;
         this.fullTexture[2].drawSubArea(
@@ -135,16 +134,14 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                 halfWidth, progressScaled,
                 0.0f, 0.0f,
                 1.0f, progressScaled / halfHeight,
-                widgetTheme
-        ); // TR, draw DOWN
+                widgetTheme); // TR, draw DOWN
 
         progressScaled = subAreas[3] * halfWidth;
         this.fullTexture[3].drawSubArea(
                 getArea().width - progressScaled, halfHeight,
                 progressScaled, halfHeight,
                 1.0f - progressScaled / halfWidth, 0.0f,
-                1.0f, 1.0f, widgetTheme
-        ); // BR, draw LEFT
+                1.0f, 1.0f, widgetTheme); // BR, draw LEFT
     }
 
     public ProgressWidget value(IDoubleValue<?> value) {
@@ -188,6 +185,10 @@ public class ProgressWidget extends Widget<ProgressWidget> {
     }
 
     public enum Direction {
-        LEFT, RIGHT, UP, DOWN, CIRCULAR_CW
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        CIRCULAR_CW
     }
 }

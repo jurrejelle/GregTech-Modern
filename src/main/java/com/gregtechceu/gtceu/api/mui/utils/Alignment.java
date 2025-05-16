@@ -56,7 +56,11 @@ public class Alignment {
      */
     public enum MainAxis {
 
-        START, CENTER, END, SPACE_BETWEEN, SPACE_AROUND
+        START,
+        CENTER,
+        END,
+        SPACE_BETWEEN,
+        SPACE_AROUND
     }
 
     /**
@@ -65,13 +69,16 @@ public class Alignment {
      */
     public enum CrossAxis {
 
-        START, CENTER, END
+        START,
+        CENTER,
+        END
     }
 
     public static class Json implements JsonDeserializer<Alignment>, JsonSerializer<Alignment> {
 
         @Override
-        public Alignment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Alignment deserialize(JsonElement json, Type typeOfT,
+                                     JsonDeserializationContext context) throws JsonParseException {
             if (!json.isJsonObject()) {
                 Alignment alignment = ALIGNMENT_MAP.get(json.getAsString());
                 if (alignment == null) {

@@ -208,7 +208,8 @@ public class Area extends Rectangle implements IUnResizeable {
 
     /**
      * Check whether given position is inside the rect.
-     * Use {@link com.gregtechceu.gtceu.api.mui.base.widget.IWidget#isInside(IViewportStack, int, int)} rather than this!
+     * Use {@link com.gregtechceu.gtceu.api.mui.base.widget.IWidget#isInside(IViewportStack, int, int)} rather than
+     * this!
      */
     public boolean isInside(int x, int y) {
         return x >= this.x && x < this.x + this.width && y >= this.y && y < this.y + this.height;
@@ -218,8 +219,8 @@ public class Area extends Rectangle implements IUnResizeable {
      * Check whether given rect intersects this rect
      */
     public boolean intersects(Rectangle area) {
-        return this.x < area.getX() + area.getWidth() && this.y < area.getY() + area.getHeight()
-                && area.getX() < this.x + this.width && area.getY() < this.y + this.height;
+        return this.x < area.getX() + area.getWidth() && this.y < area.getY() + area.getHeight() &&
+                area.getX() < this.x + this.width && area.getY() < this.y + this.height;
     }
 
     /**
@@ -242,7 +243,8 @@ public class Area extends Rectangle implements IUnResizeable {
     /**
      * Increases or decreases the size of this area. The position will change so that the center of the new
      * area is in the same place.
-     * The size will change with double of the given value. The position will change with the negative of the given value.
+     * The size will change with double of the given value. The position will change with the negative of the given
+     * value.
      * <br>
      * In short, it will push or pull all four edges by the given amount.
      *
@@ -256,7 +258,8 @@ public class Area extends Rectangle implements IUnResizeable {
     /**
      * Increases or decreases the size of this area. The position will change so that the center of the new
      * area is in the same place.
-     * The size will change with double of the given value. The position will change with the negative of the given value.
+     * The size will change with double of the given value. The position will change with the negative of the given
+     * value.
      * <br>
      * In short, it will push or pull all four edges by the given amount.
      *
@@ -271,7 +274,8 @@ public class Area extends Rectangle implements IUnResizeable {
     /**
      * Increases or decreases the width of this area. The x position will change so that the center of the new
      * area is in the same place.
-     * The width will change with double of the given value. The x position will change with the negative of the given value.
+     * The width will change with double of the given value. The x position will change with the negative of the given
+     * value.
      * <br>
      * In short, it will push or pull the left and right edges by the given amount.
      *
@@ -285,7 +289,8 @@ public class Area extends Rectangle implements IUnResizeable {
     /**
      * Increases or decreases the height of this area. The y position will change so that the center of the new
      * area is in the same place.
-     * The height will change with double of the given value. The y position will change with the negative of the given value.
+     * The height will change with double of the given value. The y position will change with the negative of the given
+     * value.
      * <br>
      * In short, it will push or pull the top and bottom edges by the given amount.
      *
@@ -441,8 +446,10 @@ public class Area extends Rectangle implements IUnResizeable {
      * @param stack pose stack
      */
     public void transformAndRectanglerize(IViewportStack stack) {
-        int xTL = stack.transformX(this.x, this.y), xTR = stack.transformX(ex(), this.y), xBL = stack.transformX(this.x, ey()), xBR = stack.transformX(ex(), ey());
-        int yTL = stack.transformY(this.x, this.y), yTR = stack.transformY(ex(), this.y), yBL = stack.transformY(this.x, ey()), yBR = stack.transformY(ex(), ey());
+        int xTL = stack.transformX(this.x, this.y), xTR = stack.transformX(ex(), this.y),
+                xBL = stack.transformX(this.x, ey()), xBR = stack.transformX(ex(), ey());
+        int yTL = stack.transformY(this.x, this.y), yTR = stack.transformY(ex(), this.y),
+                yBL = stack.transformY(this.x, ey()), yBR = stack.transformY(ex(), ey());
         int x0 = MathUtils.min(xTL, xTR, xBL, xBR);
         int x1 = MathUtils.max(xTL, xTR, xBL, xBR);
         int y0 = MathUtils.min(yTL, yTR, yBL, yBR);

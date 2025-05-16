@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.common.mui.widgets.slot;
 
 import com.gregtechceu.gtceu.core.mixins.TransientCraftingContainerAccessor;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.TransientCraftingContainer;
@@ -15,7 +16,8 @@ public class CraftingContainerWrapper extends TransientCraftingContainer {
     private final int startIndex;
     private final ItemStack[] snapshot;
 
-    public CraftingContainerWrapper(AbstractContainerMenu menu, int width, int height, IItemHandlerModifiable delegate, int startIndex) {
+    public CraftingContainerWrapper(AbstractContainerMenu menu, int width, int height, IItemHandlerModifiable delegate,
+                                    int startIndex) {
         super(menu, width, height);
         this.delegate = delegate;
         this.startIndex = startIndex;
@@ -45,7 +47,8 @@ public class CraftingContainerWrapper extends TransientCraftingContainer {
         for (int slot = 0; slot < snapshot.length; slot++) {
             ItemStack stack = snapshot[slot];
             ItemStack current = this.delegate.getStackInSlot(slot + this.startIndex);
-            if (stack.isEmpty() != current.isEmpty() || (!stack.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, current))) {
+            if (stack.isEmpty() != current.isEmpty() ||
+                    (!stack.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, current))) {
                 setItem(slot, current);
                 updateSnapshot(slot, current);
             }

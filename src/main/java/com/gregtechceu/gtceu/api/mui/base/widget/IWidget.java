@@ -4,11 +4,11 @@ import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Flex;
+import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +65,8 @@ public interface IWidget extends IGuiElement {
     }
 
     /**
-     * Draws extra elements of this widget. Called after {@link #drawBackground(ModularGuiContext, WidgetTheme)} and before
+     * Draws extra elements of this widget. Called after {@link #drawBackground(ModularGuiContext, WidgetTheme)} and
+     * before
      * {@link #drawOverlay(ModularGuiContext, WidgetTheme)}
      *
      * @param context     gui context

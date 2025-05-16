@@ -1,6 +1,5 @@
 package com.gregtechceu.gtceu.client.mui.screen;
 
-import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
@@ -9,25 +8,24 @@ import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.base.widget.IFocusedWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiViewportStack;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Animator;
 import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
 import com.gregtechceu.gtceu.api.mui.utils.Interpolation;
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.ParentWidget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiViewportStack;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.common.mui.widgets.SlotGroupWidget;
-import mezz.jei.gui.ghost.GhostIngredientDrag;
+
 import net.minecraft.Util;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +41,8 @@ import java.util.function.Supplier;
 
 /**
  * This class is like a window in windows. It can hold any amount of widgets. It may also be draggable.
- * To open another panel on top of the main panel you must use {@link IPanelHandler#simple(ModularPanel, SecondaryPanel.IPanelBuilder, boolean)}
+ * To open another panel on top of the main panel you must use
+ * {@link IPanelHandler#simple(ModularPanel, SecondaryPanel.IPanelBuilder, boolean)}
  * or {@link PanelSyncManager#panel(String, PanelSyncHandler.IPanelBuilder, boolean)} if the panel should be synced.
  */
 public class ModularPanel extends ParentWidget<ModularPanel> implements IViewport {
@@ -258,7 +257,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     /**
-     * Wraps a function so it can be called safely. This is needed in methods where the panel can be closed and disposed, but doing
+     * Wraps a function so it can be called safely. This is needed in methods where the panel can be closed and
+     * disposed, but doing
      * so will result in unexpected errors. This wrapper stops the disposal until the function has been fully executed.
      * The return value of the function is then returned.
      *
@@ -386,7 +386,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         });
     }
 
-    private boolean onMouseReleased(double mouseX, double mouseY, int button, boolean tryTap, LocatedWidget widget, Interactable interactable) {
+    private boolean onMouseReleased(double mouseX, double mouseY, int button, boolean tryTap, LocatedWidget widget,
+                                    Interactable interactable) {
         boolean stop = false;
         widget.applyMatrix(getContext());
         if (tryTap && this.mouse.acceptedInteractions.remove(interactable)) {
@@ -409,7 +410,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
 
     public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
         return doSafeBool(() -> {
-            switch (interactFocused(widget -> widget.onKeyPressed(keyCode, scanCode, modifiers), Interactable.Result.IGNORE)) {
+            switch (interactFocused(widget -> widget.onKeyPressed(keyCode, scanCode, modifiers),
+                    Interactable.Result.IGNORE)) {
                 case STOP:
                     this.keyboard.pressed(LocatedWidget.EMPTY, keyCode);
                     return true;
@@ -483,7 +485,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         });
     }
 
-    private boolean onKeyReleased(int keyCode, int scanCode, int modifiers, boolean tryTap, LocatedWidget widget, Interactable interactable) {
+    private boolean onKeyReleased(int keyCode, int scanCode, int modifiers, boolean tryTap, LocatedWidget widget,
+                                  Interactable interactable) {
         boolean stop = false;
         widget.applyMatrix(getContext());
         if (tryTap && this.mouse.acceptedInteractions.remove(interactable)) {
@@ -574,7 +577,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     @SuppressWarnings("unchecked")
-    private <T, W extends IWidget & IFocusedWidget & Interactable> T interactFocused(Function<W, T> function, T defaultValue) {
+    private <T, W extends IWidget & IFocusedWidget & Interactable> T interactFocused(Function<W, T> function,
+                                                                                     T defaultValue) {
         LocatedWidget focused = this.getContext().getFocusedWidget();
         T result = defaultValue;
         if (focused.getElement() instanceof Interactable interactable) {
@@ -689,7 +693,8 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     @NotNull
     protected Animator getAnimator() {
         if (this.animator == null) {
-            this.animator = new Animator(getScreen().getCurrentTheme().getOpenCloseAnimationOverride(), Interpolation.QUINT_OUT)
+            this.animator = new Animator(getScreen().getCurrentTheme().getOpenCloseAnimationOverride(),
+                    Interpolation.QUINT_OUT)
                     .setValueBounds(0.0f, 1.0f)
                     .setCallback(val -> {
                         this.alpha = (float) val;

@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.widget.ParentWidget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Box;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -158,7 +159,8 @@ public class Flow extends ParentWidget<Flow> implements ILayoutWidget, IExpander
                     if (this.crossAxisAlignment == Alignment.CrossAxis.CENTER) {
                         crossAxisPos = (int) (width / 2f - widget.getArea().getSize(other) / 2f);
                     } else if (this.crossAxisAlignment == Alignment.CrossAxis.END) {
-                        crossAxisPos = width - widget.getArea().getSize(other) - margin.getEnd(other) - padding.getStart(other);
+                        crossAxisPos = width - widget.getArea().getSize(other) - margin.getEnd(other) -
+                                padding.getStart(other);
                     }
                 }
                 widget.getArea().setRelativePoint(other, crossAxisPos);

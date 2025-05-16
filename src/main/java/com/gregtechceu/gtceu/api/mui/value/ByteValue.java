@@ -48,9 +48,12 @@ public class ByteValue implements IByteValue<Byte> {
     }
 
     public interface Supplier {
+
         byte getByte();
     }
+
     public interface Consumer {
+
         void setByte(byte b);
     }
 }

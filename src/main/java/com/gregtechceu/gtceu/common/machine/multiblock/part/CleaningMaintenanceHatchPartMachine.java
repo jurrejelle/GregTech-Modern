@@ -28,8 +28,8 @@ public class CleaningMaintenanceHatchPartMachine extends AutoMaintenanceHatchPar
     @Getter
     private final CleanroomType cleanroomType;
 
-    public CleaningMaintenanceHatchPartMachine(IMachineBlockEntity metaBlockEntityId, CleanroomType cleanroomType) {
-        super(metaBlockEntityId);
+    public CleaningMaintenanceHatchPartMachine(IMachineBlockEntity metaTileEntityId, CleanroomType cleanroomType) {
+        super(metaTileEntityId);
         this.cleanroomType = cleanroomType;
         DUMMY_CLEANROOM = DummyCleanroom.createForTypes(Collections.singletonList(cleanroomType));
     }

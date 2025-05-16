@@ -1,9 +1,11 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IIntSyncValue;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IStringSyncValue;
-import com.gregtechceu.gtceu.utils.NetworkUtils;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +14,8 @@ import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-public class IntSyncValue extends ValueSyncHandler<Integer> implements IIntSyncValue<Integer>, IStringSyncValue<Integer> {
+public class IntSyncValue extends ValueSyncHandler<Integer>
+                          implements IIntSyncValue<Integer>, IStringSyncValue<Integer> {
 
     private int cache;
     private final IntSupplier getter;

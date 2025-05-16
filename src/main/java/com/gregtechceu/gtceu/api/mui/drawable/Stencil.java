@@ -1,20 +1,21 @@
 package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
-
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 
 public class Stencil {
 
@@ -59,7 +60,8 @@ public class Stencil {
     /**
      * Scissor a transformed part of the screen.
      * OpenGL's transformations do effect these values.
-     * If the context is not null, it's viewport transformations are applied to the area that will be stored in the stack,
+     * If the context is not null, it's viewport transformations are applied to the area that will be stored in the
+     * stack,
      * but not to the actual stencil.
      */
     public static void apply(int x, int y, int w, int h, @Nullable GuiContext context) {
@@ -75,7 +77,8 @@ public class Stencil {
         apply(stencilShape, x, y, w, h, context, true);
     }
 
-    public static void apply(Runnable stencilShape, int x, int y, int w, int h, @Nullable GuiContext context, boolean hideStencilShape) {
+    public static void apply(Runnable stencilShape, int x, int y, int w, int h, @Nullable GuiContext context,
+                             boolean hideStencilShape) {
         Area scissor = new Area(x, y, w, h);
         if (context != null) {
             scissor.transformAndRectanglerize(context);
@@ -98,7 +101,8 @@ public class Stencil {
         GL11.glStencilMask(0x00);
     }
 
-    private static void setStencilValue(Runnable stencilShape, int stencilValue, boolean remove, boolean hideStencilShape) {
+    private static void setStencilValue(Runnable stencilShape, int stencilValue, boolean remove,
+                                        boolean hideStencilShape) {
         // Set stencil func
         int mode = remove ? GL11.GL_DECR : GL11.GL_INCR;
         GL11.glStencilFunc(GL11.GL_EQUAL, stencilValue, 0xFF);

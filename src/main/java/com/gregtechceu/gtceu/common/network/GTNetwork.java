@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.common.network;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.common.network.packets.*;
 import com.gregtechceu.gtceu.common.network.packets.hazard.SPacketAddHazardZone;
 import com.gregtechceu.gtceu.common.network.packets.hazard.SPacketRemoveHazardZone;
@@ -10,9 +9,9 @@ import com.gregtechceu.gtceu.common.network.packets.hazard.SPacketSyncLevelHazar
 import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectBedrockFluid;
 import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectBedrockOre;
 import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectOre;
-
 import com.gregtechceu.gtceu.common.network.packets.ui.OpenGuiPacket;
 import com.gregtechceu.gtceu.common.network.packets.ui.SyncHandlerPacket;
+
 import com.lowdragmc.lowdraglib.networking.INetworking;
 import com.lowdragmc.lowdraglib.networking.forge.LDLNetworkingImpl;
 

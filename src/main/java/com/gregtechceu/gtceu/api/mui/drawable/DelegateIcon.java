@@ -1,9 +1,9 @@
 package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IIcon;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Box;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 public class DelegateIcon implements IIcon {
 

@@ -4,7 +4,9 @@ import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufAdapter;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufDeserializer;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufSerializer;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IEquals;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,12 +88,12 @@ public class GenericSyncValue<T> extends ValueSyncHandler<T> {
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) throws IOException {
+    public void write(FriendlyByteBuf buffer) {
         this.serializer.serialize(buffer, this.cache);
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) throws IOException {
+    public void read(FriendlyByteBuf buffer) {
         setValue(this.deserializer.deserialize(buffer), true, false);
     }
 }

@@ -1,8 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
 import com.gregtechceu.gtceu.api.mui.factory.GuiData;
-import com.gregtechceu.gtceu.client.mui.screen.*;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
+import com.gregtechceu.gtceu.client.mui.screen.*;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -55,8 +55,11 @@ public interface UIFactory<D extends GuiData> {
      * @param container container for the gui
      * @param screen    the screen which was created in {@link #createScreen(GuiData, ModularPanel)}
      * @return new screen wrapper
-     * @throws IllegalStateException if the wrapping screen is not a {@link net.minecraft.world.inventory.AbstractContainerMenu AbstractContainerMenu} or if the
-     *                               container inside is not the same as the one passed to this method. This method is not the thrower, but the
+     * @throws IllegalStateException if the wrapping screen is not a
+     *                               {@link net.minecraft.world.inventory.AbstractContainerMenu AbstractContainerMenu}
+     *                               or if the
+     *                               container inside is not the same as the one passed to this method. This method is
+     *                               not the thrower, but the
      *                               caller of this method.
      */
     @OnlyIn(Dist.CLIENT)
@@ -75,8 +78,10 @@ public interface UIFactory<D extends GuiData> {
     }
 
     /**
-     * A default function to check if the current interacting player can interact with the ui. If not overridden on {@link UISettings},
-     * then this is called every tick while a UI opened by this factory is open. Once this function returns false, the UI is immediately
+     * A default function to check if the current interacting player can interact with the ui. If not overridden on
+     * {@link UISettings},
+     * then this is called every tick while a UI opened by this factory is open. Once this function returns false, the
+     * UI is immediately
      * closed.
      *
      * @param player  current interacting player

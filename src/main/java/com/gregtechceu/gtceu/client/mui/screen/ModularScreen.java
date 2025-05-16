@@ -9,17 +9,12 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IGuiAction;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.overlay.OverlayScreenWrapper;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.sync.ModularSyncManager;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -28,6 +23,13 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -104,10 +106,12 @@ public class ModularScreen implements GuiEventListener {
         this(owner, Objects.requireNonNull(mainPanelCreator, "The main panel function must not be null!"), false);
     }
 
-    private ModularScreen(@NotNull String owner, @Nullable Function<ModularGuiContext, ModularPanel> mainPanelCreator, boolean ignored) {
+    private ModularScreen(@NotNull String owner, @Nullable Function<ModularGuiContext, ModularPanel> mainPanelCreator,
+                          boolean ignored) {
         Objects.requireNonNull(owner, "The owner must not be null!");
         this.owner = owner;
-        ModularPanel mainPanel = mainPanelCreator != null ? mainPanelCreator.apply(this.context) : buildUI(this.context);
+        ModularPanel mainPanel = mainPanelCreator != null ? mainPanelCreator.apply(this.context) :
+                buildUI(this.context);
         Objects.requireNonNull(mainPanel, "The main panel must not be null!");
         this.name = mainPanel.getName();
         this.currentTheme = IThemeApi.get().getThemeForScreen(this, null);
@@ -174,12 +178,10 @@ public class ModularScreen implements GuiEventListener {
     }
 
     @ApiStatus.OverrideOnly
-    public void onOpen() {
-    }
+    public void onOpen() {}
 
     @ApiStatus.OverrideOnly
-    public void onClose() {
-    }
+    public void onClose() {}
 
     public void close() {
         close(false);
@@ -225,7 +227,8 @@ public class ModularScreen implements GuiEventListener {
     @MustBeInvokedByOverriders
     public void onFrameUpdate() {
         this.panelManager.checkDirty();
-        for (ObjectIterator<Object2ObjectMap.Entry<IWidget, Runnable>> iterator = this.frameUpdates.object2ObjectEntrySet().fastIterator(); iterator.hasNext(); ) {
+        for (ObjectIterator<Object2ObjectMap.Entry<IWidget, Runnable>> iterator = this.frameUpdates
+                .object2ObjectEntrySet().fastIterator(); iterator.hasNext();) {
             Object2ObjectMap.Entry<IWidget, Runnable> entry = iterator.next();
             if (!entry.getKey().isValid()) {
                 iterator.remove();
@@ -245,7 +248,8 @@ public class ModularScreen implements GuiEventListener {
         for (ModularPanel panel : this.panelManager.getReverseOpenPanels()) {
             this.context.updateZ(panel.getArea().getPanelLayer() * 20);
             if (panel.disablePanelsBelow()) {
-                GuiDraw.drawRect(0, 0, this.context.getScreenArea().w(), this.context.getScreenArea().h(), Color.argb(16, 16, 16, (int) (125 * panel.getAlpha())));
+                GuiDraw.drawRect(0, 0, this.context.getScreenArea().w(), this.context.getScreenArea().h(),
+                        Color.argb(16, 16, 16, (int) (125 * panel.getAlpha())));
             }
             WidgetTree.drawTree(panel, this.context);
         }
@@ -503,12 +507,14 @@ public class ModularScreen implements GuiEventListener {
      * Registers an interaction listener. This is useful when you want to listen to any GUI interactions and not just
      * for a specific widget. <br>
      * <b>Do NOT register listeners which are bound to a widget here!</b>
-     * Use {@link com.gregtechceu.gtceu.api.mui.widget.Widget#listenGuiAction(IGuiAction) Widget#listenGuiAction(IGuiAction)} for that!
+     * Use {@link com.gregtechceu.gtceu.api.mui.widget.Widget#listenGuiAction(IGuiAction)
+     * Widget#listenGuiAction(IGuiAction)} for that!
      *
      * @param action action listener
      */
     public void registerGuiActionListener(IGuiAction action) {
-        List<IGuiAction> list = this.guiActionListeners.computeIfAbsent(getGuiActionClass(action), key -> new ArrayList<>());
+        List<IGuiAction> list = this.guiActionListeners.computeIfAbsent(getGuiActionClass(action),
+                key -> new ArrayList<>());
         if (!list.contains(action)) list.add(action);
     }
 
@@ -536,7 +542,8 @@ public class ModularScreen implements GuiEventListener {
     /**
      * Registers a frame update listener which runs approximately 60 times per second.
      * Listeners are automatically removed if the widget becomes invalid.
-     * If a listener is already registered from the given widget and <code>merge</code> is true, the listeners get merged.
+     * If a listener is already registered from the given widget and <code>merge</code> is true, the listeners get
+     * merged.
      * Otherwise, the current listener is overwritten (if any)
      *
      * @param widget   widget the listener is bound to
@@ -589,7 +596,9 @@ public class ModularScreen implements GuiEventListener {
     }
 
     public enum UpOrDown {
-        UP(1), DOWN(-1);
+
+        UP(1),
+        DOWN(-1);
 
         public final int modifier;
 

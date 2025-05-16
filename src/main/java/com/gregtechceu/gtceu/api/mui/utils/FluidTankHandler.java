@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.mui.utils;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
 import org.jetbrains.annotations.NotNull;
 
 public class FluidTankHandler implements IFluidHandler {

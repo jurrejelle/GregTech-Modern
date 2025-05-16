@@ -1,10 +1,8 @@
 package com.gregtechceu.gtceu.integration.jei;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
-import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
 import com.gregtechceu.gtceu.common.data.GTFluids;
@@ -25,21 +23,20 @@ import com.gregtechceu.gtceu.integration.jei.orevein.GTOreVeinInfoCategory;
 import com.gregtechceu.gtceu.integration.jei.recipe.GTRecipeJEICategory;
 import com.gregtechceu.gtceu.integration.jei.subtype.PotionFluidSubtypeInterpreter;
 
-import lombok.Getter;
-import mezz.jei.api.runtime.IJeiRuntime;
-import mezz.jei.gui.GuiProperties;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.fluids.FluidStack;
 
+import lombok.Getter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IPlatformFluidHelper;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

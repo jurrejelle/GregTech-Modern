@@ -2,10 +2,12 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -54,7 +56,8 @@ public class FontRenderHelper {
         state[0] = formatting;
     }
 
-    public static MutableComponent format(@Nullable FormattingState state, @Nullable FormattingState parentState, Component text) {
+    public static MutableComponent format(@Nullable FormattingState state, @Nullable FormattingState parentState,
+                                          Component text) {
         if (state == null) {
             if (parentState == null) return text.copy();
             return parentState.prependText(ChatFormatting.RESET, null).append(text);
@@ -62,7 +65,8 @@ public class FontRenderHelper {
         return state.prependText(ChatFormatting.RESET, parentState).append(text);
     }
 
-    public static MutableComponent formatArgs(Object[] args, @Nullable FormattingState parentState, String text, boolean translate) {
+    public static MutableComponent formatArgs(Object[] args, @Nullable FormattingState parentState, String text,
+                                              boolean translate) {
         if (args == null || args.length == 0) return translate ? Component.translatable(text) : Component.literal(text);
         args = Arrays.copyOf(args, args.length);
         for (int i = 0; i < args.length; i++) {

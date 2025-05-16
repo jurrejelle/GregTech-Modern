@@ -1,12 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-import com.google.common.collect.AbstractIterator;
 import com.gregtechceu.gtceu.GTCEu;
-import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
-import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.chars.CharArraySet;
-import it.unimi.dsi.fastutil.chars.CharSet;
-import lombok.Getter;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +10,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import com.google.common.collect.AbstractIterator;
+import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
+import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.chars.CharArraySet;
+import it.unimi.dsi.fastutil.chars.CharSet;
+import lombok.Getter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -144,7 +146,8 @@ public class ArraySchema implements ISchema {
 
         public Builder where(char c, ResourceLocation registryName) {
             Optional<Block> block = BuiltInRegistries.BLOCK.getOptional(registryName);
-            if (block.isEmpty()) throw new IllegalArgumentException("Block with name " + registryName + " doesn't exist!");
+            if (block.isEmpty())
+                throw new IllegalArgumentException("Block with name " + registryName + " doesn't exist!");
             BlockState state = block.get().defaultBlockState();
             return where(c, new BlockInfo(state));
         }
@@ -161,7 +164,8 @@ public class ArraySchema implements ISchema {
                 if (xLayer.length == 0) {
                     errors.add(String.format("Layer %s is empty. This is not right", x + 1));
                 } else if (xLayer.length != layerSize) {
-                    errors.add(String.format("Invalid x-layer size. Expected %s, but got %s at layer %s", layerSize, xLayer.length, x + 1));
+                    errors.add(String.format("Invalid x-layer size. Expected %s, but got %s at layer %s", layerSize,
+                            xLayer.length, x + 1));
                 }
                 int rowSize = xLayer[0].length();
                 for (int y = 0; y < xLayer.length; y++) {
@@ -169,13 +173,16 @@ public class ArraySchema implements ISchema {
                     if (yRow.isEmpty()) {
                         errors.add(String.format("Row %s in layer %s is empty. This is not right", y + 1, x + 1));
                     } else if (yRow.length() != rowSize) {
-                        errors.add(String.format("Invalid x-layer size. Expected %s, but got %s at row %s in layer %s", layerSize, xLayer.length, y + 1, x + 1));
+                        errors.add(String.format("Invalid x-layer size. Expected %s, but got %s at row %s in layer %s",
+                                layerSize, xLayer.length, y + 1, x + 1));
                     }
                     for (int z = 0; z < yRow.length(); z++) {
                         char zChar = yRow.charAt(z);
                         if (!checkedChars.contains(zChar)) {
                             if (!this.blockMap.containsKey(zChar)) {
-                                errors.add(String.format("Found char '%s' at char %s in row %s in layer %s, but character was not found in map!", zChar, z + 1, y + 1, x + 1));
+                                errors.add(String.format(
+                                        "Found char '%s' at char %s in row %s in layer %s, but character was not found in map!",
+                                        zChar, z + 1, y + 1, x + 1));
                             }
                             checkedChars.add(zChar);
                         }
@@ -191,7 +198,8 @@ public class ArraySchema implements ISchema {
 
         public ArraySchema build() {
             validate();
-            BlockInfo[][][] blocks = new BlockInfo[this.tensor.size()][this.tensor.get(0).length][this.tensor.get(0)[0].length()];
+            BlockInfo[][][] blocks = new BlockInfo[this.tensor.size()][this.tensor.get(0).length][this.tensor.get(0)[0]
+                    .length()];
             for (int x = 0; x < this.tensor.size(); x++) {
                 String[] xLayer = this.tensor.get(x);
                 for (int y = 0; y < xLayer.length; y++) {
@@ -199,7 +207,8 @@ public class ArraySchema implements ISchema {
                     for (int z = 0; z < yRow.length(); z++) {
                         char zChar = yRow.charAt(z);
                         BlockInfo info = this.blockMap.get(zChar);
-                        if (info == null || info == BlockInfo.EMPTY) continue; // null -> any allowed -> don't need to check
+                        if (info == null || info == BlockInfo.EMPTY) continue; // null -> any allowed -> don't need to
+                                                                               // check
                         blocks[x][y][z] = info;
                     }
                 }

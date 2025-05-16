@@ -1,10 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.base.widget;
 
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 
 /**
  * Base interface for gui elements. For example widgets.

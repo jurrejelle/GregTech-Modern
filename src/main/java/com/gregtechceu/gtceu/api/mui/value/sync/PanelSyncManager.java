@@ -5,13 +5,15 @@ import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,7 +95,7 @@ public class PanelSyncManager {
         this.init = false;
     }
 
-    public void receiveWidgetUpdate(String mapKey, int id, FriendlyByteBuf buf) throws IOException {
+    public void receiveWidgetUpdate(String mapKey, int id, FriendlyByteBuf buf) {
         if (!this.syncHandlers.containsKey(mapKey)) {
             GTCEu.LOGGER.warn("SyncHandler \"{}\" does not exist for panel \"{}\"! ID was {}.", mapKey, panelName, id);
             return;
@@ -115,7 +117,8 @@ public class PanelSyncManager {
     }
 
     public boolean hasSyncHandler(SyncHandler syncHandler) {
-        return syncHandler.isValid() && syncHandler.getSyncManager() == this && this.reverseSyncHandlers.containsKey(syncHandler);
+        return syncHandler.isValid() && syncHandler.getSyncManager() == this &&
+                this.reverseSyncHandlers.containsKey(syncHandler);
     }
 
     private void putSyncValue(String name, int id, SyncHandler syncHandler) {
@@ -170,13 +173,17 @@ public class PanelSyncManager {
     /**
      * Creates a synced panel handler. This can be used to automatically handle syncing for synced panels.
      * Synced panels do not need to be synced themselves, but contain at least one widget which is synced.
-     * <p>NOTE</p>
+     * <p>
+     * NOTE
+     * </p>
      * A panel sync handler is only created once. If one was already registered, that one will be returned.
      * (This is only relevant for nested sub panels.)
      *
      * @param key          the key used for syncing
-     * @param panelBuilder the panel builder, that will create the new panel. It must not return null or any existing panels.
-     * @param subPanel     true if this panel should close when its parent closes (the parent is defined by <i>this</i> {@link PanelSyncManager})
+     * @param panelBuilder the panel builder, that will create the new panel. It must not return null or any existing
+     *                     panels.
+     * @param subPanel     true if this panel should close when its parent closes (the parent is defined by <i>this</i>
+     *                     {@link PanelSyncManager})
      * @return a synced panel handler.
      * @throws NullPointerException     if the build panel of the builder is null
      * @throws IllegalArgumentException if the build panel of the builder is the main panel
@@ -222,7 +229,8 @@ public class PanelSyncManager {
             itemSlot(key, i, slotFunction.apply(playerInventory, i).slotGroup(ModularSyncManager.PLAYER_INVENTORY));
         }
         // player inv sorting is handled by bogosorter
-        registerSlotGroup(new SlotGroup(ModularSyncManager.PLAYER_INVENTORY, 9, SlotGroup.PLAYER_INVENTORY_PRIO, true).setAllowSorting(false));
+        registerSlotGroup(new SlotGroup(ModularSyncManager.PLAYER_INVENTORY, 9, SlotGroup.PLAYER_INVENTORY_PRIO, true)
+                .setAllowSorting(false));
         return this;
     }
 

@@ -57,7 +57,8 @@ public class ThemeBuilder<B extends ThemeBuilder<B>> extends JsonBuilder {
     }
 
     public B background(String widgetTheme, String textureId) {
-        mergeAdd(widgetTheme, new JsonBuilder().add("background", new JsonBuilder().add("type", "texture").add("id", textureId)));
+        mergeAdd(widgetTheme,
+                new JsonBuilder().add("background", new JsonBuilder().add("type", "texture").add("id", textureId)));
         return getThis();
     }
 
@@ -67,7 +68,8 @@ public class ThemeBuilder<B extends ThemeBuilder<B>> extends JsonBuilder {
     }
 
     public B hoverBackground(String widgetTheme, String textureId) {
-        mergeAdd(widgetTheme, new JsonBuilder().add("hoverBackground", new JsonBuilder().add("type", "texture").add("id", textureId)));
+        mergeAdd(widgetTheme, new JsonBuilder().add("hoverBackground",
+                new JsonBuilder().add("type", "texture").add("id", textureId)));
         return getThis();
     }
 
@@ -106,23 +108,27 @@ public class ThemeBuilder<B extends ThemeBuilder<B>> extends JsonBuilder {
         return getThis();
     }
 
-    public  B toggleButtonSelectedBackground(IDrawable v) {
-        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedBackground", DrawableSerialization.serialize(v)));
+    public B toggleButtonSelectedBackground(IDrawable v) {
+        mergeAdd(IThemeApi.TOGGLE_BUTTON,
+                new JsonBuilder().add("selectedBackground", DrawableSerialization.serialize(v)));
         return getThis();
     }
 
     public B toggleButtonSelectedBackground(String widgetTheme, String textureId) {
-        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedBackground", new JsonBuilder().add("type", "texture").add("id", textureId)));
+        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedBackground",
+                new JsonBuilder().add("type", "texture").add("id", textureId)));
         return getThis();
     }
 
-    public  B toggleButtonSelectedHoverBackground(IDrawable v) {
-        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedHoverBackground", DrawableSerialization.serialize(v)));
+    public B toggleButtonSelectedHoverBackground(IDrawable v) {
+        mergeAdd(IThemeApi.TOGGLE_BUTTON,
+                new JsonBuilder().add("selectedHoverBackground", DrawableSerialization.serialize(v)));
         return getThis();
     }
 
     public B toggleButtonSelectedHoverBackground(String widgetTheme, String textureId) {
-        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedHoverBackground", new JsonBuilder().add("type", "texture").add("id", textureId)));
+        mergeAdd(IThemeApi.TOGGLE_BUTTON, new JsonBuilder().add("selectedHoverBackground",
+                new JsonBuilder().add("type", "texture").add("id", textureId)));
         return getThis();
     }
 

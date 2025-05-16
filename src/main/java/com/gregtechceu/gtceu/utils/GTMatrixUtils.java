@@ -1,7 +1,5 @@
 package com.gregtechceu.gtceu.utils;
 
-import com.mojang.blaze3d.platform.GlUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
@@ -11,6 +9,8 @@ import net.minecraftforge.client.model.SimpleModelState;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
+import com.mojang.blaze3d.platform.GlUtil;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Transformation;
 import org.jetbrains.annotations.Contract;
 import org.joml.*;

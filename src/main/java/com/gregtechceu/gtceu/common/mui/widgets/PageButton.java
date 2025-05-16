@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.mui.drawable.TabTexture;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetThemeSelectable;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+
 import org.jetbrains.annotations.NotNull;
 
 public class PageButton extends Widget<PageButton> implements Interactable {

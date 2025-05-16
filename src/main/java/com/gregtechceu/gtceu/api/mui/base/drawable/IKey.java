@@ -3,15 +3,15 @@ package com.gregtechceu.gtceu.api.mui.base.drawable;
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.drawable.Icon;
 import com.gregtechceu.gtceu.api.mui.drawable.text.*;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.common.mui.widgets.TextWidget;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -215,8 +215,10 @@ public interface IKey extends IDrawable, IJsonSerializable<IKey> {
     }
 
     /**
-     * Set text formatting to this key. If {@link IKey#RESET} is used, then that's applied first and then all other formatting of this key.
-     * With {@link null}, you can remove a color formatting. No matter the parents color, the default color will be used.
+     * Set text formatting to this key. If {@link IKey#RESET} is used, then that's applied first and then all other
+     * formatting of this key.
+     * With {@link null}, you can remove a color formatting. No matter the parents color, the default color will be
+     * used.
      *
      * @param formatting a formatting rul
      * @return this
@@ -261,13 +263,15 @@ public interface IKey extends IDrawable, IJsonSerializable<IKey> {
 
     @Override
     default void loadFromJson(JsonObject json) {
-        if (json.has("color") || json.has("shadow") || json.has("align") || json.has("alignment") || json.has("scale")) {
+        if (json.has("color") || json.has("shadow") || json.has("align") || json.has("alignment") ||
+                json.has("scale")) {
             StyledText styledText = this instanceof StyledText styledText1 ? styledText1 : withStyle();
             if (json.has("color")) {
                 styledText.color(JsonHelper.getInt(json, 0, "color"));
             }
             styledText.shadow(JsonHelper.getBoolean(json, false, "shadow"));
-            styledText.alignment(JsonHelper.deserialize(json, Alignment.class, styledText.getAlignment(), "align", "alignment"));
+            styledText.alignment(
+                    JsonHelper.deserialize(json, Alignment.class, styledText.getAlignment(), "align", "alignment"));
             styledText.scale(JsonHelper.getFloat(json, 1, "scale"));
         }
     }

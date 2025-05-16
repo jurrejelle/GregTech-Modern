@@ -1,12 +1,13 @@
 package com.gregtechceu.gtceu.api.mui.theme;
 
-import com.gregtechceu.gtceu.api.mui.ModularUIConfig;
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonBuilder;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
@@ -30,13 +31,24 @@ public class ThemeAPI implements IThemeApi {
     private final Object2ObjectMap<String, String> screenThemes = new Object2ObjectOpenHashMap<>();
 
     private ThemeAPI() {
-        registerWidgetTheme(Theme.PANEL, new WidgetTheme(GuiTextures.MC_BACKGROUND, null, Color.WHITE.main, 0xFF404040, false), WidgetTheme::new);
-        registerWidgetTheme(Theme.BUTTON, new WidgetTheme(GuiTextures.MC_BUTTON, GuiTextures.MC_BUTTON_HOVERED, Color.WHITE.main, Color.WHITE.main, true), WidgetTheme::new);
-        registerWidgetTheme(Theme.ITEM_SLOT, new WidgetSlotTheme(GuiTextures.SLOT_ITEM, Color.withAlpha(Color.WHITE.main, 0x60)), WidgetSlotTheme::new);
-        registerWidgetTheme(Theme.FLUID_SLOT, new WidgetSlotTheme(GuiTextures.SLOT_FLUID, Color.withAlpha(Color.WHITE.main, 0x60)), WidgetSlotTheme::new);
-        registerWidgetTheme(Theme.TEXT_FIELD, new WidgetTextFieldTheme(0xFF2F72A8, 0xFF5F5F5F), (parent, json, fallback) -> new WidgetTextFieldTheme(parent, fallback, json));
-        registerWidgetTheme(Theme.TOGGLE_BUTTON, new WidgetThemeSelectable(GuiTextures.MC_BUTTON, GuiTextures.MC_BUTTON_HOVERED, Color.WHITE.main, Color.WHITE.main, true,
-                GuiTextures.MC_BUTTON_DISABLED, IDrawable.NONE, Color.WHITE.main, Color.WHITE.main, true), WidgetThemeSelectable::new);
+        registerWidgetTheme(Theme.PANEL,
+                new WidgetTheme(GuiTextures.MC_BACKGROUND, null, Color.WHITE.main, 0xFF404040, false),
+                WidgetTheme::new);
+        registerWidgetTheme(Theme.BUTTON, new WidgetTheme(GuiTextures.MC_BUTTON, GuiTextures.MC_BUTTON_HOVERED,
+                Color.WHITE.main, Color.WHITE.main, true), WidgetTheme::new);
+        registerWidgetTheme(Theme.ITEM_SLOT,
+                new WidgetSlotTheme(GuiTextures.SLOT_ITEM, Color.withAlpha(Color.WHITE.main, 0x60)),
+                WidgetSlotTheme::new);
+        registerWidgetTheme(Theme.FLUID_SLOT,
+                new WidgetSlotTheme(GuiTextures.SLOT_FLUID, Color.withAlpha(Color.WHITE.main, 0x60)),
+                WidgetSlotTheme::new);
+        registerWidgetTheme(Theme.TEXT_FIELD, new WidgetTextFieldTheme(0xFF2F72A8, 0xFF5F5F5F),
+                (parent, json, fallback) -> new WidgetTextFieldTheme(parent, fallback, json));
+        registerWidgetTheme(Theme.TOGGLE_BUTTON,
+                new WidgetThemeSelectable(GuiTextures.MC_BUTTON, GuiTextures.MC_BUTTON_HOVERED, Color.WHITE.main,
+                        Color.WHITE.main, true,
+                        GuiTextures.MC_BUTTON_DISABLED, IDrawable.NONE, Color.WHITE.main, Color.WHITE.main, true),
+                WidgetThemeSelectable::new);
     }
 
     @Override
@@ -77,7 +89,7 @@ public class ThemeAPI implements IThemeApi {
         String theme = getThemeIdForScreen(owner, name);
         if (theme != null) return getTheme(theme);
         if (defaultTheme != null) return getTheme(defaultTheme);
-        return getTheme(ModularUIConfig.useDarkThemeByDefault ? "vanilla_dark" : "vanilla");
+        return getTheme(ConfigHolder.INSTANCE.client.ui.useDarkThemeByDefault ? "vanilla_dark" : "vanilla");
     }
 
     private String getThemeIdForScreen(String mod, String name) {
@@ -123,8 +135,7 @@ public class ThemeAPI implements IThemeApi {
 
     public static class DefaultTheme extends AbstractDefaultTheme {
 
-        private DefaultTheme() {
-        }
+        private DefaultTheme() {}
 
         @Override
         public String getId() {

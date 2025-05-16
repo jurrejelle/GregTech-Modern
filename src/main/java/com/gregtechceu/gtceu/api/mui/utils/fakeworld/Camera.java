@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
 import net.minecraft.core.Vec3i;
+
 import org.joml.Vector3f;
 
 public record Camera(Vector3f pos, Vector3f lookAt) {

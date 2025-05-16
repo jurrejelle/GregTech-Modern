@@ -6,12 +6,13 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IGuiAction;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.HoveredWidgetList;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.HorizontalScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollArea;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.VerticalScrollData;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
  * @param <I> type of children (in most cases just {@link IWidget})
  * @param <W> type of this widget
  */
-public abstract class AbstractScrollWidget<I extends IWidget, W extends AbstractScrollWidget<I, W>> extends AbstractParentWidget<I, W> implements IViewport, Interactable {
+public abstract class AbstractScrollWidget<I extends IWidget, W extends AbstractScrollWidget<I, W>>
+                                          extends AbstractParentWidget<I, W> implements IViewport, Interactable {
 
     private final ScrollArea scroll = new ScrollArea();
     private boolean keepScrollBarInArea = false;
@@ -82,7 +84,8 @@ public abstract class AbstractScrollWidget<I extends IWidget, W extends Abstract
 
     @Override
     public boolean canHover() {
-        return super.canHover() || this.scroll.isInsideScrollbarArea(getContext().getMouseX(), getContext().getMouseY());
+        return super.canHover() ||
+                this.scroll.isInsideScrollbarArea(getContext().getMouseX(), getContext().getMouseY());
     }
 
     @Override
@@ -135,8 +138,10 @@ public abstract class AbstractScrollWidget<I extends IWidget, W extends Abstract
     }
 
     /**
-     * Sets whether the scroll bar should be kept inside the area of this widget, which might cause it to overlap with the content of this widget.
-     * By setting the value to false, the size of this widget is expanded by the thickness of the scrollbars after the tree is resized.
+     * Sets whether the scroll bar should be kept inside the area of this widget, which might cause it to overlap with
+     * the content of this widget.
+     * By setting the value to false, the size of this widget is expanded by the thickness of the scrollbars after the
+     * tree is resized.
      * Default: false
      *
      * @param value if the scroll bar should be kept inside the widgets area

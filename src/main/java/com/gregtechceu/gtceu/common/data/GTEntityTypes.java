@@ -43,7 +43,6 @@ public class GTEntityTypes {
             .properties(builder -> builder.sized(1.375f, 0.5625f).clientTrackingRange(10))
             .register();
 
-
     public static final EntityEntry<HoloScreenEntity> MODULAR_SCREEN = REGISTRATE
             .<HoloScreenEntity>entity("modular_screen", HoloScreenEntity::new, MobCategory.MISC)
             .lang("Modular Screen")

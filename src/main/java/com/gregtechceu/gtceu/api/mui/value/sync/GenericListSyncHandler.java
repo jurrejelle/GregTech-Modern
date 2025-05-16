@@ -1,12 +1,14 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufAdapter;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufDeserializer;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufSerializer;
 import com.gregtechceu.gtceu.api.mui.utils.serialization.IEquals;
+
 import net.minecraft.network.FriendlyByteBuf;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,7 +98,7 @@ public class GenericListSyncHandler<T> extends ValueSyncHandler<List<T>> {
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) throws IOException {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeVarInt(this.cache.size());
         for (T t : this.cache) {
             this.serializer.serialize(buffer, t);
@@ -104,7 +106,7 @@ public class GenericListSyncHandler<T> extends ValueSyncHandler<List<T>> {
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) throws IOException {
+    public void read(FriendlyByteBuf buffer) {
         this.cache.clear();
         for (int i = 0, n = buffer.readVarInt(); i < n; i++) {
             this.cache.add(this.deserializer.deserialize(buffer));

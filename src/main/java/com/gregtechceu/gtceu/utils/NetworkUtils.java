@@ -1,10 +1,12 @@
 package com.gregtechceu.gtceu.utils;
 
 import com.gregtechceu.gtceu.GTCEu;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
@@ -61,7 +63,8 @@ public class NetworkUtils {
         int maxEncoded = getMaxEncodedUtfLength(maxBytes);
         if (bytesTest.length > maxEncoded) {
             if (crash) {
-                throw new IllegalArgumentException("Max String size is " + maxEncoded + ", but found " + bytesTest.length + " bytes for '" + string + "'!");
+                throw new IllegalArgumentException("Max String size is " + maxEncoded + ", but found " +
+                        bytesTest.length + " bytes for '" + string + "'!");
             }
             bytes = new byte[maxEncoded];
             System.arraycopy(bytesTest, 0, bytes, 0, maxEncoded);

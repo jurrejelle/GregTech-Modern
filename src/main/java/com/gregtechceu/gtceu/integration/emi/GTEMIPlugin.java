@@ -2,7 +2,6 @@ package com.gregtechceu.gtceu.integration.emi;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
@@ -17,7 +16,6 @@ import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.integration.emi.circuit.GTProgrammedCircuitCategory;
 import com.gregtechceu.gtceu.integration.emi.handler.EMIScreenHandler;
-import com.gregtechceu.gtceu.integration.emi.handler.EmiStackConverter;
 import com.gregtechceu.gtceu.integration.emi.multipage.MultiblockInfoEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.oreprocessing.GTOreProcessingEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTBedrockFluidEmiCategory;
@@ -27,12 +25,8 @@ import com.gregtechceu.gtceu.integration.emi.recipe.Ae2PatternTerminalHandler;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTEmiRecipeHandler;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
 
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.lowdragmc.lowdraglib.gui.modular.ModularUIContainer;
 
-import dev.emi.emi.api.stack.EmiIngredient;
-import dev.emi.emi.api.stack.EmiStackInteraction;
-import dev.emi.emi.api.widget.Bounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;

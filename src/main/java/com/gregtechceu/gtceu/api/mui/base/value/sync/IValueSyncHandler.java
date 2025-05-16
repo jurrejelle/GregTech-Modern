@@ -4,8 +4,6 @@ import com.gregtechceu.gtceu.api.mui.base.value.IValue;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-import java.io.IOException;
-
 /**
  * A helper interface for syncing an object value.
  *

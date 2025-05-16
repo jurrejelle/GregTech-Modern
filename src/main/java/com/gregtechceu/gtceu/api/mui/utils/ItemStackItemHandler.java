@@ -1,11 +1,12 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+
 import org.jetbrains.annotations.NotNull;
 
 public class ItemStackItemHandler implements IItemHandlerModifiable {
@@ -111,8 +112,7 @@ public class ItemStackItemHandler implements IItemHandlerModifiable {
         return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
     }
 
-    protected void onContentsChanged(int slot) {
-    }
+    protected void onContentsChanged(int slot) {}
 
     public ListTag getItemsNbt() {
         CompoundTag nbt = this.container.getOrCreateTag();

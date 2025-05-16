@@ -1,32 +1,34 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
 import com.gregtechceu.gtceu.api.mui.base.UIFactory;
-import com.gregtechceu.gtceu.client.mui.screen.*;
+import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+import com.gregtechceu.gtceu.client.mui.screen.*;
 import com.gregtechceu.gtceu.common.network.GTNetwork;
 import com.gregtechceu.gtceu.common.network.packets.ui.OpenGuiPacket;
 import com.gregtechceu.gtceu.core.mixins.ServerPlayerAccessor;
-import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,7 +65,8 @@ public class GuiManager {
         return FACTORIES.containsKey(name);
     }
 
-    public static <T extends GuiData> void open(@NotNull UIFactory<T> factory, @NotNull T guiData, ServerPlayer player) {
+    public static <T extends GuiData> void open(@NotNull UIFactory<T> factory, @NotNull T guiData,
+                                                ServerPlayer player) {
         if (player instanceof FakePlayer || openedContainers.contains(player)) return;
         openedContainers.add(player);
         // create panel, collect sync handlers and create container
@@ -77,7 +80,8 @@ public class GuiManager {
         player.nextContainerCounter();
         player.closeContainer();
         int windowId = player.containerCounter;
-        ModularContainerMenu container = settings.hasContainer() ? settings.createContainer(windowId) : factory.createContainer(windowId);
+        ModularContainerMenu container = settings.hasContainer() ? settings.createContainer(windowId) :
+                factory.createContainer(windowId);
         container.construct(player, syncManager, settings, panel.getName(), guiData);
 
         // sync to client
@@ -92,7 +96,8 @@ public class GuiManager {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static <T extends GuiData> void open(int windowId, @NotNull UIFactory<T> factory, @NotNull FriendlyByteBuf data, @NotNull LocalPlayer player) {
+    public static <T extends GuiData> void open(int windowId, @NotNull UIFactory<T> factory,
+                                                @NotNull FriendlyByteBuf data, @NotNull LocalPlayer player) {
         T guiData = factory.readGuiData(player, data);
         UISettings settings = new UISettings();
         settings.defaultCanInteractWith(factory, guiData);
@@ -101,13 +106,15 @@ public class GuiManager {
         WidgetTree.collectSyncValues(syncManager, panel);
         ModularScreen screen = factory.createScreen(guiData, panel);
         screen.getContext().setSettings(settings);
-        ModularContainerMenu container = settings.hasContainer() ? settings.createContainer(windowId) : factory.createContainer(windowId);
+        ModularContainerMenu container = settings.hasContainer() ? settings.createContainer(windowId) :
+                factory.createContainer(windowId);
         container.construct(player, syncManager, settings, panel.getName(), guiData);
         IMuiScreen wrapper = factory.createScreenWrapper(container, screen);
         if (!(wrapper.getWrappedScreen() instanceof AbstractContainerScreen<?> guiContainer)) {
             throw new IllegalStateException("The wrapping screen must be a GuiContainer for synced GUIs!");
         }
-        if (guiContainer.getMenu() != container) throw new IllegalStateException("Custom Containers are not yet allowed!");
+        if (guiContainer.getMenu() != container)
+            throw new IllegalStateException("Custom Containers are not yet allowed!");
         MCHelper.setScreen(wrapper.getWrappedScreen());
         player.containerMenu = guiContainer.getMenu();
     }

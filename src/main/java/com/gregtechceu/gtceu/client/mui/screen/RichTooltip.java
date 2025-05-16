@@ -7,15 +7,13 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.drawable.text.RichText;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Either;
+import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -23,13 +21,15 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Either;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -107,15 +107,16 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
                 .<Either<FormattedText, TooltipComponent>>map(Either::left)
                 .collect(Collectors.toList());
 
-        var gatherEvent = new RenderTooltipEvent.GatherComponents(stack, screen.width, screen.height, textLines, this.maxWidth);
+        var gatherEvent = new RenderTooltipEvent.GatherComponents(stack, screen.width, screen.height, textLines,
+                this.maxWidth);
         if (MinecraftForge.EVENT_BUS.post(gatherEvent)) return; // canceled
         this.maxWidth = gatherEvent.getMaxWidth();
         textLines = gatherEvent.getTooltipElements();
         List<ClientTooltipComponent> components = textLines.stream()
                 .map(either -> either.map(
-                        text -> ClientTooltipComponent.create(text instanceof Component ? ((Component) text).getVisualOrderText() : Language.getInstance().getVisualOrder(text)),
-                        ClientTooltipComponent::create
-                ))
+                        text -> ClientTooltipComponent.create(text instanceof Component ?
+                                ((Component) text).getVisualOrderText() : Language.getInstance().getVisualOrder(text)),
+                        ClientTooltipComponent::create))
                 .toList();
 
         RenderTooltipEvent.Pre event = new RenderTooltipEvent.Pre(stack, context.getGraphics(),
@@ -137,26 +138,31 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
 
-        GuiDraw.drawTooltipBackground(context.getGraphics(), stack, components, area.x, area.y, area.width, area.height);
+        GuiDraw.drawTooltipBackground(context.getGraphics(), stack, components, area.x, area.y, area.width,
+                area.height);
 
-        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y, TextRenderer.getFont(), area.width, area.height));
+        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y,
+        // TextRenderer.getFont(), area.width, area.height));
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         renderer.setPos(area.x, area.y);
         this.text.compileAndDraw(renderer, context, false);
 
-        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, area.x, area.y, TextRenderer.getFont(), area.width, area.height));
+        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, area.x, area.y,
+        // TextRenderer.getFont(), area.width, area.height));
     }
 
-    public Rectangle determineTooltipArea(GuiContext context, TextRenderer renderer, int screenWidth, int screenHeight, int mouseX, int mouseY) {
+    public Rectangle determineTooltipArea(GuiContext context, TextRenderer renderer, int screenWidth, int screenHeight,
+                                          int mouseX, int mouseY) {
         int width = (int) renderer.getLastWidth();
         int height = (int) renderer.getLastHeight();
 
         Pos pos = this.pos;
         if (pos == null) {
-            pos = context.isMuiContext() ? context.getMuiContext().getScreen().getCurrentTheme().getTooltipPosOverride() : null;
-            if (pos == null) pos = ModularUIConfig.tooltipPos;
+            pos = context.isMuiContext() ?
+                    context.getMuiContext().getScreen().getCurrentTheme().getTooltipPosOverride() : null;
+            if (pos == null) pos = ConfigHolder.INSTANCE.client.ui.tooltipPos;
         }
         if (pos == Pos.FIXED) {
             return new Rectangle(this.x, this.y, width, height);

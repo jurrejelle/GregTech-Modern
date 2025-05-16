@@ -1,11 +1,12 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+
+import lombok.Getter;
 
 /**
  * See {@link GuiData} for an explanation for what this is for.

@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
 import com.gregtechceu.gtceu.integration.emi.handler.EMIScreenHandler;
 import com.gregtechceu.gtceu.integration.jei.handler.JEIScreenHandler;
 import com.gregtechceu.gtceu.integration.rei.handler.REIScreenHandler;
+
 import org.jetbrains.annotations.Nullable;
 
 public abstract class RecipeViewerHandler {
@@ -42,5 +43,4 @@ public abstract class RecipeViewerHandler {
         if (getCurrentlyDragged() == null) return false;
         return slot.castGhostIngredientIfValid(getCurrentlyDragged()) != null;
     }
-
 }

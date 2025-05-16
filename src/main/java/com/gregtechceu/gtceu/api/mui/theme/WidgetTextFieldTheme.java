@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+
 import com.google.gson.JsonObject;
 
 public class WidgetTextFieldTheme extends WidgetTheme {
@@ -19,8 +20,10 @@ public class WidgetTextFieldTheme extends WidgetTheme {
 
     public WidgetTextFieldTheme(WidgetTheme parent, JsonObject fallback, JsonObject json) {
         super(parent, json, fallback);
-        this.markedColor = JsonHelper.getColorWithFallback(json, fallback, ((WidgetTextFieldTheme) parent).getMarkedColor(), IThemeApi.MARKED_COLOR);
-        this.hintColor = JsonHelper.getColorWithFallback(json, fallback, ((WidgetTextFieldTheme) parent).getHintColor(), IThemeApi.HINT_COLOR);
+        this.markedColor = JsonHelper.getColorWithFallback(json, fallback,
+                ((WidgetTextFieldTheme) parent).getMarkedColor(), IThemeApi.MARKED_COLOR);
+        this.hintColor = JsonHelper.getColorWithFallback(json, fallback, ((WidgetTextFieldTheme) parent).getHintColor(),
+                IThemeApi.HINT_COLOR);
     }
 
     public int getMarkedColor() {

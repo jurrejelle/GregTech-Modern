@@ -5,11 +5,12 @@ import com.gregtechceu.gtceu.api.mui.base.layout.ILayoutWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.widget.AbstractParentWidget;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -123,8 +124,10 @@ public class CategoryList extends AbstractParentWidget<IWidget, CategoryList> im
 
         private final List<CategoryList> categories = new ArrayList<>();
 
-        private IDrawable expandedOverlay = GuiTextures.MOVE_DOWN.asIcon().size(16, 8).alignment(Alignment.CenterRight).marginRight(4);
-        private IDrawable collapsedOverlay = GuiTextures.MOVE_RIGHT.asIcon().size(8, 16).alignment(Alignment.CenterRight).marginRight(8);
+        private IDrawable expandedOverlay = GuiTextures.MOVE_DOWN.asIcon().size(16, 8).alignment(Alignment.CenterRight)
+                .marginRight(4);
+        private IDrawable collapsedOverlay = GuiTextures.MOVE_RIGHT.asIcon().size(8, 16)
+                .alignment(Alignment.CenterRight).marginRight(8);
 
         @Override
         public void onChildAdd(IWidget child) {

@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.common.mui.widgets.slot;
 
 import net.minecraft.world.inventory.Slot;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;

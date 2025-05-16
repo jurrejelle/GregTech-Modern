@@ -3,9 +3,10 @@ package com.gregtechceu.gtceu.api.mui.value.sync;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IBoolSyncValue;
 import com.gregtechceu.gtceu.api.mui.base.value.sync.IStringSyncValue;
-import com.gregtechceu.gtceu.utils.NetworkUtils;
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+
 import net.minecraft.network.FriendlyByteBuf;
+
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
-public class BooleanSyncValue extends ValueSyncHandler<Boolean> implements IBoolSyncValue<Boolean>, IStringSyncValue<Boolean> {
+public class BooleanSyncValue extends ValueSyncHandler<Boolean>
+                              implements IBoolSyncValue<Boolean>, IStringSyncValue<Boolean> {
 
     private final BooleanSupplier getter;
     private final BooleanConsumer setter;

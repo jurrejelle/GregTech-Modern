@@ -1,16 +1,17 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
 import com.gregtechceu.gtceu.api.mui.factory.GuiData;
+import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.UISettings;
-import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * An interface to implement on {@link net.minecraft.world.level.block.entity.BlockEntity} or {@link net.minecraft.world.item.Item}.
+ * An interface to implement on {@link net.minecraft.world.level.block.entity.BlockEntity} or
+ * {@link net.minecraft.world.item.Item}.
  */
 @FunctionalInterface
 public interface IGuiHolder<T extends GuiData> {
@@ -28,8 +29,10 @@ public interface IGuiHolder<T extends GuiData> {
     }
 
     /**
-     * Called on server and client. Create only the main panel here. Only here you can add sync handlers to widgets directly.
-     * If the widget to be synced is not in this panel yet (f.e. in another panel) the sync handler must be registered here
+     * Called on server and client. Create only the main panel here. Only here you can add sync handlers to widgets
+     * directly.
+     * If the widget to be synced is not in this panel yet (f.e. in another panel) the sync handler must be registered
+     * here
      * with {@link PanelSyncManager}.
      *
      * @param data        information about the creation context

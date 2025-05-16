@@ -1,32 +1,22 @@
 package com.gregtechceu.gtceu.core.mixins;
 
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
- * Accessor interface for accessing protected methods from {@link net.minecraft.inventory.Slot}.
+ * Accessor interface for accessing protected methods from {@link Slot}.
  */
 @Mixin(Slot.class)
 public interface SlotAccessor {
 
-    @Invoker
-    void invokeOnQuickCraft(ItemStack stack, int amount);
-
-    @Invoker
-    void invokeOnSwapCraft(int numItemsCrafted);
-
-    @Invoker
-    void invokeCheckTakeAchievements(ItemStack stack);
-
-    @Accessor
+    @Accessor("x")
     @Mutable
-    void setX(int x);
+    void gtceu$setX(int x);
 
-    @Accessor
+    @Accessor("x")
     @Mutable
-    void setY(int y);
+    void gtceu$setY(int y);
 }

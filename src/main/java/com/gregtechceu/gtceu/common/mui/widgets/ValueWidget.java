@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.widget.IValueWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+
 import lombok.Getter;
 
 public class ValueWidget<W extends ValueWidget<W, T>, T> extends Widget<W> implements IValueWidget<T> {

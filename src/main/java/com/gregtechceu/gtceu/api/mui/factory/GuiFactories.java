@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;

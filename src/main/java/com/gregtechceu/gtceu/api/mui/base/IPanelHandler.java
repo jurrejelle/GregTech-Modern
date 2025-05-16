@@ -1,21 +1,28 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.SecondaryPanel;
 import com.gregtechceu.gtceu.api.mui.value.sync.ItemSlotSH;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
+import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
+import com.gregtechceu.gtceu.client.mui.screen.SecondaryPanel;
 
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * This class can handle opening and closing of a {@link ModularPanel}. It makes sure, that the same panel is not created multiple
+ * This class can handle opening and closing of a {@link ModularPanel}. It makes sure, that the same panel is not
+ * created multiple
  * times and instead reused.
- * <p>Using {@link #openPanel()} is the only way to open multiple panels. </p>
- * <p>Panels can be closed with {@link #closePanel()}, but also with {@link ModularPanel#closeIfOpen(boolean)} and
- * {@link ModularPanel#animateClose()}. With the difference, that the method from this interface also works on server side. </p>
+ * <p>
+ * Using {@link #openPanel()} is the only way to open multiple panels.
+ * </p>
+ * <p>
+ * Panels can be closed with {@link #closePanel()}, but also with {@link ModularPanel#closeIfOpen(boolean)} and
+ * {@link ModularPanel#animateClose()}. With the difference, that the method from this interface also works on server
+ * side.
+ * </p>
  * Synced panels must be created with {@link PanelSyncManager#panel(String, PanelSyncHandler.IPanelBuilder, boolean)}.
- * If the panel does not contain any synced widgets, a simple panel handler using {@link #simple(ModularPanel, SecondaryPanel.IPanelBuilder, boolean)}
+ * If the panel does not contain any synced widgets, a simple panel handler using
+ * {@link #simple(ModularPanel, SecondaryPanel.IPanelBuilder, boolean)}
  * is likely what you need.
  */
 public interface IPanelHandler {
@@ -26,10 +33,12 @@ public interface IPanelHandler {
      *
      * @param parent   an existing parent panel of the gui
      * @param provider the panel builder, that will create the new panel. It must not return null or the main panel.
-     * @param subPanel true if this panel should close when its parent closes (the parent is defined by the first parameter)
+     * @param subPanel true if this panel should close when its parent closes (the parent is defined by the first
+     *                 parameter)
      * @return a simple panel handler.
      * @throws NullPointerException     if the build panel of the builder is null
-     * @throws IllegalArgumentException if the build panel of the builder is the main panel or there are synced values in the panel
+     * @throws IllegalArgumentException if the build panel of the builder is the main panel or there are synced values
+     *                                  in the panel
      */
     static IPanelHandler simple(ModularPanel parent, SecondaryPanel.IPanelBuilder provider, boolean subPanel) {
         return new SecondaryPanel(parent, provider, subPanel);

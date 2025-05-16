@@ -102,8 +102,8 @@ public class CleanroomMachine extends WorkableElectricMultiblockMachine
     @Nullable
     private Collection<ICleanroomReceiver> cleanroomReceivers;
 
-    public CleanroomMachine(IMachineBlockEntity metaBlockEntityId) {
-        super(metaBlockEntityId);
+    public CleanroomMachine(IMachineBlockEntity metaTileEntityId) {
+        super(metaTileEntityId);
     }
 
     //////////////////////////////////////

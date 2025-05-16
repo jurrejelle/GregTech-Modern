@@ -1,20 +1,23 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IInterpolation;
+
+import net.minecraft.util.Mth;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.ToIntFunction;
 
 /**
  * Utility class for dealing with colors.
  * <b>All methods assume the color int to be AARRGGBB if not stated otherwise!</b>
- * Most of the conversion methods are written by me with the help of <a href=https://www.rapidtables.com/convert/color/>this website</a>.
+ * Most of the conversion methods are written by me with the help of <a
+ * href=https://www.rapidtables.com/convert/color/>this website</a>.
  *
  * @author brachy
  */
@@ -568,7 +571,7 @@ public class Color {
      * @return rgba as an array [red, green, blue]
      */
     public static int[] getRGBValues(int argb) {
-        return new int[]{getRed(argb), getGreen(argb), getBlue(argb)};
+        return new int[] { getRed(argb), getGreen(argb), getBlue(argb) };
     }
 
     /**
@@ -577,7 +580,7 @@ public class Color {
      * @return rgba as an array [red, green, blue, alpha]
      */
     public static int[] getARGBValues(int argb) {
-        return new int[]{getRed(argb), getGreen(argb), getBlue(argb), getAlpha(argb)};
+        return new int[] { getRed(argb), getGreen(argb), getBlue(argb), getAlpha(argb) };
     }
 
     /**
@@ -587,7 +590,7 @@ public class Color {
      * @return HSV values array
      */
     public static float[] getHSVValues(int argb) {
-        return new float[]{getHue(argb), getHSVSaturation(argb), getValue(argb)};
+        return new float[] { getHue(argb), getHSVSaturation(argb), getValue(argb) };
     }
 
     /**
@@ -597,7 +600,7 @@ public class Color {
      * @return HSL values array
      */
     public static float[] getHSLValues(int argb) {
-        return new float[]{getHue(argb), getHSLSaturation(argb), getLightness(argb)};
+        return new float[] { getHue(argb), getHSLSaturation(argb), getLightness(argb) };
     }
 
     /**
@@ -607,7 +610,7 @@ public class Color {
      * @return CMYK values array
      */
     public static float[] getCMYKValues(int argb) {
-        return new float[]{getCyan(argb), getMagenta(argb), getYellow(argb), getBlack(argb)};
+        return new float[] { getCyan(argb), getMagenta(argb), getYellow(argb), getBlack(argb) };
     }
 
     /**
@@ -649,7 +652,8 @@ public class Color {
      * @return multiplied ARGB color
      */
     public static int multiply(int argb, float factor, boolean multiplyAlpha) {
-        return argb(getRedF(argb) * factor, getGreenF(argb) * factor, getBlueF(argb) * factor, multiplyAlpha ? getAlphaF(argb) * factor : getAlphaF(argb));
+        return argb(getRedF(argb) * factor, getGreenF(argb) * factor, getBlueF(argb) * factor,
+                multiplyAlpha ? getAlphaF(argb) * factor : getAlphaF(argb));
     }
 
     /**
@@ -779,7 +783,8 @@ public class Color {
             String alphaS = JsonHelper.getString(json, "1f", "a", "alpha");
             float alphaF;
             int alpha;
-            if (alphaS.contains(".") || alphaS.endsWith("f") || alphaS.endsWith("F") || alphaS.endsWith("d") || alphaS.endsWith("D")) {
+            if (alphaS.contains(".") || alphaS.endsWith("f") || alphaS.endsWith("F") || alphaS.endsWith("d") ||
+                    alphaS.endsWith("D")) {
                 try {
                     alphaF = Mth.clamp(Float.parseFloat(alphaS), 0f, 1f);
                     alpha = (int) (alphaF * 255);

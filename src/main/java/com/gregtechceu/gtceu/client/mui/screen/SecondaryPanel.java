@@ -3,9 +3,11 @@ package com.gregtechceu.gtceu.client.mui.screen;
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.MCHelper;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
@@ -81,7 +83,8 @@ public class SecondaryPanel implements IPanelHandler {
                 throw new IllegalArgumentException("Must not return main panel!");
             }
             if (WidgetTree.hasSyncedValues(this.panel)) {
-                throw new IllegalArgumentException("Panel has widgets with synced values, but the panel is not synced!");
+                throw new IllegalArgumentException(
+                        "Panel has widgets with synced values, but the panel is not synced!");
             }
             this.panel.setPanelHandler(this);
         }

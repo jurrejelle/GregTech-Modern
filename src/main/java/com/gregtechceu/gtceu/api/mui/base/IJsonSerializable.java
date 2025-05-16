@@ -11,6 +11,7 @@ public interface IJsonSerializable<T extends IJsonSerializable<T>> {
 
     /**
      * Override this
+     * 
      * @return the codec to serialize this object with
      */
     // TODO actually implement on subclasses

@@ -7,9 +7,11 @@ public final class PointF {
 
     public static final PointF ZERO = new PointF(0, 0);
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public float x;
-    @Getter @Setter
+    @Getter
+    @Setter
     public float y;
 
     public PointF() {
@@ -30,10 +32,7 @@ public final class PointF {
     }
 
     public boolean isIn(Rectangle rect) {
-        return x >= rect.getX()
-                && y >= rect.getY()
-                && x < rect.getX() + rect.getWidth()
-                && y < rect.getY() + rect.getHeight();
+        return x >= rect.getX() && y >= rect.getY() && x < rect.getX() + rect.getWidth() &&
+                y < rect.getY() + rect.getHeight();
     }
-
 }

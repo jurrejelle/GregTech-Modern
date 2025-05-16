@@ -2,13 +2,15 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Box;
-import lombok.Getter;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+
 import net.minecraft.ChatFormatting;
+
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class TextWidget extends Widget<TextWidget> {
@@ -100,5 +102,9 @@ public class TextWidget extends Widget<TextWidget> {
     public TextWidget style(ChatFormatting formatting) {
         this.key.style(formatting);
         return this;
+    }
+
+    public Boolean isShadow() {
+        return this.getShadow();
     }
 }

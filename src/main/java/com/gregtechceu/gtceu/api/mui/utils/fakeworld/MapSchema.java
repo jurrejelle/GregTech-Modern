@@ -1,16 +1,17 @@
 package com.gregtechceu.gtceu.api.mui.utils.fakeworld;
 
-import com.google.common.collect.AbstractIterator;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import com.google.common.collect.AbstractIterator;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +80,8 @@ public class MapSchema implements ISchema {
     public Iterator<Map.Entry<BlockPos, BlockInfo>> iterator() {
         return new AbstractIterator<>() {
 
-            private final ObjectIterator<Object2ObjectMap.Entry<BlockPos, BlockInfo>> it = blocks.object2ObjectEntrySet().fastIterator();
+            private final ObjectIterator<Object2ObjectMap.Entry<BlockPos, BlockInfo>> it = blocks
+                    .object2ObjectEntrySet().fastIterator();
 
             @Override
             protected Map.Entry<BlockPos, BlockInfo> computeNext() {

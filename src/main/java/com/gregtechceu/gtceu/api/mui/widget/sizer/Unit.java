@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.widget.sizer;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.DoubleSupplier;
@@ -9,6 +10,7 @@ import java.util.function.DoubleSupplier;
 public class Unit {
 
     public enum State {
+
         UNUSED("", ""),
         START("LEFT", "TOP"),
         END("RIGHT", "BOTTOM"),
@@ -41,8 +43,7 @@ public class Unit {
 
     public State state = State.UNUSED;
 
-    public Unit() {
-    }
+    public Unit() {}
 
     public void reset() {
         this.state = State.UNUSED;
@@ -109,6 +110,7 @@ public class Unit {
     }
 
     public enum Measure {
-        PIXEL, RELATIVE
+        PIXEL,
+        RELATIVE
     }
 }

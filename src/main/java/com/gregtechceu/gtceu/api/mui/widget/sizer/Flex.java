@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.widget.sizer;
 
+import com.gregtechceu.gtceu.api.mui.GuiError;
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.base.layout.ILayoutWidget;
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
@@ -9,6 +10,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IVanillaSlot;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.core.mixins.SlotAccessor;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -334,7 +336,8 @@ public class Flex implements IResizeable, IPositioned<Flex> {
 
         if (relativeArea.getPanelLayer() > panelLayer ||
                 (relativeArea.getPanelLayer() == panelLayer && relativeArea.z() >= this.parent.getArea().z())) {
-            GuiError.throwNew(this.parent, GuiError.Type.SIZING, "Widget can't be relative to a widget at the same level or above");
+            GuiError.throwNew(this.parent, GuiError.Type.SIZING,
+                    "Widget can't be relative to a widget at the same level or above");
             return true;
         }
 
@@ -407,7 +410,8 @@ public class Flex implements IResizeable, IPositioned<Flex> {
         if (this.y.dependsOnChildren()) {
             moveChildrenY = this.y.postApply(this.parent.getArea(), relativeTo, y0, y1);
         }
-        // since the edges might have been moved closer to the widgets, the widgets should move back into it's original (absolute) position
+        // since the edges might have been moved closer to the widgets, the widgets should move back into it's original
+        // (absolute) position
         if (moveChildrenX != 0 || moveChildrenY != 0) {
             for (IWidget child : children) {
                 Area area = child.getArea();
@@ -481,8 +485,8 @@ public class Flex implements IResizeable, IPositioned<Flex> {
         if (parent instanceof IVanillaSlot vanillaSlot) {
             // special treatment for minecraft slots
             SlotAccessor slot = (SlotAccessor) vanillaSlot.getVanillaSlot();
-            slot.setX(parent.getArea().x);
-            slot.setY(parent.getArea().y);
+            slot.gtceu$setX(parent.getArea().x);
+            slot.gtceu$setY(parent.getArea().y);
         }
     }
 

@@ -1,9 +1,9 @@
 package com.gregtechceu.gtceu.common.mui.widgets;
 
-import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -22,24 +22,26 @@ public class SortButtons extends Widget<SortButtons> {
     @Override
     public void onInit() {
         super.onInit();
-        this.slotGroup = getScreen().getContainer().validateSlotGroup(getPanel().getName(), this.slotGroupName, this.slotGroup);
+        this.slotGroup = getScreen().getContainer().validateSlotGroup(getPanel().getName(), this.slotGroupName,
+                this.slotGroup);
         if (!this.slotGroup.isAllowSorting()) {
             throw new IllegalStateException("Slot group can't be sorted!");
         }
-        /* TODO bogosort doesn't exist (yet), pick some other sorting mod to add compat for
-        this.sortButton.size(10).pos(0, 0)
-                .overlay(IKey.str("z"))
-                .onMousePressed(mouseButton -> {
-                    IBogoSortAPI.getInstance().sortSlotGroup(this.slotGroup.getSlots().get(0));
-                    return true;
-                });
-        this.settingsButton.size(10)
-                .overlay(IKey.str("..."))
-                .onMousePressed(mouseButton -> {
-                    IBogoSortAPI.getInstance().openConfigGui();
-                    return true;
-                });
-        */
+        /*
+         * TODO bogosort doesn't exist (yet), pick some other sorting mod to add compat for
+         * this.sortButton.size(10).pos(0, 0)
+         * .overlay(IKey.str("z"))
+         * .onMousePressed(mouseButton -> {
+         * IBogoSortAPI.getInstance().sortSlotGroup(this.slotGroup.getSlots().get(0));
+         * return true;
+         * });
+         * this.settingsButton.size(10)
+         * .overlay(IKey.str("..."))
+         * .onMousePressed(mouseButton -> {
+         * IBogoSortAPI.getInstance().openConfigGui();
+         * return true;
+         * });
+         */
         if (this.horizontal) {
             size(20, 10);
             this.settingsButton.pos(10, 0);
@@ -58,7 +60,7 @@ public class SortButtons extends Widget<SortButtons> {
     @Override
     public boolean isEnabled() {
         // TODO bogosort doesn't exist (yet), pick some other sorting mod to add compat for
-        return false; //return super.isEnabled() && false; ModularUI.isSortModLoaded();
+        return false; // return super.isEnabled() && false; ModularUI.isSortModLoaded();
     }
 
     public String getSlotGroupName() {
