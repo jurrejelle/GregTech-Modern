@@ -32,8 +32,6 @@ public abstract class RecipeViewerHandler {
         return current;
     }
 
-    public abstract void stopDrag();
-
     public abstract @Nullable Object getCurrentlyDragged();
 
     public boolean isDraggingGhostIngredient() {

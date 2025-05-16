@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
-import com.gregtechceu.gtceu.integration.jei.GTJEIPlugin;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
@@ -13,7 +12,6 @@ import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.gui.handlers.IScreenHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.gui.GuiProperties;
-import mezz.jei.gui.input.handlers.DragRouter;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,14 +71,6 @@ public class JEIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
     }
 
     static ITypedIngredient<?> currentIngredient = null;
-    public static DragRouter dragRouter = null;
-
-    @Override
-    public void stopDrag() {
-        if (dragRouter != null) {
-            dragRouter.cancelDrag();
-        }
-    }
 
     @Override
     public @Nullable Object getCurrentlyDragged() {

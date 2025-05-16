@@ -58,13 +58,4 @@ public interface GhostIngredientSlot<I> extends IGuiElement {
         int color = hovering ? Color.argb(76, 201, 25, 128) : Color.argb(19, 201, 10, 64);
         GuiDraw.drawRect(0, 0, area.width, area.height, color);
     }
-
-    static <T> boolean insertGhostIngredient(Object currentlyDragged, GhostIngredientSlot<T> slot) {
-        T t = slot.castGhostIngredientIfValid(currentlyDragged);
-        if (t != null) {
-            slot.setGhostIngredient(t);
-            return true;
-        }
-        return false;
-    }
 }

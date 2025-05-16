@@ -12,7 +12,6 @@ import lombok.Getter;
 import me.shedaniel.rei.api.client.gui.drag.*;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZonesProvider;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.impl.client.gui.dragging.CurrentDraggingStack;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
@@ -146,16 +145,6 @@ public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
     }
 
     static DraggableStack currentIngredient = null;
-
-    /**
-     * Why do none of the recipe viewers have API for intercepting ghost item drags?!
-     * @author screret
-     */
-    @Override
-    public void stopDrag() {
-        // Impl method, as there isn't one in API.
-        ((CurrentDraggingStack) DraggingContext.getInstance()).drop();
-    }
 
     @Override
     public @Nullable Object getCurrentlyDragged() {

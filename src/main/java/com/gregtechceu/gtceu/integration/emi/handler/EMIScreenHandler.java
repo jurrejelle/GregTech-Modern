@@ -13,8 +13,6 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.registry.EmiDragDropHandlers;
-import dev.emi.emi.screen.EmiScreenManager;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.Item;
@@ -102,16 +100,6 @@ public class EMIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends R
     }
 
     static EmiIngredient currentIngredient = null;
-
-    /**
-     * Someone's going to be mad at me for doing it like this.
-     * @author screret
-     */
-    @Override
-    public void stopDrag() {
-        EmiScreenManager.pressedStack = EmiStack.EMPTY;
-        EmiScreenManager.draggedStack = EmiStack.EMPTY;
-    }
 
     @Override
     public @Nullable Object getCurrentlyDragged() {

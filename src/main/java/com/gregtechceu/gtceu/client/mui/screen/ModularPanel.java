@@ -300,8 +300,6 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
                     animateClose();
                     result = true;
                 }
-            } else if (checkGhostIngredient(button)) {
-                return true;
             } else {
                 for (LocatedWidget widget : this.hovering) {
                     widget.applyMatrix(getContext());
@@ -346,38 +344,6 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
             this.mouse.pressed(pressed, button);
             return result;
         });
-    }
-
-    private boolean checkGhostIngredient(int mouseButton) {
-        RecipeViewerHandler handler = RecipeViewerHandler.getCurrent();
-        if (handler == null) return false;
-        Object currentlyDragged = handler.getCurrentlyDragged();
-
-        if (currentlyDragged != null) {
-            // try inserting ghost ingredient
-            for (LocatedWidget widget : this.hovering) {
-                if (widget.getElement() instanceof GhostIngredientSlot<?> ghostSlot && GhostIngredientSlot.insertGhostIngredient(currentlyDragged, ghostSlot)) {
-                    handler.stopDrag();
-                    this.mouse.pressed(widget, mouseButton);
-                    this.mouse.doRelease = false;
-                    getContext().removeFocus();
-                    return true;
-                }
-                // we can't really predict if the interactable would stop further interaction
-                // so we assume worst
-                if (widget.getElement() instanceof Interactable || !widget.getElement().canClickThrough()) {
-                    break;
-                }
-            }
-            // no target found -> tell jei to drop the ghost ingredient
-            // stop all further interaction since dropping the ingredient counts as an interaction
-            handler.stopDrag();
-            this.mouse.pressed(LocatedWidget.EMPTY, mouseButton);
-            this.mouse.doRelease = false;
-            getContext().removeFocus();
-            return true;
-        }
-        return false;
     }
 
     public boolean onMouseReleased(double mouseX, double mouseY, int button) {

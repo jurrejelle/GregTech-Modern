@@ -77,7 +77,6 @@
         "emi.FillRecipePacketMixin",
         "emi.FluidEmiStackMixin",
         "jei.FluidHelperMixin",
-        "jei.JeiGuiStarterMixin",
         "ldlib.ModularWrapperWidgetMixin",
         "ldlib.SyncUtilsMixin",
         "rei.InputSlotCrafterMixin",
