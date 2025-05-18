@@ -6,9 +6,12 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
+
 public class TextLine implements ITextLine {
 
     private final Component text;
+    @Getter
     private final int width;
 
     private float lastX, lastY;
@@ -16,11 +19,6 @@ public class TextLine implements ITextLine {
     public TextLine(Component text, int width) {
         this.text = text;
         this.width = width;
-    }
-
-    @Override
-    public int getWidth() {
-        return width;
     }
 
     @Override
@@ -38,8 +36,8 @@ public class TextLine implements ITextLine {
     @Override
     public Object getHoveringElement(Font font, int x, int y) {
         if (y < lastY || y > lastY + getHeight(font)) return null;
-        if (x < lastX || x > lastX + getWidth()) return Boolean.FALSE; // not hovering, but we know that nothing else is
-                                                                       // hovered either
+        // not hovering, but we know that nothing else is hovered either
+        if (x < lastX || x > lastX + getWidth()) return Boolean.FALSE;
         return this.text;
     }
 }

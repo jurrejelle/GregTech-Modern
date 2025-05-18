@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
+import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 
@@ -11,6 +12,7 @@ import com.lowdragmc.lowdraglib.jei.ModularUIRecipeCategory;
 
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
@@ -23,14 +25,18 @@ import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.rawOre;
 import static com.gregtechceu.gtceu.common.data.GTMachines.*;
 import static com.gregtechceu.gtceu.common.data.GTMaterials.Iron;
 
-public class GTOreProcessingInfoCategory extends ModularUIRecipeCategory<GTOreProcessingInfoWrapper> {
+public class GTOreProcessingInfoCategory extends ModularUIRecipeCategory<Material> {
 
-    public final static RecipeType<GTOreProcessingInfoWrapper> RECIPE_TYPE = new RecipeType<>(
-            GTCEu.id("ore_processing_diagram"), GTOreProcessingInfoWrapper.class);
+    public final static RecipeType<Material> RECIPE_TYPE = new RecipeType<>(
+            GTCEu.id("ore_processing_diagram"), Material.class);
+
+    @Getter
     private final IDrawable background;
+    @Getter
     private final IDrawable icon;
 
     public GTOreProcessingInfoCategory(IJeiHelpers helpers) {
+        super(GTOreProcessingInfoWrapper::new);
         IGuiHelper guiHelper = helpers.getGuiHelper();
         this.background = guiHelper.createBlankDrawable(186, 174);
         this.icon = helpers.getGuiHelper().createDrawableItemStack(ChemicalHelper.get(rawOre, Iron));
@@ -40,7 +46,6 @@ public class GTOreProcessingInfoCategory extends ModularUIRecipeCategory<GTOrePr
         registry.addRecipes(RECIPE_TYPE, GTCEuAPI.materialManager.getRegisteredMaterials().stream()
                 .filter((material) -> material.hasProperty(PropertyKey.ORE) &&
                         !material.hasFlag(MaterialFlags.NO_ORE_PROCESSING_TAB))
-                .map(GTOreProcessingInfoWrapper::new)
                 .toList());
     }
 
@@ -56,7 +61,7 @@ public class GTOreProcessingInfoCategory extends ModularUIRecipeCategory<GTOrePr
 
     @Override
     @NotNull
-    public RecipeType<GTOreProcessingInfoWrapper> getRecipeType() {
+    public RecipeType<Material> getRecipeType() {
         return RECIPE_TYPE;
     }
 
@@ -64,17 +69,5 @@ public class GTOreProcessingInfoCategory extends ModularUIRecipeCategory<GTOrePr
     @Override
     public Component getTitle() {
         return Component.translatable("gtceu.jei.ore_processing_diagram");
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getIcon() {
-        return icon;
     }
 }

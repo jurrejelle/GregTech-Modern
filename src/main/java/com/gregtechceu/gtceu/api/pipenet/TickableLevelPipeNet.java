@@ -26,7 +26,7 @@ public abstract class TickableLevelPipeNet<NodeDataType, T extends PipeNet<NodeD
     }
 
     private boolean isChunkLoaded(ChunkPos chunkPos) {
-        var worldServer = getWorld();
+        var worldServer = getLevel();
         if (worldServer == null) return false;
         return worldServer.getChunkSource().hasChunk(chunkPos.x, chunkPos.z);
     }
@@ -34,7 +34,7 @@ public abstract class TickableLevelPipeNet<NodeDataType, T extends PipeNet<NodeD
     protected abstract int getUpdateRate();
 
     public void update() {
-        if (getWorld().getGameTime() % getUpdateRate() == 0L) {
+        if (getLevel().getGameTime() % getUpdateRate() == 0L) {
             tickingPipeNets.forEach(ITickablePipeNet::update);
         }
         if (removeLater.size() > 0) {

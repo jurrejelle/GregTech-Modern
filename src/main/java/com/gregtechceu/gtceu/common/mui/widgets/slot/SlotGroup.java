@@ -2,7 +2,11 @@ package com.gregtechceu.gtceu.common.mui.widgets.slot;
 
 import net.minecraft.world.inventory.Slot;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,17 +19,24 @@ import java.util.List;
  * {@link com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager#registerSlotGroup(String, int, boolean)}
  * or overloads of the method (except it's a singleton).
  */
+@Accessors(chain = true)
 public class SlotGroup {
 
     public static final int PLAYER_INVENTORY_PRIO = 0;
     public static final int STORAGE_SLOT_PRIO = 100;
 
+    @Getter
     private final String name;
     private final List<Slot> slots = new ArrayList<>();
+    @Getter
     private final int rowSize;
+    @Getter
     private final int shiftClickPriority;
+    @Getter
     private final boolean allowShiftTransfer;
+    @Setter
     private boolean allowSorting = true;
+    @Getter
     private final boolean singleton;
 
     /**
@@ -81,36 +92,12 @@ public class SlotGroup {
         this.slots.remove(slot);
     }
 
-    public int getShiftClickPriority() {
-        return this.shiftClickPriority;
-    }
-
+    @UnmodifiableView
     public List<Slot> getSlots() {
         return Collections.unmodifiableList(this.slots);
     }
 
-    public int getRowSize() {
-        return this.rowSize;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public boolean allowShiftTransfer() {
-        return this.allowShiftTransfer;
-    }
-
     public boolean isAllowSorting() {
         return this.slots.size() > 1 && this.allowSorting;
-    }
-
-    public boolean isSingleton() {
-        return this.singleton;
-    }
-
-    public SlotGroup setAllowSorting(boolean allowSorting) {
-        this.allowSorting = allowSorting;
-        return this;
     }
 }

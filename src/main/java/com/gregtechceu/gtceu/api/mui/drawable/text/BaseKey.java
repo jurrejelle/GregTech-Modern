@@ -5,12 +5,14 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 
+import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseKey implements IKey {
 
-    private FormattingState formatting;
+    @Getter
+    private @Nullable FormattingState formatting;
 
     @Override
     public MutableComponent getFormatted(@Nullable FormattingState parentFormatting) {
@@ -33,11 +35,6 @@ public abstract class BaseKey implements IKey {
             this.formatting.reset();
         }
         return this;
-    }
-
-    @Override
-    public @Nullable FormattingState getFormatting() {
-        return formatting;
     }
 
     @Override

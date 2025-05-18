@@ -10,9 +10,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import lombok.Getter;
+
 public class CraftingContainerWrapper extends TransientCraftingContainer {
 
+    @Getter
     private final IItemHandler delegate;
+    @Getter
     private final int startIndex;
     private final ItemStack[] snapshot;
 
@@ -53,13 +57,5 @@ public class CraftingContainerWrapper extends TransientCraftingContainer {
                 updateSnapshot(slot, current);
             }
         }
-    }
-
-    public IItemHandler getDelegate() {
-        return delegate;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
     }
 }

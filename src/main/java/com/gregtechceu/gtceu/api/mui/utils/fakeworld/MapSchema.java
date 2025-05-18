@@ -12,8 +12,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +25,10 @@ public class MapSchema implements ISchema {
     @Getter
     private final Level level;
     private final Object2ObjectOpenHashMap<BlockPos, BlockInfo> blocks = new Object2ObjectOpenHashMap<>();
+    @Getter
+    @Setter
     private BiPredicate<BlockPos, BlockInfo> renderFilter;
+    @Getter
     private final BlockPos origin;
     private final Vec3 center;
 
@@ -56,23 +59,8 @@ public class MapSchema implements ISchema {
     }
 
     @Override
-    public void setRenderFilter(@Nullable BiPredicate<BlockPos, BlockInfo> renderFilter) {
-        this.renderFilter = renderFilter;
-    }
-
-    @Override
-    public @Nullable BiPredicate<BlockPos, BlockInfo> getRenderFilter() {
-        return renderFilter;
-    }
-
-    @Override
     public Vec3 getFocus() {
         return center;
-    }
-
-    @Override
-    public BlockPos getOrigin() {
-        return origin;
     }
 
     @NotNull

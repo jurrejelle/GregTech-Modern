@@ -2,12 +2,14 @@ package com.gregtechceu.gtceu.api.mui.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class JsonBuilder {
 
+    @Getter
     private final JsonObject json;
 
     public JsonBuilder(JsonObject json) {
@@ -16,10 +18,6 @@ public class JsonBuilder {
 
     public JsonBuilder() {
         this(new JsonObject());
-    }
-
-    public JsonObject getJson() {
-        return this.json;
     }
 
     public JsonBuilder add(String key, JsonElement element) {

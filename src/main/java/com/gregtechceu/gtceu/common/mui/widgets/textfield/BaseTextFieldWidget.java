@@ -18,6 +18,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -50,6 +51,7 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
     protected TextFieldHandler handler = new TextFieldHandler(this);
     protected TextFieldRenderer renderer = new TextFieldRenderer(this.handler);
     protected Alignment textAlignment = Alignment.CenterLeft;
+    @Getter
     protected List<String> lastText;
     protected int scrollOffset = 0;
     protected float scale = 1f;
@@ -290,10 +292,6 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
         return getScrollArea().getScrollX();
     }
 
-    public List<String> getLastText() {
-        return lastText;
-    }
-
     public W setTextAlignment(Alignment textAlignment) {
         this.textAlignment = textAlignment;
         return getThis();
@@ -303,25 +301,6 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
         this.scale = scale;
         return getThis();
     }
-
-    /*
-     * public W setScrollBar() {
-     * return setScrollBar(0);
-     * }
-     * 
-     * public W setScrollBar(int posOffset) {
-     * return setScrollBar(ScrollBar.defaultTextScrollBar().setPosOffset(posOffset));
-     * }
-     * 
-     * public W setScrollBar(@Nullable ScrollBar scrollBar) {
-     * this.scrollBar = scrollBar;
-     * this.handler.setScrollBar(scrollBar);
-     * if (this.scrollBar != null) {
-     * this.scrollBar.setScrollType(ScrollType.HORIZONTAL, this, null);
-     * }
-     * return getThis();
-     * }
-     */
 
     public W setTextColor(int color) {
         this.textColor = color;

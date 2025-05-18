@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.core.mixins.SlotAccessor;
 
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class Flex implements IResizeable, IPositioned<Flex> {
 
     private final DimensionSizer x = new DimensionSizer(GuiAxis.X);
     private final DimensionSizer y = new DimensionSizer(GuiAxis.Y);
+    @Getter
     private boolean expanded = false;
     private final IGuiElement parent;
     private Area relativeTo;
@@ -244,10 +246,6 @@ public class Flex implements IResizeable, IPositioned<Flex> {
         IGuiElement parent = this.parent.getParent();
         IResizeable relativeTo = this.relativeToParent && parent != null ? parent.resizer() : this.relativeTo;
         return relativeTo != null ? relativeTo : this.parent.getScreen().getScreenArea();
-    }
-
-    public boolean isExpanded() {
-        return this.expanded;
     }
 
     public boolean hasYPos() {

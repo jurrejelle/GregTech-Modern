@@ -22,6 +22,7 @@ import com.gregtechceu.gtceu.integration.jei.orevein.GTBedrockOreInfoCategory;
 import com.gregtechceu.gtceu.integration.jei.orevein.GTOreVeinInfoCategory;
 import com.gregtechceu.gtceu.integration.jei.recipe.GTRecipeJEICategory;
 import com.gregtechceu.gtceu.integration.jei.subtype.PotionFluidSubtypeInterpreter;
+import com.gregtechceu.gtceu.integration.xei.widgets.GTProgrammedCircuitWidget;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -115,8 +116,7 @@ public class GTJEIPlugin implements IModPlugin {
         GTBedrockFluidInfoCategory.registerRecipes(registration);
         if (ConfigHolder.INSTANCE.machines.doBedrockOres)
             GTBedrockOreInfoCategory.registerRecipes(registration);
-        registration.addRecipes(GTProgrammedCircuitCategory.RECIPE_TYPE,
-                List.of(new GTProgrammedCircuitCategory.GTProgrammedCircuitWrapper()));
+        registration.addRecipes(GTProgrammedCircuitCategory.RECIPE_TYPE, List.of(new GTProgrammedCircuitWidget()));
     }
 
     @Override
@@ -160,9 +160,5 @@ public class GTJEIPlugin implements IModPlugin {
         registration.addGhostIngredientHandler(ContainerScreenWrapper.class,
                 JEIScreenHandler.of(ContainerScreenWrapper.class));
         registration.addGuiContainerHandler(ContainerScreenWrapper.class, JEIContainerHandler.INSTANCE);
-
-        registration.addGuiScreenHandler(ScreenWrapper.class, JEIScreenHandler.of(ScreenWrapper.class));
-        registration.addGuiScreenHandler(ContainerScreenWrapper.class,
-                JEIScreenHandler.of(ContainerScreenWrapper.class));
     }
 }

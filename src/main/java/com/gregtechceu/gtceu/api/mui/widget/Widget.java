@@ -40,6 +40,7 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     @Setter
     private boolean enabled = true;
     // gui context
+    @Getter
     private boolean valid = false;
     private IWidget parent = null;
     private ModularPanel panel = null;
@@ -360,11 +361,6 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     // -------------------
     // === Gui context ===
     // -------------------
-
-    @Override
-    public boolean isValid() {
-        return this.valid;
-    }
 
     @Override
     public ModularScreen getScreen() {

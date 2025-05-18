@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.integration.jei.orevein;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.data.worldgen.GTOreDefinition;
 import com.gregtechceu.gtceu.client.ClientProxy;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
@@ -12,6 +13,7 @@ import com.lowdragmc.lowdraglib.jei.ModularUIRecipeCategory;
 
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -23,14 +25,18 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import org.jetbrains.annotations.NotNull;
 
-public class GTOreVeinInfoCategory extends ModularUIRecipeCategory<GTOreVeinInfoWrapper> {
+public class GTOreVeinInfoCategory extends ModularUIRecipeCategory<GTOreDefinition> {
 
-    public final static RecipeType<GTOreVeinInfoWrapper> RECIPE_TYPE = new RecipeType<>(GTCEu.id("ore_vein_diagram"),
-            GTOreVeinInfoWrapper.class);
+    public final static RecipeType<GTOreDefinition> RECIPE_TYPE = new RecipeType<>(GTCEu.id("ore_vein_diagram"),
+            GTOreDefinition.class);
+
+    @Getter
     private final IDrawable background;
+    @Getter
     private final IDrawable icon;
 
     public GTOreVeinInfoCategory(IJeiHelpers helpers) {
+        super(GTOreVeinInfoWrapper::new);
         IGuiHelper guiHelper = helpers.getGuiHelper();
         this.background = guiHelper.createBlankDrawable(GTOreVeinWidget.width, 120);
         this.icon = helpers.getGuiHelper()
@@ -38,16 +44,14 @@ public class GTOreVeinInfoCategory extends ModularUIRecipeCategory<GTOreVeinInfo
     }
 
     public static void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(RECIPE_TYPE, ClientProxy.CLIENT_ORE_VEINS.values().stream()
-                .map(GTOreVeinInfoWrapper::new)
-                .toList());
+        registry.addRecipes(RECIPE_TYPE, ClientProxy.CLIENT_ORE_VEINS.values().stream().toList());
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, GTOreVeinInfoWrapper wrapper, IFocusGroup focuses) {
-        super.setRecipe(builder, wrapper, focuses);
+    public void setRecipe(IRecipeLayoutBuilder builder, GTOreDefinition definition, IFocusGroup focuses) {
+        super.setRecipe(builder, definition, focuses);
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addItemStacks(GTOreVeinWidget.getContainedOresAndBlocks(wrapper.oreDefinition));
+                .addItemStacks(GTOreVeinWidget.getContainedOresAndBlocks(definition));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
@@ -58,7 +62,7 @@ public class GTOreVeinInfoCategory extends ModularUIRecipeCategory<GTOreVeinInfo
 
     @NotNull
     @Override
-    public RecipeType<GTOreVeinInfoWrapper> getRecipeType() {
+    public RecipeType<GTOreDefinition> getRecipeType() {
         return RECIPE_TYPE;
     }
 
@@ -66,17 +70,5 @@ public class GTOreVeinInfoCategory extends ModularUIRecipeCategory<GTOreVeinInfo
     @Override
     public Component getTitle() {
         return Component.translatable("gtceu.jei.ore_vein_diagram");
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getIcon() {
-        return icon;
     }
 }

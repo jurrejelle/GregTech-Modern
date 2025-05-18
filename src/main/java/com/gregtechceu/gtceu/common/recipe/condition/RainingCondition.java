@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,7 @@ public class RainingCondition extends RecipeCondition {
                     .apply(instance, RainingCondition::new));
 
     public final static RainingCondition INSTANCE = new RainingCondition();
+    @Getter
     private float level;
 
     public RainingCondition(boolean isReverse, float level) {
@@ -50,10 +52,6 @@ public class RainingCondition extends RecipeCondition {
     @Override
     public Component getTooltips() {
         return Component.translatable("recipe.condition.rain.tooltip", level);
-    }
-
-    public float getLevel() {
-        return level;
     }
 
     @Override

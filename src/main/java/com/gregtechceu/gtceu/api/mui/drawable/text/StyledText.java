@@ -11,14 +11,18 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class StyledText extends BaseKey {
 
     private final IKey key;
+    @Getter
     private Alignment alignment = Alignment.Center;
-    private Integer color = null;
-    private Boolean shadow = null;
+    @Getter
+    private @Nullable Integer color = null;
+    private @Nullable Boolean shadow = null;
+    @Getter
     private float scale = 1f;
 
     public StyledText(IKey key) {
@@ -44,18 +48,6 @@ public class StyledText extends BaseKey {
         renderer.setPos(x, y);
         renderer.setShadow(this.shadow != null ? this.shadow : widgetTheme.getTextShadow());
         renderer.draw(context.getGraphics(), getFormatted());
-    }
-
-    public Alignment getAlignment() {
-        return this.alignment;
-    }
-
-    public @Nullable Integer getColor() {
-        return this.color;
-    }
-
-    public float getScale() {
-        return this.scale;
     }
 
     public @Nullable Boolean isShadow() {

@@ -117,7 +117,7 @@ public class MultiblockInWorldPreviewRenderer {
         IMultiController controllerBase = null;
         LEVEL = new TrackedDummyWorld();
 
-        var blocks = shapeInfo.getBlocks();
+        var blocks = shapeInfo.blocks();
         BlockPos controllerPatternPos = null;
         var maxY = 0;
         // find the pos of controller

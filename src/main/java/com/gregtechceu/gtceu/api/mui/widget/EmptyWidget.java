@@ -10,12 +10,16 @@ import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class EmptyWidget implements IWidget {
 
+    @Getter
     private final Area area = new Area();
+    @Getter
     private final Flex flex = new Flex(this);
+    @Getter
     private IWidget parent;
 
     @Override
@@ -54,11 +58,6 @@ public class EmptyWidget implements IWidget {
     public void onUpdate() {}
 
     @Override
-    public Area getArea() {
-        return this.area;
-    }
-
-    @Override
     public @NotNull ModularPanel getPanel() {
         return this.parent.getPanel();
     }
@@ -80,11 +79,6 @@ public class EmptyWidget implements IWidget {
     public void markTooltipDirty() {}
 
     @Override
-    public @NotNull IWidget getParent() {
-        return this.parent;
-    }
-
-    @Override
     public ModularGuiContext getContext() {
         return this.parent.getContext();
     }
@@ -101,9 +95,4 @@ public class EmptyWidget implements IWidget {
 
     @Override
     public void resizer(IResizeable resizer) {}
-
-    @Override
-    public Flex getFlex() {
-        return this.flex;
-    }
 }

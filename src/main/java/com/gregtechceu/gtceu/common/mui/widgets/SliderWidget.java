@@ -20,19 +20,27 @@ import net.minecraft.util.Mth;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
+@Accessors(chain = true)
 public class SliderWidget extends Widget<SliderWidget> implements Interactable {
 
     private IDoubleValue<?> doubleValue;
     private IDrawable stopperDrawable = new Rectangle().setColor(Color.withAlpha(Color.WHITE.main, 0.4f));
     private IDrawable handleDrawable = GuiTextures.BUTTON_CLEAN;
+    @Setter
     private GuiAxis axis = GuiAxis.X;
     private DoubleList stopper;
     private int stopperWidth = 2, stopperHeight = 4;
     private final Unit sliderWidth = new Unit(), sliderHeight = new Unit();
     private final Area sliderArea = new Area();
-    private double min, max, each = 0;
+    @Getter
+    private double min, max;
+    private double each = 0;
+    @Getter
     private boolean dragging = false;
 
     private double cache = Double.MIN_VALUE;
@@ -180,18 +188,6 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
         }
     }
 
-    public double getMin() {
-        return this.min;
-    }
-
-    public double getMax() {
-        return this.max;
-    }
-
-    public boolean isDragging() {
-        return this.dragging;
-    }
-
     @Override
     public String toString() {
         return super.toString() + " # " + getSliderValue();
@@ -227,11 +223,6 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
 
     public SliderWidget stopper(double each) {
         this.each = each;
-        return this;
-    }
-
-    public SliderWidget setAxis(GuiAxis axis) {
-        this.axis = axis;
         return this;
     }
 

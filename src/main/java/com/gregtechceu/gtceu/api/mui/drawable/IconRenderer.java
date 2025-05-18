@@ -17,6 +17,9 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,12 +31,19 @@ public class IconRenderer {
     protected float maxWidth = -1, maxHeight = -1;
     protected int x = 0, y = 0;
     protected Alignment alignment = Alignment.TopLeft;
+    @Setter
     protected float scale = 1f;
+    @Setter
     protected boolean shadow = false;
+    @Setter
     protected int color = 0;
+    @Setter
     protected int linePadding = 1;
+    @Setter
     protected boolean simulate;
+    @Getter
     protected float lastWidth = 0, lastHeight = 0;
+    @Setter
     protected boolean useWholeWidth = false;
 
     public void setAlignment(Alignment alignment, float maxWidth) {
@@ -46,33 +56,9 @@ public class IconRenderer {
         this.maxHeight = maxHeight;
     }
 
-    public void setShadow(boolean shadow) {
-        this.shadow = shadow;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
     public void setPos(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public void setLinePadding(int linePadding) {
-        this.linePadding = linePadding;
-    }
-
-    public void setSimulate(boolean simulate) {
-        this.simulate = simulate;
-    }
-
-    public void setUseWholeWidth(boolean useWholeWidth) {
-        this.useWholeWidth = useWholeWidth;
     }
 
     public void draw(GuiContext context, IDrawable text) {
@@ -159,14 +145,6 @@ public class IconRenderer {
 
     public float getFontHeight() {
         return getFont().lineHeight * this.scale;
-    }
-
-    public float getLastHeight() {
-        return this.lastHeight;
-    }
-
-    public float getLastWidth() {
-        return this.lastWidth;
     }
 
     @OnlyIn(Dist.CLIENT)

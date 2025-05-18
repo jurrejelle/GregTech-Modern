@@ -2,6 +2,8 @@ package com.gregtechceu.gtceu.api.mui.drawable;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
 public class TabTexture {
@@ -37,9 +39,13 @@ public class TabTexture {
     private final UITexture startInactive;
     private final UITexture inactive;
     private final UITexture endInactive;
+    @Getter
     private final int width, height;
+    @Getter
     private final int textureInset;
+    @Getter
     private final GuiAxis axis;
+    @Getter
     private final boolean positive;
 
     public TabTexture(UITexture startActive, UITexture active, UITexture endActive, UITexture startInactive,
@@ -78,25 +84,5 @@ public class TabTexture {
             return getStart(active);
         }
         return getEnd(active);
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
-    }
-
-    public int getTextureInset() {
-        return this.textureInset;
-    }
-
-    public GuiAxis getAxis() {
-        return this.axis;
-    }
-
-    public boolean isPositive() {
-        return this.positive;
     }
 }

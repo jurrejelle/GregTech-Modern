@@ -10,16 +10,27 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 /**
  * Scrollable area
  * <p>
  * This class is responsible for storing information for scrollable one
  * directional objects.
  */
+@Accessors(chain = true)
 public class ScrollArea extends Area {
 
+    @Getter
+    @Setter
     private HorizontalScrollData scrollX;
+    @Getter
+    @Setter
     private VerticalScrollData scrollY;
+    @Getter
+    @Setter
     private int scrollBarBackgroundColor = Color.withAlpha(Color.BLACK.main, 0.25f);
 
     public ScrollArea(int x, int y, int w, int h) {
@@ -39,22 +50,6 @@ public class ScrollArea extends Area {
     public void removeScrollData() {
         this.scrollX = null;
         this.scrollY = null;
-    }
-
-    public void setScrollDataX(HorizontalScrollData scrollX) {
-        this.scrollX = scrollX;
-    }
-
-    public void setScrollDataY(VerticalScrollData data) {
-        this.scrollY = data;
-    }
-
-    public HorizontalScrollData getScrollX() {
-        return this.scrollX;
-    }
-
-    public VerticalScrollData getScrollY() {
-        return this.scrollY;
     }
 
     public ScrollData getScrollData(GuiAxis axis) {
@@ -189,14 +184,6 @@ public class ScrollArea extends Area {
         return this.scrollY != null && this.scrollY.isScrollBarActive(this);
     }
 
-    public int getScrollBarBackgroundColor() {
-        return this.scrollBarBackgroundColor;
-    }
-
-    public void setScrollBarBackgroundColor(int scrollBarBackgroundColor) {
-        this.scrollBarBackgroundColor = scrollBarBackgroundColor;
-    }
-
     public boolean isDragging() {
         return (this.scrollX != null && this.scrollX.isDragging()) ||
                 (this.scrollY != null && this.scrollY.isDragging());
@@ -206,14 +193,14 @@ public class ScrollArea extends Area {
      * This method is responsible for drawing a scroll bar
      */
     @OnlyIn(Dist.CLIENT)
-    public void drawScrollbar() {
+    public void drawScrollbar(GuiContext context) {
         boolean isXActive = false; // micro optimisation
         if (this.scrollX != null && this.scrollX.isScrollBarActive(this, false)) {
             isXActive = true;
-            this.scrollX.drawScrollbar(this);
+            this.scrollX.drawScrollbar(context, this);
         }
         if (this.scrollY != null && this.scrollY.isScrollBarActive(this, isXActive)) {
-            this.scrollY.drawScrollbar(this);
+            this.scrollY.drawScrollbar(context, this);
         }
     }
 }

@@ -50,7 +50,7 @@ public class CleanroomCondition extends RecipeCondition {
     @Override
     public Component getTooltips() {
         return cleanroom == null ? null :
-                Component.translatable("gtceu.recipe.cleanroom", Component.translatable(cleanroom.getTranslationKey()));
+                Component.translatable("gtceu.recipe.cleanroom", Component.translatable(cleanroom.translationKey()));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CleanroomCondition extends RecipeCondition {
     @Override
     public JsonObject serialize() {
         JsonObject value = super.serialize();
-        value.addProperty("cleanroom", cleanroom.getName());
+        value.addProperty("cleanroom", cleanroom.name());
         return value;
     }
 
@@ -86,7 +86,7 @@ public class CleanroomCondition extends RecipeCondition {
     @Override
     public void toNetwork(FriendlyByteBuf buf) {
         super.toNetwork(buf);
-        buf.writeUtf(this.cleanroom.getName());
+        buf.writeUtf(this.cleanroom.name());
     }
 
     @Override

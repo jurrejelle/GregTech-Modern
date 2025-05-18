@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.client.mui.screen.viewport;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewport;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -14,13 +15,19 @@ public class TransformationMatrix {
 
     public static final TransformationMatrix EMPTY = new TransformationMatrix(null);
 
+    @Getter
     private final TransformationMatrix wrapped;
+    @Getter
     private final IViewport viewport;
+    @Getter
     private final Area area;
+    @Getter
     private final Matrix4f matrix;
     private final Matrix4f invertedMatrix = new Matrix4f();
 
+    @Getter
     private final boolean viewportMatrix;
+    @Getter
     private boolean dirty = true;
 
     public TransformationMatrix(TransformationMatrix parent, @Nullable Matrix4f parentMatrix) {
@@ -54,22 +61,6 @@ public class TransformationMatrix {
         }
     }
 
-    public TransformationMatrix getWrapped() {
-        return this.wrapped;
-    }
-
-    public IViewport getViewport() {
-        return this.viewport;
-    }
-
-    public Area getArea() {
-        return this.area;
-    }
-
-    public Matrix4f getMatrix() {
-        return this.matrix;
-    }
-
     public Matrix4f getInvertedMatrix() {
         if (this.dirty) {
             if (this.matrix.invert(this.invertedMatrix) == null) {
@@ -80,16 +71,8 @@ public class TransformationMatrix {
         return this.invertedMatrix;
     }
 
-    public boolean isViewportMatrix() {
-        return this.viewportMatrix;
-    }
-
     public void markDirty() {
         this.dirty = true;
-    }
-
-    public boolean isDirty() {
-        return this.dirty;
     }
 
     public int transformX(float x, float y) {

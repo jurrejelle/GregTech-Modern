@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.mui.widget.scroll;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 public class HorizontalScrollData extends ScrollData {
 
@@ -60,14 +61,14 @@ public class HorizontalScrollData extends ScrollData {
     }
 
     @Override
-    public void drawScrollbar(ScrollArea area) {
+    public void drawScrollbar(GuiContext context, ScrollArea area) {
         boolean isOtherActive = isOtherScrollBarActive(area, true);
         int l = getScrollBarLength(area);
         int x = 0;
         int y = isAxisStart() ? 0 : area.height - getThickness();
         int w = area.width;
         int h = getThickness();
-        GuiDraw.drawRect(x, y, w, h, area.getScrollBarBackgroundColor());
+        GuiDraw.drawRect(context.getLastPose(), x, y, w, h, area.getScrollBarBackgroundColor());
 
         x = getScrollBarStart(area, l, isOtherActive);
         ScrollData data2 = getOtherScrollData(area);
@@ -76,6 +77,6 @@ public class HorizontalScrollData extends ScrollData {
         }
 
         w = l;
-        drawScrollBar(x, y, w, h);
+        drawScrollBar(context, x, y, w, h);
     }
 }

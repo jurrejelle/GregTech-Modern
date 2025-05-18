@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,9 @@ public class BlockInfo {
         return new BlockInfo(blockState, block);
     }
 
+    @Getter
     private BlockState blockState;
+    @Getter
     private BlockEntity blockEntity;
 
     public BlockInfo(@NotNull Block block) {
@@ -47,14 +50,6 @@ public class BlockInfo {
 
     public BlockInfo(@NotNull BlockState blockState, @Nullable BlockEntity blockEntity) {
         set(blockState, blockEntity);
-    }
-
-    public BlockState getBlockState() {
-        return blockState;
-    }
-
-    public BlockEntity getBlockEntity() {
-        return blockEntity;
     }
 
     public void apply(Level level, BlockPos pos) {

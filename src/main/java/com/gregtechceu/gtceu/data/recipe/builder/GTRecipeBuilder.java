@@ -37,6 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -46,6 +47,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -1069,19 +1072,19 @@ public class GTRecipeBuilder {
         return addCondition(new CleanroomCondition(cleanroomType));
     }
 
-    public GTRecipeBuilder dimension(ResourceLocation dimension, boolean reverse) {
+    public GTRecipeBuilder dimension(ResourceKey<Level> dimension, boolean reverse) {
         return addCondition(new DimensionCondition(dimension).setReverse(reverse));
     }
 
-    public GTRecipeBuilder dimension(ResourceLocation dimension) {
+    public GTRecipeBuilder dimension(ResourceKey<Level> dimension) {
         return dimension(dimension, false);
     }
 
-    public GTRecipeBuilder biome(ResourceLocation biome, boolean reverse) {
+    public GTRecipeBuilder biome(ResourceKey<Biome> biome, boolean reverse) {
         return addCondition(new BiomeCondition(biome).setReverse(reverse));
     }
 
-    public GTRecipeBuilder biome(ResourceLocation biome) {
+    public GTRecipeBuilder biome(ResourceKey<Biome> biome) {
         return biome(biome, false);
     }
 

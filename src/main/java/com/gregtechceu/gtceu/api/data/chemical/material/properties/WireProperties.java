@@ -3,17 +3,59 @@ package com.gregtechceu.gtceu.api.data.chemical.material.properties;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
 import static com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags.GENERATE_FOIL;
 
 public class WireProperties implements IMaterialProperty {
 
+    // spotless:off
+    /**
+     * The current wire voltage
+     */
+    @Getter
+    @Setter
     private long voltage;
+    /**
+     * The current wire amperage
+     */
+    @Getter
+    @Setter
     private int amperage;
+    /**
+     * The current wire loss per block
+     */
+    @Getter
+    @Setter
     private int lossPerBlock;
+    /**
+     * The critical temperature of the superconductor
+     * (the temperature at which the superconductive phase transition happens)
+     *
+     * @param criticalTemperature The new critical temperature
+     * @return Critical temperature of the material
+     */
+    @Getter
+    @Setter
     private int superconductorCriticalTemperature;
+    /**
+     * current wire superconductor status
+     * -- GETTER --
+     * If the current wire is a Superconductor wire
+     *
+     * @return {@code true} if the current wire is a Superconductor
+     *  -- SETTER --
+     *  Sets the current wire to a superconductor wire
+     *
+     * @param isSuperconductor The new wire superconductor status
+     */
+    @Getter
+    @Setter
     private boolean isSuperconductor;
+    // spotless:on
 
     public WireProperties(long voltage, int baseAmperage, int lossPerBlock) {
         this(voltage, baseAmperage, lossPerBlock, false);
@@ -43,97 +85,6 @@ public class WireProperties implements IMaterialProperty {
         this(8, 1, 1, false);
     }
 
-    /**
-     * Retrieves the current wire voltage
-     *
-     * @return The current wire voltage
-     */
-    public long getVoltage() {
-        return voltage;
-    }
-
-    /**
-     * Sets the current wire voltage
-     *
-     * @param voltage The new wire voltage
-     */
-    public void setVoltage(long voltage) {
-        this.voltage = voltage;
-    }
-
-    /**
-     * Retrieves the current wire amperage
-     *
-     * @return The current wire amperage
-     */
-    public int getAmperage() {
-        return amperage;
-    }
-
-    /**
-     * Sets the current wire amperage
-     *
-     * @param amperage The new current wire amperage
-     */
-    public void setAmperage(int amperage) {
-        this.amperage = amperage;
-    }
-
-    /**
-     * Retrieves the current wire loss per block
-     *
-     * @return The current wire loss per block
-     */
-    public int getLossPerBlock() {
-        return lossPerBlock;
-    }
-
-    /**
-     * Sets the current wire loss per block
-     *
-     * @param lossPerBlock The new wire loss per block
-     */
-    public void setLossPerBlock(int lossPerBlock) {
-        this.lossPerBlock = lossPerBlock;
-    }
-
-    /**
-     * If the current wire is a Superconductor wire
-     *
-     * @return {@code true} if the current wire is a Superconductor
-     */
-    public boolean isSuperconductor() {
-        return isSuperconductor;
-    }
-
-    /**
-     * Sets the current wire to a superconductor wire
-     *
-     * @param isSuperconductor The new wire superconductor status
-     */
-    public void setSuperconductor(boolean isSuperconductor) {
-        this.isSuperconductor = isSuperconductor;
-    }
-
-    /**
-     * Retrieves the critical temperature of the superconductor (the temperature at which the superconductive phase
-     * transition happens)
-     *
-     * @return Critical temperature of the material
-     */
-    public int getSuperconductorCriticalTemperature() {
-        return superconductorCriticalTemperature;
-    }
-
-    /**
-     * Sets the material's critical temperature
-     *
-     * @param criticalTemperature The new critical temperature
-     */
-    public void setSuperconductorCriticalTemperature(int criticalTemperature) {
-        this.superconductorCriticalTemperature = this.isSuperconductor ? criticalTemperature : 0;
-    }
-
     @Override
     public void verifyProperty(MaterialProperties properties) {
         properties.ensureSet(PropertyKey.DUST, true);
@@ -159,6 +110,6 @@ public class WireProperties implements IMaterialProperty {
 
     @Override
     public int hashCode() {
-        return Objects.hash(voltage, amperage, lossPerBlock);
+        return Objects.hash(voltage, amperage, lossPerBlock, superconductorCriticalTemperature, isSuperconductor);
     }
 }

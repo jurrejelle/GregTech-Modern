@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class WidgetTheme {
@@ -13,11 +14,15 @@ public class WidgetTheme {
         return ThemeAPI.DEFAULT_DEFAULT.getFallback();
     }
 
+    @Getter
     @Nullable
     private final IDrawable background;
+    @Getter
     @Nullable
     private final IDrawable hoverBackground;
+    @Getter
     private final int color;
+    @Getter
     private final int textColor;
     private final boolean textShadow;
 
@@ -38,22 +43,6 @@ public class WidgetTheme {
         this.color = JsonHelper.getColorWithFallback(json, fallback, parent.getColor(), IThemeApi.COLOR);
         this.textColor = JsonHelper.getColorWithFallback(json, fallback, parent.getTextColor(), IThemeApi.TEXT_COLOR);
         this.textShadow = JsonHelper.getBoolWithFallback(json, fallback, parent.getTextShadow(), IThemeApi.TEXT_SHADOW);
-    }
-
-    public @Nullable IDrawable getBackground() {
-        return this.background;
-    }
-
-    public @Nullable IDrawable getHoverBackground() {
-        return this.hoverBackground;
-    }
-
-    public int getColor() {
-        return this.color;
-    }
-
-    public int getTextColor() {
-        return this.textColor;
     }
 
     public boolean getTextShadow() {

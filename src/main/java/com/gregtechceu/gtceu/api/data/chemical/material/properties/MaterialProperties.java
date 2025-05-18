@@ -3,6 +3,9 @@ package com.gregtechceu.gtceu.api.data.chemical.material.properties;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.*;
 
 public class MaterialProperties {
@@ -17,6 +20,8 @@ public class MaterialProperties {
     }
 
     private final Map<PropertyKey<? extends IMaterialProperty>, IMaterialProperty> propertyMap;
+    @Getter
+    @Setter
     private Material material;
 
     public MaterialProperties() {
@@ -79,14 +84,6 @@ public class MaterialProperties {
             } else
                 throw new IllegalArgumentException("Material must have at least one of: " + baseTypes + " specified!");
         }
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public Material getMaterial() {
-        return material;
     }
 
     @Override

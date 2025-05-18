@@ -5,6 +5,9 @@ import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
 import com.gregtechceu.gtceu.api.mui.utils.MathUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A rectangular widget area, composed of a position and a size.
  * Also has fields for a relative position, a layer and margin & padding.
@@ -27,12 +30,16 @@ public class Area extends Rectangle implements IUnResizeable {
     /**
      * each panel has its own layer
      */
+    @Getter
+    @Setter
     private byte panelLayer = 0;
     /**
      * the widget layer within this panel
      */
     private int z;
+    @Getter
     private final Box margin = new Box();
+    @Getter
     private final Box padding = new Box();
 
     public Area() {
@@ -109,14 +116,6 @@ public class Area extends Rectangle implements IUnResizeable {
 
     public void z(int z) {
         this.z = z;
-    }
-
-    public byte getPanelLayer() {
-        return this.panelLayer;
-    }
-
-    public void setPanelLayer(byte panelLayer) {
-        this.panelLayer = panelLayer;
     }
 
     /**
@@ -455,14 +454,6 @@ public class Area extends Rectangle implements IUnResizeable {
         int y0 = MathUtils.min(yTL, yTR, yBL, yBR);
         int y1 = MathUtils.max(yTL, yTR, yBL, yBR);
         setPos(x0, y0, x1, y1);
-    }
-
-    public Box getMargin() {
-        return this.margin;
-    }
-
-    public Box getPadding() {
-        return this.padding;
     }
 
     @Override

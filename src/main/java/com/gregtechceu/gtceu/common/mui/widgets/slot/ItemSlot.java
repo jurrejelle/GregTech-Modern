@@ -22,7 +22,6 @@ import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -88,15 +87,15 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     public void draw(ModularGuiContext context, WidgetTheme widgetTheme) {
         if (this.syncHandler == null) return;
         Lighting.setupFor3DItems();
-        drawSlot(context.getGraphics(), getSlot());
+        drawSlot(context, getSlot());
         Lighting.setupFor3DItems();
-        drawOverlay();
+        drawOverlay(context);
     }
 
-    protected void drawOverlay() {
+    protected void drawOverlay(ModularGuiContext context) {
         if (isHovering()) {
             RenderSystem.colorMask(true, true, true, false);
-            GuiDraw.drawRect(1, 1, 16, 16, getSlotHoverColor());
+            GuiDraw.drawRect(context.getLastPose(), 1, 1, 16, 16, getSlotHoverColor());
             RenderSystem.colorMask(true, true, true, true);
         }
     }
@@ -105,7 +104,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     public void drawForeground(ModularGuiContext context) {
         RichTooltip tooltip = getTooltip();
         if (tooltip != null && isHoveringFor(tooltip.getShowUpTimer())) {
-            tooltip.draw(getContext(), getSlot().getItem());
+            tooltip.draw(context, getSlot().getItem());
         }
     }
 
@@ -177,7 +176,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void drawSlot(GuiGraphics graphics, Slot slotIn) {
+    private void drawSlot(ModularGuiContext context, Slot slotIn) {
         Screen guiScreen = getScreen().getScreenWrapper().getWrappedScreen();
         if (!(guiScreen instanceof AbstractContainerScreen<?>))
             throw new IllegalStateException("The gui must be an instance of GuiContainer if it contains slots!");
@@ -221,20 +220,20 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         }
 
         // makes sure items of different layers don't interfere with each other visually
-        float z = getContext().getCurrentDrawingZ() + 100;
-        // ((GuiAccessor) guiScreen).setZLevel(z);
-        // itemRenderer.zLevel = z;
+        float z = context.getCurrentDrawingZ() + 100;
+        context.getGraphics().pose().pushPose();
+        context.getGraphics().pose().translate(0, 0, z);
 
         if (!flag1) {
             if (isDragPreview) {
-                GuiDraw.drawRect(1, 1, 16, 16, -2130706433);
+                GuiDraw.drawRect(context.getLastPose(), 1, 1, 16, 16, -2130706433);
             }
 
             if (!slotStack.isEmpty()) {
                 RenderSystem.enableDepthTest();
                 // render the item itself
 
-                graphics.renderItem(slotStack, 1, 1);
+                context.getGraphics().renderItem(slotStack, 1, 1);
                 if (amount < 0) {
                     amount = slotStack.getCount();
                 }
@@ -259,7 +258,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
                     textRenderer.setPos(1, 1);
                     RenderSystem.disableDepthTest();
                     RenderSystem.disableBlend();
-                    textRenderer.draw(graphics, amountText);
+                    textRenderer.draw(context.getGraphics(), amountText);
                     RenderSystem.enableDepthTest();
                     RenderSystem.enableBlend();
                 }
@@ -267,14 +266,13 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
                 int cachedCount = slotStack.getCount();
                 slotStack.setCount(1); // required to not render the amount overlay
                 // render other overlays like durability bar
-                graphics.renderItemDecorations(((ScreenAccessor) guiScreen).getFont(), slotStack, 1, 1, null);
+                context.getGraphics().renderItemDecorations(((ScreenAccessor) guiScreen).getFont(), slotStack, 1, 1,
+                        null);
                 slotStack.setCount(cachedCount);
                 RenderSystem.disableDepthTest();
             }
         }
-
-        // ((ScreenAccessor) guiScreen).setZLevel(0f);
-        // itemRenderer.zLevel = 0f;
+        context.getGraphics().pose().popPose();
     }
 
     @Override

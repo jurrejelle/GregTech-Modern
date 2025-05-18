@@ -22,13 +22,17 @@ import net.minecraft.world.level.Level;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
+@Accessors(fluent = true)
 public class DataItemBehavior implements IInteractionItem, IAddInformation, IDataItem {
 
+    @Getter
     private final boolean requireDataBank;
 
     public DataItemBehavior() {
@@ -37,11 +41,6 @@ public class DataItemBehavior implements IInteractionItem, IAddInformation, IDat
 
     public DataItemBehavior(boolean requireDataBank) {
         this.requireDataBank = requireDataBank;
-    }
-
-    @Override
-    public boolean requireDataBank() {
-        return requireDataBank;
     }
 
     @Override

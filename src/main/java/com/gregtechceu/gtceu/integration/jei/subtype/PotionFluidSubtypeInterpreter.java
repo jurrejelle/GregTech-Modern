@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class PotionFluidSubtypeInterpreter implements IIngredientSubtypeInterpreter<FluidStack> {
 
     @Override
-    public String apply(FluidStack ingredient, UidContext context) {
+    public @NotNull String apply(FluidStack ingredient, @NotNull UidContext context) {
         if (!ingredient.hasTag())
             return IIngredientSubtypeInterpreter.NONE;
 

@@ -1,10 +1,13 @@
 package com.gregtechceu.gtceu.api.mui.utils;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class ParseResult {
 
+    @Getter
     private final double result;
+    @Getter
     private final String error;
 
     public static ParseResult success(double result) {
@@ -34,13 +37,5 @@ public class ParseResult {
 
     public boolean hasValue() {
         return !Double.isNaN(this.result);
-    }
-
-    public double getResult() {
-        return result;
-    }
-
-    public String getError() {
-        return error;
     }
 }

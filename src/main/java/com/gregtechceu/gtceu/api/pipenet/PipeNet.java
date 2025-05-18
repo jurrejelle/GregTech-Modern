@@ -16,18 +16,23 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.Getter;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 public abstract class PipeNet<NodeDataType> implements ITagSerializable<CompoundTag> {
 
+    @Getter
     protected final LevelPipeNet<NodeDataType, PipeNet<NodeDataType>> worldData;
     private final Map<BlockPos, Node<NodeDataType>> nodeByBlockPos = new HashMap<>();
     private final Map<BlockPos, Node<NodeDataType>> unmodifiableNodeByBlockPos = Collections
             .unmodifiableMap(nodeByBlockPos);
     private final Map<ChunkPos, Integer> ownedChunks = new HashMap<>();
+    @Getter
     private long lastUpdate;
+    @Getter
     boolean isValid = false;
 
     public PipeNet(LevelPipeNet<NodeDataType, ? extends PipeNet<NodeDataType>> Level) {
@@ -35,24 +40,13 @@ public abstract class PipeNet<NodeDataType> implements ITagSerializable<Compound
         this.worldData = (LevelPipeNet<NodeDataType, PipeNet<NodeDataType>>) Level;
     }
 
+    @UnmodifiableView
     public Set<ChunkPos> getContainedChunks() {
         return Collections.unmodifiableSet(ownedChunks.keySet());
     }
 
-    public LevelPipeNet<NodeDataType, PipeNet<NodeDataType>> getWorldData() {
-        return worldData;
-    }
-
     public ServerLevel getLevel() {
-        return worldData.getWorld();
-    }
-
-    public long getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public boolean isValid() {
-        return isValid;
+        return worldData.getLevel();
     }
 
     /**

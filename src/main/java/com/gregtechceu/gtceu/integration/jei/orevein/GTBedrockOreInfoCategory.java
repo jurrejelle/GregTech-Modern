@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.integration.jei.orevein;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.data.worldgen.bedrockore.BedrockOreDefinition;
 import com.gregtechceu.gtceu.client.ClientProxy;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.integration.xei.widgets.GTOreVeinWidget;
@@ -19,16 +20,18 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import org.jetbrains.annotations.NotNull;
 
-public class GTBedrockOreInfoCategory extends ModularUIRecipeCategory<GTBedrockOreInfoWrapper> {
+public class GTBedrockOreInfoCategory extends ModularUIRecipeCategory<BedrockOreDefinition> {
 
-    public final static RecipeType<GTBedrockOreInfoWrapper> RECIPE_TYPE = new RecipeType<>(
-            GTCEu.id("bedrock_ore_diagram"), GTBedrockOreInfoWrapper.class);
+    public final static RecipeType<BedrockOreDefinition> RECIPE_TYPE = new RecipeType<>(
+            GTCEu.id("bedrock_ore_diagram"), BedrockOreDefinition.class);
+
     @Getter
     private final IDrawable background;
     @Getter
     private final IDrawable icon;
 
     public GTBedrockOreInfoCategory(IJeiHelpers helpers) {
+        super(GTBedrockOreInfoWrapper::new);
         IGuiHelper guiHelper = helpers.getGuiHelper();
         this.background = guiHelper.createBlankDrawable(GTOreVeinWidget.width, 120);
         this.icon = helpers.getGuiHelper()
@@ -36,9 +39,7 @@ public class GTBedrockOreInfoCategory extends ModularUIRecipeCategory<GTBedrockO
     }
 
     public static void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(RECIPE_TYPE, ClientProxy.CLIENT_BEDROCK_ORE_VEINS.values().stream()
-                .map(GTBedrockOreInfoWrapper::new)
-                .toList());
+        registry.addRecipes(RECIPE_TYPE, ClientProxy.CLIENT_BEDROCK_ORE_VEINS.values().stream().toList());
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
@@ -48,7 +49,7 @@ public class GTBedrockOreInfoCategory extends ModularUIRecipeCategory<GTBedrockO
 
     @NotNull
     @Override
-    public RecipeType<GTBedrockOreInfoWrapper> getRecipeType() {
+    public RecipeType<BedrockOreDefinition> getRecipeType() {
         return RECIPE_TYPE;
     }
 

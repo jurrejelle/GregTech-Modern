@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemStackItemHandler implements IItemHandlerModifiable {
@@ -14,16 +15,12 @@ public class ItemStackItemHandler implements IItemHandlerModifiable {
     private static final String KEY_ITEMS = "Items";
 
     private final ItemStack container;
+    @Getter
     private final int slots;
 
     public ItemStackItemHandler(ItemStack container, int slots) {
         this.container = container;
         this.slots = slots;
-    }
-
-    @Override
-    public int getSlots() {
-        return this.slots;
     }
 
     @NotNull

@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 
 import com.google.common.base.Joiner;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -27,34 +28,27 @@ public class TextFieldHandler {
     private final List<String> text = new ArrayList<>();
     private final Point cursor = new Point(), cursorEnd = new Point();
     private final BaseTextFieldWidget<?> textFieldWidget;
+    @Setter
     private TextFieldRenderer renderer;
+    @Getter
+    @Setter
     @Nullable
     private ScrollArea scrollArea;
     private boolean mainCursorStart = true;
+    @Getter
     private int maxLines = 1;
+    @Setter
     @Nullable
     private Pattern pattern;
+    @Getter
+    @Setter
     private int maxCharacters = -1;
+    @Getter
+    @Setter
     private GuiContext guiContext;
 
     public TextFieldHandler(BaseTextFieldWidget<?> textFieldWidget) {
         this.textFieldWidget = textFieldWidget;
-    }
-
-    public void setPattern(@Nullable Pattern pattern) {
-        this.pattern = pattern;
-    }
-
-    public void setMaxCharacters(int maxCharacters) {
-        this.maxCharacters = maxCharacters;
-    }
-
-    public void setScrollArea(@Nullable ScrollArea scrollArea) {
-        this.scrollArea = scrollArea;
-    }
-
-    public void setRenderer(TextFieldRenderer renderer) {
-        this.renderer = renderer;
     }
 
     public void switchCursors() {
@@ -399,17 +393,5 @@ public class TextFieldHandler {
 
     public void setMaxLines(int maxLines) {
         this.maxLines = Math.max(1, maxLines);
-    }
-
-    public int getMaxLines() {
-        return this.maxLines;
-    }
-
-    public GuiContext getGuiContext() {
-        return this.guiContext;
-    }
-
-    public void setGuiContext(GuiContext guiContext) {
-        this.guiContext = guiContext;
     }
 }

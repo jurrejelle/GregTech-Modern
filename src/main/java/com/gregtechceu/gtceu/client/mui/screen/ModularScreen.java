@@ -30,10 +30,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.*;
 import java.util.function.Function;
@@ -65,16 +67,24 @@ public class ModularScreen implements GuiEventListener {
         return null;
     }
 
+    @Getter
     private final String owner;
+    @Getter
     private final String name;
+    @Getter
     private final PanelManager panelManager;
+    @Getter
     private final ModularGuiContext context = new ModularGuiContext(this);
     private final Map<Class<?>, List<IGuiAction>> guiActionListeners = new Object2ObjectOpenHashMap<>();
     private final Object2ObjectArrayMap<IWidget, Runnable> frameUpdates = new Object2ObjectArrayMap<>();
-    private boolean pausesGame = false;
+    @Getter
+    private boolean pauseScreen = false;
 
+    @Getter
     private ITheme currentTheme;
+    @Getter
     private IMuiScreen screenWrapper;
+    @Getter
     private boolean overlay = false;
 
     /**
@@ -137,8 +147,10 @@ public class ModularScreen implements GuiEventListener {
         if (this.screenWrapper != null) throw new IllegalStateException("ModularScreen is already constructed!");
         if (wrapper == null) throw new NullPointerException("ScreenWrapper must not be null!");
         this.screenWrapper = wrapper;
-        if (this.screenWrapper.getWrappedScreen() instanceof AbstractContainerScreen<?> container) {
-            ((ModularContainerMenu) container.getMenu()).initializeClient(this);
+        if (this.screenWrapper.getWrappedScreen() instanceof AbstractContainerScreen<?> containerScreen) {
+            if (containerScreen.getMenu() instanceof ModularContainerMenu modular && !modular.isScreenInitialized()) {
+                modular.initializeClient(this);
+            }
         }
         this.screenWrapper.updateGuiArea(this.panelManager.getMainPanel().getArea());
         this.overlay = false;
@@ -239,16 +251,17 @@ public class ModularScreen implements GuiEventListener {
         this.context.onFrameUpdate();
     }
 
-    public void drawScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void drawScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         RenderSystem.disableDepthTest();
+        Matrix4f pose = graphics.pose().last().pose();
 
         this.context.reset();
         this.context.pushViewport(null, this.context.getScreenArea());
         for (ModularPanel panel : this.panelManager.getReverseOpenPanels()) {
             this.context.updateZ(panel.getArea().getPanelLayer() * 20);
             if (panel.disablePanelsBelow()) {
-                GuiDraw.drawRect(0, 0, this.context.getScreenArea().w(), this.context.getScreenArea().h(),
+                GuiDraw.drawRect(pose, 0, 0, this.context.getScreenArea().w(), this.context.getScreenArea().h(),
                         Color.argb(16, 16, 16, (int) (125 * panel.getAlpha())));
             }
             WidgetTree.drawTree(panel, this.context);
@@ -438,30 +451,8 @@ public class ModularScreen implements GuiEventListener {
         return getCurrent() == this;
     }
 
-    @NotNull
-    public String getOwner() {
-        return this.owner;
-    }
-
-    @NotNull
-    public String getName() {
-        return this.name;
-    }
-
     public ResourceLocation getResourceLocation() {
         return new ResourceLocation(this.owner, this.name);
-    }
-
-    public boolean isOverlay() {
-        return overlay;
-    }
-
-    public ModularGuiContext getContext() {
-        return this.context;
-    }
-
-    public PanelManager getPanelManager() {
-        return panelManager;
     }
 
     public ModularSyncManager getSyncManager() {
@@ -470,10 +461,6 @@ public class ModularScreen implements GuiEventListener {
 
     public ModularPanel getMainPanel() {
         return this.panelManager.getMainPanel();
-    }
-
-    public IMuiScreen getScreenWrapper() {
-        return this.screenWrapper;
     }
 
     public Area getScreenArea() {
@@ -492,10 +479,6 @@ public class ModularScreen implements GuiEventListener {
             return (ModularContainerMenu) container.getMenu();
         }
         throw new IllegalStateException("Screen does not extend AbstractContainerScreen!");
-    }
-
-    public boolean isPauseScreen() {
-        return pausesGame;
     }
 
     @SuppressWarnings("unchecked")
@@ -581,17 +564,13 @@ public class ModularScreen implements GuiEventListener {
         throw new IllegalArgumentException();
     }
 
-    public ITheme getCurrentTheme() {
-        return this.currentTheme;
-    }
-
     public ModularScreen useTheme(String theme) {
         this.currentTheme = IThemeApi.get().getThemeForScreen(this, theme);
         return this;
     }
 
     public ModularScreen pausesGame(boolean pausesGame) {
-        this.pausesGame = pausesGame;
+        this.pauseScreen = pausesGame;
         return this;
     }
 

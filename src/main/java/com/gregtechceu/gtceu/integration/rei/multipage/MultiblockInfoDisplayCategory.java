@@ -11,6 +11,7 @@ import com.lowdragmc.lowdraglib.rei.ModularUIDisplayCategory;
 
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -19,6 +20,8 @@ public class MultiblockInfoDisplayCategory extends ModularUIDisplayCategory<Mult
 
     public static final CategoryIdentifier<MultiblockInfoDisplay> CATEGORY = CategoryIdentifier
             .of(GTCEu.id("multiblock_info"));
+
+    @Getter
     private final Renderer icon;
 
     public MultiblockInfoDisplayCategory() {
@@ -52,10 +55,5 @@ public class MultiblockInfoDisplayCategory extends ModularUIDisplayCategory<Mult
     @Override
     public Component getTitle() {
         return Component.translatable("gtceu.jei.multiblock_info");
-    }
-
-    @Override
-    public Renderer getIcon() {
-        return icon;
     }
 }

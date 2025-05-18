@@ -2,6 +2,8 @@ package com.gregtechceu.gtceu.integration.xei.entry.item;
 
 import net.minecraft.world.item.ItemStack;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.stream.Stream;
 
 public final class ItemStackList implements ItemEntryList {
 
+    @Getter
     private final List<ItemStack> stacks;
 
     public ItemStackList() {
@@ -42,11 +45,6 @@ public final class ItemStackList implements ItemEntryList {
     @Override
     public boolean isEmpty() {
         return stacks.isEmpty();
-    }
-
-    @Override
-    public List<ItemStack> getStacks() {
-        return stacks;
     }
 
     public Stream<ItemStack> stream() {

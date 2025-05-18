@@ -6,9 +6,11 @@ import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 public class WidgetSlotTheme extends WidgetTheme {
 
+    @Getter
     private final int slotHoverColor;
 
     public WidgetSlotTheme(IDrawable background, int slotHoverColor) {
@@ -20,9 +22,5 @@ public class WidgetSlotTheme extends WidgetTheme {
         super(parent, json, fallback);
         this.slotHoverColor = JsonHelper.getColorWithFallback(json, fallback,
                 ((WidgetSlotTheme) parent).getSlotHoverColor(), IThemeApi.SLOT_HOVER_COLOR);
-    }
-
-    public int getSlotHoverColor() {
-        return this.slotHoverColor;
     }
 }

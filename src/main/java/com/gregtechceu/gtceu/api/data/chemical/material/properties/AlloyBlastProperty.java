@@ -17,6 +17,7 @@ public class AlloyBlastProperty implements IMaterialProperty {
      * Internal material fluid field
      */
     private Supplier<? extends Fluid> fluidSupplier;
+    @Getter
     private int temperature;
 
     @Getter
@@ -50,9 +51,5 @@ public class AlloyBlastProperty implements IMaterialProperty {
     public void setTemperature(int fluidTemperature) {
         Preconditions.checkArgument(fluidTemperature > 0, "Invalid temperature");
         this.temperature = fluidTemperature;
-    }
-
-    public int getTemperature() {
-        return temperature;
     }
 }

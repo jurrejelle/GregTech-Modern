@@ -40,6 +40,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
 
 import java.util.*;
 
@@ -78,6 +79,7 @@ public class CharcoalPileIgniterMachine extends WorkableMultiblockMachine implem
     private int fDist = 0;
     @DescSynced
     private int hDist = 0;
+    @Getter
     @DescSynced
     @RequireRerender
     private boolean isActive;
@@ -129,11 +131,6 @@ public class CharcoalPileIgniterMachine extends WorkableMultiblockMachine implem
     @Override
     public int getMaxProgress() {
         return maxTime;
-    }
-
-    @Override
-    public boolean isActive() {
-        return isActive;
     }
 
     @Override

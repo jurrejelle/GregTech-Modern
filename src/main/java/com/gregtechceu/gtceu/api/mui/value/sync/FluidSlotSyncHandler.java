@@ -16,9 +16,13 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Accessors(fluent = true, chain = true)
 public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
 
     public static final int SYNC_FLUID = 0;
@@ -27,9 +31,14 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
     public static final int SYNC_CONTROLS_AMOUNT = 3;
 
     private @NotNull FluidStack cache = FluidStack.EMPTY;
+    @Getter
     private final IFluidTank fluidTank;
     private final IFluidHandler fluidHandler;
-    private boolean canFillSlot = true, canDrainSlot = true, controlsAmount = true, phantom = false;
+    @Getter
+    @Setter
+    private boolean canFillSlot = true, canDrainSlot = true, phantom = false;
+    @Getter
+    private boolean controlsAmount = true;
     @Nullable
     private FluidStack lastStoredPhantomFluid;
 
@@ -279,25 +288,8 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         return this.fluidTank;
     }
 
-    public boolean canDrainSlot() {
-        return this.canDrainSlot;
-    }
-
-    public boolean canFillSlot() {
-        return this.canFillSlot;
-    }
-
-    public boolean controlsAmount() {
-        return this.controlsAmount;
-    }
-
     public boolean isPhantom() {
         return this.phantom;
-    }
-
-    public FluidSlotSyncHandler phantom(boolean phantom) {
-        this.phantom = phantom;
-        return this;
     }
 
     public FluidSlotSyncHandler controlsAmount(boolean controlsAmount) {
@@ -305,16 +297,6 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<FluidStack> {
         if (isValid()) {
             sync(SYNC_CONTROLS_AMOUNT, buffer -> buffer.writeBoolean(controlsAmount));
         }
-        return this;
-    }
-
-    public FluidSlotSyncHandler canDrainSlot(boolean canDrainSlot) {
-        this.canDrainSlot = canDrainSlot;
-        return this;
-    }
-
-    public FluidSlotSyncHandler canFillSlot(boolean canFillSlot) {
-        this.canFillSlot = canFillSlot;
         return this;
     }
 }

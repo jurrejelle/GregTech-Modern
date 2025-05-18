@@ -2,13 +2,22 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import java.util.function.Consumer;
 
+@Accessors(chain = true)
 public class Dialog<T> extends ModularPanel {
 
     private final Consumer<T> resultConsumer;
+    @Getter
+    @Setter
     private boolean draggable = false;
+    @Setter
     private boolean disablePanelsBelow = true;
+    @Setter
     private boolean closeOnOutOfBoundsClick = false;
 
     public Dialog(String name) {
@@ -28,11 +37,6 @@ public class Dialog<T> extends ModularPanel {
     }
 
     @Override
-    public boolean isDraggable() {
-        return this.draggable;
-    }
-
-    @Override
     public boolean disablePanelsBelow() {
         return this.disablePanelsBelow;
     }
@@ -40,20 +44,5 @@ public class Dialog<T> extends ModularPanel {
     @Override
     public boolean closeOnOutOfBoundsClick() {
         return this.closeOnOutOfBoundsClick;
-    }
-
-    public Dialog<T> setDraggable(boolean draggable) {
-        this.draggable = draggable;
-        return this;
-    }
-
-    public Dialog<T> setDisablePanelsBelow(boolean disablePanelsBelow) {
-        this.disablePanelsBelow = disablePanelsBelow;
-        return this;
-    }
-
-    public Dialog<T> setCloseOnOutOfBoundsClick(boolean closeOnOutOfBoundsClick) {
-        this.closeOnOutOfBoundsClick = closeOnOutOfBoundsClick;
-        return this;
     }
 }

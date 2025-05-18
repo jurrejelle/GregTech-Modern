@@ -115,6 +115,7 @@ public class ToolProperty implements IMaterialProperty {
     /**
      * Enchantment to be applied to tools made from this Material.
      */
+    @Getter
     private final Object2IntMap<Enchantment> enchantments = new Object2IntArrayMap<>();
 
     public ToolProperty(float harvestSpeed, float attackDamage, int durability, int harvestLevel, GTToolType[] types) {
@@ -127,10 +128,6 @@ public class ToolProperty implements IMaterialProperty {
 
     public ToolProperty() {
         this(1.0F, 1.0F, 100, 2, GTToolType.getTypes().values().toArray(GTToolType[]::new));
-    }
-
-    public Object2IntMap<Enchantment> getEnchantments() {
-        return enchantments;
     }
 
     @Override

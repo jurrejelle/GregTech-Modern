@@ -9,9 +9,9 @@ public class SteamMinerLogic extends MinerLogic {
      * Creates the logic for steam miners
      *
      * @param metaTileEntity the {@link IRecipeLogicMachine} this logic belongs to
-     * @param fortune         the fortune amount to apply when mining ores
-     * @param speed           the speed in ticks per block mined
-     * @param maximumRadius   the maximum radius (square shaped) the miner can mine in
+     * @param fortune        the fortune amount to apply when mining ores
+     * @param speed          the speed in ticks per block mined
+     * @param maximumRadius  the maximum radius (square shaped) the miner can mine in
      */
     public SteamMinerLogic(IRecipeLogicMachine metaTileEntity, int fortune, int speed, int maximumRadius) {
         super(metaTileEntity, fortune, speed, maximumRadius);

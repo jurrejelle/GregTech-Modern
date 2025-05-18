@@ -34,7 +34,7 @@ public class SimplePredicate {
 
     public static SimplePredicate ANY = new SimplePredicate("any", x -> true, null);
     public static SimplePredicate AIR = new SimplePredicate("air",
-            blockWorldState -> blockWorldState.getWorld().isEmptyBlock(blockWorldState.getPos()), null);
+            blockWorldState -> blockWorldState.getLevel().isEmptyBlock(blockWorldState.getPos()), null);
     @Nullable
     public Supplier<BlockInfo[]> candidates;
     public Predicate<MultiblockState> predicate;
@@ -130,7 +130,7 @@ public class SimplePredicate {
                 blockWorldState.io = null;
             }
         }
-        if (nbtParser != null && !blockWorldState.world.isClientSide) {
+        if (nbtParser != null && !blockWorldState.level.isClientSide) {
             BlockEntity te = blockWorldState.getBlockEntity();
             if (te != null) {
                 CompoundTag nbt = te.saveWithFullMetadata();

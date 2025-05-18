@@ -57,7 +57,6 @@ public class DrawableTooltipComponent implements ClientTooltipComponent, Tooltip
 
         context.setGraphics(guiGraphics);
         drawable.draw(context, x, y, getWidth(font), getHeight(), WidgetTheme.getDefault());
-
         context.setGraphics(lastGraphics);
     }
 }

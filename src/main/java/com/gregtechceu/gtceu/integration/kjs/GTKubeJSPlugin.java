@@ -130,7 +130,8 @@ import static dev.latvian.mods.kubejs.recipe.schema.minecraft.ShapedRecipeSchema
  * @date 2023/3/26
  * @implNote GregTechKubeJSPlugin
  */
-public class GregTechKubeJSPlugin extends KubeJSPlugin {
+@SuppressWarnings("unused")
+public class GTKubeJSPlugin extends KubeJSPlugin {
 
     @Override
     public void initStartup() {

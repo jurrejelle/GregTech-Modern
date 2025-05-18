@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.mui.base.value.sync.IIntSyncValue;
 
 import net.minecraft.network.FriendlyByteBuf;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 
 public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implements IEnumValue<T>, IIntSyncValue<T> {
 
+    @Getter
     protected final Class<T> enumClass;
     private final Supplier<T> getter;
     private final Consumer<T> setter;
@@ -54,11 +56,6 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implem
             this.setter = serverSetter != null ? serverSetter : clientSetter;
         }
         this.cache = this.getter.get();
-    }
-
-    @Override
-    public Class<T> getEnumClass() {
-        return this.enumClass;
     }
 
     @Override

@@ -17,9 +17,9 @@ import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.chars.CharArraySet;
 import it.unimi.dsi.fastutil.chars.CharSet;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -33,6 +33,8 @@ public class ArraySchema implements ISchema {
     @Getter
     private final Level level;
     private final BlockInfo[][][] blocks;
+    @Getter
+    @Setter
     private BiPredicate<BlockPos, BlockInfo> renderFilter;
     private final Vec3 center;
 
@@ -63,16 +65,6 @@ public class ArraySchema implements ISchema {
     @Override
     public BlockPos getOrigin() {
         return BlockPos.ZERO;
-    }
-
-    @Override
-    public void setRenderFilter(@Nullable BiPredicate<BlockPos, BlockInfo> renderFilter) {
-        this.renderFilter = renderFilter;
-    }
-
-    @Override
-    public @Nullable BiPredicate<BlockPos, BlockInfo> getRenderFilter() {
-        return renderFilter;
     }
 
     @NotNull
@@ -207,8 +199,8 @@ public class ArraySchema implements ISchema {
                     for (int z = 0; z < yRow.length(); z++) {
                         char zChar = yRow.charAt(z);
                         BlockInfo info = this.blockMap.get(zChar);
-                        if (info == null || info == BlockInfo.EMPTY) continue; // null -> any allowed -> don't need to
-                                                                               // check
+                        // null -> any allowed -> don't need to check
+                        if (info == null || info == BlockInfo.EMPTY) continue;
                         blocks[x][y][z] = info;
                     }
                 }

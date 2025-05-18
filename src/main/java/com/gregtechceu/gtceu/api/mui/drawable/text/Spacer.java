@@ -5,6 +5,8 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 import net.minecraft.client.gui.Font;
 
+import lombok.Getter;
+
 public class Spacer implements ITextLine {
 
     public static final Spacer SPACER_2PX = new Spacer(2);
@@ -16,14 +18,11 @@ public class Spacer implements ITextLine {
         return new Spacer(space);
     }
 
+    @Getter
     private final int space;
 
     protected Spacer(int space) {
         this.space = space;
-    }
-
-    public int getSpace() {
-        return space;
     }
 
     @Override

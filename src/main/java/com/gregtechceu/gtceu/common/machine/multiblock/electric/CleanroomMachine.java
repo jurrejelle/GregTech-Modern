@@ -432,7 +432,7 @@ public class CleanroomMachine extends WorkableElectricMultiblockMachine
                 }
             }
             if (blockEntity != null) {
-                var receiver = GTCapabilityHelper.getCleanroomReceiver(blockWorldState.getWorld(),
+                var receiver = GTCapabilityHelper.getCleanroomReceiver(blockWorldState.getLevel(),
                         blockWorldState.getPos(), null);
                 if (receiver != null) {
                     receivers.add(receiver);
@@ -480,7 +480,7 @@ public class CleanroomMachine extends WorkableElectricMultiblockMachine
             }
 
             if (cleanroomType != null) {
-                textList.add(Component.translatable(cleanroomType.getTranslationKey()));
+                textList.add(Component.translatable(cleanroomType.translationKey()));
             }
 
             if (!isWorkingEnabled()) {

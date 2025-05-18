@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,7 @@ public class OpticalNetHandler implements IDataAccessHatch, IOpticalComputationP
     private final Level world;
     private final Direction facing;
 
+    @Getter
     private OpticalPipeNet net;
 
     public OpticalNetHandler(OpticalPipeNet net, @NotNull OpticalPipeBlockEntity pipe, @Nullable Direction facing) {
@@ -32,10 +34,6 @@ public class OpticalNetHandler implements IDataAccessHatch, IOpticalComputationP
 
     public void updateNetwork(OpticalPipeNet net) {
         this.net = net;
-    }
-
-    public OpticalPipeNet getNet() {
-        return net;
     }
 
     @Override

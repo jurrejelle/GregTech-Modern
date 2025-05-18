@@ -2,11 +2,13 @@ package com.gregtechceu.gtceu.api.mui.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import lombok.Getter;
 
 import java.util.function.Consumer;
 
 public class JsonArrayBuilder {
 
+    @Getter
     private final JsonArray json;
 
     public JsonArrayBuilder(JsonArray json) {
@@ -15,10 +17,6 @@ public class JsonArrayBuilder {
 
     public JsonArrayBuilder() {
         this(new JsonArray());
-    }
-
-    public JsonArray getJson() {
-        return this.json;
     }
 
     public JsonArrayBuilder add(boolean element) {

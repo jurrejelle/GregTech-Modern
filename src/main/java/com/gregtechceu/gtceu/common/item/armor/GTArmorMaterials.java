@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.Lazy;
 import com.mojang.serialization.Codec;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 
@@ -73,27 +74,27 @@ public enum GTArmorMaterials implements ArmorMaterial, StringRepresentable {
     private final Lazy<Ingredient> repairIngredient;
 
     @Override
-    public int getDurabilityForType(ArmorItem.Type type) {
+    public int getDurabilityForType(ArmorItem.@NotNull Type type) {
         return HEALTH_FUNCTION_FOR_TYPE.get(type) * this.durabilityMultiplier;
     }
 
     @Override
-    public int getDefenseForType(ArmorItem.Type type) {
+    public int getDefenseForType(ArmorItem.@NotNull Type type) {
         return this.protectionFunctionForType.get(type);
     }
 
     @Override
-    public Ingredient getRepairIngredient() {
+    public @NotNull Ingredient getRepairIngredient() {
         return this.repairIngredient.get();
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
     @Override
-    public String getSerializedName() {
+    public @NotNull String getSerializedName() {
         return name;
     }
 }

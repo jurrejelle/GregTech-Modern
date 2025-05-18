@@ -33,6 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidType;
 
 import com.google.common.collect.Tables;
+import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +52,7 @@ public class SimpleSteamMachine extends SteamWorkableMachine implements IExhaust
     public final NotifiableItemStackHandler importItems;
     @Persisted
     public final NotifiableItemStackHandler exportItems;
+    @Getter
     @Setter
     @Persisted
     private boolean needsVenting;
@@ -108,11 +110,6 @@ public class SimpleSteamMachine extends SteamWorkableMachine implements IExhaust
     @Override
     public @NotNull Direction getVentingDirection() {
         return getOutputFacing();
-    }
-
-    @Override
-    public boolean isNeedsVenting() {
-        return this.needsVenting;
     }
 
     @Override

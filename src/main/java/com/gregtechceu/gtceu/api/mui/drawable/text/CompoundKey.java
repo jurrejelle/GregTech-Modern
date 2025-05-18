@@ -5,12 +5,14 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class CompoundKey extends BaseKey {
 
     private static final IKey[] EMPTY = new IKey[0];
 
+    @Getter
     private final IKey[] keys;
 
     public CompoundKey(IKey... keys) {
@@ -39,9 +41,5 @@ public class CompoundKey extends BaseKey {
             }
         }
         return builder;
-    }
-
-    public IKey[] getKeys() {
-        return this.keys;
     }
 }

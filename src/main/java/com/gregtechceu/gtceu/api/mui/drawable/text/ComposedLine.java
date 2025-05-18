@@ -10,11 +10,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
+import lombok.Getter;
+
 import java.util.List;
 
 public class ComposedLine implements ITextLine {
 
     private final List<Object> elements;
+    @Getter
     private final int width;
     private final int height;
 
@@ -24,11 +27,6 @@ public class ComposedLine implements ITextLine {
         this.elements = elements;
         this.width = width;
         this.height = height;
-    }
-
-    @Override
-    public int getWidth() {
-        return width;
     }
 
     @Override

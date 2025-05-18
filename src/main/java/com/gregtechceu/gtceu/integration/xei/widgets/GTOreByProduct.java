@@ -29,10 +29,13 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Accessors(fluent = true, chain = true)
 public class GTOreByProduct {
 
     private static final List<TagPrefix> ORES = new ArrayList<>();
@@ -51,9 +54,13 @@ public class GTOreByProduct {
     protected final List<ItemEntryList> itemInputs = new ArrayList<>();
     protected final NonNullList<ItemStack> itemOutputs = NonNullList.create();
     protected final List<FluidEntryList> fluidInputs = new ArrayList<>();
+    @Getter
     private boolean hasDirectSmelt = false;
+    @Getter
     private boolean hasChemBath = false;
+    @Getter
     private boolean hasSeparator = false;
+    @Getter
     private boolean hasSifter = false;
     private int currentSlot;
 
@@ -300,22 +307,6 @@ public class GTOreByProduct {
 
     public Content getChance(int slot) {
         return chances.get(slot);
-    }
-
-    public boolean hasSifter() {
-        return hasSifter;
-    }
-
-    public boolean hasSeparator() {
-        return hasSeparator;
-    }
-
-    public boolean hasChemBath() {
-        return hasChemBath;
-    }
-
-    public boolean hasDirectSmelt() {
-        return hasDirectSmelt;
     }
 
     private void addToOutputs(Material material, TagPrefix prefix, int size) {

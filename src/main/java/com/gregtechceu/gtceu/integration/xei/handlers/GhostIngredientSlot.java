@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,8 +55,8 @@ public interface GhostIngredientSlot<I> extends IGuiElement {
         return false;
     }
 
-    default void drawHighlight(Rectangle area, boolean hovering) {
+    default void drawHighlight(GuiContext context, Rectangle area, boolean hovering) {
         int color = hovering ? Color.argb(76, 201, 25, 128) : Color.argb(19, 201, 10, 64);
-        GuiDraw.drawRect(0, 0, area.width, area.height, color);
+        GuiDraw.drawRect(context.getLastPose(), 0, 0, area.width, area.height, color);
     }
 }

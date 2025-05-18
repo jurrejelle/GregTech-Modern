@@ -10,10 +10,13 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -23,14 +26,22 @@ import java.util.function.Predicate;
  */
 public class ModularSlot extends SlotItemHandler {
 
+    public static final Comparator<ModularSlot> SHIFT_CLICK_PRIORITY = Comparator.comparingInt(
+            slot -> Objects.requireNonNull(slot.getSlotGroup()).getShiftClickPriority());
+
     @Getter
+    @Setter(onMethod_ = { @ApiStatus.Internal })
     private boolean enabled = true;
     private boolean canTake = true, canPut = true;
     private Predicate<ItemStack> filter = stack -> true;
     private IOnSlotChanged changeListener = IOnSlotChanged.DEFAULT;
+    @Getter
     private boolean ignoreMaxStackSize = false;
-    private String slotGroupName = null;
-    private SlotGroup slotGroup = null;
+    @Getter
+    private @Nullable String slotGroupName = null;
+    @Getter
+    private @Nullable SlotGroup slotGroup = null;
+    @Getter
     private boolean phantom = false;
 
     private ItemSlotSH syncHandler = null;
@@ -96,30 +107,9 @@ public class ModularSlot extends SlotItemHandler {
         return null;
     }
 
-    @ApiStatus.Internal
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public boolean isActive() {
         return this.isEnabled();
-    }
-
-    public boolean isPhantom() {
-        return this.phantom;
-    }
-
-    public boolean isIgnoreMaxStackSize() {
-        return this.ignoreMaxStackSize;
-    }
-
-    public @Nullable String getSlotGroupName() {
-        return this.slotGroupName;
-    }
-
-    public @Nullable SlotGroup getSlotGroup() {
-        return this.slotGroup;
     }
 
     public @NotNull ItemSlotSH getSyncHandler() {

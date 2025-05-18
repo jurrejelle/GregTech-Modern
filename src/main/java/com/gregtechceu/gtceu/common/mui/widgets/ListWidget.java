@@ -13,6 +13,7 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import lombok.Getter;
 
 import java.util.function.IntFunction;
 
@@ -25,6 +26,7 @@ import java.util.function.IntFunction;
 public class ListWidget<I extends IWidget, W extends ListWidget<I, W>> extends AbstractScrollWidget<I, W>
                        implements ILayoutWidget, IParentWidget<I, W> {
 
+    @Getter
     private ScrollData scrollData;
     private IIcon childSeparator;
     private final IntList separatorPositions = new IntArrayList();
@@ -120,10 +122,6 @@ public class ListWidget<I extends IWidget, W extends ListWidget<I, W>> extends A
         if (this.childSeparator == null) return 0;
         return this.scrollData.getAxis().isHorizontal() ? this.childSeparator.getWidth() :
                 this.childSeparator.getHeight();
-    }
-
-    public ScrollData getScrollData() {
-        return this.scrollData;
     }
 
     public W scrollDirection(GuiAxis axis) {

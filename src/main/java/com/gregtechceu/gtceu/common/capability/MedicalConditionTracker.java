@@ -33,6 +33,7 @@ public class MedicalConditionTracker implements IMedicalConditionTracker, INBTSe
 
     private final Set<MedicalCondition> flaggedForRemoval = new HashSet<>();
 
+    @Getter
     @Setter
     private int maxAirSupply = -1;
 
@@ -171,11 +172,6 @@ public class MedicalConditionTracker implements IMedicalConditionTracker, INBTSe
             return;
         }
         medicalConditions.replace(condition, medicalConditions.getOrDefault(condition, 0) - progression);
-    }
-
-    @Override
-    public int getMaxAirSupply() {
-        return maxAirSupply;
     }
 
     @Override

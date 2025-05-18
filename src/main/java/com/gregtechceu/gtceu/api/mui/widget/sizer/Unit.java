@@ -2,6 +2,8 @@ package com.gregtechceu.gtceu.api.mui.widget.sizer;
 
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.DoubleSupplier;
@@ -34,11 +36,18 @@ public class Unit {
     public static final byte END = 1;
     public static final byte SIZE = 2;
 
+    @Getter
+    @Setter
     private boolean autoAnchor = true;
     private float value = 0f;
     private DoubleSupplier valueSupplier = null;
+    @Getter
+    @Setter
     private Measure measure = Measure.PIXEL;
+    @Setter
     private float anchor = 0f;
+    @Getter
+    @Setter
     private int offset = 0;
 
     public State state = State.UNUSED;
@@ -71,34 +80,6 @@ public class Unit {
     public float getAnchor() {
         float val = getValue();
         return isAutoAnchor() && isRelative() && val < 1 ? val : this.anchor;
-    }
-
-    public boolean isAutoAnchor() {
-        return this.autoAnchor;
-    }
-
-    public int getOffset() {
-        return this.offset;
-    }
-
-    public Measure getMeasure() {
-        return this.measure;
-    }
-
-    public void setAnchor(float anchor) {
-        this.anchor = anchor;
-    }
-
-    public void setAutoAnchor(boolean autoAnchor) {
-        this.autoAnchor = autoAnchor;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public void setMeasure(Measure measure) {
-        this.measure = measure;
     }
 
     public boolean isRelative() {

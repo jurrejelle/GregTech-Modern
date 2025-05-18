@@ -2,6 +2,8 @@ package com.gregtechceu.gtceu.integration.xei.entry.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.stream.Stream;
 
 public final class FluidStackList implements FluidEntryList {
 
+    @Getter
     private final List<FluidStack> stacks;
 
     public FluidStackList() {
@@ -38,11 +41,6 @@ public final class FluidStackList implements FluidEntryList {
     @Override
     public boolean isEmpty() {
         return stacks.isEmpty();
-    }
-
-    @Override
-    public List<FluidStack> getStacks() {
-        return stacks;
     }
 
     public Stream<FluidStack> stream() {

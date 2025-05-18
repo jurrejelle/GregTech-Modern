@@ -24,7 +24,6 @@ import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
@@ -66,7 +65,7 @@ public class FluidSlot extends Widget<FluidSlot>
             IFluidTank fluidTank = getFluidTank();
             FluidStack fluid = this.syncHandler.getValue();
             if (fluid != null) {
-                tooltip.addLine(IKey.lang((MutableComponent) fluid.getDisplayName())).spaceLine(2);
+                tooltip.addLine(IKey.lang(fluid.getDisplayName())).spaceLine(2);
             }
             if (this.syncHandler.isPhantom()) {
                 if (fluid != null) {
@@ -165,7 +164,7 @@ public class FluidSlot extends Widget<FluidSlot>
         }
         if (isHovering()) {
             RenderSystem.colorMask(true, true, true, false);
-            GuiDraw.drawRect(1, 1, getArea().w() - 2, getArea().h() - 2, getSlotHoverColor());
+            GuiDraw.drawRect(context.getLastPose(), 1, 1, getArea().w() - 2, getArea().h() - 2, getSlotHoverColor());
             RenderSystem.colorMask(true, true, true, true);
         }
     }

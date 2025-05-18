@@ -14,6 +14,7 @@ import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
@@ -25,7 +26,9 @@ public class ModularSyncManager {
     private static final String CURSOR_KEY = makeSyncKey("cursor_slot", 255255);
 
     private final Map<String, PanelSyncManager> panelSyncManagerMap = new Object2ObjectOpenHashMap<>();
+    @Getter
     private PanelSyncManager mainPSM;
+    @Getter
     private final ModularContainerMenu menu;
     private final CursorSlotSyncHandler cursorSlotSyncHandler = new CursorSlotSyncHandler();
 
@@ -41,10 +44,6 @@ public class ModularSyncManager {
         }
         open(mainPanelName, mainPSM);
         mainPSM.syncValue(CURSOR_KEY, this.cursorSlotSyncHandler);
-    }
-
-    public PanelSyncManager getMainPSM() {
-        return mainPSM;
     }
 
     public void detectAndSendChanges(boolean init) {
@@ -102,10 +101,6 @@ public class ModularSyncManager {
 
     public Player getPlayer() {
         return this.menu.getPlayer();
-    }
-
-    public ModularContainerMenu getMenu() {
-        return menu;
     }
 
     public boolean isClient() {

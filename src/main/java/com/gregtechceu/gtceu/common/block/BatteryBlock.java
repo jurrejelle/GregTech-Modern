@@ -59,7 +59,9 @@ public class BatteryBlock extends AppearanceBlock {
         UHV_ULTIMATE(GTValues.UHV, Long.MAX_VALUE),       // Ultimate Battery
         ;
 
+        @Getter
         private final int tier;
+        @Getter
         private final long capacity;
 
         BatteryPartType() {
@@ -70,16 +72,6 @@ public class BatteryBlock extends AppearanceBlock {
         BatteryPartType(int tier, long capacity) {
             this.tier = tier;
             this.capacity = capacity;
-        }
-
-        @Override
-        public int getTier() {
-            return tier;
-        }
-
-        @Override
-        public long getCapacity() {
-            return capacity;
         }
 
         // must be separately named because of reobf issue

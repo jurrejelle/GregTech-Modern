@@ -36,7 +36,7 @@ public abstract class LevelPipeNet<NodeDataType, T extends PipeNet<NodeDataType>
         init();
     }
 
-    public ServerLevel getWorld() {
+    public ServerLevel getLevel() {
         return serverLevel;
     }
 

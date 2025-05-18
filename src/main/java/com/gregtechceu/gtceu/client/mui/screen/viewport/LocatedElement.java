@@ -1,21 +1,17 @@
 package com.gregtechceu.gtceu.client.mui.screen.viewport;
 
+import lombok.Getter;
+
 public class LocatedElement<T> {
 
+    @Getter
     private final T element;
+    @Getter
     private final TransformationMatrix transformationMatrix;
 
     public LocatedElement(T element, TransformationMatrix transformationMatrix) {
         this.element = element;
         this.transformationMatrix = new TransformationMatrix(transformationMatrix, null);
-    }
-
-    public T getElement() {
-        return this.element;
-    }
-
-    public TransformationMatrix getTransformationMatrix() {
-        return this.transformationMatrix;
     }
 
     public void applyMatrix(GuiContext context) {

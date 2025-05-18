@@ -27,6 +27,9 @@ import net.minecraftforge.common.MinecraftForge;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,6 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Accessors(chain = true)
 public class RichTooltip implements IRichTextBuilder<RichTooltip> {
 
     private static final Area HOLDER = new Area();
@@ -42,7 +46,11 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
     private final RichText text = new RichText();
     private Pos pos = null;
     private Consumer<RichTooltip> tooltipBuilder;
+    @Getter
+    @Setter
     private int showUpTimer = 0;
+    @Getter
+    @Setter
     private boolean autoUpdate = false;
     private int titleMargin = 0;
     private boolean appliedMargin = true;
@@ -298,14 +306,6 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         this.dirty = true;
     }
 
-    public int getShowUpTimer() {
-        return this.showUpTimer;
-    }
-
-    public boolean isAutoUpdate() {
-        return this.autoUpdate;
-    }
-
     public RichTooltip pos(Pos pos) {
         this.pos = pos;
         return this;
@@ -328,11 +328,6 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         return text;
     }
 
-    public RichTooltip showUpTimer(int showUpTimer) {
-        this.showUpTimer = showUpTimer;
-        return this;
-    }
-
     public RichTooltip tooltipBuilder(Consumer<RichTooltip> tooltipBuilder) {
         Consumer<RichTooltip> existingBuilder = this.tooltipBuilder;
         if (existingBuilder != null) {
@@ -344,11 +339,6 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
             this.tooltipBuilder = tooltipBuilder;
         }
         markDirty();
-        return this;
-    }
-
-    public RichTooltip setAutoUpdate(boolean update) {
-        this.autoUpdate = update;
         return this;
     }
 

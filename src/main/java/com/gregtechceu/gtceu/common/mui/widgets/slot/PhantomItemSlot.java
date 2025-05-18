@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.common.mui.widgets.slot;
 import com.gregtechceu.gtceu.api.mui.utils.MouseData;
 import com.gregtechceu.gtceu.api.mui.value.sync.PhantomItemSlotSH;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
 
@@ -30,14 +31,14 @@ public class PhantomItemSlot extends ItemSlot implements GhostIngredientSlot<Ite
     }
 
     @Override
-    protected void drawOverlay() {
+    protected void drawOverlay(ModularGuiContext context) {
         RecipeViewerHandler handler = RecipeViewerHandler.getCurrent();
         if (handler.isDraggingGhostIngredient() || handler.isHoveringOver(this)) {
             RenderSystem.colorMask(true, true, true, false);
-            drawHighlight(getArea(), isHovering());
+            drawHighlight(context, getArea(), isHovering());
             RenderSystem.colorMask(true, true, true, true);
         } else {
-            super.drawOverlay();
+            super.drawOverlay(context);
         }
     }
 

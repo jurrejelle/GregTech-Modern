@@ -11,6 +11,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -78,6 +79,7 @@ public class MultiblockWorldSavedData extends SavedData {
             .setDaemon(true)
             .build();
     private static final ThreadLocal<Boolean> IN_SERVICE = ThreadLocal.withInitial(() -> false);
+    @Getter
     private long periodID = Long.MIN_VALUE;
 
     public void createExecutorService() {
@@ -138,9 +140,5 @@ public class MultiblockWorldSavedData extends SavedData {
             executorService.shutdownNow();
         }
         executorService = null;
-    }
-
-    public long getPeriodID() {
-        return periodID;
     }
 }

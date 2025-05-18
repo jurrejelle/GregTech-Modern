@@ -6,6 +6,10 @@ import com.gregtechceu.gtceu.api.capability.IElectricItem;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
+@Accessors(fluent = true)
 public class ElectricItem implements IElectricItem {
 
     protected final ItemStack itemStack;
@@ -13,16 +17,18 @@ public class ElectricItem implements IElectricItem {
     protected final long maxCharge;
     protected final int tier;
 
+    @Getter
     protected final boolean chargeable;
-    protected final boolean canProvideEnergyExternally;
+    @Getter
+    protected final boolean canProvideChargeExternally;
 
     public ElectricItem(ItemStack itemStack, long maxCharge, int tier, boolean chargeable,
-                        boolean canProvideEnergyExternally) {
+                        boolean canProvideChargeExternally) {
         this.itemStack = itemStack;
         this.maxCharge = maxCharge;
         this.tier = tier;
         this.chargeable = chargeable;
-        this.canProvideEnergyExternally = canProvideEnergyExternally;
+        this.canProvideChargeExternally = canProvideChargeExternally;
     }
 
     public void setCharge(long change) {
@@ -62,16 +68,6 @@ public class ElectricItem implements IElectricItem {
     }
 
     @Override
-    public boolean canProvideChargeExternally() {
-        return this.canProvideEnergyExternally;
-    }
-
-    @Override
-    public boolean chargeable() {
-        return chargeable;
-    }
-
-    @Override
     public long charge(long amount, int chargerTier, boolean ignoreTransferLimit, boolean simulate) {
         if (itemStack.getCount() != 1) {
             return 0L;
@@ -96,7 +92,7 @@ public class ElectricItem implements IElectricItem {
         if (itemStack.getCount() != 1) {
             return 0L;
         }
-        if ((canProvideEnergyExternally || !externally || amount == Long.MAX_VALUE) && (chargerTier >= tier) &&
+        if ((canProvideChargeExternally || !externally || amount == Long.MAX_VALUE) && (chargerTier >= tier) &&
                 amount > 0L) {
             if (!ignoreTransferLimit) {
                 amount = Math.min(amount, getTransferLimit());

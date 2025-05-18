@@ -6,8 +6,12 @@ import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Theme implements ITheme {
 
@@ -21,19 +25,31 @@ public class Theme implements ITheme {
 
     private final Map<String, WidgetTheme> widgetThemes = new Object2ObjectOpenHashMap<>();
 
+    @Getter
     private final String id;
+    @Getter
     private final ITheme parentTheme;
+    @Getter
     private final WidgetTheme fallback;
+    @Getter
     private final WidgetTheme panelTheme;
+    @Getter
     private final WidgetTheme buttonTheme;
+    @Getter
     private final WidgetSlotTheme itemSlotTheme;
+    @Getter
     private final WidgetSlotTheme fluidSlotTheme;
+    @Getter
     private final WidgetTextFieldTheme textFieldTheme;
+    @Getter
     private final WidgetThemeSelectable toggleButtonTheme;
 
+    @Setter
     private int openCloseAnimationOverride = -1;
-    private Boolean smoothProgressBarOverride = null;
-    private RichTooltip.Pos tooltipPosOverride = null;
+    @Setter
+    private @Nullable Boolean smoothProgressBarOverride = null;
+    @Setter
+    private @Nullable RichTooltip.Pos tooltipPosOverride = null;
 
     Theme(String id, ITheme parent, Map<String, WidgetTheme> widgetThemes) {
         this.id = id;
@@ -64,57 +80,6 @@ public class Theme implements ITheme {
         this.toggleButtonTheme = (WidgetThemeSelectable) this.widgetThemes.get(TOGGLE_BUTTON);
     }
 
-    void setOpenCloseAnimationOverride(int override) {
-        this.openCloseAnimationOverride = override;
-    }
-
-    void setSmoothProgressBarOverride(boolean smooth) {
-        this.smoothProgressBarOverride = smooth;
-    }
-
-    void setTooltipPosOverride(RichTooltip.Pos pos) {
-        this.tooltipPosOverride = pos;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public ITheme getParentTheme() {
-        return this.parentTheme;
-    }
-
-    public WidgetTheme getFallback() {
-        return this.fallback;
-    }
-
-    public WidgetTheme getPanelTheme() {
-        return this.panelTheme;
-    }
-
-    public WidgetTheme getButtonTheme() {
-        return this.buttonTheme;
-    }
-
-    @Override
-    public WidgetSlotTheme getItemSlotTheme() {
-        return this.itemSlotTheme;
-    }
-
-    @Override
-    public WidgetSlotTheme getFluidSlotTheme() {
-        return this.fluidSlotTheme;
-    }
-
-    public WidgetTextFieldTheme getTextFieldTheme() {
-        return this.textFieldTheme;
-    }
-
-    @Override
-    public WidgetThemeSelectable getToggleButtonTheme() {
-        return this.toggleButtonTheme;
-    }
-
     public WidgetTheme getWidgetTheme(String id) {
         if (this.widgetThemes.containsKey(id)) {
             return this.widgetThemes.get(id);
@@ -132,17 +97,12 @@ public class Theme implements ITheme {
 
     @Override
     public boolean getSmoothProgressBarOverride() {
-        if (this.smoothProgressBarOverride != null) {
-            return this.smoothProgressBarOverride;
-        }
-        return ConfigHolder.INSTANCE.client.ui.smoothProgressBar;
+        return Objects.requireNonNullElse(this.smoothProgressBarOverride,
+                ConfigHolder.INSTANCE.client.ui.smoothProgressBar);
     }
 
     @Override
     public RichTooltip.Pos getTooltipPosOverride() {
-        if (this.tooltipPosOverride != null) {
-            return this.tooltipPosOverride;
-        }
-        return ConfigHolder.INSTANCE.client.ui.tooltipPos;
+        return Objects.requireNonNullElse(this.tooltipPosOverride, ConfigHolder.INSTANCE.client.ui.tooltipPos);
     }
 }

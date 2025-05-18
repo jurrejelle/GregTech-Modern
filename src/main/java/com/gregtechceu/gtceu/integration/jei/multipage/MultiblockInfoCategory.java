@@ -9,6 +9,7 @@ import com.lowdragmc.lowdraglib.jei.ModularUIRecipeCategory;
 
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
@@ -16,14 +17,19 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeRegistration;
 import org.jetbrains.annotations.NotNull;
 
-public class MultiblockInfoCategory extends ModularUIRecipeCategory<MultiblockInfoWrapper> {
+public class MultiblockInfoCategory extends ModularUIRecipeCategory<MultiblockMachineDefinition> {
 
-    public final static RecipeType<MultiblockInfoWrapper> RECIPE_TYPE = new RecipeType<>(GTCEu.id("multiblock_info"),
-            MultiblockInfoWrapper.class);
+    public final static RecipeType<MultiblockMachineDefinition> RECIPE_TYPE = new RecipeType<>(
+            GTCEu.id("multiblock_info"),
+            MultiblockMachineDefinition.class);
+
+    @Getter
     private final IDrawable background;
+    @Getter
     private final IDrawable icon;
 
     public MultiblockInfoCategory(IJeiHelpers helpers) {
+        super(MultiblockInfoWrapper::new);
         IGuiHelper guiHelper = helpers.getGuiHelper();
         this.background = guiHelper.createBlankDrawable(160, 160);
         this.icon = helpers.getGuiHelper().createDrawableItemStack(GTMultiMachines.ELECTRIC_BLAST_FURNACE.asStack());
@@ -34,13 +40,12 @@ public class MultiblockInfoCategory extends ModularUIRecipeCategory<MultiblockIn
                 .filter(MultiblockMachineDefinition.class::isInstance)
                 .map(MultiblockMachineDefinition.class::cast)
                 .filter(MultiblockMachineDefinition::isRenderXEIPreview)
-                .map(MultiblockInfoWrapper::new)
                 .toList());
     }
 
     @Override
     @NotNull
-    public RecipeType<MultiblockInfoWrapper> getRecipeType() {
+    public RecipeType<MultiblockMachineDefinition> getRecipeType() {
         return RECIPE_TYPE;
     }
 
@@ -48,17 +53,5 @@ public class MultiblockInfoCategory extends ModularUIRecipeCategory<MultiblockIn
     @Override
     public Component getTitle() {
         return Component.translatable("gtceu.jei.multiblock_info");
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
-
-    @NotNull
-    @Override
-    public IDrawable getIcon() {
-        return icon;
     }
 }

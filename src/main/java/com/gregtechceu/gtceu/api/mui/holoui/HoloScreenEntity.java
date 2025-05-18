@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,11 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Experimental
 public class HoloScreenEntity extends Entity {
 
+    @Getter
     private ContainerScreenWrapper wrapper;
+    @Getter
     private ModularScreen screen;
+    @Getter
     private final Plane3D plane3D;
     private static final EntityDataAccessor<Byte> ORIENTATION = SynchedEntityData.defineId(HoloScreenEntity.class,
             EntityDataSerializers.BYTE);
@@ -45,14 +49,6 @@ public class HoloScreenEntity extends Entity {
         this.wrapper.init(Minecraft.getInstance(), (int) this.plane3D.getWidth(), (int) this.plane3D.getHeight());
     }
 
-    public ModularScreen getScreen() {
-        return this.screen;
-    }
-
-    public ContainerScreenWrapper getWrapper() {
-        return this.wrapper;
-    }
-
     public void spawnInWorld() {
         level().addFreshEntity(this);
     }
@@ -63,10 +59,6 @@ public class HoloScreenEntity extends Entity {
 
     public ScreenOrientation getOrientation() {
         return ScreenOrientation.values()[this.getEntityData().get(ORIENTATION)];
-    }
-
-    public Plane3D getPlane3D() {
-        return this.plane3D;
     }
 
     @Override

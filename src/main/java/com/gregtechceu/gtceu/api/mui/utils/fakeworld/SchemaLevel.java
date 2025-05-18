@@ -8,9 +8,10 @@ import net.minecraft.world.phys.Vec3;
 import com.google.common.collect.AbstractIterator;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,6 +20,8 @@ import java.util.function.BiPredicate;
 public class SchemaLevel extends DummyLevel implements ISchema {
 
     private final ObjectLinkedOpenHashSet<BlockPos> blocks = new ObjectLinkedOpenHashSet<>();
+    @Getter
+    @Setter
     private BiPredicate<BlockPos, BlockInfo> renderFilter;
     private final BlockPos.MutableBlockPos min = new BlockPos.MutableBlockPos();
     private final BlockPos.MutableBlockPos max = new BlockPos.MutableBlockPos();
@@ -44,16 +47,6 @@ public class SchemaLevel extends DummyLevel implements ISchema {
     @Override
     public BlockPos getOrigin() {
         return min;
-    }
-
-    @Override
-    public void setRenderFilter(@Nullable BiPredicate<BlockPos, BlockInfo> renderFilter) {
-        this.renderFilter = renderFilter;
-    }
-
-    @Override
-    public @Nullable BiPredicate<BlockPos, BlockInfo> getRenderFilter() {
-        return renderFilter;
     }
 
     @Override

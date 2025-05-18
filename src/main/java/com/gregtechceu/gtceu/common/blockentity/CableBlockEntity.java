@@ -61,6 +61,7 @@ public class CableBlockEntity extends PipeBlockEntity<Insulation, WireProperties
 
     protected WeakReference<EnergyNet> currentEnergyNet = new WeakReference<>(null);
 
+    @Getter
     private static final int meltTemp = 3000;
 
     private final EnumMap<Direction, EnergyNetHandler> handlers = new EnumMap<>(Direction.class);
@@ -215,10 +216,6 @@ public class CableBlockEntity extends PipeBlockEntity<Insulation, WireProperties
 
     public int getDefaultTemp() {
         return 293;
-    }
-
-    public static int getMeltTemp() {
-        return meltTemp;
     }
 
     /**

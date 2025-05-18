@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -11,8 +12,11 @@ import java.util.List;
 
 public class PagedWidget<W extends PagedWidget<W>> extends Widget<W> {
 
+    @Getter
     private final List<IWidget> pages = new ArrayList<>();
+    @Getter
     private IWidget currentPage;
+    @Getter
     private int currentPageIndex = 0;
 
     @Override
@@ -44,18 +48,6 @@ public class PagedWidget<W extends PagedWidget<W>> extends Widget<W> {
             this.currentPageIndex = this.pages.size() - 1;
         }
         setPage(this.currentPageIndex);
-    }
-
-    public List<IWidget> getPages() {
-        return this.pages;
-    }
-
-    public IWidget getCurrentPage() {
-        return this.currentPage;
-    }
-
-    public int getCurrentPageIndex() {
-        return this.currentPageIndex;
     }
 
     @Override

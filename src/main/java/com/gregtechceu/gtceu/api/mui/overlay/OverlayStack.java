@@ -56,6 +56,7 @@ public class OverlayStack {
         ModularScreen hovered = null;
         ModularScreen fallback = null;
         for (ModularScreen screen : overlay) {
+            screen.getContext().setGraphics(graphics);
             screen.getContext().updateState(mouseX, mouseY, partialTicks);
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);

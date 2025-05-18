@@ -20,6 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -33,11 +34,20 @@ public class TextRenderer {
     public static final TextRenderer SHARED = new TextRenderer();
 
     protected float maxWidth = -1, maxHeight = -1;
+    @Getter
     protected int x = 0, y = 0;
+    @Getter
     protected Alignment alignment = Alignment.TopLeft;
+    @Getter
+    @Setter
     protected float scale = 1f;
+    @Getter
+    @Setter
     protected boolean shadow = false;
+    @Getter
+    @Setter
     protected int color = 0;// Theme.INSTANCE.getText();
+    @Setter
     protected boolean simulate;
     @Getter
     protected float lastWidth = 0, lastHeight = 0;
@@ -54,25 +64,9 @@ public class TextRenderer {
         this.maxHeight = maxHeight;
     }
 
-    public void setShadow(boolean shadow) {
-        this.shadow = shadow;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
     public void setPos(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public void setSimulate(boolean simulate) {
-        this.simulate = simulate;
     }
 
     public void draw(GuiGraphics graphics, String text) {
@@ -355,26 +349,6 @@ public class TextRenderer {
         graphics.drawString(getFont(), text, (int) (x / this.scale), (int) (y / this.scale), this.color, this.shadow);
         graphics.pose().popPose();
         RenderSystem.enableBlend();
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
-    public Alignment getAlignment() {
-        return alignment;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public float getFontHeight() {

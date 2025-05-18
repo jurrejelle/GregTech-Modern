@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 /**
  * A {@link IDrawable} wrapper with a fixed size and an alignment.
@@ -20,28 +21,16 @@ import com.google.gson.JsonObject;
 public class Icon implements IIcon, IJsonSerializable<Icon> {
 
     private final IDrawable drawable;
+    @Getter
     private int width = 0, height = 0;
+    @Getter
     private Alignment alignment = Alignment.Center;
+    @Getter
     private final Box margin = new Box();
     private int color = 0;
 
     public Icon(IDrawable drawable) {
         this.drawable = drawable;
-    }
-
-    @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
-    }
-
-    @Override
-    public Box getMargin() {
-        return this.margin;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -63,10 +52,6 @@ public class Icon implements IIcon, IJsonSerializable<Icon> {
             widgetTheme = widgetTheme.withColor(this.color);
         }
         this.drawable.draw(context, x, y, width, height, widgetTheme);
-    }
-
-    public Alignment getAlignment() {
-        return this.alignment;
     }
 
     public Icon width(int width) {

@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
+import org.joml.Matrix4f;
 
 /**
  * A gui context contains various properties like screen size, mouse position, last clicked button etc.
@@ -140,6 +141,11 @@ public class GuiContext extends GuiViewportStack {
     }
 
     /* Viewport */
+
+    public Matrix4f getLastPose() {
+        if (graphics == null) return new Matrix4f();
+        return graphics.pose().last().pose();
+    }
 
     public int getMouseX() {
         return unTransformX(this.absMouseX, this.absMouseY);

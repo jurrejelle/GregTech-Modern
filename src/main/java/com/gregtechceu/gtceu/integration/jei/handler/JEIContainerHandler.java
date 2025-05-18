@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 
 import net.minecraft.client.renderer.Rect2i;
 
+import lombok.Getter;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -57,7 +58,7 @@ public class JEIContainerHandler implements IGuiContainerHandler<ContainerScreen
         return provider.renderMappingFunction().apply(provider.getIngredients().getStacks().get(0));
     }
 
-    private record ClickableIngredient<T>(ITypedIngredient<T> ingredient, Rect2i area)
+    private record ClickableIngredient<T>(ITypedIngredient<T> ingredient, @Getter Rect2i area)
             implements IClickableIngredient<T> {
 
         @SuppressWarnings("removal") // I have to override this.
@@ -74,11 +75,6 @@ public class JEIContainerHandler implements IGuiContainerHandler<ContainerScreen
         @Override
         public @NotNull T getIngredient() {
             return ingredient.getIngredient();
-        }
-
-        @Override
-        public @NotNull Rect2i getArea() {
-            return area;
         }
     }
 }

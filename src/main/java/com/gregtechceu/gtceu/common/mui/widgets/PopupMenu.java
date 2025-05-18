@@ -3,6 +3,8 @@ package com.gregtechceu.gtceu.common.mui.widgets;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -11,19 +13,14 @@ import java.util.List;
 public class PopupMenu<W extends PopupMenu<W>> extends Widget<W> {
 
     private final MenuWrapper menu;
-    private final List<IWidget> children;
+    @Getter
+    private final @NotNull List<IWidget> children;
 
     public PopupMenu(IWidget child) {
         this.menu = new MenuWrapper(child);
         child.flex().relative(this.getArea());
         this.menu.setEnabled(false);
         this.children = Collections.singletonList(this.menu);
-    }
-
-    @NotNull
-    @Override
-    public List<IWidget> getChildren() {
-        return this.children;
     }
 
     @Override
@@ -40,7 +37,9 @@ public class PopupMenu<W extends PopupMenu<W>> extends Widget<W> {
     public static class MenuWrapper extends Widget<MenuWrapper> {
 
         private final IWidget child;
-        private final List<IWidget> children;
+        @Getter
+        private final @NotNull List<IWidget> children;
+        @Setter
         private boolean mightClose = false;
 
         private MenuWrapper(IWidget child) {
@@ -50,20 +49,11 @@ public class PopupMenu<W extends PopupMenu<W>> extends Widget<W> {
         }
 
         @Override
-        public @NotNull List<IWidget> getChildren() {
-            return this.children;
-        }
-
-        @Override
         public void onUpdate() {
             super.onUpdate();
             if (this.mightClose && !isBelowMouse()) {
                 setEnabled(false);
             }
-        }
-
-        public void setMightClose(boolean mightClose) {
-            this.mightClose = mightClose;
         }
     }
 }

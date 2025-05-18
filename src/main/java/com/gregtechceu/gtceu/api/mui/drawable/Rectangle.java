@@ -12,12 +12,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.function.IntConsumer;
 
+@Accessors(fluent = true, chain = true)
 public class Rectangle implements IDrawable, IJsonSerializable<Rectangle> {
 
-    private int cornerRadius, colorTL, colorTR, colorBL, colorBR, cornerSegments;
+    private int cornerRadius, colorTL, colorTR, colorBL, colorBR;
+    @Setter
+    private int cornerSegments;
+    @Getter
+    @Setter
     private boolean canApplyTheme = false;
 
     public Rectangle() {
@@ -55,16 +63,6 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle> {
         return setColor(color, color, color, color);
     }
 
-    public Rectangle setCornerSegments(int cornerSegments) {
-        this.cornerSegments = cornerSegments;
-        return this;
-    }
-
-    public Rectangle setCanApplyTheme(boolean canApplyTheme) {
-        this.canApplyTheme = canApplyTheme;
-        return this;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void draw(GuiContext context, int x0, int y0, int width, int height, WidgetTheme widgetTheme) {
@@ -74,16 +72,13 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle> {
             Color.setGlColorOpaque(Color.WHITE.main);
         }
         if (this.cornerRadius <= 0) {
-            GuiDraw.drawRect(x0, y0, width, height, this.colorTL, this.colorTR, this.colorBL, this.colorBR);
+            GuiDraw.drawRect(context.getLastPose(), x0, y0, width, height,
+                    this.colorTL, this.colorTR, this.colorBL, this.colorBR);
             return;
         }
-        GuiDraw.drawRoundedRect(x0, y0, width, height, this.colorTL, this.colorTR, this.colorBL, this.colorBR,
+        GuiDraw.drawRoundedRect(context.getLastPose(), x0, y0, width, height,
+                this.colorTL, this.colorTR, this.colorBL, this.colorBR,
                 this.cornerRadius, this.cornerSegments);
-    }
-
-    @Override
-    public boolean canApplyTheme() {
-        return this.canApplyTheme;
     }
 
     @Override

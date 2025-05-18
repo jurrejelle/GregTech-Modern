@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -18,6 +19,7 @@ public abstract class LongDistancePipeType {
 
     private static final Object2ObjectOpenHashMap<String, LongDistancePipeType> PIPE_TYPES = new Object2ObjectOpenHashMap<>();
 
+    @Getter
     private final String name;
 
     protected LongDistancePipeType(String name) {
@@ -69,9 +71,5 @@ public abstract class LongDistancePipeType {
 
     public final LongDistanceNetwork createNetwork(Level world) {
         return createNetwork(LongDistanceNetwork.WorldData.get(world));
-    }
-
-    public final String getName() {
-        return name;
     }
 }

@@ -21,6 +21,7 @@ public class PipeNetRoutePath implements IRoutePath<IFluidHandler> {
     private final Direction targetFacing;
     @Getter
     private final int distance;
+    @Getter
     private final Pair<BlockPos, FluidPipeData>[] path;
 
     public PipeNetRoutePath(BlockPos pipePos, Direction targetFacing, Pair<BlockPos, FluidPipeData>[] path,
@@ -29,10 +30,6 @@ public class PipeNetRoutePath implements IRoutePath<IFluidHandler> {
         this.targetFacing = targetFacing;
         this.path = path;
         this.distance = distance;
-    }
-
-    public Pair<BlockPos, FluidPipeData>[] getPath() {
-        return path;
     }
 
     @Override

@@ -29,8 +29,10 @@ import com.gregtechceu.gtceu.integration.kjs.recipe.components.ExtendedOutputIte
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.GTRecipeComponents;
 import com.gregtechceu.gtceu.utils.ResearchManager;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -769,7 +771,8 @@ public interface GTRecipeSchema {
         }
 
         public GTRecipeJS dimension(ResourceLocation dimension, boolean reverse) {
-            return addCondition(new DimensionCondition(dimension).setReverse(reverse));
+            return addCondition(
+                    new DimensionCondition(ResourceKey.create(Registries.DIMENSION, dimension)).setReverse(reverse));
         }
 
         public GTRecipeJS dimension(ResourceLocation dimension) {
@@ -777,7 +780,7 @@ public interface GTRecipeSchema {
         }
 
         public GTRecipeJS biome(ResourceLocation biome, boolean reverse) {
-            return addCondition(new BiomeCondition(biome).setReverse(reverse));
+            return addCondition(new BiomeCondition(ResourceKey.create(Registries.BIOME, biome)).setReverse(reverse));
         }
 
         public GTRecipeJS biome(ResourceLocation biome) {
@@ -870,13 +873,13 @@ public interface GTRecipeSchema {
         private boolean applyResearchProperty(ResearchData.ResearchEntry researchEntry) {
             if (!ConfigHolder.INSTANCE.machines.enableResearch) return false;
             if (researchEntry == null) {
-                throw new RecipeExceptionJS(
-                        String.format("Assembly Line Research Entry cannot be empty.", new IllegalArgumentException()));
+                throw new RecipeExceptionJS("Assembly Line Research Entry cannot be empty.",
+                        new IllegalStateException());
             }
 
             if (!generatingRecipes) {
-                throw new RecipeExceptionJS(String.format("Cannot generate recipes when using researchWithoutRecipe()",
-                        new IllegalArgumentException()));
+                throw new RecipeExceptionJS("Cannot generate recipes when using researchWithoutRecipe()",
+                        new IllegalArgumentException());
             }
 
             if (getValue(CONDITIONS) == null) setValue(CONDITIONS, new RecipeCondition[0]);

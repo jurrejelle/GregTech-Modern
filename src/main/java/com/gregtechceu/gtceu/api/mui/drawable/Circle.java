@@ -11,10 +11,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.Contract;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true, chain = true)
 public class Circle implements IDrawable, IJsonSerializable<Circle> {
 
+    @Setter
     private int colorInner, colorOuter, segments;
 
     public Circle() {
@@ -39,17 +42,6 @@ public class Circle implements IDrawable, IJsonSerializable<Circle> {
         return segments(segments);
     }
 
-    @Contract("_ -> this")
-    public Circle colorInner(int colorInner) {
-        this.colorInner = colorInner;
-        return this;
-    }
-
-    public Circle colorOuter(int colorOuter) {
-        this.colorOuter = colorOuter;
-        return this;
-    }
-
     public Circle color(int inner, int outer) {
         this.colorInner = inner;
         this.colorOuter = outer;
@@ -60,15 +52,11 @@ public class Circle implements IDrawable, IJsonSerializable<Circle> {
         return color(color, color);
     }
 
-    public Circle segments(int segments) {
-        this.segments = segments;
-        return this;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void draw(GuiContext context, int x0, int y0, int width, int height, WidgetTheme widgetTheme) {
-        GuiDraw.drawEllipse(x0, y0, width, height, this.colorInner, this.colorOuter, this.segments);
+        GuiDraw.drawEllipse(context.getLastPose(), x0, y0, width, height,
+                this.colorInner, this.colorOuter, this.segments);
     }
 
     @Override

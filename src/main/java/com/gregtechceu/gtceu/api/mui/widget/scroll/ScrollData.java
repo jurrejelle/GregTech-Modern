@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.utils.Animator;
 import com.gregtechceu.gtceu.api.mui.utils.Interpolation;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
@@ -225,13 +226,13 @@ public abstract class ScrollData {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public abstract void drawScrollbar(ScrollArea area);
+    public abstract void drawScrollbar(GuiContext context, ScrollArea area);
 
     @OnlyIn(Dist.CLIENT)
-    protected void drawScrollBar(int x, int y, int w, int h) {
-        GuiDraw.drawRect(x, y, w, h, 0xffeeeeee);
-        GuiDraw.drawRect(x + 1, y + 1, w - 1, h - 1, 0xff666666);
-        GuiDraw.drawRect(x + 1, y + 1, w - 2, h - 2, 0xffaaaaaa);
+    protected void drawScrollBar(GuiContext context, int x, int y, int w, int h) {
+        GuiDraw.drawRect(context.getLastPose(), x, y, w, h, 0xffeeeeee);
+        GuiDraw.drawRect(context.getLastPose(), x + 1, y + 1, w - 1, h - 1, 0xff666666);
+        GuiDraw.drawRect(context.getLastPose(), x + 1, y + 1, w - 2, h - 2, 0xffaaaaaa);
     }
 
     public boolean onMouseClicked(ScrollArea area, int mainAxisPos, int crossAxisPos, int button) {

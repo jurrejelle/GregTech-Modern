@@ -3,13 +3,15 @@ package com.gregtechceu.gtceu.api.fluids.attribute;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public final class FluidAttribute {
 
-    private final ResourceLocation resourceLocation;
+    @Getter
+    private final @NotNull ResourceLocation resourceLocation;
     private final Consumer<Consumer<Component>> fluidTooltip;
     private final Consumer<Consumer<Component>> containerTooltip;
     private final int hashCode;
@@ -21,10 +23,6 @@ public final class FluidAttribute {
         this.fluidTooltip = fluidTooltip;
         this.containerTooltip = containerTooltip;
         this.hashCode = resourceLocation.hashCode();
-    }
-
-    public @NotNull ResourceLocation getResourceLocation() {
-        return resourceLocation;
     }
 
     public void appendFluidTooltips(@NotNull Consumer<@NotNull Component> tooltip) {

@@ -4,8 +4,13 @@ import com.gregtechceu.gtceu.api.mui.base.value.sync.IValueSyncHandler;
 
 import net.minecraft.network.FriendlyByteBuf;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public abstract class ValueSyncHandler<T> extends SyncHandler implements IValueSyncHandler<T> {
 
+    @Getter
+    @Setter
     private Runnable changeListener;
 
     @Override
@@ -31,13 +36,5 @@ public abstract class ValueSyncHandler<T> extends SyncHandler implements IValueS
         if (this.changeListener != null) {
             this.changeListener.run();
         }
-    }
-
-    public void setChangeListener(Runnable changeListener) {
-        this.changeListener = changeListener;
-    }
-
-    public Runnable getChangeListener() {
-        return this.changeListener;
     }
 }

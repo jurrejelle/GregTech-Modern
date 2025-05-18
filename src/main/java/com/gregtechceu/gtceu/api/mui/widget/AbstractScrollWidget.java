@@ -30,8 +30,8 @@ public abstract class AbstractScrollWidget<I extends IWidget, W extends Abstract
 
     public AbstractScrollWidget(@Nullable HorizontalScrollData x, @Nullable VerticalScrollData y) {
         super();
-        this.scroll.setScrollDataX(x);
-        this.scroll.setScrollDataY(y);
+        this.scroll.setScrollX(x);
+        this.scroll.setScrollY(y);
         listenGuiAction((IGuiAction.MouseReleased) (mouseX, mouseY, button) -> {
             this.scroll.mouseReleased(getContext());
             return false;
@@ -125,7 +125,7 @@ public abstract class AbstractScrollWidget<I extends IWidget, W extends Abstract
     public void postDraw(ModularGuiContext context, boolean transformed) {
         if (!transformed) {
             Stencil.remove();
-            this.scroll.drawScrollbar();
+            this.scroll.drawScrollbar(context);
         }
     }
 

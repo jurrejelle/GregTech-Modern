@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
+import com.gregtechceu.gtceu.api.mui.factory.GuiData;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,21 +20,29 @@ import org.jetbrains.annotations.NotNull;
 public class ContainerScreenWrapper extends AbstractContainerScreen<ModularContainerMenu>
                                     implements IScreenWithMuiScreen, IMuiScreen {
 
-    private final ModularScreen screen;
+    @Getter
+    private final @NotNull ModularScreen screen;
 
-    public ContainerScreenWrapper(ModularContainerMenu container, ModularScreen screen) {
+    public ContainerScreenWrapper(ModularContainerMenu container, @NotNull ModularScreen screen) {
         super(container, container.getPlayer().getInventory(), Component.empty());
         this.screen = screen;
         this.screen.construct(this);
     }
 
     /**
-     * This is only used to create the menu type with Registrate. Do not use for anything.
+     * This is only used to create the menu type with Registrate. Do not use it (even though it may work).
      */
+    @SuppressWarnings("DataFlowIssue")
     @ApiStatus.Internal
-    public ContainerScreenWrapper(ModularContainerMenu container, Inventory inventory, Component display) {
+    public <T extends GuiData> ContainerScreenWrapper(ModularContainerMenu container, Inventory inventory,
+                                                      Component display) {
         super(container, inventory, display);
-        this.screen = null;
+        if (container.isScreenInitialized()) {
+            this.screen = container.getScreen();
+            this.screen.construct(this);
+        } else {
+            this.screen = null;
+        }
     }
 
     @Override
@@ -52,17 +62,7 @@ public class ContainerScreenWrapper extends AbstractContainerScreen<ModularConta
     }
 
     @Override
-    public @NotNull ModularScreen getScreen() {
-        return this.screen;
-    }
-
-    @Override
     public boolean isPauseScreen() {
-        return this.screen != null && this.screen.isPauseScreen();
-    }
-
-    @Override
-    public void setFocused(boolean focused) {
-        super.setFocused(focused);
+        return this.screen.isPauseScreen();
     }
 }

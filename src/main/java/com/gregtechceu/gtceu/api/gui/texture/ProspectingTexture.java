@@ -24,7 +24,6 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 
 import javax.annotation.ParametersAreNonnullByDefault;

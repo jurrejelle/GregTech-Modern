@@ -8,13 +8,15 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.gui.GuiGraphics;
 
-import org.jetbrains.annotations.Nullable;
+import lombok.Getter;
 
 public class DraggablePanelWrapper implements IDraggable {
 
     private final ModularPanel panel;
+    @Getter
     private final Area movingArea;
     private int relativeClickX, relativeClickY;
+    @Getter
     private boolean moving;
 
     public DraggablePanelWrapper(ModularPanel panel) {
@@ -62,16 +64,6 @@ public class DraggablePanelWrapper implements IDraggable {
     public void onDrag(int mouseButton, double timeSinceLastClick) {
         this.movingArea.x = this.panel.getContext().getMouseX() - this.relativeClickX;
         this.movingArea.y = this.panel.getContext().getMouseY() - this.relativeClickY;
-    }
-
-    @Override
-    public @Nullable Area getMovingArea() {
-        return this.movingArea;
-    }
-
-    @Override
-    public boolean isMoving() {
-        return this.moving;
     }
 
     @Override

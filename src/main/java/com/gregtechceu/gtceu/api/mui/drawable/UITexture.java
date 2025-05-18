@@ -16,7 +16,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true, chain = true)
 public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
 
     public static final UITexture DEFAULT = fullImage("gui/options_background", true);
@@ -42,6 +45,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
 
     public final ResourceLocation location;
     public final float u0, v0, u1, v1;
+    @Getter
     public final boolean canApplyTheme;
 
     /**
@@ -135,33 +139,25 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         } else {
             Color.setGlColorOpaque(Color.WHITE.main);
         }
-        draw((float) x, y, width, height);
+        draw(context, (float) x, y, width, height);
     }
 
-    public void draw(float x, float y, float width, float height) {
-        GuiDraw.drawTexture(this.location, x, y, x + width, y + height, this.u0, this.v0, this.u1, this.v1);
+    public void draw(GuiContext context, float x, float y, float width, float height) {
+        GuiDraw.drawTexture(context.getLastPose(), this.location, x, y, x + width, y + height, this.u0, this.v0,
+                this.u1, this.v1);
     }
 
-    @Deprecated
-    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd,
-                            float vEnd) {
-        drawSubArea(x, y, width, height, uStart, vStart, uEnd, vEnd, WidgetTheme.getDefault());
-    }
-
-    public void drawSubArea(float x, float y, float width, float height, float uStart, float vStart, float uEnd,
+    public void drawSubArea(GuiContext context, float x, float y, float width, float height, float uStart, float vStart,
+                            float uEnd,
                             float vEnd, WidgetTheme widgetTheme) {
         if (canApplyTheme()) {
             Color.setGlColor(widgetTheme.getColor());
         } else {
             Color.setGlColorOpaque(Color.WHITE.main);
         }
-        GuiDraw.drawTexture(this.location, x, y, x + width, y + height, lerpU(uStart), lerpV(vStart), lerpU(uEnd),
+        GuiDraw.drawTexture(context.getLastPose(), this.location, x, y, x + width, y + height, lerpU(uStart),
+                lerpV(vStart), lerpU(uEnd),
                 lerpV(vEnd));
-    }
-
-    @Override
-    public boolean canApplyTheme() {
-        return this.canApplyTheme;
     }
 
     public static UITexture parseFromJson(JsonObject json) {

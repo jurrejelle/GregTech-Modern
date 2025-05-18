@@ -84,7 +84,7 @@ public class HoloUI {
 
         public void open(ModularScreen screen) {
             UISettings settings = new UISettings();
-            settings.getJeiSettings().defaultXei();
+            settings.getXeiSettings().defaultXei();
             screen.getContext().setSettings(settings);
             HoloScreenEntity holoScreenEntity = new HoloScreenEntity(GTEntityTypes.MODULAR_SCREEN.get(),
                     Minecraft.getInstance().level, this.plane3D);

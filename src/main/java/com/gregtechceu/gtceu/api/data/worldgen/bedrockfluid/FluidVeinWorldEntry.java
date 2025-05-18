@@ -19,23 +19,19 @@ public class FluidVeinWorldEntry {
 
     @Nullable
     @Getter
-    private BedrockFluidDefinition vein;
+    private BedrockFluidDefinition definition;
     @Getter
     private int fluidYield;
     @Getter
     private int operationsRemaining;
 
-    public FluidVeinWorldEntry(@Nullable BedrockFluidDefinition vein, int fluidYield, int operationsRemaining) {
-        this.vein = vein;
+    public FluidVeinWorldEntry(@Nullable BedrockFluidDefinition definition, int fluidYield, int operationsRemaining) {
+        this.definition = definition;
         this.fluidYield = fluidYield;
         this.operationsRemaining = operationsRemaining;
     }
 
     private FluidVeinWorldEntry() {}
-
-    public BedrockFluidDefinition getDefinition() {
-        return this.vein;
-    }
 
     @SuppressWarnings("unused")
     public void setOperationsRemaining(int amount) {
@@ -51,8 +47,8 @@ public class FluidVeinWorldEntry {
         var tag = new CompoundTag();
         tag.putInt("fluidYield", fluidYield);
         tag.putInt("operationsRemaining", operationsRemaining);
-        if (vein != null && GTRegistries.BEDROCK_FLUID_DEFINITIONS.getKey(vein) != null) {
-            tag.putString("vein", GTRegistries.BEDROCK_FLUID_DEFINITIONS.getKey(vein).toString());
+        if (definition != null && GTRegistries.BEDROCK_FLUID_DEFINITIONS.getKey(definition) != null) {
+            tag.putString("vein", GTRegistries.BEDROCK_FLUID_DEFINITIONS.getKey(definition).toString());
         }
         return tag;
     }
@@ -66,7 +62,7 @@ public class FluidVeinWorldEntry {
         if (tag.contains("vein")) {
             ResourceLocation id = new ResourceLocation(tag.getString("vein"));
             if (GTRegistries.BEDROCK_FLUID_DEFINITIONS.containKey(id)) {
-                info.vein = GTRegistries.BEDROCK_FLUID_DEFINITIONS.get(id);
+                info.definition = GTRegistries.BEDROCK_FLUID_DEFINITIONS.get(id);
             }
         }
         return info;

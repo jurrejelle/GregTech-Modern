@@ -9,6 +9,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,11 +30,15 @@ import java.util.function.Consumer;
 public class ModularGuiContext extends GuiContext {
 
     /* GUI elements */
-    @Deprecated
+    @Getter
     public final ModularScreen screen;
+    @Getter
     private LocatedWidget focusedWidget = LocatedWidget.EMPTY;
-    @Nullable
-    private IWidget hovered;
+    /**
+     * the hovered widget (widget directly below the mouse)
+     */
+    @Getter
+    private @Nullable IWidget hovered;
     private int timeHovered = 0;
     private final HoveredIterable hoveredWidgets;
 
@@ -49,10 +54,6 @@ public class ModularGuiContext extends GuiContext {
     public ModularGuiContext(ModularScreen screen) {
         this.screen = screen;
         this.hoveredWidgets = new HoveredIterable(this.screen.getPanelManager());
-    }
-
-    public ModularScreen getScreen() {
-        return screen;
     }
 
     /**
@@ -81,14 +82,6 @@ public class ModularGuiContext extends GuiContext {
     }
 
     /**
-     * @return the hovered widget (widget directly below the mouse)
-     */
-    @Nullable
-    public IWidget getHovered() {
-        return this.hovered;
-    }
-
-    /**
      * @return all widgets which are below the mouse ({@link GuiContext#isAbove(IGuiElement)} is true)
      */
     public Iterable<IGuiElement> getAllBelowMouse() {
@@ -109,10 +102,6 @@ public class ModularGuiContext extends GuiContext {
      */
     public boolean isFocused(IFocusedWidget widget) {
         return this.focusedWidget.getElement() == widget;
-    }
-
-    public LocatedWidget getFocusedWidget() {
-        return this.focusedWidget;
     }
 
     /**
@@ -367,7 +356,7 @@ public class ModularGuiContext extends GuiContext {
         if (this.screen.isOverlay()) {
             throw new IllegalStateException("Overlays don't have JEI settings!");
         }
-        return (XeiSettingsImpl) getUISettings().getJeiSettings();
+        return (XeiSettingsImpl) getUISettings().getXeiSettings();
     }
 
     @ApiStatus.Internal

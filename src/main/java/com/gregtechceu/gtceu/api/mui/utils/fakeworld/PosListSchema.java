@@ -4,10 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +18,8 @@ public abstract class PosListSchema implements ISchema {
     @Getter
     private final Level level;
     private final Iterable<? extends BlockPos> posList;
+    @Getter
+    @Setter
     private BiPredicate<BlockPos, BlockInfo> renderFilter;
 
     public PosListSchema(Level level, Iterable<? extends BlockPos> posList,
@@ -25,16 +27,6 @@ public abstract class PosListSchema implements ISchema {
         this.level = level;
         this.posList = posList;
         this.renderFilter = renderFilter;
-    }
-
-    @Override
-    public void setRenderFilter(@Nullable BiPredicate<BlockPos, BlockInfo> renderFilter) {
-        this.renderFilter = renderFilter;
-    }
-
-    @Override
-    public @Nullable BiPredicate<BlockPos, BlockInfo> getRenderFilter() {
-        return renderFilter;
     }
 
     @NotNull

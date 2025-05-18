@@ -3,26 +3,22 @@ package com.gregtechceu.gtceu.api.mui.value;
 import com.gregtechceu.gtceu.api.mui.base.value.IEnumValue;
 import com.gregtechceu.gtceu.api.mui.base.value.IIntValue;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnumValue<T extends Enum<T>> implements IEnumValue<T>, IIntValue<T> {
 
+    @Getter
     protected final Class<T> enumClass;
+    @Getter
+    @Setter
     protected T value;
 
     public EnumValue(Class<T> enumClass, T value) {
         this.enumClass = enumClass;
-        this.value = value;
-    }
-
-    @Override
-    public T getValue() {
-        return this.value;
-    }
-
-    @Override
-    public void setValue(T value) {
         this.value = value;
     }
 
@@ -36,13 +32,9 @@ public class EnumValue<T extends Enum<T>> implements IEnumValue<T>, IIntValue<T>
         setValue(this.enumClass.getEnumConstants()[val]);
     }
 
-    @Override
-    public Class<T> getEnumClass() {
-        return this.enumClass;
-    }
-
     public static class Dynamic<T extends Enum<T>> implements IEnumValue<T>, IIntValue<T> {
 
+        @Getter
         protected final Class<T> enumClass;
         protected final Supplier<T> getter;
         protected final Consumer<T> setter;
@@ -71,11 +63,6 @@ public class EnumValue<T extends Enum<T>> implements IEnumValue<T>, IIntValue<T>
         @Override
         public void setValue(T value) {
             this.setter.accept(value);
-        }
-
-        @Override
-        public Class<T> getEnumClass() {
-            return this.enumClass;
         }
     }
 }

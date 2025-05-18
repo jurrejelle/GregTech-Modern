@@ -27,6 +27,7 @@ public enum FluidPipeType implements IMaterialPipeType<FluidPipeProperties> {
     public static final ResourceLocation TYPE_ID = GTCEu.id("fluid");
 
     public final String name;
+    @Getter
     public final float thickness;
     public final int capacityMultiplier;
     @Getter
@@ -43,11 +44,6 @@ public enum FluidPipeType implements IMaterialPipeType<FluidPipeProperties> {
         this.capacityMultiplier = capacityMultiplier;
         this.tagPrefix = TagPrefix;
         this.channels = channels;
-    }
-
-    @Override
-    public float getThickness() {
-        return thickness;
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.gui.GuiGraphics;
 
-import org.jetbrains.annotations.Nullable;
+import lombok.Getter;
 
 /**
  * A widget that can be picked up by the cursor.
@@ -17,8 +17,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DraggableWidget<W extends DraggableWidget<W>> extends Widget<W> implements IDraggable {
 
+    @Getter
     private boolean moving = false;
     private int relativeClickX, relativeClickY;
+    @Getter
     private final Area movingArea;
     private int realX, realY;
 
@@ -60,16 +62,6 @@ public class DraggableWidget<W extends DraggableWidget<W>> extends Widget<W> imp
     public void onDrag(int mouseButton, double timeSinceLastClick) {
         this.movingArea.x = getContext().getMouseX() - this.relativeClickX;
         this.movingArea.y = getContext().getMouseY() - this.relativeClickY;
-    }
-
-    @Override
-    public @Nullable Area getMovingArea() {
-        return this.movingArea;
-    }
-
-    @Override
-    public boolean isMoving() {
-        return this.moving;
     }
 
     @Override

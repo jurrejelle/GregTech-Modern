@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.mui.factory.PosGuiData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.IntFunction;
@@ -19,6 +20,7 @@ public class UISettings {
 
     private IntFunction<ModularContainerMenu> containerCreator;
     private Predicate<Player> canInteractWith;
+    @Getter
     private final XeiSettings xeiSettings;
 
     public UISettings() {
@@ -77,10 +79,6 @@ public class UISettings {
 
     public void canInteractWithinDefaultRange(PosGuiData guiData) {
         canInteractWithinRange(guiData, DEFAULT_INTERACT_RANGE);
-    }
-
-    public XeiSettings getJeiSettings() {
-        return xeiSettings;
     }
 
     @ApiStatus.Internal

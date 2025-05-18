@@ -3,6 +3,8 @@ package com.gregtechceu.gtceu.utils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 public class OverlayedItemHandler {
@@ -101,8 +103,17 @@ public class OverlayedItemHandler {
 
     private static class OverlayedItemHandlerSlot {
 
-        private ItemStack itemStack = ItemStack.EMPTY;
+        /**
+         * Storage of this ItemStack elsewhere will require copying it
+         *
+         * @return the stored ItemStack
+         */
+        @Getter
+        private @NotNull ItemStack itemStack = ItemStack.EMPTY;
+        @Getter
+        @Setter
         private int count = 0;
+        @Getter
         private int slotLimit;
 
         protected OverlayedItemHandlerSlot(@NotNull ItemStack stackToMirror, int slotLimit) {
@@ -121,33 +132,11 @@ public class OverlayedItemHandler {
             this.slotLimit = slotLimit;
         }
 
-        public int getSlotLimit() {
-            return slotLimit;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        /**
-         * Storage of this ItemStack elsewhere will require copying it
-         * 
-         * @return the stored ItemStack
-         */
-        @NotNull
-        public ItemStack getItemStack() {
-            return this.itemStack;
-        }
-
         public void setItemStack(@NotNull ItemStack itemStack) {
             if (!ItemStack.isSameItemSameTags(this.itemStack, itemStack)) {
                 this.itemStack = itemStack;
                 this.slotLimit = Math.min(itemStack.getMaxStackSize(), slotLimit);
             }
-        }
-
-        public void setCount(int count) {
-            this.count = count;
         }
 
         @NotNull

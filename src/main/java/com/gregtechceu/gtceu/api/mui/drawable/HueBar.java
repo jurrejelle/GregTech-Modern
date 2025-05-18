@@ -31,9 +31,11 @@ public class HueBar implements IDrawable {
         for (int i = 0; i < 6; i++) {
             int current = COLORS[i];
             if (this.axis.isHorizontal()) {
-                GuiDraw.drawHorizontalGradientRect(x + step * i, y, step, height, previous, current);
+                GuiDraw.drawHorizontalGradientRect(context.getLastPose(), x + step * i, y, step, height, previous,
+                        current);
             } else {
-                GuiDraw.drawVerticalGradientRect(x, y + step * i, width, step, previous, current);
+                GuiDraw.drawVerticalGradientRect(context.getLastPose(), x, y + step * i, width, step, previous,
+                        current);
             }
             previous = current;
         }

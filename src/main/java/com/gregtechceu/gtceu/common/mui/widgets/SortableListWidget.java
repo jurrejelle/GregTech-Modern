@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.widget.DraggableWidget;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,6 +116,7 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
         private List<IWidget> children;
         private Predicate<IGuiElement> dropPredicate;
         private SortableListWidget<T> listWidget;
+        @Getter
         private int index = -1;
 
         public Item(T value) {
@@ -158,10 +160,6 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
         @Override
         public T getWidgetValue() {
             return this.value;
-        }
-
-        public int getIndex() {
-            return this.index;
         }
 
         public boolean removeSelfFromList() {

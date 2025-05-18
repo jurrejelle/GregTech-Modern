@@ -9,6 +9,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +19,13 @@ public class RichText implements IDrawable, IRichTextBuilder<RichText> {
     private static final TextRenderer renderer = new TextRenderer();
 
     private final List<Object> elements = new ArrayList<>();
+    @Getter
     private Alignment alignment = Alignment.CenterLeft;
+    @Getter
     private float scale = 1f;
+    @Getter
     private Integer color = null;
+    @Getter
     private Boolean shadow = null;
 
     private List<ITextLine> cachedText;
@@ -59,22 +65,6 @@ public class RichText implements IDrawable, IRichTextBuilder<RichText> {
             }
         }
         return minWidth;
-    }
-
-    public Alignment getAlignment() {
-        return alignment;
-    }
-
-    public Boolean getShadow() {
-        return shadow;
-    }
-
-    public Integer getColor() {
-        return color;
-    }
-
-    public float getScale() {
-        return scale;
     }
 
     @Override

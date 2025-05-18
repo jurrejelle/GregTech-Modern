@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -86,24 +87,19 @@ public class GTBoat extends Boat {
         RUBBER("rubber", GTBlocks.RUBBER_PLANK.get()),
         TREATED_WOOD("treated", GTBlocks.TREATED_WOOD_PLANK.get());
 
+        @Getter
         private final String name;
+        @Getter
         private final Block planks;
 
         private static final BoatType[] VALUES = values();
 
-        private BoatType(String name, Block planks) {
+        BoatType(String name, Block planks) {
             this.name = name;
             this.planks = planks;
         }
 
-        public String getName() {
-            return this.name;
-        }
-
-        public Block getPlanks() {
-            return this.planks;
-        }
-
+        @Override
         public String toString() {
             return this.name;
         }

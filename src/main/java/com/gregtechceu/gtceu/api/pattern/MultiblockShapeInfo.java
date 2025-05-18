@@ -10,19 +10,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import lombok.Getter;
+
 import java.util.function.Supplier;
 
-public class MultiblockShapeInfo {
-
-    private final BlockInfo[][][] blocks; // [z][y][x]
-
-    public MultiblockShapeInfo(BlockInfo[][][] blocks) {
-        this.blocks = blocks;
-    }
-
-    public BlockInfo[][][] getBlocks() {
-        return blocks;
-    }
+/**
+ * @param blocks blocks in [x][y][z] order
+ */
+public record MultiblockShapeInfo(@Getter BlockInfo[][][] blocks) {
 
     public static ShapeInfoBuilder builder() {
         return new ShapeInfoBuilder();

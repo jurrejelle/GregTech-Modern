@@ -14,6 +14,9 @@ import com.gregtechceu.gtceu.api.mui.value.sync.ValueSyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParsePosition;
@@ -24,11 +27,14 @@ import java.util.regex.Pattern;
 /**
  * Text input widget with one line only. Can be synced between client and server. Can handle text validation.
  */
+@Accessors(chain = true)
 public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
 
     private IStringValue<?> stringValue;
+    @Setter
     private Function<String, String> validator = val -> val;
     private boolean numbers = false;
+    @Getter
     private String mathFailMessage = null;
     private double defaultNumber = 0;
 
@@ -155,10 +161,6 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
         return true;
     }
 
-    public String getMathFailMessage() {
-        return mathFailMessage;
-    }
-
     public TextFieldWidget setMaxLength(int maxLength) {
         this.handler.setMaxCharacters(maxLength);
         return this;
@@ -166,11 +168,6 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
 
     public TextFieldWidget setPattern(Pattern pattern) {
         this.handler.setPattern(pattern);
-        return this;
-    }
-
-    public TextFieldWidget setValidator(Function<String, String> validator) {
-        this.validator = validator;
         return this;
     }
 

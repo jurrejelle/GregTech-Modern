@@ -1,9 +1,12 @@
 package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.mui.base.UIFactory;
 import com.gregtechceu.gtceu.api.mui.factory.GuiData;
+import com.gregtechceu.gtceu.api.mui.factory.GuiManager;
 import com.gregtechceu.gtceu.api.mui.value.sync.ModularSyncManager;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
+import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 import com.gregtechceu.gtceu.common.data.GTMenuTypes;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.ModularSlot;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
@@ -11,6 +14,7 @@ import com.gregtechceu.gtceu.core.mixins.AbstractContainerMenuAccessor;
 import com.gregtechceu.gtceu.utils.NetworkUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import lombok.Getter;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -39,12 +44,14 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     private static final int LEFT_MOUSE = 0;
     private static final int RIGHT_MOUSE = 1;
 
+    @Getter
     private Player player;
     private ModularSyncManager syncManager;
     private boolean init = true;
-    // all phantom slots (inventory don't contain phantom slots)
+    // all phantom slots (inventory doesn't contain phantom slots)
     private final List<ModularSlot> phantomSlots = new ArrayList<>();
     private final List<ModularSlot> shiftClickSlots = new ArrayList<>();
+    @Getter
     private GuiData guiData;
     private UISettings settings;
 
@@ -55,8 +62,24 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         super(GTMenuTypes.MODULAR_CONTAINER.get(), containerId);
     }
 
-    public ModularContainerMenu(MenuType<ModularContainerMenu> type, int containerId, Inventory playerInv) {
+    public <T extends GuiData> ModularContainerMenu(MenuType<ModularContainerMenu> type, int containerId,
+                                                    Inventory playerInv, @Nullable FriendlyByteBuf data) {
         super(type, containerId);
+        if (data != null) {
+            this.player = playerInv.player;
+            // Copied from GuiManager to (hopefully) set up the correct state even when someone didn't use the API.
+            UIFactory<T> factory = (UIFactory<T>) GuiManager.getFactory(data.readResourceLocation());
+            T guiData = factory.readGuiData(player, data);
+            UISettings settings = new UISettings();
+            settings.defaultCanInteractWith(factory, guiData);
+            PanelSyncManager syncManager = new PanelSyncManager();
+            ModularPanel panel = factory.createPanel(guiData, syncManager, settings);
+            WidgetTree.collectSyncValues(syncManager, panel);
+            ModularScreen screen = factory.createScreen(guiData, panel);
+            screen.getContext().setSettings(settings);
+            this.optionalScreen = screen;
+            this.construct(player, syncManager, settings, panel.getName(), guiData);
+        }
     }
 
     @ApiStatus.Internal
@@ -89,7 +112,11 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     @OnlyIn(Dist.CLIENT)
     public ModularScreen getScreen() {
         if (this.optionalScreen == null) throw new NullPointerException("ModularScreen is not yet initialised!");
-        return optionalScreen;
+        return this.optionalScreen;
+    }
+
+    public boolean isScreenInitialized() {
+        return this.optionalScreen != null;
     }
 
     public AbstractContainerMenuAccessor acc() {
@@ -116,8 +143,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     private void sortShiftClickSlots() {
-        this.shiftClickSlots.sort(
-                Comparator.comparingInt(slot -> Objects.requireNonNull(slot.getSlotGroup()).getShiftClickPriority()));
+        this.shiftClickSlots.sort(ModularSlot.SHIFT_CLICK_PRIORITY);
     }
 
     @Override
@@ -149,7 +175,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         }
         if (slot.getSlotGroup() != null) {
             SlotGroup slotGroup = slot.getSlotGroup();
-            if (slotGroup.allowShiftTransfer()) {
+            if (slotGroup.isAllowShiftTransfer()) {
                 this.shiftClickSlots.add(slot);
                 if (!this.init) {
                     sortShiftClickSlots();
@@ -194,14 +220,6 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         return this.syncManager == null;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public GuiData getGuiData() {
-        return guiData;
-    }
-
     public ModularSlot getModularSlot(int index) {
         Slot slot = this.slots.get(index);
         if (slot instanceof ModularSlot modularSlot) {
@@ -211,6 +229,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                 "A non-ModularSlot was found, but all slots in a ModularContainer must extend ModularSlot.");
     }
 
+    @UnmodifiableView
     public List<ModularSlot> getShiftClickSlots() {
         return Collections.unmodifiableList(this.shiftClickSlots);
     }

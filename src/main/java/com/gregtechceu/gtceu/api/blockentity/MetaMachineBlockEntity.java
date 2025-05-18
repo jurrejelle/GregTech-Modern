@@ -54,6 +54,7 @@ public class MetaMachineBlockEntity extends BlockEntity implements IMachineBlock
     public final MultiManagedStorage managedStorage = new MultiManagedStorage();
     @Getter
     public final MetaMachine metaMachine;
+    @Getter
     private final long offset = GTValues.RNG.nextInt(20);
 
     protected MetaMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -82,11 +83,6 @@ public class MetaMachineBlockEntity extends BlockEntity implements IMachineBlock
             return true;
         }
         return false;
-    }
-
-    @Override
-    public long getOffset() {
-        return offset;
     }
 
     @Override

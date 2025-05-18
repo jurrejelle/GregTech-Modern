@@ -5,10 +5,12 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public class WidgetThemeSelectable extends WidgetTheme {
 
+    @Getter
     private final WidgetTheme selected;
 
     public WidgetThemeSelectable(@Nullable IDrawable background, @Nullable IDrawable hoverBackground,
@@ -35,9 +37,5 @@ public class WidgetThemeSelectable extends WidgetTheme {
                 parentWTBT.getSelected().getTextShadow(), IThemeApi.SELECTED_TEXT_SHADOW);
         this.selected = new WidgetTheme(selectedBackground, selectedHoverBackground, selectedColor, selectedTextColor,
                 selectedTextShadow);
-    }
-
-    public WidgetTheme getSelected() {
-        return selected;
     }
 }

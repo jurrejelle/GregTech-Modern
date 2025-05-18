@@ -342,7 +342,7 @@ public class PatternPreviewWidget extends WidgetGroup {
         IMultiController controllerBase = null;
         BlockPos multiPos = locateNextRegion(500);
 
-        BlockInfo[][][] blocks = shapeInfo.getBlocks();
+        BlockInfo[][][] blocks = shapeInfo.blocks();
         for (int x = 0; x < blocks.length; x++) {
             BlockInfo[][] aisle = blocks[x];
             for (int y = 0; y < aisle.length; y++) {

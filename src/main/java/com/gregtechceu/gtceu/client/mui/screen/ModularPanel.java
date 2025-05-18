@@ -26,6 +26,7 @@ import net.minecraft.Util;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -57,20 +58,24 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
 
     private static final int tapTime = 200;
 
-    @NotNull
-    private final String name;
+    @Getter
+    private final @NotNull String name;
     private ModularScreen screen;
     private IPanelHandler panelHandler;
+    @Getter
     private State state = State.IDLE;
     private boolean cantDisposeNow = false;
-    private final ObjectArrayList<LocatedWidget> hovering = new ObjectArrayList<>();
+    @Getter
+    private final @NotNull ObjectArrayList<LocatedWidget> hovering = new ObjectArrayList<>();
     private final Input keyboard = new Input();
     private final Input mouse = new Input();
 
     private final List<IPanelHandler> clientSubPanels = new ArrayList<>();
     private boolean invisible = false;
     private Animator animator;
+    @Getter
     private float scale = 1f;
+    @Getter
     private float alpha = 1f;
 
     public ModularPanel(@NotNull String name) {
@@ -610,21 +615,12 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         return false;
     }
 
-    public @NotNull String getName() {
-        return this.name;
-    }
-
     @Override
     public ModularScreen getScreen() {
         if (!isValid()) {
             throw new IllegalStateException();
         }
         return this.screen;
-    }
-
-    @NotNull
-    public ObjectList<LocatedWidget> getHovering() {
-        return this.hovering;
     }
 
     @Nullable
@@ -666,14 +662,6 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
 
     public boolean isClosing() {
         return this.animator != null && this.animator.isRunningBackwards();
-    }
-
-    public float getScale() {
-        return this.scale;
-    }
-
-    public float getAlpha() {
-        return this.alpha;
     }
 
     public final boolean isMainPanel() {
@@ -738,10 +726,6 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     @Override
     public String toString() {
         return super.toString() + "#" + getName();
-    }
-
-    public State getState() {
-        return this.state;
     }
 
     public enum State {

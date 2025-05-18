@@ -9,49 +9,42 @@ import com.lowdragmc.lowdraglib.jei.ModularWrapper;
 
 import net.minecraft.network.chat.Component;
 
+import lombok.Getter;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.RecipeType;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public class GTProgrammedCircuitCategory extends
-                                         ModularUIRecipeCategory<GTProgrammedCircuitCategory.GTProgrammedCircuitWrapper> {
+public class GTProgrammedCircuitCategory extends ModularUIRecipeCategory<GTProgrammedCircuitWidget> {
 
-    public final static RecipeType<GTProgrammedCircuitWrapper> RECIPE_TYPE = new RecipeType<>(
-            GTCEu.id("programmed_circuit"), GTProgrammedCircuitWrapper.class);
+    public final static RecipeType<GTProgrammedCircuitWidget> RECIPE_TYPE = new RecipeType<>(
+            GTCEu.id("programmed_circuit"), GTProgrammedCircuitWidget.class);
 
+    @Getter
     private final IDrawable background;
+    @Getter
     private final IDrawable icon;
 
     public GTProgrammedCircuitCategory(IJeiHelpers helpers) {
+        super(GTProgrammedCircuitWrapper::new);
         background = helpers.getGuiHelper().createBlankDrawable(150, 80);
         icon = helpers.getGuiHelper().createDrawableItemStack(GTItems.PROGRAMMED_CIRCUIT.asStack());
     }
 
     @Override
-    public RecipeType<GTProgrammedCircuitWrapper> getRecipeType() {
+    public @NotNull RecipeType<GTProgrammedCircuitWidget> getRecipeType() {
         return RECIPE_TYPE;
     }
 
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.translatable("gtceu.jei.programmed_circuit");
-    }
-
-    @Override
-    public @Nullable IDrawable getBackground() {
-        return background;
-    }
-
-    @Override
-    public @Nullable IDrawable getIcon() {
-        return icon;
     }
 
     public static class GTProgrammedCircuitWrapper extends ModularWrapper<GTProgrammedCircuitWidget> {
 
-        public GTProgrammedCircuitWrapper() {
-            super(new GTProgrammedCircuitWidget());
+        public GTProgrammedCircuitWrapper(GTProgrammedCircuitWidget widget) {
+            super(widget);
         }
     }
 }

@@ -6,23 +6,19 @@ import com.gregtechceu.gtceu.api.mui.base.widget.ITooltip;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class HoverableIcon extends DelegateIcon implements IHoverable, ITooltip<HoverableIcon> {
 
     private final Area area = new Area();
-    private RichTooltip tooltip;
+    @Getter
+    private @Nullable RichTooltip tooltip;
 
     public HoverableIcon(IIcon icon) {
         super(icon);
         setRenderedAt(0, 0);
-    }
-
-    @Override
-    @Nullable
-    public RichTooltip getTooltip() {
-        return tooltip;
     }
 
     @Override

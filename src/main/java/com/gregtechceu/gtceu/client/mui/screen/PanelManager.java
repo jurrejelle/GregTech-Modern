@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,8 @@ import java.util.function.Supplier;
 
 public class PanelManager {
 
-    private final ModularScreen screen;
+    @Getter
+    private final @NotNull ModularScreen screen;
     /**
      * At least one panel must exist always exist.
      * If this panel is closed, all panels will close.
@@ -40,7 +42,7 @@ public class PanelManager {
     private boolean dirty = false;
     private State state = State.INIT;
 
-    public PanelManager(ModularScreen screen, ModularPanel panel) {
+    public PanelManager(@NotNull ModularScreen screen, ModularPanel panel) {
         this.screen = screen;
         this.mainPanel = Objects.requireNonNull(panel, "Main panel must not be null!");
     }
@@ -93,11 +95,6 @@ public class PanelManager {
             }
         }
         return false;
-    }
-
-    @NotNull
-    public ModularScreen getScreen() {
-        return this.screen;
     }
 
     @NotNull

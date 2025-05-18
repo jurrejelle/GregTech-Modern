@@ -6,10 +6,13 @@ import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 public class WidgetTextFieldTheme extends WidgetTheme {
 
+    @Getter
     private final int markedColor;
+    @Getter
     private final int hintColor;
 
     public WidgetTextFieldTheme(int markedColor, int hintColor) {
@@ -24,13 +27,5 @@ public class WidgetTextFieldTheme extends WidgetTheme {
                 ((WidgetTextFieldTheme) parent).getMarkedColor(), IThemeApi.MARKED_COLOR);
         this.hintColor = JsonHelper.getColorWithFallback(json, fallback, ((WidgetTextFieldTheme) parent).getHintColor(),
                 IThemeApi.HINT_COLOR);
-    }
-
-    public int getMarkedColor() {
-        return this.markedColor;
-    }
-
-    public int getHintColor() {
-        return hintColor;
     }
 }

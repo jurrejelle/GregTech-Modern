@@ -11,10 +11,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
 public class EnergyNetHandler implements IEnergyContainer {
 
+    @Getter
     private EnergyNet net;
     private boolean transfer;
     private final CableBlockEntity cable;
@@ -24,10 +27,6 @@ public class EnergyNetHandler implements IEnergyContainer {
         this.net = Objects.requireNonNull(net);
         this.cable = Objects.requireNonNull(cable);
         this.facing = facing;
-    }
-
-    public EnergyNet getNet() {
-        return net;
     }
 
     public void updateNetwork(EnergyNet net) {

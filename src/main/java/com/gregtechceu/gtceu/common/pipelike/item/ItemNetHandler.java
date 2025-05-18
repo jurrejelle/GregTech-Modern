@@ -26,6 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -481,8 +482,8 @@ public class ItemNetHandler implements IItemHandlerModifiable {
     }
 
     private void decrementBy(int amount) {
-        for (Map.Entry<FacingPos, Integer> entry : pipe.getTransferred().entrySet()) {
-            entry.setValue(entry.getValue() - amount);
+        for (Object2IntMap.Entry<FacingPos> entry : pipe.getTransferred().object2IntEntrySet()) {
+            entry.setValue(entry.getIntValue() - amount);
         }
     }
 

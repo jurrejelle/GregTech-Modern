@@ -81,6 +81,7 @@ public class Material implements Comparable<Material> {
     /**
      * Chemical formula of this material
      */
+    @Getter
     private String chemicalFormula;
 
     private String calculateChemicalFormula() {
@@ -101,10 +102,6 @@ public class Material implements Comparable<Material> {
             return components.toString();
         }
         return "";
-    }
-
-    public String getChemicalFormula() {
-        return chemicalFormula;
     }
 
     public Material setFormula(String formula) {

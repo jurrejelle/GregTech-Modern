@@ -13,6 +13,7 @@ import net.minecraft.util.GsonHelper;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,8 +33,8 @@ public class PositionYCondition extends RecipeCondition {
             .apply(instance, PositionYCondition::new));
 
     public final static PositionYCondition INSTANCE = new PositionYCondition();
-    private int min;
-    private int max;
+    @Getter
+    private int min, max;
 
     public PositionYCondition(int min, int max) {
         this.min = min;
@@ -54,14 +55,6 @@ public class PositionYCondition extends RecipeCondition {
     @Override
     public Component getTooltips() {
         return Component.translatable("recipe.condition.pos_y.tooltip", this.min, this.max);
-    }
-
-    public int getMin() {
-        return min;
-    }
-
-    public int getMax() {
-        return max;
     }
 
     @Override

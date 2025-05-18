@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.registry.MaterialRegistry;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -14,7 +15,9 @@ public class MaterialRegistryImpl extends MaterialRegistry {
 
     private static int networkIdCounter;
 
+    @Getter
     private final int networkId = networkIdCounter++;
+    @Getter
     private final java.lang.String modid;
 
     private boolean isRegistryClosed = false;
@@ -61,17 +64,6 @@ public class MaterialRegistryImpl extends MaterialRegistry {
             this.fallbackMaterial = MaterialRegistryManager.getInstance().getDefaultFallback();
         }
         return this.fallbackMaterial;
-    }
-
-    @Override
-    public int getNetworkId() {
-        return this.networkId;
-    }
-
-    @NotNull
-    @Override
-    public java.lang.String getModid() {
-        return this.modid;
     }
 
     public void closeRegistry() {

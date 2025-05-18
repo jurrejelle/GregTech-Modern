@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.common.mui.widgets.slot.SlotGroup;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -11,13 +12,16 @@ import java.util.List;
 
 public class SortButtons extends Widget<SortButtons> {
 
+    @Getter
     private String slotGroupName;
+    @Getter
     private SlotGroup slotGroup;
 
     private boolean horizontal = true;
     private final ButtonWidget<?> sortButton = new ButtonWidget<>();
     private final ButtonWidget<?> settingsButton = new ButtonWidget<>();
-    private final List<IWidget> children = Arrays.asList(sortButton, settingsButton);
+    @Getter
+    private final @NotNull List<IWidget> children = Arrays.asList(sortButton, settingsButton);
 
     @Override
     public void onInit() {
@@ -51,24 +55,10 @@ public class SortButtons extends Widget<SortButtons> {
         }
     }
 
-    @NotNull
-    @Override
-    public List<IWidget> getChildren() {
-        return this.children;
-    }
-
     @Override
     public boolean isEnabled() {
         // TODO bogosort doesn't exist (yet), pick some other sorting mod to add compat for
         return false; // return super.isEnabled() && false; ModularUI.isSortModLoaded();
-    }
-
-    public String getSlotGroupName() {
-        return slotGroupName;
-    }
-
-    public SlotGroup getSlotGroup() {
-        return slotGroup;
     }
 
     public SortButtons slotGroup(String slotGroupName) {

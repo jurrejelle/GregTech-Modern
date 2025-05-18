@@ -8,6 +8,8 @@ import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import lombok.Getter;
+
 import java.util.function.Supplier;
 
 /**
@@ -17,6 +19,7 @@ import java.util.function.Supplier;
  */
 public class DynamicDrawable implements IDrawable {
 
+    @Getter
     private final Supplier<IDrawable> supplier;
 
     public DynamicDrawable(Supplier<IDrawable> supplier) {
@@ -40,9 +43,5 @@ public class DynamicDrawable implements IDrawable {
         } else {
             return IDrawable.super.canApplyTheme();
         }
-    }
-
-    public Supplier<IDrawable> getSupplier() {
-        return this.supplier;
     }
 }

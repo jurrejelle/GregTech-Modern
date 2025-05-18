@@ -155,7 +155,7 @@ public final class ChestGenHooks {
         }
 
         @Override
-        public LootItemFunctionType getType() {
+        public @NotNull LootItemFunctionType getType() {
             return TYPE;
         }
 
