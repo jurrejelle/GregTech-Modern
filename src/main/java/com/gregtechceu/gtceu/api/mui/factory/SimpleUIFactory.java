@@ -1,6 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
-import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +18,10 @@ import java.util.function.Supplier;
  * on client and server.
  * These factories are registered automatically.
  */
-public class SimpleGuiFactory extends AbstractUIFactory<GuiData> {
+public class SimpleUIFactory extends AbstractUIFactory<GuiData> {
 
-    private final Supplier<IGuiHolder<GuiData>> guiHolderSupplier;
-    private IGuiHolder<GuiData> guiHolder;
+    private final Supplier<IUIHolder<GuiData>> guiHolderSupplier;
+    private IUIHolder<GuiData> guiHolder;
 
     /**
      * Creates a simple gui factory.
@@ -29,7 +29,7 @@ public class SimpleGuiFactory extends AbstractUIFactory<GuiData> {
      * @param name      name of the factory
      * @param guiHolder gui holder
      */
-    public SimpleGuiFactory(ResourceLocation name, IGuiHolder<GuiData> guiHolder) {
+    public SimpleUIFactory(ResourceLocation name, IUIHolder<GuiData> guiHolder) {
         this(name, () -> guiHolder);
     }
 
@@ -39,7 +39,7 @@ public class SimpleGuiFactory extends AbstractUIFactory<GuiData> {
      * @param name              name of the factory
      * @param guiHolderSupplier a function which retrieves a gui holder. This is only called once and then cached.
      */
-    public SimpleGuiFactory(ResourceLocation name, Supplier<IGuiHolder<GuiData>> guiHolderSupplier) {
+    public SimpleUIFactory(ResourceLocation name, Supplier<IUIHolder<GuiData>> guiHolderSupplier) {
         super(name);
         this.guiHolderSupplier = guiHolderSupplier;
         GuiManager.registerFactory(this);
@@ -60,10 +60,10 @@ public class SimpleGuiFactory extends AbstractUIFactory<GuiData> {
     }
 
     @Override
-    public @NotNull IGuiHolder<GuiData> getGuiHolder(GuiData data) {
+    public @NotNull IUIHolder<GuiData> getGuiHolder(GuiData data) {
         if (this.guiHolder == null) {
             this.guiHolder = this.guiHolderSupplier.get();
-            Objects.requireNonNull(this.guiHolder, "IGuiHolder must not be null");
+            Objects.requireNonNull(this.guiHolder, "IUIHolder must not be null");
         }
         return this.guiHolder;
     }

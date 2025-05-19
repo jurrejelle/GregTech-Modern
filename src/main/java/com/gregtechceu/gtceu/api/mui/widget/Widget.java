@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.mui.widget;
 
 import com.gregtechceu.gtceu.api.mui.base.ITheme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.layout.IResizeable;
 import com.gregtechceu.gtceu.api.mui.base.value.IValue;
@@ -58,9 +59,8 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     @Nullable
     private String syncKey;
     /**
-     * -- SETTER --
-     * This intended to only be used when build the main panel in methods like
-     * {@link com.gregtechceu.gtceu.api.mui.base.IGuiHolder#buildUI(GuiData, com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager, com.gregtechceu.gtceu.client.mui.screen.UISettings)}
+     * This is intended to only be used when building the main panel in methods like
+     * {@link IUIHolder#buildUI(GuiData, com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager, com.gregtechceu.gtceu.client.mui.screen.UISettings)}
      * since it's called on server and client. Otherwise, this will not work.
      */
     @Setter

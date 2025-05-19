@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,15 +13,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class BlockEntityGuiFactory extends AbstractUIFactory<PosGuiData> {
+public class BlockEntityUIFactory extends AbstractUIFactory<PosGuiData> {
 
-    public static final BlockEntityGuiFactory INSTANCE = new BlockEntityGuiFactory();
+    public static final BlockEntityUIFactory INSTANCE = new BlockEntityUIFactory();
 
-    private BlockEntityGuiFactory() {
+    private BlockEntityUIFactory() {
         super(GTCEu.id("block_entity"));
     }
 
-    public <T extends BlockEntity & IGuiHolder<PosGuiData>> void open(Player player, T blockEntity) {
+    public <T extends BlockEntity & IUIHolder<PosGuiData>> void open(Player player, T blockEntity) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(blockEntity);
         if (blockEntity.isRemoved()) {
@@ -43,8 +43,8 @@ public class BlockEntityGuiFactory extends AbstractUIFactory<PosGuiData> {
     }
 
     @Override
-    public @NotNull IGuiHolder<PosGuiData> getGuiHolder(PosGuiData data) {
-        return Objects.requireNonNull(castGuiHolder(data.getBlockEntity()), "Found BlockEntity is not a gui holder!");
+    public @NotNull IUIHolder<PosGuiData> getGuiHolder(PosGuiData data) {
+        return Objects.requireNonNull(castUIHolder(data.getBlockEntity()), "Found BlockEntity is not a gui holder!");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
-import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 import com.gregtechceu.gtceu.api.mui.base.UIFactory;
 import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
@@ -27,25 +27,25 @@ public abstract class AbstractUIFactory<T extends GuiData> implements UIFactory<
     }
 
     @NotNull
-    public abstract IGuiHolder<T> getGuiHolder(T data);
+    public abstract IUIHolder<T> getGuiHolder(T data);
 
     @Override
     public ModularPanel createPanel(T guiData, PanelSyncManager syncManager, UISettings settings) {
-        IGuiHolder<T> guiHolder = Objects.requireNonNull(getGuiHolder(guiData), "Gui holder must not be null!");
+        IUIHolder<T> guiHolder = Objects.requireNonNull(getGuiHolder(guiData), "Gui holder must not be null!");
         return guiHolder.buildUI(guiData, syncManager, settings);
     }
 
     @Override
     public ModularScreen createScreen(T guiData, ModularPanel mainPanel) {
-        IGuiHolder<T> guiHolder = Objects.requireNonNull(getGuiHolder(guiData), "Gui holder must not be null!");
+        IUIHolder<T> guiHolder = Objects.requireNonNull(getGuiHolder(guiData), "Gui holder must not be null!");
         return guiHolder.createScreen(guiData, mainPanel);
     }
 
     @SuppressWarnings("unchecked")
-    protected IGuiHolder<T> castGuiHolder(Object o) {
-        if (!(o instanceof IGuiHolder)) return null;
+    protected IUIHolder<T> castUIHolder(Object o) {
+        if (!(o instanceof IUIHolder)) return null;
         try {
-            return (IGuiHolder<T>) o;
+            return (IUIHolder<T>) o;
         } catch (ClassCastException e) {
             return null;
         }

@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * {@link net.minecraft.world.item.Item}.
  */
 @FunctionalInterface
-public interface IGuiHolder<T extends GuiData> {
+public interface IUIHolder<T extends GuiData> {
 
     /**
      * Only called on client side.

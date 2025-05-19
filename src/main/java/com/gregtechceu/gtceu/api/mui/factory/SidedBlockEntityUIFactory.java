@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class SidedBlockEntityGuiFactory extends AbstractUIFactory<SidedPosGuiData> {
+public class SidedBlockEntityUIFactory extends AbstractUIFactory<SidedPosGuiData> {
 
-    public static final SidedBlockEntityGuiFactory INSTANCE = new SidedBlockEntityGuiFactory();
+    public static final SidedBlockEntityUIFactory INSTANCE = new SidedBlockEntityUIFactory();
 
-    public <T extends BlockEntity & IGuiHolder<SidedPosGuiData>> void open(Player player, T blockEntity,
-                                                                           Direction facing) {
+    public <T extends BlockEntity & IUIHolder<SidedPosGuiData>> void open(Player player, T blockEntity,
+                                                                          Direction facing) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(blockEntity);
         Objects.requireNonNull(facing);
@@ -42,13 +42,13 @@ public class SidedBlockEntityGuiFactory extends AbstractUIFactory<SidedPosGuiDat
         GuiManager.open(this, data, (ServerPlayer) player);
     }
 
-    private SidedBlockEntityGuiFactory() {
+    private SidedBlockEntityUIFactory() {
         super(GTCEu.id("sided_block_entity"));
     }
 
     @Override
-    public @NotNull IGuiHolder<SidedPosGuiData> getGuiHolder(SidedPosGuiData data) {
-        return Objects.requireNonNull(castGuiHolder(data.getBlockEntity()), "Found BlockEntity is not a gui holder!");
+    public @NotNull IUIHolder<SidedPosGuiData> getGuiHolder(SidedPosGuiData data) {
+        return Objects.requireNonNull(castUIHolder(data.getBlockEntity()), "Found BlockEntity is not a gui holder!");
     }
 
     @Override

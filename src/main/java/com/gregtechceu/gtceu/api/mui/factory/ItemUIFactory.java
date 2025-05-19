@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.base.IGuiHolder;
+import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class ItemGuiFactory extends AbstractUIFactory<HandGuiData> {
+public class ItemUIFactory extends AbstractUIFactory<HandGuiData> {
 
-    public static final ItemGuiFactory INSTANCE = new ItemGuiFactory();
+    public static final ItemUIFactory INSTANCE = new ItemUIFactory();
 
-    private ItemGuiFactory() {
+    private ItemUIFactory() {
         super(GTCEu.id("item"));
     }
 
@@ -36,8 +36,8 @@ public class ItemGuiFactory extends AbstractUIFactory<HandGuiData> {
     }
 
     @Override
-    public @NotNull IGuiHolder<HandGuiData> getGuiHolder(HandGuiData data) {
-        return Objects.requireNonNull(castGuiHolder(data.getUsedItem().getItem()), "Item was not a gui holder!");
+    public @NotNull IUIHolder<HandGuiData> getGuiHolder(HandGuiData data) {
+        return Objects.requireNonNull(castUIHolder(data.getUsedItem().getItem()), "Item was not a gui holder!");
     }
 
     @Override
