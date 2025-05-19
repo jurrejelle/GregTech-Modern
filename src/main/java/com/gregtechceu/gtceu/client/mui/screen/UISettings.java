@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.mui.factory.PosGuiData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
@@ -57,20 +58,20 @@ public class UISettings {
         canInteractWith(player -> factory.canInteractWith(player, guiData));
     }
 
-    public void canInteractWithinRange(double x, double y, double z, double range) {
-        canInteractWith(player -> player.distanceToSqr(x, y, z) <= range * range);
+    public void canInteractWithinRange(Vec3 pos, double range) {
+        canInteractWith(player -> player.distanceToSqr(pos) <= range * range);
     }
 
     public void canInteractWithinRange(BlockPos pos, double range) {
-        canInteractWith(player -> player.distanceToSqr(pos.getCenter()) <= range * range);
+        canInteractWithinRange(pos.getCenter(), range);
     }
 
     public void canInteractWithinRange(PosGuiData guiData, double range) {
-        canInteractWithinRange(guiData.getX() + 0.5, guiData.getY() + 0.5, guiData.getZ() + 0.5, range);
+        canInteractWithinRange(guiData.getBlockPos(), range);
     }
 
-    public void canInteractWithinDefaultRange(double x, double y, double z) {
-        canInteractWithinRange(x, y, z, DEFAULT_INTERACT_RANGE);
+    public void canInteractWithinDefaultRange(Vec3 pos) {
+        canInteractWithinRange(pos, DEFAULT_INTERACT_RANGE);
     }
 
     public void canInteractWithinDefaultRange(BlockPos pos) {

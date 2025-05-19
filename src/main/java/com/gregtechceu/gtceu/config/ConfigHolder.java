@@ -787,6 +787,10 @@ public class ConfigHolder {
             @Configurable
             @Configurable.Comment("If true and not specified otherwise, screens will try to use the 'vanilla_dark' theme.")
             public boolean useDarkThemeByDefault = false;
+
+            public int getDefaultUIColor() {
+                return Long.decode(ConfigHolder.INSTANCE.client.ui.defaultUIColor).intValue() | 0xFF000000;
+            }
         }
     }
 

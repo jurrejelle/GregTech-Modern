@@ -31,8 +31,11 @@ public class ContainerScreenWrapper extends AbstractContainerScreen<ModularConta
 
     /**
      * This is only used to create the menu type with Registrate. Do not use it (even though it may work).
+     *
+     * @deprecated Internal use only.
      */
     @SuppressWarnings("DataFlowIssue")
+    @Deprecated
     @ApiStatus.Internal
     public <T extends GuiData> ContainerScreenWrapper(ModularContainerMenu container, Inventory inventory,
                                                       Component display) {

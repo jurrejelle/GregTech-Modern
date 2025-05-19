@@ -30,7 +30,7 @@ public class SidedBlockEntityUIFactory extends AbstractUIFactory<SidedPosGuiData
             throw new IllegalArgumentException("BlockEntity must be in same dimension as the player!");
         }
         BlockPos pos = blockEntity.getBlockPos();
-        SidedPosGuiData data = new SidedPosGuiData(player, pos.getX(), pos.getY(), pos.getZ(), facing);
+        SidedPosGuiData data = new SidedPosGuiData(player, pos, facing);
         GuiManager.open(this, data, (ServerPlayer) player);
     }
 
@@ -38,7 +38,7 @@ public class SidedBlockEntityUIFactory extends AbstractUIFactory<SidedPosGuiData
         Objects.requireNonNull(player);
         Objects.requireNonNull(pos);
         Objects.requireNonNull(facing);
-        SidedPosGuiData data = new SidedPosGuiData(player, pos.getX(), pos.getY(), pos.getZ(), facing);
+        SidedPosGuiData data = new SidedPosGuiData(player, pos, facing);
         GuiManager.open(this, data, (ServerPlayer) player);
     }
 
@@ -59,16 +59,12 @@ public class SidedBlockEntityUIFactory extends AbstractUIFactory<SidedPosGuiData
 
     @Override
     public void writeGuiData(SidedPosGuiData guiData, FriendlyByteBuf buffer) {
-        buffer.writeVarInt(guiData.getX());
-        buffer.writeVarInt(guiData.getY());
-        buffer.writeVarInt(guiData.getZ());
+        buffer.writeBlockPos(guiData.getBlockPos());
         buffer.writeByte(guiData.getSide().get3DDataValue());
     }
 
     @Override
     public @NotNull SidedPosGuiData readGuiData(Player player, FriendlyByteBuf buffer) {
-        return new SidedPosGuiData(player,
-                buffer.readVarInt(), buffer.readVarInt(), buffer.readVarInt(),
-                Direction.from3DDataValue(buffer.readByte()));
+        return new SidedPosGuiData(player, buffer.readBlockPos(), Direction.from3DDataValue(buffer.readByte()));
     }
 }

@@ -315,9 +315,12 @@ public class MetaMachineBlock extends AppearanceBlock implements IMachineBlock {
             var result = interactedMachine.onUse(state, world, pos, player, hand, hit);
             if (result != InteractionResult.PASS) return result;
         }
-        if (shouldOpenUi && machine instanceof IUIMachine uiMachine &&
-                MachineOwner.canOpenOwnerMachine(player, machine)) {
-            return uiMachine.tryToOpenUI(player, hand, hit);
+        if (shouldOpenUi && MachineOwner.canOpenOwnerMachine(player, machine)) {
+            if (machine instanceof IMuiMachine muiMachine) {
+                return muiMachine.tryToOpenUI(player, hand, hit);
+            } else if (machine instanceof IUIMachine uiMachine) {
+                return uiMachine.tryToOpenUI(player, hand, hit);
+            }
         }
         return shouldOpenUi ? InteractionResult.PASS : InteractionResult.CONSUME;
     }

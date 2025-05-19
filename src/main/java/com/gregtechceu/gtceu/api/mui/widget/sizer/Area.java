@@ -387,6 +387,14 @@ public class Area extends Rectangle implements IUnResizeable {
     }
 
     /**
+     * Set the relative position
+     */
+    public void setRelativePos(int rx, int ry) {
+        this.rx = rx;
+        this.ry = ry;
+    }
+
+    /**
      * Set the position
      */
     public void setPos(int x, int y) {

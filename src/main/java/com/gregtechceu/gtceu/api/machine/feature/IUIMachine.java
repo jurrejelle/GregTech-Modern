@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.gui.factory.MachineUIFactory;
 
 import com.lowdragmc.lowdraglib.gui.modular.IUIHolder;
+import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -11,12 +12,19 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 
+import org.jetbrains.annotations.ApiStatus;
+
 /**
  * @author KilaBash
  * @date 2023/2/17
  * @implNote A machine that has gui. can be opened via right click.
  */
+@ApiStatus.ScheduledForRemoval(inVersion = "8.0.0")
+@Deprecated(since = "7.0.0", forRemoval = true)
 public interface IUIMachine extends IUIHolder, IMachineFeature {
+
+    @Override
+    ModularUI createUI(Player entityPlayer);
 
     default boolean shouldOpenUI(Player player, InteractionHand hand, BlockHitResult hit) {
         return true;

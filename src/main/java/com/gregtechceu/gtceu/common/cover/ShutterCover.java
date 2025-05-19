@@ -43,7 +43,7 @@ public class ShutterCover extends CoverBehavior implements IControllable {
     }
 
     @Override
-    public InteractionResult onScrewdriverClick(Player playerIn, InteractionHand hand, BlockHitResult hitResult) {
+    public InteractionResult onScrewdriverClick(Player player, InteractionHand hand, BlockHitResult hitResult) {
         return InteractionResult.FAIL;
     }
 

@@ -1,6 +1,8 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.api.mui.base.IUIHolder;
+import com.gregtechceu.gtceu.common.mui.factory.CoverUIFactory;
+import com.gregtechceu.gtceu.common.mui.factory.MachineUIFactory;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,6 +28,10 @@ public class UIFactories {
         return MachineUIFactory.INSTANCE;
     }
 
+    public static CoverUIFactory cover() {
+        return CoverUIFactory.INSTANCE;
+    }
+
     public static SimpleUIFactory createSimple(ResourceLocation name, IUIHolder<GuiData> holder) {
         return new SimpleUIFactory(name, holder);
     }
@@ -39,6 +45,8 @@ public class UIFactories {
         GuiManager.registerFactory(blockEntity());
         GuiManager.registerFactory(sidedBlockEntity());
         GuiManager.registerFactory(item());
+        GuiManager.registerFactory(machine());
+        GuiManager.registerFactory(cover());
     }
 
     private UIFactories() {}

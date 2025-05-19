@@ -2,7 +2,6 @@ package com.gregtechceu.gtceu.api.cover;
 
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
-import com.gregtechceu.gtceu.api.gui.factory.CoverUIFactory;
 import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfigurator;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.IToolGridHighlight;
@@ -10,6 +9,7 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 import com.gregtechceu.gtceu.client.renderer.cover.ICoverRenderer;
+import com.gregtechceu.gtceu.common.mui.factory.CoverUIFactory;
 
 import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 import com.lowdragmc.lowdraglib.syncdata.IEnhancedManaged;
@@ -155,12 +155,17 @@ public abstract class CoverBehavior implements IEnhancedManaged, IToolGridHighli
     //////////////////////////////////////
     // ******* Interaction *******//
     //////////////////////////////////////
-    public InteractionResult onScrewdriverClick(Player playerIn, InteractionHand hand, BlockHitResult hitResult) {
-        if (this instanceof IUICover) {
-            if (playerIn instanceof ServerPlayer serverPlayer) {
-                CoverUIFactory.INSTANCE.openUI(this, serverPlayer);
+    public InteractionResult onScrewdriverClick(Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (this instanceof IMuiCover uiCover) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                CoverUIFactory.INSTANCE.open(serverPlayer, uiCover);
             }
-            playerIn.swing(hand);
+            return InteractionResult.sidedSuccess(player.level().isClientSide);
+        } else if (this instanceof IUICover) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                com.gregtechceu.gtceu.api.gui.factory.CoverUIFactory.INSTANCE.openUI(this, serverPlayer);
+            }
+            player.swing(hand);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;
@@ -196,19 +201,23 @@ public abstract class CoverBehavior implements IEnhancedManaged, IToolGridHighli
     public boolean shouldRenderGrid(Player player, BlockPos pos, BlockState state, ItemStack held,
                                     Set<GTToolType> toolTypes) {
         return toolTypes.contains(GTToolType.CROWBAR) ||
-                ((toolTypes.isEmpty() || toolTypes.contains(GTToolType.SCREWDRIVER)) && this instanceof IUICover);
+                ((toolTypes.isEmpty() || toolTypes.contains(GTToolType.SCREWDRIVER)) && this.isSomeUICover());
     }
 
     @Override
-    public ResourceTexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
-                                    Direction side) {
+    public @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
+                                              Direction side) {
         if (toolTypes.contains(GTToolType.CROWBAR)) {
             return GuiTextures.TOOL_REMOVE_COVER;
         }
-        if ((toolTypes.isEmpty() || toolTypes.contains(GTToolType.SCREWDRIVER)) && this instanceof IUICover) {
+        if ((toolTypes.isEmpty() || toolTypes.contains(GTToolType.SCREWDRIVER)) && this.isSomeUICover()) {
             return GuiTextures.TOOL_COVER_SETTINGS;
         }
         return null;
+    }
+
+    public final boolean isSomeUICover() {
+        return this instanceof IMuiCover || this instanceof IUICover;
     }
 
     /**

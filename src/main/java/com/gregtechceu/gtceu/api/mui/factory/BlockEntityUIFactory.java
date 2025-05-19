@@ -31,14 +31,14 @@ public class BlockEntityUIFactory extends AbstractUIFactory<PosGuiData> {
             throw new IllegalArgumentException("BlockEntity must be in same dimension as the player!");
         }
         BlockPos pos = blockEntity.getBlockPos();
-        PosGuiData data = new PosGuiData(player, pos.getX(), pos.getY(), pos.getZ());
+        PosGuiData data = new PosGuiData(player, pos);
         GuiManager.open(this, data, (ServerPlayer) player);
     }
 
     public void open(Player player, BlockPos pos) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(pos);
-        PosGuiData data = new PosGuiData(player, pos.getX(), pos.getY(), pos.getZ());
+        PosGuiData data = new PosGuiData(player, pos);
         GuiManager.open(this, data, (ServerPlayer) player);
     }
 
@@ -55,13 +55,11 @@ public class BlockEntityUIFactory extends AbstractUIFactory<PosGuiData> {
 
     @Override
     public void writeGuiData(PosGuiData guiData, FriendlyByteBuf buffer) {
-        buffer.writeVarInt(guiData.getX());
-        buffer.writeVarInt(guiData.getY());
-        buffer.writeVarInt(guiData.getZ());
+        buffer.writeBlockPos(guiData.getBlockPos());
     }
 
     @Override
     public @NotNull PosGuiData readGuiData(Player player, FriendlyByteBuf buffer) {
-        return new PosGuiData(player, buffer.readVarInt(), buffer.readVarInt(), buffer.readVarInt());
+        return new PosGuiData(player, buffer.readBlockPos());
     }
 }

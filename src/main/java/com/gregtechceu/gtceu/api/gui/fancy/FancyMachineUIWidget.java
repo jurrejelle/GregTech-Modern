@@ -76,7 +76,7 @@ public class FancyMachineUIWidget extends WidgetGroup {
         this.pageSwitcher = new PageSwitcher(this::switchPage);
 
         setBackground(GuiTextures.BACKGROUND.copy()
-                .setColor(Long.decode(ConfigHolder.INSTANCE.client.ui.defaultUIColor).intValue() | 0xFF000000));
+                .setColor(ConfigHolder.INSTANCE.client.ui.getDefaultUIColor()));
     }
 
     @Override

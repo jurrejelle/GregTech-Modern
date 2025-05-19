@@ -21,6 +21,10 @@ public class SlotGroupWidget extends ParentWidget<SlotGroupWidget> {
         return positioned ? playerInventory(7, true) : playerInventory((index, slot) -> slot);
     }
 
+    public static SlotGroupWidget playerInventory(boolean positioned, SlotConsumer slotConsumer) {
+        return positioned ? playerInventory(7, true, slotConsumer) : playerInventory(slotConsumer);
+    }
+
     public static SlotGroupWidget playerInventory(int bottom, boolean horizontalCentered) {
         return playerInventory(bottom, horizontalCentered, (index, slot) -> slot);
     }

@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 
@@ -13,8 +14,8 @@ public class SidedPosGuiData extends PosGuiData {
     @Getter
     private final Direction side;
 
-    public SidedPosGuiData(Player player, int x, int y, int z, Direction side) {
-        super(player, x, y, z);
+    public SidedPosGuiData(Player player, BlockPos pos, Direction side) {
+        super(player, pos);
         this.side = side;
     }
 }

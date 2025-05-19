@@ -147,7 +147,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void initializeContents(int stateId, List<ItemStack> items, ItemStack carried) {
+    public void initializeContents(int stateId, List<ItemStack> items, @NotNull ItemStack carried) {
         if (this.slots.size() != items.size()) {
             GTCEu.LOGGER.error("Here are {} slots, but expected {}", this.slots.size(), items.size());
         }

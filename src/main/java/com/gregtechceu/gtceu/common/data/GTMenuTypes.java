@@ -9,6 +9,7 @@ import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
 
 public class GTMenuTypes {
 
+    @SuppressWarnings("deprecation")
     public static final MenuEntry<ModularContainerMenu> MODULAR_CONTAINER = REGISTRATE
             .<ModularContainerMenu, ContainerScreenWrapper>menu("modular",
                     ModularContainerMenu::new, () -> ContainerScreenWrapper::new)
