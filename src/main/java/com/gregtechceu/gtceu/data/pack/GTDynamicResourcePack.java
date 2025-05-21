@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.config.ConfigHolder;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -41,6 +42,11 @@ import static com.gregtechceu.gtceu.data.pack.GTDynamicDataPack.writeJson;
 @ParametersAreNonnullByDefault
 public class GTDynamicResourcePack implements PackResources {
 
+    private static final FileToIdConverter TEXTURE_ID_CONVERTER = new FileToIdConverter("textures", ".png");
+    private static final FileToIdConverter BLOCK_STATE_ID_CONVERTER = FileToIdConverter.json("blockstates");
+    private static final FileToIdConverter BLOCK_MODEL_ID_CONVERTER = FileToIdConverter.json("models/block");
+    private static final FileToIdConverter ITEM_MODEL_ID_CONVERTER = FileToIdConverter.json("models/item");
+
     protected static final ObjectSet<String> CLIENT_DOMAINS = new ObjectOpenHashSet<>();
     protected static final GTDynamicPackContents CONTENTS = new GTDynamicPackContents();
 
@@ -64,12 +70,13 @@ public class GTDynamicResourcePack implements PackResources {
     }
 
     public static void addBlockModel(ResourceLocation loc, JsonElement obj) {
-        ResourceLocation l = getModelLocation(loc);
+        byte[] modelBytes = obj.toString().getBytes(StandardCharsets.UTF_8);
+        ResourceLocation l = getBlockModelLocation(loc);
         if (ConfigHolder.INSTANCE.dev.dumpAssets) {
             Path parent = GTCEu.getGameDir().resolve("gtceu/dumped/assets");
-            writeJson(l, null, parent, obj);
+            writeJson(l, null, parent, modelBytes);
         }
-        CONTENTS.addToData(l, obj.toString().getBytes(StandardCharsets.UTF_8));
+        CONTENTS.addToData(l, modelBytes);
     }
 
     public static void addBlockModel(ResourceLocation loc, Supplier<JsonElement> obj) {
@@ -77,12 +84,13 @@ public class GTDynamicResourcePack implements PackResources {
     }
 
     public static void addItemModel(ResourceLocation loc, JsonElement obj) {
+        byte[] modelBytes = obj.toString().getBytes(StandardCharsets.UTF_8);
         ResourceLocation l = getItemModelLocation(loc);
         if (ConfigHolder.INSTANCE.dev.dumpAssets) {
             Path parent = GTCEu.getGameDir().resolve("gtceu/dumped/assets");
-            writeJson(l, null, parent, obj);
+            writeJson(l, null, parent, modelBytes);
         }
-        CONTENTS.addToData(l, obj.toString().getBytes(StandardCharsets.UTF_8));
+        CONTENTS.addToData(l, modelBytes);
     }
 
     public static void addItemModel(ResourceLocation loc, Supplier<JsonElement> obj) {
@@ -90,12 +98,13 @@ public class GTDynamicResourcePack implements PackResources {
     }
 
     public static void addBlockState(ResourceLocation loc, JsonElement stateJson) {
+        byte[] stateBytes = stateJson.toString().getBytes(StandardCharsets.UTF_8);
         ResourceLocation l = getBlockStateLocation(loc);
         if (ConfigHolder.INSTANCE.dev.dumpAssets) {
             Path parent = GTCEu.getGameDir().resolve("gtceu/dumped/assets");
-            writeJson(l, null, parent, stateJson);
+            writeJson(l, null, parent, stateBytes);
         }
-        CONTENTS.addToData(l, stateJson.toString().getBytes(StandardCharsets.UTF_8));
+        CONTENTS.addToData(l, stateBytes);
     }
 
     public static void addBlockState(ResourceLocation loc, Supplier<JsonElement> generator) {
@@ -135,18 +144,17 @@ public class GTDynamicResourcePack implements PackResources {
                 output.write(data);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            GTCEu.LOGGER.error("Failed to save texture for id {} to disk.", id, e);
         }
     }
 
-    @Nullable
     @Override
-    public IoSupplier<InputStream> getRootResource(String... elements) {
+    public @Nullable IoSupplier<InputStream> getRootResource(String... elements) {
         return null;
     }
 
     @Override
-    public IoSupplier<InputStream> getResource(PackType type, ResourceLocation location) {
+    public @Nullable IoSupplier<InputStream> getResource(PackType type, ResourceLocation location) {
         if (type == PackType.CLIENT_RESOURCES) {
             return CONTENTS.getResource(location);
         }
@@ -165,9 +173,9 @@ public class GTDynamicResourcePack implements PackResources {
         return type == PackType.CLIENT_RESOURCES ? CLIENT_DOMAINS : Set.of();
     }
 
-    @Nullable
+    @SuppressWarnings("unchecked")
     @Override
-    public <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
+    public <T> @Nullable T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
         if (metaReader == PackMetadataSection.TYPE) {
             return (T) new PackMetadataSection(Component.literal("GTCEu dynamic assets"),
                     SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES));
@@ -186,23 +194,21 @@ public class GTDynamicResourcePack implements PackResources {
     }
 
     public static ResourceLocation getBlockStateLocation(ResourceLocation blockId) {
-        return new ResourceLocation(blockId.getNamespace(),
-                String.join("", "blockstates/", blockId.getPath(), ".json"));
+        return BLOCK_STATE_ID_CONVERTER.idToFile(blockId);
     }
 
-    public static ResourceLocation getModelLocation(ResourceLocation blockId) {
-        return new ResourceLocation(blockId.getNamespace(), String.join("", "models/", blockId.getPath(), ".json"));
+    public static ResourceLocation getBlockModelLocation(ResourceLocation blockId) {
+        return BLOCK_MODEL_ID_CONVERTER.idToFile(blockId);
     }
 
     public static ResourceLocation getItemModelLocation(ResourceLocation itemId) {
-        return new ResourceLocation(itemId.getNamespace(), String.join("", "models/item/", itemId.getPath(), ".json"));
+        return ITEM_MODEL_ID_CONVERTER.idToFile(itemId);
     }
 
-    public static ResourceLocation getTextureLocation(@Nullable String path, ResourceLocation tagId) {
-        if (path == null) {
-            return new ResourceLocation(tagId.getNamespace(), String.join("", "textures/", tagId.getPath(), ".png"));
+    public static ResourceLocation getTextureLocation(@Nullable String path, ResourceLocation textureId) {
+        if (path != null) {
+            textureId = textureId.withPrefix(path + "/");
         }
-        return new ResourceLocation(tagId.getNamespace(),
-                String.join("", "textures/", path, "/", tagId.getPath(), ".png"));
+        return TEXTURE_ID_CONVERTER.idToFile(textureId);
     }
 }
