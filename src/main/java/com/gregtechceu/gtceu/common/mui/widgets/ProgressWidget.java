@@ -10,9 +10,10 @@ import com.gregtechceu.gtceu.api.mui.widget.Widget;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
+import net.minecraft.util.Mth;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.util.Mth;
 
 import java.util.function.DoubleSupplier;
 
