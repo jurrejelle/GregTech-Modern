@@ -307,7 +307,7 @@ public class ClientScreenHandler {
 
     public static void clickSlot(ModularScreen ms, Slot slot) {
         Screen screen = ms.getScreenWrapper().getWrappedScreen();
-        if (screen instanceof ScreenAccessor acc && screen instanceof IClickableGuiContainer clickableGuiContainer &&
+        if (screen instanceof ScreenAccessor acc && screen instanceof IClickableContainerScreen clickableScreen &&
                 checkGui(screen)) {
             ModularGuiContext ctx = ms.getContext();
             var buttonList = screen.children();
@@ -315,11 +315,11 @@ public class ClientScreenHandler {
                 // remove buttons to make sure they are not clicked
                 acc.setChildren(Collections.emptyList());
                 // set clicked slot to make sure the container clicks the desired slot
-                clickableGuiContainer.gtceu$setClickedSlot(slot);
+                clickableScreen.gtceu$setClickedSlot(slot);
                 screen.mouseClicked(ctx.getMouseX(), ctx.getMouseY(), ctx.getMouseButton());
             } finally {
                 // undo modifications
-                clickableGuiContainer.gtceu$setClickedSlot(null);
+                clickableScreen.gtceu$setClickedSlot(null);
                 acc.setChildren(buttonList);
             }
         }

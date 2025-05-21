@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.core.mixins;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.client.mui.screen.IClickableGuiContainer;
+import com.gregtechceu.gtceu.client.mui.screen.IClickableContainerScreen;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
-public class AbstractContainerScreenMixin implements IClickableGuiContainer {
+public class AbstractContainerScreenMixin implements IClickableContainerScreen {
 
     @Shadow
     protected Slot hoveredSlot;

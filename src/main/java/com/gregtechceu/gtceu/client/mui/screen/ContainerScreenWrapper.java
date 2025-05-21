@@ -2,7 +2,6 @@ package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
-import com.gregtechceu.gtceu.api.mui.factory.GuiData;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
 
 import net.minecraft.client.gui.GuiGraphics;
