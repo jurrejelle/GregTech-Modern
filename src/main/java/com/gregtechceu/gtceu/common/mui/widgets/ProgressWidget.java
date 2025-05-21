@@ -7,16 +7,21 @@ import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.DoubleValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.util.Mth;
 
 import java.util.function.DoubleSupplier;
 
+@Accessors(fluent = true, chain = true)
 public class ProgressWidget extends Widget<ProgressWidget> {
 
     private final UITexture[] fullTexture = new UITexture[4];
     private UITexture emptyTexture;
+    @Setter
     private Direction direction = Direction.RIGHT;
     private int imageSize = -1;
 
@@ -62,7 +67,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
         float progress = getCurrentProgress();
         if (this.fullTexture[0] != null && progress > 0) {
             if (this.direction == Direction.CIRCULAR_CW) {
-                drawCircular(progress, widgetTheme);
+                drawCircular(context, progress, widgetTheme);
                 return;
             }
             if (progress >= 1) {
@@ -91,7 +96,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                         y = getArea().height - height;
                         break;
                 }
-                this.fullTexture[0].drawSubArea(x, y, width, height, u0, v0, u1, v1, widgetTheme);
+                this.fullTexture[0].drawSubArea(context, x, y, width, height, u0, v0, u1, v1, widgetTheme);
             }
         }
     }
@@ -103,7 +108,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
         return (float) (Math.floor(uv * this.imageSize) / this.imageSize);
     }
 
-    private void drawCircular(float progress, WidgetTheme widgetTheme) {
+    private void drawCircular(GuiContext context, float progress, WidgetTheme widgetTheme) {
         float[] subAreas = {
                 getProgressUV(Mth.clamp(progress / 0.25f, 0, 1)),
                 getProgressUV(Mth.clamp((progress - 0.25f) / 0.25f, 0, 1)),
@@ -114,14 +119,14 @@ public class ProgressWidget extends Widget<ProgressWidget> {
         float halfHeight = getArea().height / 2f;
 
         float progressScaled = subAreas[0] * halfHeight;
-        this.fullTexture[0].drawSubArea(
+        this.fullTexture[0].drawSubArea(context,
                 0, getArea().height - progressScaled,
                 halfWidth, progressScaled,
                 0.0f, 1.0f - progressScaled / halfHeight,
                 1.0f, 1.0f, widgetTheme); // BL, draw UP
 
         progressScaled = subAreas[1] * halfWidth;
-        this.fullTexture[1].drawSubArea(
+        this.fullTexture[1].drawSubArea(context,
                 0, 0,
                 progressScaled, halfHeight,
                 0.0f, 0.0f,
@@ -129,7 +134,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                 widgetTheme); // TL, draw RIGHT
 
         progressScaled = subAreas[2] * halfHeight;
-        this.fullTexture[2].drawSubArea(
+        this.fullTexture[2].drawSubArea(context,
                 halfWidth, 0,
                 halfWidth, progressScaled,
                 0.0f, 0.0f,
@@ -137,7 +142,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
                 widgetTheme); // TR, draw DOWN
 
         progressScaled = subAreas[3] * halfWidth;
-        this.fullTexture[3].drawSubArea(
+        this.fullTexture[3].drawSubArea(context,
                 getArea().width - progressScaled, halfHeight,
                 progressScaled, halfHeight,
                 1.0f - progressScaled / halfWidth, 0.0f,
@@ -177,11 +182,6 @@ public class ProgressWidget extends Widget<ProgressWidget> {
      */
     public ProgressWidget texture(UITexture texture, int imageSize) {
         return texture(texture.getSubArea(0, 0, 1, 0.5f), texture.getSubArea(0, 0.5f, 1, 1), imageSize);
-    }
-
-    public ProgressWidget direction(Direction direction) {
-        this.direction = direction;
-        return this;
     }
 
     public enum Direction {
