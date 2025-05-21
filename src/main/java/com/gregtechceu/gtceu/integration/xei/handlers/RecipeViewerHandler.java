@@ -10,6 +10,9 @@ import com.gregtechceu.gtceu.integration.rei.handler.REIScreenHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public abstract class RecipeViewerHandler {
 
     private static RecipeViewerHandler current = null;
@@ -17,15 +20,17 @@ public abstract class RecipeViewerHandler {
     @NotNull
     public static RecipeViewerHandler getCurrent() {
         if (current == null) {
+            Supplier<Function<Class<ScreenWrapper>, ? extends RecipeViewerHandler>> supplier;
             if (GTCEu.isModLoaded(GTValues.MODID_EMI)) {
-                current = EmiScreenHandler.of(ScreenWrapper.class);
+                supplier = () -> EmiScreenHandler::of;
             } else if (GTCEu.isModLoaded(GTValues.MODID_REI)) {
-                current = REIScreenHandler.of(ScreenWrapper.class);
+                supplier = () -> REIScreenHandler::of;
             } else if (GTCEu.isModLoaded(GTValues.MODID_JEI)) {
-                current = JEIScreenHandler.of(ScreenWrapper.class);
+                supplier = () -> JEIScreenHandler::of;
             } else {
-                current = DUMMY;
+                supplier = () -> cls -> DUMMY;
             }
+            current = supplier.get().apply(ScreenWrapper.class);
         }
         return current;
     }
