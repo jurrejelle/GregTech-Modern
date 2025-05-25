@@ -23,29 +23,16 @@ public class NetworkUtils {
 
     public static void writeByteBuf(FriendlyByteBuf writeTo, ByteBuf writeFrom) {
         writeTo.writeVarInt(writeFrom.readableBytes());
-        // Use Slice instead of copy, to not update the read index, allowing packet to be sent multiple times.
         writeTo.writeBytes(writeFrom.slice());
     }
 
     public static ByteBuf readByteBuf(FriendlyByteBuf buf) {
-        return readByteBuf(buf, true);
-    }
-
-    public static ByteBuf readByteBuf(FriendlyByteBuf buf, boolean shouldRelease) {
         ByteBuf directSliceBuffer = buf.readBytes(buf.readVarInt());
-        ByteBuf copiedDataBuffer = Unpooled.copiedBuffer(directSliceBuffer);
-        // (copied from) FORGE: Fix impl buffer leaks (MC-121884)
-        // can only be fixed partially, because else you get problems in LAN worlds
-        if (shouldRelease) directSliceBuffer.release();
-        return copiedDataBuffer;
+        return Unpooled.copiedBuffer(directSliceBuffer);
     }
 
     public static FriendlyByteBuf readFriendlyByteBuf(FriendlyByteBuf buf) {
-        return readFriendlyByteBuf(buf, true);
-    }
-
-    public static FriendlyByteBuf readFriendlyByteBuf(FriendlyByteBuf buf, boolean shouldRelease) {
-        return new FriendlyByteBuf(readByteBuf(buf, shouldRelease));
+        return new FriendlyByteBuf(readByteBuf(buf));
     }
 
     public static void writeStringSafe(FriendlyByteBuf buffer, String string) {

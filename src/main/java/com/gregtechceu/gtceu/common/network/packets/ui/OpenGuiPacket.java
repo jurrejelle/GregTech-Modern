@@ -11,27 +11,16 @@ import com.lowdragmc.lowdraglib.networking.IPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpenGuiPacket<T extends GuiData> implements IPacket {
 
     private int windowId;
     private UIFactory<T> factory;
     private FriendlyByteBuf data;
-
-    private final boolean shouldRelease;
-
-    @SuppressWarnings("unused")
-    public OpenGuiPacket() {
-        // We are the owner of the buffer, release it when we are done.
-        this.shouldRelease = true;
-    }
-
-    public OpenGuiPacket(int windowId, UIFactory<T> factory, FriendlyByteBuf data) {
-        this.windowId = windowId;
-        this.factory = factory;
-        this.data = data;
-        // We are not the owner of the buffer, don't release it, it might be reused.
-        this.shouldRelease = false;
-    }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
@@ -44,7 +33,7 @@ public class OpenGuiPacket<T extends GuiData> implements IPacket {
     public void decode(FriendlyByteBuf buf) {
         this.windowId = buf.readVarInt();
         this.factory = (UIFactory<T>) GuiManager.getFactory(buf.readResourceLocation());
-        this.data = NetworkUtils.readFriendlyByteBuf(buf, this.shouldRelease);
+        this.data = NetworkUtils.readFriendlyByteBuf(buf);
     }
 
     @Override
