@@ -1,11 +1,10 @@
 package com.gregtechceu.gtceu.api.mui.drawable.text;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.ITextLine;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 
 public class Spacer implements ITextLine {
@@ -37,8 +36,7 @@ public class Spacer implements ITextLine {
     }
 
     @Override
-    public void draw(PoseStack poseStack, MultiBufferSource.BufferSource buffers, Font font,
-                     float x, float y, int color, boolean shadow) {}
+    public void draw(GuiContext context, Font font, float x, float y, int color, boolean shadow) {}
 
     @Override
     public Object getHoveringElement(Font font, int x, int y) {

@@ -3,15 +3,14 @@ package com.gregtechceu.gtceu.api.mui.drawable.text;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
+import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 import com.gregtechceu.gtceu.common.mui.widgets.TextWidget;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,14 +41,13 @@ public class StyledText extends BaseKey {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void drawNoContext(PoseStack poseStack, MultiBufferSource.BufferSource buffers,
-                              int x, int y, int width, int height, WidgetTheme widgetTheme) {
+    public void draw(GuiContext context, int x, int y, int width, int height, WidgetTheme widgetTheme) {
         renderer.setAlignment(this.alignment, width, height);
         renderer.setColor(this.color != null ? this.color : widgetTheme.getColor());
         renderer.setScale(this.scale);
         renderer.setPos(x, y);
         renderer.setShadow(this.shadow != null ? this.shadow : widgetTheme.getTextShadow());
-        renderer.draw(poseStack, buffers, getFormatted());
+        renderer.draw(context.getGraphics(), getFormatted());
     }
 
     public @Nullable Boolean isShadow() {
