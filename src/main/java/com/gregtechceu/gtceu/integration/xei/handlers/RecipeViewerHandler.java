@@ -39,10 +39,6 @@ public abstract class RecipeViewerHandler {
 
     public abstract @Nullable Object getCurrentlyDragged();
 
-    public boolean isDraggingGhostIngredient() {
-        return getCurrentlyDragged() != null;
-    }
-
     public boolean isHoveringOver(GhostIngredientSlot<?> slot) {
         Object currentlyDragged = getCurrentlyDragged();
         if (currentlyDragged == null) {
