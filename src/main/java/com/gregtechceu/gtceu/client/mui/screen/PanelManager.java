@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
 import com.gregtechceu.gtceu.utils.ReverseIterable;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
+import com.gregtechceu.gtceu.api.mui.widget.wrapper.WidgetWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -36,6 +37,9 @@ public class PanelManager {
     private final List<ModularPanel> panelsClone = new ArrayList<>();
     private final List<ModularPanel> panelsView = Collections.unmodifiableList(this.panelsClone);
     private final ReverseIterable<ModularPanel> reversePanels = new ReverseIterable<>(this.panelsView);
+    private final List<WidgetWrapper> panelWrappers = new ArrayList<>();
+    private final List<WidgetWrapper> panelWrappersView = Collections.unmodifiableList(this.panelWrappers);
+    private final ReverseIterable<WidgetWrapper> reversePanelWrappers = new ReverseIterable<>(this.panelWrappersView);
     private final ObjectList<ModularPanel> disposal = new ObjectArrayList<>(20);
     private final Map<String, IPanelHandler> panelHandlerMap = new Object2ObjectOpenHashMap<>();
     private boolean cantDisposeNow = false;
@@ -66,6 +70,12 @@ public class PanelManager {
         if (this.dirty) {
             this.panelsClone.clear();
             this.panelsClone.addAll(this.panels);
+
+            this.panelWrappers.clear();
+            this.panelsClone.stream()
+                    .map(WidgetWrapper::new)
+                    .forEach(this.panelWrappers::add);
+
             this.dirty = false;
         }
     }
@@ -214,6 +224,7 @@ public class PanelManager {
         this.disposal.clear();
         this.panels.clear();
         this.panelsClone.clear();
+        this.panelWrappers.clear();
         this.dirty = false;
         setState(State.DISPOSED);
     }
@@ -276,6 +287,20 @@ public class PanelManager {
     public Iterable<ModularPanel> getReverseOpenPanels() {
         checkDirty();
         return this.reversePanels;
+    }
+
+    @NotNull
+    @UnmodifiableView
+    public List<WidgetWrapper> getOpenPanelsWrappers() {
+        checkDirty();
+        return this.panelWrappersView;
+    }
+
+    @NotNull
+    @UnmodifiableView
+    public Iterable<WidgetWrapper> getReverseOpenPanelsWrappers() {
+        checkDirty();
+        return this.reversePanelWrappers;
     }
 
     private void setState(State state) {

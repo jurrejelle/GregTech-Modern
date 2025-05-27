@@ -7,10 +7,12 @@ import com.gregtechceu.gtceu.api.mui.drawable.Stencil;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Flex;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
+import com.gregtechceu.gtceu.api.mui.utils.Point;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
+import com.gregtechceu.gtceu.utils.FormattingUtil;
 
+import com.google.common.base.CharMatcher;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +24,16 @@ import java.util.function.Consumer;
  * A widget in a Gui
  */
 public interface IWidget extends IGuiElement {
+
+    String WIDGET_TRANSLATION_KEY_FORMAT = "widget.%s.name";
+    /**
+     * This char matcher is used to remove any non-{@code [a-z0-9_.-]} characters in translation keys.
+     * In essence, it
+     */
+    CharMatcher DISALLOWED_TRANSLATION_KEY_CHARS = CharMatcher.inRange('a', 'z')
+            .or(CharMatcher.inRange('0', '9'))
+            .or(CharMatcher.anyOf("-_."))
+            .negate();
 
     /**
      * Validates and initialises this element.
@@ -109,6 +121,12 @@ public interface IWidget extends IGuiElement {
      */
     @Override
     Area getArea();
+
+    default String getTranslationId() {
+        String className = FormattingUtil.toLowerCaseUnderscore(this.getClass().getSimpleName());
+        className = DISALLOWED_TRANSLATION_KEY_CHARS.removeFrom(className);
+        return WIDGET_TRANSLATION_KEY_FORMAT.formatted(className);
+    }
 
     /**
      * Calculates if a given pos is inside this widgets area.

@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,7 +12,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
-public class ScreenWrapper extends Screen implements IScreenWithMuiScreen, IMuiScreen {
+public class ScreenWrapper extends Screen implements IMuiScreen {
 
     @Getter
     private final @NotNull ModularScreen screen;

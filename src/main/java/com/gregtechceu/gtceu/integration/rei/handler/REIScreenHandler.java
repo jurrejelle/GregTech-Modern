@@ -1,9 +1,8 @@
 package com.gregtechceu.gtceu.integration.rei.handler;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
 import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
@@ -24,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class REIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler
+public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
                              implements DraggableStackProvider<T>, ExclusionZonesProvider<T> {
 
     private static final Map<Class<?>, REIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T extends Screen & IScreenWithMuiScreen> REIScreenHandler<T> of(Class<T> cls) {
+    public static <T extends Screen & IMuiScreen> REIScreenHandler<T> of(Class<T> cls) {
         return (REIScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new REIScreenHandler<T>());
     }
 

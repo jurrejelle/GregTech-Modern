@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Matrix4f;
 
@@ -33,8 +34,9 @@ public class GuiContext extends GuiViewportStack {
     @Getter
     private final Area screenArea = new Area();
     @Getter
+    @Setter(onMethod_ = @ApiStatus.Internal)
     private GuiGraphics graphics = new GuiGraphics(Minecraft.getInstance(),
-            Minecraft.getInstance().renderBuffers().bufferSource());;
+            Minecraft.getInstance().renderBuffers().bufferSource());
 
     /* Mouse states */
     /**
@@ -84,11 +86,6 @@ public class GuiContext extends GuiViewportStack {
      */
     public boolean isMouseAbove(Area area) {
         return area.isInside(this.absMouseX, this.absMouseY);
-    }
-
-    @ApiStatus.Internal
-    public void setGraphics(GuiGraphics graphics) {
-        this.graphics = graphics;
     }
 
     @ApiStatus.Internal

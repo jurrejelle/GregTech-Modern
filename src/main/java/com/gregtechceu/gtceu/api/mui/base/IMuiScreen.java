@@ -39,16 +39,6 @@ public interface IMuiScreen {
     ModularScreen getScreen();
 
     /**
-     * {@link Screen Screens} need to be focused when a text field is focused, to prevent key input from
-     * behaving unexpectedly.
-     *
-     * @param focused if the screen should be focused
-     */
-    default void setFocused(boolean focused) {
-        getWrappedScreen().setFocused(focused);
-    }
-
-    /**
      * This method decides how the gui background is drawn.
      * The intended usage is to override {@link Screen#renderBackground(GuiGraphics)} and call this method
      * with the super method reference as the second parameter.

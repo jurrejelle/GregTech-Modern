@@ -15,8 +15,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
-public class ContainerScreenWrapper extends AbstractContainerScreen<ModularContainerMenu>
-                                    implements IScreenWithMuiScreen, IMuiScreen {
+public class ContainerScreenWrapper extends AbstractContainerScreen<ModularContainerMenu> implements IMuiScreen {
 
     @Getter
     private final @NotNull ModularScreen screen;

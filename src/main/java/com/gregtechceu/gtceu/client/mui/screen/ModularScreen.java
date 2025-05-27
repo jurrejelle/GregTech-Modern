@@ -13,13 +13,22 @@ import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.sync.ModularSyncManager;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
+import com.gregtechceu.gtceu.api.mui.widget.wrapper.WidgetWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,14 +46,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 /**
  * This is the base class for all modular ui's. It only exists on client side.
  * It handles drawing the screen, all panels and widget interactions.
  */
 @OnlyIn(Dist.CLIENT)
-public class ModularScreen implements GuiEventListener {
+public class ModularScreen implements GuiEventListener, Renderable, LayoutElement, NarratableEntry {
 
     public static boolean isScreen(@Nullable Screen guiScreen, String owner, String name) {
         if (guiScreen instanceof IMuiScreen screenWrapper) {
@@ -250,7 +261,8 @@ public class ModularScreen implements GuiEventListener {
         this.context.onFrameUpdate();
     }
 
-    public void drawScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    @Override
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         Lighting.setupForFlatItems();
         RenderSystem.disableDepthTest();
 
@@ -437,7 +449,7 @@ public class ModularScreen implements GuiEventListener {
 
     @ApiStatus.Internal
     public void setFocused(boolean focus) {
-        this.screenWrapper.setFocused(focus);
+        this.screenWrapper.getWrappedScreen().setFocused(focus);
     }
 
     @Override
@@ -570,6 +582,67 @@ public class ModularScreen implements GuiEventListener {
     public ModularScreen pausesGame(boolean pausesGame) {
         this.pauseScreen = pausesGame;
         return this;
+    }
+
+    @Override
+    public void setX(int x) {
+        this.panelManager.getMainPanel().getArea().setX(x);
+    }
+
+    @Override
+    public void setY(int y) {
+        this.panelManager.getMainPanel().getArea().setY(y);
+    }
+
+    @Override
+    public int getX() {
+        return this.panelManager.getMainPanel().getArea().getX();
+    }
+
+    @Override
+    public int getY() {
+        return this.panelManager.getMainPanel().getArea().getY();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.panelManager.getMainPanel().getArea().getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return this.panelManager.getMainPanel().getArea().getHeight();
+    }
+
+    @Override
+    public @NotNull ScreenRectangle getRectangle() {
+        Area area = this.panelManager.getMainPanel().getArea();
+        return new ScreenRectangle(area.x(), area.y(), area.w(), area.h());
+    }
+
+    @Override
+    public void visitWidgets(@NotNull Consumer<AbstractWidget> consumer) {
+        for (WidgetWrapper wrapper : panelManager.getReverseOpenPanelsWrappers()) {
+            consumer.accept(wrapper);
+        }
+    }
+
+    private static final Component USAGE_NARRATION = Component.translatable("narrator.screen.usage");
+
+    private NarratableEntry lastNarratable = null;
+
+    @Override
+    public void updateNarration(@NotNull NarrationElementOutput output) {
+        output.add(NarratedElementType.USAGE, USAGE_NARRATION);
+        var entries = StreamSupport.stream(panelManager.getReverseOpenPanelsWrappers().spliterator(), false);
+        WidgetWrapper.updateNarrations(entries, output, lastNarratable, entry -> lastNarratable = entry);
+    }
+
+    @Override
+    public @NotNull NarrationPriority narrationPriority() {
+        if (this.isFocused()) return NarrationPriority.FOCUSED;
+        else if (this.context.isHovered()) return NarrationPriority.HOVERED;
+        else return NarrationPriority.NONE;
     }
 
     public enum UpOrDown {

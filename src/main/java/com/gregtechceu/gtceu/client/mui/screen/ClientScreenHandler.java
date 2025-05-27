@@ -375,7 +375,7 @@ public class ClientScreenHandler {
                                           int mouseY, float partialTicks) {
         Stencil.reset();
         Stencil.apply(muiScreen.getScreenArea(), null);
-        muiScreen.drawScreen(graphics, mouseX, mouseY, partialTicks);
+        muiScreen.render(graphics, mouseX, mouseY, partialTicks);
         RenderSystem.disableDepthTest();
         drawVanillaElements(graphics, mcScreen, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -397,7 +397,7 @@ public class ClientScreenHandler {
         int y = mcScreen.getGuiTop();
 
         acc.invokeRenderBg(graphics, partialTicks, mouseX, mouseY);
-        muiScreen.drawScreen(graphics, mouseX, mouseY, partialTicks);
+        muiScreen.render(graphics, mouseX, mouseY, partialTicks);
 
         RenderSystem.disableDepthTest();
         // mainly for invtweaks compat
@@ -438,7 +438,7 @@ public class ClientScreenHandler {
                 }
             }
 
-            drawItemStack(mcScreen, graphics, draggingItem, mouseX - x - xOffset, mouseY - y - yOffset, text);
+            drawFloatingItemStack(mcScreen, graphics, draggingItem, mouseX - x - xOffset, mouseY - y - yOffset, text);
         }
         graphics.pose().popPose();
 
@@ -454,7 +454,7 @@ public class ClientScreenHandler {
             int snapBackOffsetY = acc.getSnapbackEnd().y - acc.getSnapbackStartY();
             int snapBackX = acc.getSnapbackStartX() + (int) ((float) snapBackOffsetX * delta);
             int snapBackY = acc.getSnapbackStartY() + (int) ((float) snapBackOffsetY * delta);
-            drawItemStack(mcScreen, graphics, acc.getSnapbackItem(), snapBackX, snapBackY, null);
+            drawFloatingItemStack(mcScreen, graphics, acc.getSnapbackItem(), snapBackX, snapBackY, null);
         }
         graphics.pose().popPose();
         RenderSystem.enableDepthTest();
@@ -462,8 +462,8 @@ public class ClientScreenHandler {
         Stencil.remove();
     }
 
-    private static void drawItemStack(AbstractContainerScreen<?> mcScreen, GuiGraphics graphics, ItemStack stack, int x,
-                                      int y, String altText) {
+    private static void drawFloatingItemStack(AbstractContainerScreen<?> mcScreen, GuiGraphics graphics,
+                                              ItemStack stack, int x, int y, String altText) {
         graphics.pose().pushPose();
         graphics.pose().translate(0.0F, 0.0F, 232.0F);
 

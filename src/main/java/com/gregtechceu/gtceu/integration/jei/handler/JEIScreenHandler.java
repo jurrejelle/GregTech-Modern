@@ -1,6 +1,6 @@
 package com.gregtechceu.gtceu.integration.jei.handler;
 
-import com.gregtechceu.gtceu.api.mui.base.IScreenWithMuiScreen;
+import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
 import com.gregtechceu.gtceu.core.mixins.jei.IngredientListOverlayAccessor;
 import com.gregtechceu.gtceu.integration.jei.GTJEIPlugin;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JEIScreenHandler<T extends Screen & IScreenWithMuiScreen> extends RecipeViewerHandler
+public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
                              implements IGhostIngredientHandler<T> {
 
     private static final Map<Class<?>, JEIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T extends Screen & IScreenWithMuiScreen> JEIScreenHandler<T> of(Class<T> cls) {
+    public static <T extends Screen & IMuiScreen> JEIScreenHandler<T> of(Class<T> cls) {
         return (JEIScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new JEIScreenHandler<T>());
     }
 
