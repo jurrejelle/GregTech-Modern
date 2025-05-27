@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.utils;
 
-import com.gregtechceu.gtceu.api.mui.utils.ParseResult;
-
+import com.gregtechceu.gtceu.utils.math.ParseResult;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
 

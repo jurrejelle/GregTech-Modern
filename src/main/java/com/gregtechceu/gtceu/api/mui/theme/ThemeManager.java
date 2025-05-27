@@ -6,6 +6,8 @@ import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.utils.*;
 import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 
+import com.gregtechceu.gtceu.utils.serialization.json.JsonBuilder;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonHelper;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;

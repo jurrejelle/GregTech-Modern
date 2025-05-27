@@ -4,7 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.IJsonSerializable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
-import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonHelper;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

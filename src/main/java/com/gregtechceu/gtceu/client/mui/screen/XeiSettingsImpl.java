@@ -2,7 +2,7 @@ package com.gregtechceu.gtceu.client.mui.screen;
 
 import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.integration.xei.XeiState;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 

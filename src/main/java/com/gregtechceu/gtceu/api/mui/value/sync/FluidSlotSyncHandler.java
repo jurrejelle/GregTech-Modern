@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.utils.FluidTankHandler;
+import com.gregtechceu.gtceu.api.misc.forge.FluidTankHandler;
 import com.gregtechceu.gtceu.api.mui.utils.MouseData;
 
 import net.minecraft.network.FriendlyByteBuf;

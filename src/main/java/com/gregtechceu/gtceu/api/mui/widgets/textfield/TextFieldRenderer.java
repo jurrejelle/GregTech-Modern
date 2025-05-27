@@ -2,8 +2,8 @@ package com.gregtechceu.gtceu.api.mui.widgets.textfield;
 
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.PointF;
+import com.gregtechceu.gtceu.api.mui.utils.Point;
+import com.gregtechceu.gtceu.api.mui.utils.PointF;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;

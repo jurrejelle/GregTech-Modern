@@ -60,7 +60,7 @@ public class OverlayStack {
             screen.getContext().updateState(mouseX, mouseY, partialTicks);
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            screen.drawScreen(graphics, mouseX, mouseY, partialTicks);
+            screen.render(graphics, mouseX, mouseY, partialTicks);
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             screen.drawForeground(graphics, partialTicks);
             if (screen.getContext().getHovered() != null) hovered = screen;

@@ -3,7 +3,7 @@ package com.gregtechceu.gtceu.client.mui.screen;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.api.mui.utils.ReverseIterable;
+import com.gregtechceu.gtceu.utils.ReverseIterable;
 import com.gregtechceu.gtceu.api.mui.widget.WidgetTree;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.LocatedWidget;
 

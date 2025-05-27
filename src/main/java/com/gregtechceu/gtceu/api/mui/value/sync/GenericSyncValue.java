@@ -1,9 +1,9 @@
 package com.gregtechceu.gtceu.api.mui.value.sync;
 
-import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufAdapter;
-import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufDeserializer;
-import com.gregtechceu.gtceu.api.mui.utils.serialization.IByteBufSerializer;
-import com.gregtechceu.gtceu.api.mui.utils.serialization.IEquals;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufAdapter;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufDeserializer;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufSerializer;
+import com.gregtechceu.gtceu.utils.EqualityTest;
 
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -20,7 +20,7 @@ public class GenericSyncValue<T> extends ValueSyncHandler<T> {
     private final Consumer<T> setter;
     private final IByteBufDeserializer<T> deserializer;
     private final IByteBufSerializer<T> serializer;
-    private final IEquals<T> equals;
+    private final EqualityTest<T> equals;
     private T cache;
 
     public GenericSyncValue(@NotNull Supplier<T> getter,
@@ -51,13 +51,13 @@ public class GenericSyncValue<T> extends ValueSyncHandler<T> {
                             @Nullable Consumer<T> setter,
                             @NotNull IByteBufDeserializer<T> deserializer,
                             @NotNull IByteBufSerializer<T> serializer,
-                            @Nullable IEquals<T> equals) {
+                            @Nullable EqualityTest<T> equals) {
         this.getter = Objects.requireNonNull(getter);
         this.cache = getter.get();
         this.setter = setter;
         this.deserializer = Objects.requireNonNull(deserializer);
         this.serializer = Objects.requireNonNull(serializer);
-        this.equals = equals == null ? Objects::equals : IEquals.wrapNullSafe(equals);
+        this.equals = equals == null ? Objects::equals : EqualityTest.wrapNullSafe(equals);
     }
 
     @Override

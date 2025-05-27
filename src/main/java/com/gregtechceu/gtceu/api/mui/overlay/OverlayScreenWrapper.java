@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.overlay;
 
 import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 
 import net.minecraft.client.gui.screens.Screen;

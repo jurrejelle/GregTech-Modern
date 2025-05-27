@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
 import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
 import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
 

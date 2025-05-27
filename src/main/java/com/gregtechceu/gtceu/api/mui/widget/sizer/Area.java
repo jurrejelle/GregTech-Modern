@@ -3,6 +3,8 @@ package com.gregtechceu.gtceu.api.mui.widget.sizer;
 import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
 import com.gregtechceu.gtceu.api.mui.base.layout.IViewportStack;
 import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
+import com.gregtechceu.gtceu.api.mui.utils.Point;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.utils.GTMath;
 
 import lombok.Getter;

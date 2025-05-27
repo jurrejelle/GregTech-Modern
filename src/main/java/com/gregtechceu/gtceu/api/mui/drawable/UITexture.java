@@ -6,7 +6,7 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.utils.Interpolations;
-import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonHelper;
 import com.gregtechceu.gtceu.api.mui.widget.sizer.Area;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 

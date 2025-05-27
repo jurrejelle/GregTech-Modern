@@ -3,7 +3,7 @@ package com.gregtechceu.gtceu.api.mui.theme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.gregtechceu.gtceu.api.mui.utils.JsonHelper;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonHelper;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;

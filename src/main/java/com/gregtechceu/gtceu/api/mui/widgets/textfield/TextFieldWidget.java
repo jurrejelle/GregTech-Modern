@@ -6,11 +6,11 @@ import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.value.IStringValue;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTextFieldTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
-import com.gregtechceu.gtceu.api.mui.utils.ParseResult;
+import com.gregtechceu.gtceu.utils.math.ParseResult;
 import com.gregtechceu.gtceu.api.mui.value.StringValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.value.sync.ValueSyncHandler;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
+import com.gregtechceu.gtceu.api.mui.utils.Point;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.utils.GTMath;
 
@@ -20,8 +20,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParsePosition;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.regex.Pattern;
 
 /**
@@ -171,7 +170,7 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
         return this;
     }
 
-    public TextFieldWidget setNumbersLong(Function<Long, Long> validator) {
+    public TextFieldWidget setNumbersLong(LongUnaryOperator validator) {
         this.numbers = true;
         setValidator(val -> {
             long num;
@@ -180,12 +179,12 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
             } else {
                 num = (long) parse(val);
             }
-            return format.format(validator.apply(num));
+            return format.format(validator.applyAsLong(num));
         });
         return this;
     }
 
-    public TextFieldWidget setNumbers(Function<Integer, Integer> validator) {
+    public TextFieldWidget setNumbers(IntUnaryOperator validator) {
         this.numbers = true;
         return setValidator(val -> {
             int num;
@@ -194,11 +193,11 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
             } else {
                 num = (int) parse(val);
             }
-            return format.format(validator.apply(num));
+            return format.format(validator.applyAsInt(num));
         });
     }
 
-    public TextFieldWidget setNumbersDouble(Function<Double, Double> validator) {
+    public TextFieldWidget setNumbersDouble(DoubleUnaryOperator validator) {
         this.numbers = true;
         return setValidator(val -> {
             double num;
@@ -207,16 +206,20 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
             } else {
                 num = parse(val);
             }
-            return format.format(validator.apply(num));
+            return format.format(validator.applyAsDouble(num));
         });
     }
 
-    public TextFieldWidget setNumbers(Supplier<Integer> min, Supplier<Integer> max) {
-        return setNumbers(val -> Math.min(max.get(), Math.max(min.get(), val)));
+    public TextFieldWidget setNumbers(IntSupplier min, IntSupplier max) {
+        return setNumbers(val -> GTMath.clamp(val, min.getAsInt(), max.getAsInt()));
     }
 
-    public TextFieldWidget setNumbersLong(Supplier<Long> min, Supplier<Long> max) {
-        return setNumbersLong(val -> Math.min(max.get(), Math.max(min.get(), val)));
+    public TextFieldWidget setNumbersLong(LongSupplier min, LongSupplier max) {
+        return setNumbersLong(val -> GTMath.clamp(val, min.getAsLong(), max.getAsLong()));
+    }
+
+    public TextFieldWidget setNumbersDouble(DoubleSupplier min, DoubleSupplier max) {
+        return setNumbersDouble(val -> GTMath.clamp(val, min.getAsDouble(), max.getAsDouble()));
     }
 
     public TextFieldWidget setNumbers(int min, int max) {

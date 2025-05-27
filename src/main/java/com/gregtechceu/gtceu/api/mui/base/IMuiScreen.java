@@ -1,6 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.base;
 
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Rectangle;
+import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
 import com.gregtechceu.gtceu.client.mui.screen.ClientScreenHandler;
 import com.gregtechceu.gtceu.client.mui.screen.ContainerScreenWrapper;
 import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;

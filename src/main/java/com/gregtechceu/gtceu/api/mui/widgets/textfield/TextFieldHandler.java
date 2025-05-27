@@ -2,7 +2,7 @@ package com.gregtechceu.gtceu.api.mui.widgets.textfield;
 
 import com.gregtechceu.gtceu.api.mui.drawable.text.FontRenderHelper;
 import com.gregtechceu.gtceu.api.mui.widget.scroll.ScrollArea;
-import com.gregtechceu.gtceu.api.mui.widget.sizer.Point;
+import com.gregtechceu.gtceu.api.mui.utils.Point;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
 
 import net.minecraft.network.chat.Component;

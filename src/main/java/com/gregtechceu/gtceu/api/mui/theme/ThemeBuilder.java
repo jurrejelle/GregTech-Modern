@@ -3,7 +3,7 @@ package com.gregtechceu.gtceu.api.mui.theme;
 import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.drawable.DrawableSerialization;
-import com.gregtechceu.gtceu.api.mui.utils.JsonBuilder;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonBuilder;
 
 public class ThemeBuilder<B extends ThemeBuilder<B>> extends JsonBuilder {
 

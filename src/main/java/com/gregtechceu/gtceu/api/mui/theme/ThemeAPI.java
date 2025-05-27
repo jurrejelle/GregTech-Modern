@@ -5,7 +5,7 @@ import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.drawable.GuiTextures;
 import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.gregtechceu.gtceu.api.mui.utils.JsonBuilder;
+import com.gregtechceu.gtceu.utils.serialization.json.JsonBuilder;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
