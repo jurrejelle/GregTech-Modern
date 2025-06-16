@@ -9,6 +9,7 @@ import com.lowdragmc.lowdraglib.syncdata.ISubscription;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +36,19 @@ public class RecipeHandlerList {
     private final IO handlerIO;
     @Getter
     private boolean isDistinct = false;
+    @Getter
+    @Setter
+    private int color = -1;
 
     protected RecipeHandlerList(IO handlerIO) {
         this.handlerIO = handlerIO;
+    }
+
+    public static RecipeHandlerList of(IO io, int color, IRecipeHandler<?>... handlers) {
+        RecipeHandlerList rhl = new RecipeHandlerList(io);
+        rhl.addHandlers(handlers);
+        rhl.setColor(color);
+        return rhl;
     }
 
     public static RecipeHandlerList of(IO io, IRecipeHandler<?>... handlers) {
@@ -49,6 +60,13 @@ public class RecipeHandlerList {
     public static RecipeHandlerList of(IO io, Iterable<IRecipeHandler<?>> handlers) {
         RecipeHandlerList rhl = new RecipeHandlerList(io);
         rhl.addHandlers(handlers);
+        return rhl;
+    }
+
+    public static RecipeHandlerList of(IO io, int color, Iterable<IRecipeHandler<?>> handlers) {
+        RecipeHandlerList rhl = new RecipeHandlerList(io);
+        rhl.addHandlers(handlers);
+        rhl.setColor(color);
         return rhl;
     }
 
