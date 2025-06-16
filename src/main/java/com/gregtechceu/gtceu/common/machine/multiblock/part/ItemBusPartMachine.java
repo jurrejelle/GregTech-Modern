@@ -14,6 +14,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.GTTransferUtils;
@@ -46,9 +47,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import static com.gregtechceu.gtceu.common.data.GTMachines.ITEM_EXPORT_BUS;
-import static com.gregtechceu.gtceu.common.data.GTMachines.ITEM_IMPORT_BUS;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -247,30 +245,19 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
         return InteractionResult.PASS;
     }
 
-    private boolean swapIO() {
+    public boolean swapIO() {
         BlockPos blockPos = getHolder().pos();
-        MachineDefinition currentDefinition = getHolder().getDefinition();
         MachineDefinition newDefinition = null;
-        // Get the output bus corresponding to this input bus and vice versa.
-        for (int i = 0; i < ITEM_IMPORT_BUS.length; i++) {
-            if (io == IO.IN) {
-                if (ITEM_IMPORT_BUS[i] == currentDefinition) {
-                    newDefinition = ITEM_EXPORT_BUS[i];
-                    break;
-                }
-            }
-            if (io == IO.OUT) {
-                if (ITEM_EXPORT_BUS[i] == currentDefinition) {
-                    newDefinition = ITEM_IMPORT_BUS[i];
-                    break;
-                }
-            }
+        if (io == IO.IN) {
+            newDefinition = GTMachines.ITEM_EXPORT_BUS[this.getTier()];
+        } else if (io == IO.OUT) {
+            newDefinition = GTMachines.ITEM_IMPORT_BUS[this.getTier()];
         }
 
         if (newDefinition == null) return false;
         BlockState newBlockState = newDefinition.getBlock().defaultBlockState();
 
-        getLevel().setBlock(blockPos, newBlockState, Block.UPDATE_ALL);
+        getLevel().setBlockAndUpdate(blockPos, newBlockState);
 
         if (getLevel().getBlockEntity(blockPos) instanceof IMachineBlockEntity newHolder) {
             if (newHolder.getMetaMachine() instanceof ItemBusPartMachine newMachine) {
@@ -279,6 +266,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
                 // Furthermore, existing inventory items
                 // and conveyors will drop to the floor on block override.
                 newMachine.setFrontFacing(this.getFrontFacing());
+                newMachine.setUpwardsFacing(this.getUpwardsFacing());
             }
         }
         return true;

@@ -16,6 +16,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.GTTransferUtils;
@@ -50,13 +51,6 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH;
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH_4X;
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH_9X;
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH;
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH_4X;
-import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH_9X;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -233,50 +227,29 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IMachi
         return InteractionResult.PASS;
     }
 
-    private boolean swapIO() {
+    public boolean swapIO() {
         BlockPos blockPos = getHolder().pos();
-        MachineDefinition currentDefinition = getHolder().getDefinition();
         MachineDefinition newDefinition = null;
-        // Get the output bus corresponding to this input bus and vice versa.
-        for (int i = 0; i < FLUID_IMPORT_HATCH.length; i++) {
-            if (io == IO.IN) {
-                if (FLUID_IMPORT_HATCH[i] == currentDefinition) {
-                    newDefinition = FLUID_EXPORT_HATCH[i];
-                    break;
-                }
-                if (FLUID_IMPORT_HATCH_4X[i] == currentDefinition) {
-                    newDefinition = FLUID_EXPORT_HATCH_4X[i];
-                    break;
-                }
-                if (FLUID_IMPORT_HATCH_9X[i] == currentDefinition) {
-                    newDefinition = FLUID_EXPORT_HATCH_9X[i];
-                    break;
-                }
-            }
-            if (io == IO.OUT) {
-                if (FLUID_EXPORT_HATCH[i] == currentDefinition) {
-                    newDefinition = FLUID_IMPORT_HATCH[i];
-                    break;
-                }
-                if (FLUID_EXPORT_HATCH_4X[i] == currentDefinition) {
-                    newDefinition = FLUID_IMPORT_HATCH_4X[i];
-                    break;
-                }
-                if (FLUID_EXPORT_HATCH_9X[i] == currentDefinition) {
-                    newDefinition = FLUID_IMPORT_HATCH_9X[i];
-                    break;
-                }
-            }
-        }
 
+        if (io == IO.IN) {
+            if (this.slots == 1) newDefinition = GTMachines.FLUID_EXPORT_HATCH[this.getTier()];
+            else if (this.slots == 4) newDefinition = GTMachines.FLUID_EXPORT_HATCH_4X[this.getTier()];
+            else if (this.slots == 9) newDefinition = GTMachines.FLUID_EXPORT_HATCH_9X[this.getTier()];
+        } else if (io == IO.OUT) {
+            if (this.slots == 1) newDefinition = GTMachines.FLUID_IMPORT_HATCH[this.getTier()];
+            else if (this.slots == 4) newDefinition = GTMachines.FLUID_IMPORT_HATCH_4X[this.getTier()];
+            else if (this.slots == 9) newDefinition = GTMachines.FLUID_IMPORT_HATCH_9X[this.getTier()];
+        }
         if (newDefinition == null) return false;
+
         BlockState newBlockState = newDefinition.getBlock().defaultBlockState();
 
-        getLevel().setBlock(blockPos, newBlockState, Block.UPDATE_ALL);
+        getLevel().setBlockAndUpdate(blockPos, newBlockState);
 
         if (getLevel().getBlockEntity(blockPos) instanceof IMachineBlockEntity newHolder) {
             if (newHolder.getMetaMachine() instanceof FluidHatchPartMachine newMachine) {
                 newMachine.setFrontFacing(this.getFrontFacing());
+                newMachine.setUpwardsFacing(this.getUpwardsFacing());
                 for (int i = 0; i < this.tank.getTanks(); i++) {
                     newMachine.tank.setFluidInTank(i, this.tank.getFluidInTank(i));
                 }
