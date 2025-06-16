@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.gui.widget.PhantomFluidWidget;
 import com.gregtechceu.gtceu.api.gui.widget.TankWidget;
 import com.gregtechceu.gtceu.api.gui.widget.ToggleButtonWidget;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.fancyconfigurator.CircuitFancyConfigurator;
 import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
@@ -34,8 +35,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 
@@ -44,6 +50,13 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH;
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH_4X;
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_EXPORT_HATCH_9X;
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH;
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH_4X;
+import static com.gregtechceu.gtceu.common.data.GTMachines.FLUID_IMPORT_HATCH_9X;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -204,6 +217,72 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IMachi
     public void setWorkingEnabled(boolean workingEnabled) {
         super.setWorkingEnabled(workingEnabled);
         updateTankSubscription();
+    }
+
+    @Override
+    protected InteractionResult onScrewdriverClick(Player playerIn, InteractionHand hand, Direction gridSide,
+                                                   BlockHitResult hitResult) {
+        InteractionResult superResult = super.onScrewdriverClick(playerIn, hand, gridSide, hitResult);
+        if (superResult == InteractionResult.SUCCESS) return InteractionResult.SUCCESS;
+        if (io == IO.BOTH) return InteractionResult.PASS;
+        if (playerIn.isShiftKeyDown()) {
+            if (swapIO()) {
+                return InteractionResult.sidedSuccess(playerIn.level().isClientSide);
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    private boolean swapIO() {
+        BlockPos blockPos = getHolder().pos();
+        MachineDefinition currentDefinition = getHolder().getDefinition();
+        MachineDefinition newDefinition = null;
+        // Get the output bus corresponding to this input bus and vice versa.
+        for (int i = 0; i < FLUID_IMPORT_HATCH.length; i++) {
+            if (io == IO.IN) {
+                if (FLUID_IMPORT_HATCH[i] == currentDefinition) {
+                    newDefinition = FLUID_EXPORT_HATCH[i];
+                    break;
+                }
+                if (FLUID_IMPORT_HATCH_4X[i] == currentDefinition) {
+                    newDefinition = FLUID_EXPORT_HATCH_4X[i];
+                    break;
+                }
+                if (FLUID_IMPORT_HATCH_9X[i] == currentDefinition) {
+                    newDefinition = FLUID_EXPORT_HATCH_9X[i];
+                    break;
+                }
+            }
+            if (io == IO.OUT) {
+                if (FLUID_EXPORT_HATCH[i] == currentDefinition) {
+                    newDefinition = FLUID_IMPORT_HATCH[i];
+                    break;
+                }
+                if (FLUID_EXPORT_HATCH_4X[i] == currentDefinition) {
+                    newDefinition = FLUID_IMPORT_HATCH_4X[i];
+                    break;
+                }
+                if (FLUID_EXPORT_HATCH_9X[i] == currentDefinition) {
+                    newDefinition = FLUID_IMPORT_HATCH_9X[i];
+                    break;
+                }
+            }
+        }
+
+        if (newDefinition == null) return false;
+        BlockState newBlockState = newDefinition.getBlock().defaultBlockState();
+
+        getLevel().setBlock(blockPos, newBlockState, Block.UPDATE_ALL);
+
+        if (getLevel().getBlockEntity(blockPos) instanceof IMachineBlockEntity newHolder) {
+            if (newHolder.getMetaMachine() instanceof FluidHatchPartMachine newMachine) {
+                newMachine.setFrontFacing(this.getFrontFacing());
+                for (int i = 0; i < this.tank.getTanks(); i++) {
+                    newMachine.tank.setFluidInTank(i, this.tank.getFluidInTank(i));
+                }
+            }
+        }
+        return true;
     }
 
     //////////////////////////////////////

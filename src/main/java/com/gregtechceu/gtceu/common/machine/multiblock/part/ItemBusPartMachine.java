@@ -284,7 +284,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
         return true;
     }
 
-    ///////////////////////////////////////
+    //////////////////////////////////////
     // ********** GUI ***********//
     //////////////////////////////////////
 
