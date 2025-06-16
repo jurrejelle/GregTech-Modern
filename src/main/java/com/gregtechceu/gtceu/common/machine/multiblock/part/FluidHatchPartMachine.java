@@ -217,7 +217,7 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IMachi
     protected InteractionResult onScrewdriverClick(Player playerIn, InteractionHand hand, Direction gridSide,
                                                    BlockHitResult hitResult) {
         InteractionResult superResult = super.onScrewdriverClick(playerIn, hand, gridSide, hitResult);
-        if (superResult == InteractionResult.SUCCESS) return InteractionResult.SUCCESS;
+        if (superResult != InteractionResult.PASS) return superResult;
         if (io == IO.BOTH) return InteractionResult.PASS;
         if (playerIn.isShiftKeyDown()) {
             if (swapIO()) {
