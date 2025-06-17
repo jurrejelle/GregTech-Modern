@@ -43,7 +43,7 @@ public class ArmorComponentItem extends ArmorItem implements IComponentItem {
     protected List<IItemComponent> components;
 
     public ArmorComponentItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
-        super(material, type, properties.durability(0));
+        super(material, type, properties.durability(-1));
         components = new ArrayList<>();
     }
 
@@ -116,11 +116,6 @@ public class ArmorComponentItem extends ArmorItem implements IComponentItem {
     @Override
     public boolean isDamaged(ItemStack stack) {
         return false;
-    }
-
-    @Override
-    public int getMaxDamage(ItemStack stack) {
-        return Integer.MAX_VALUE;
     }
 
     @Override
