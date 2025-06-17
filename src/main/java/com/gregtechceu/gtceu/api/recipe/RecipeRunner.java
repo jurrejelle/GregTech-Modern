@@ -164,43 +164,30 @@ class RecipeRunner {
         // Check the others
         for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
             if(RecipeHandlerGroup.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
+            // List to keep track of the remaining items for this RecipeHandlerGroup
+            Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new HashMap<>(searchRecipeContents);
+            boolean found = false;
             for (RecipeHandlerList handler : handlerListEntry.getValue()) {
-                recipeContents = handler.handleRecipe(io, recipe, recipeContents, simulated);
-                if (recipeContents.isEmpty()) {
-                    return RecipeHandlingResult.SUCCESS;
+                copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, true);
+                if (copiedRecipeContents.isEmpty()) {
+                    found = true;
+                    break;
                 }
-                recipeContents.clear();
             }
-        }
-
-        /*
-        // handle distinct first
-        for (var handler : distinct) {
-            var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
-            if (res.isEmpty()) {
-                if (!simulated) {
-                    handler.handleRecipe(io, recipe, recipeContents, false);
+            if(found) {
+                if(simulated) return RecipeHandlingResult.SUCCESS;
+                // Start actually removing items, keep track of the remaining items for this RecipeHandlerGroup
+                copiedRecipeContents = new HashMap<>(searchRecipeContents);
+                for (RecipeHandlerList handler : handlerListEntry.getValue()) {
+                    copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, false);
+                    if (copiedRecipeContents.isEmpty()) {
+                        recipeContents.clear();
+                        return RecipeHandlingResult.SUCCESS;
+                    }
                 }
-                recipeContents.clear();
-                return RecipeHandlingResult.SUCCESS;
             }
         }
 
-        for (var handler : indistinct) {
-            recipeContents = handler.handleRecipe(io, recipe, recipeContents, simulated);
-            if (recipeContents.isEmpty()) {
-                return RecipeHandlingResult.SUCCESS;
-            }
-        }
-
-        for (var handler : distinct) {
-            var res = handler.handleRecipe(io, recipe, recipeContents, simulated);
-            if (res.isEmpty()) {
-                recipeContents.clear();
-                return RecipeHandlingResult.SUCCESS;
-            }
-        }
-        */
         for (var entry : recipeContents.entrySet()) {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 return new RecipeHandlingResult(ActionResult.FAIL_NO_REASON, entry.getKey());
