@@ -2,11 +2,11 @@ package com.gregtechceu.gtceu.api.machine.trait;
 
 import java.util.Objects;
 
-public class RecipeHandlerGroupDistinctness implements RecipeHandlerGroup{
+public class RecipeHandlerGroupDistinctness implements RecipeHandlerGroup {
 
     public boolean isDistinct;
 
-    public RecipeHandlerGroupDistinctness(boolean isDistinct){
+    public RecipeHandlerGroupDistinctness(boolean isDistinct) {
         this.isDistinct = isDistinct;
     }
 

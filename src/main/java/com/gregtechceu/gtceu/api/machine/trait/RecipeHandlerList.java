@@ -10,7 +10,6 @@ import com.lowdragmc.lowdraglib.syncdata.ISubscription;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -106,7 +105,7 @@ public class RecipeHandlerList {
     protected void setDistinct(boolean distinct, boolean notify) {
         boolean currentDistinct = isDistinct();
         if (currentDistinct != distinct) {
-            if(currentDistinct == true){
+            if (currentDistinct == true) {
                 this.group = new RecipeHandlerGroupColor(color);
             } else {
                 this.group = RecipeHandlerGroupDistinctness.BUS_DISTINCT;
@@ -117,19 +116,21 @@ public class RecipeHandlerList {
             }
         }
     }
-    public boolean isDistinct(){
+
+    public boolean isDistinct() {
         return RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(this.group);
     }
 
-    public void setColor(int color){
+    public void setColor(int color) {
         setColor(color, false);
     }
-    public void setColor(int color, boolean notify){
+
+    public void setColor(int color, boolean notify) {
         this.color = color;
-        if(!RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(this.group)){
+        if (!RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(this.group)) {
             this.group = new RecipeHandlerGroupColor(color);
         }
-        if(notify) {
+        if (notify) {
             for (var rht : allHandlerTraits) {
                 rht.notifyListeners();
             }

@@ -11,7 +11,6 @@ import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
@@ -120,7 +119,8 @@ class RecipeRunner {
         return handleContentsInternal(IO.BOTH);
     }
 
-    private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler, Map<RecipeHandlerGroup, List<RecipeHandlerList>> map){
+    private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler,
+                                       Map<RecipeHandlerGroup, List<RecipeHandlerList>> map) {
         if (key.equals(RecipeHandlerGroupColor.UNDYED)) {
             for (var group : map.values()) {
                 group.add(handler);
@@ -128,8 +128,7 @@ class RecipeRunner {
         }
         List<RecipeHandlerList> undyed = map.getOrDefault(RecipeHandlerGroupColor.UNDYED, Collections.emptyList());
 
-        map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)
-        ).add(handler);
+        map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)).add(handler);
     }
 
     private RecipeHandlingResult handleContentsInternal(IO capIO) {
@@ -144,13 +143,13 @@ class RecipeRunner {
             handlers.sort(RecipeHandlerList.COMPARATOR.reversed());
         }
 
-
         Map<RecipeHandlerGroup, List<RecipeHandlerList>> distinctonMap = new HashMap<>();
         for (var handler : handlers) {
             addToRecipeHandlerMap(handler.getGroup(), handler, distinctonMap);
         }
         // Specifically check distinct handlers first
-        for(RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroupDistinctness.BUS_DISTINCT, Collections.emptyList())) {
+        for (RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroupDistinctness.BUS_DISTINCT,
+                Collections.emptyList())) {
             var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
             if (res.isEmpty()) {
                 if (!simulated) {
@@ -161,12 +160,12 @@ class RecipeRunner {
             }
         }
 
-
         // Check the others
-        for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
-            if(RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
+        for (Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()) {
+            if (RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
             // List to keep track of the remaining items for this RecipeHandlerGroup
-            Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
+            Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(
+                    searchRecipeContents);
             boolean found = false;
             for (RecipeHandlerList handler : handlerListEntry.getValue()) {
                 copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, true);
@@ -175,8 +174,8 @@ class RecipeRunner {
                     break;
                 }
             }
-            if(!found) continue;
-            if(simulated) return RecipeHandlingResult.SUCCESS;
+            if (!found) continue;
+            if (simulated) return RecipeHandlingResult.SUCCESS;
             // Start actually removing items, keep track of the remaining items for this RecipeHandlerGroup
             copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
             for (RecipeHandlerList handler : handlerListEntry.getValue()) {

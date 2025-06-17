@@ -184,7 +184,7 @@ public class MetaMachine implements IEnhancedManaged, IToolable, ITickSubscripti
         this.onPaintingColorChanged(color);
     }
 
-    public void onPaintingColorChanged(int color){}
+    public void onPaintingColorChanged(int color) {}
 
     public long getOffsetTimer() {
         return holder.getOffsetTimer();

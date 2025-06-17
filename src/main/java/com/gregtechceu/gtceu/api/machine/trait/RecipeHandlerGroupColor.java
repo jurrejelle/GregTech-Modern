@@ -1,18 +1,15 @@
 package com.gregtechceu.gtceu.api.machine.trait;
 
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.material.MapColor;
-
 import java.util.Objects;
 
-public class RecipeHandlerGroupColor implements RecipeHandlerGroup{
+public class RecipeHandlerGroupColor implements RecipeHandlerGroup {
 
     // Note: An un-dyed hatch is the same as an "indistinct" hatch.
     public static RecipeHandlerGroup UNDYED = new RecipeHandlerGroupColor(-1);
 
     public int color;
 
-    public RecipeHandlerGroupColor(int color){
+    public RecipeHandlerGroupColor(int color) {
         this.color = color;
     }
 
