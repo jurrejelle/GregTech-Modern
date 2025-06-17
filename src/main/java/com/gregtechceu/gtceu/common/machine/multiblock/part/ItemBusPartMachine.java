@@ -141,7 +141,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
 
     @Override
     public void onPaintingColorChanged(int color) {
-        getHandlerList().setColor(color);
+        getHandlerList().setColor(color, true);
     }
 
     @Override

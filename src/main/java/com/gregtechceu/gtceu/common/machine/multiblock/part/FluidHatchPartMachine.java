@@ -142,7 +142,7 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IMachi
 
     @Override
     public void onPaintingColorChanged(int color) {
-        getHandlerList().setColor(color);
+        getHandlerList().setColor(color, true);
     }
 
     @Override
