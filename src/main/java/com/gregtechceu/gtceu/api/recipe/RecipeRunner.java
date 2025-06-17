@@ -162,7 +162,7 @@ class RecipeRunner {
 
         // Check the others
         for (Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()) {
-            if (RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
+            if (RecipeHandlerGroupDistinctness.BUS_DISTINCT == handlerListEntry.getKey()) continue;
             // List to keep track of the remaining items for this RecipeHandlerGroup
             Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(
                     searchRecipeContents);
