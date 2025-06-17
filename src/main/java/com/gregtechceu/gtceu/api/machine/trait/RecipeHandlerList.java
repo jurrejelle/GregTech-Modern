@@ -10,6 +10,7 @@ import com.lowdragmc.lowdraglib.syncdata.ISubscription;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,20 @@ public class RecipeHandlerList {
     @Getter
     @Setter
     private int color = -1;
+
+    // Setting this distinctly will override the automatic generation
+    // from the isDistinct and color values
+    @Setter
+    private RecipeHandlerGroup group = null;
+
+    public RecipeHandlerGroup getGroup(){
+        if(group != null) return group;
+        if(isDistinct) return RecipeHandlerGroup.BUS_DISTINCT;
+        if(color == -1) return RecipeHandlerGroup.INDISTINCT;
+        return new RecipeHandlerGroup(color);
+    }
+
+
 
     protected RecipeHandlerList(IO handlerIO) {
         this.handlerIO = handlerIO;

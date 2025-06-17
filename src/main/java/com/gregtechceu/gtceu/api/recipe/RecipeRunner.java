@@ -3,8 +3,7 @@ package com.gregtechceu.gtceu.api.recipe;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.IRecipeCapabilityHolder;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.machine.trait.RecipeDistinction;
-import com.gregtechceu.gtceu.api.machine.trait.RecipeDistinctionHelper;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroup;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,18 @@ class RecipeRunner {
         return handleContentsInternal(IO.BOTH);
     }
 
+    private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler, Map<RecipeHandlerGroup, List<RecipeHandlerList>> map){
+        if (key.equals(RecipeHandlerGroup.INDISTINCT)) {
+            for (var group : map.values()) {
+                group.add(handler);
+            }
+        }
+        List<RecipeHandlerList> indistinct = map.getOrDefault(RecipeHandlerGroup.INDISTINCT, Collections.emptyList());
+
+        map.computeIfAbsent(key, $ -> new ArrayList<>(indistinct)
+        ).add(handler);
+    }
+
     private RecipeHandlingResult handleContentsInternal(IO capIO) {
         if (recipeContents.isEmpty()) return RecipeHandlingResult.SUCCESS;
         if (!capabilityProxies.containsKey(capIO)) {
@@ -129,36 +142,34 @@ class RecipeRunner {
             handlers.sort(RecipeHandlerList.COMPARATOR.reversed());
         }
 
-        // Add the different types of handlers
-        RecipeDistinctionHelper distinctionHelper = new RecipeDistinctionHelper();
+
+        Map<RecipeHandlerGroup, List<RecipeHandlerList>> distinctonMap = new HashMap<>();
         for (var handler : handlers) {
-            distinctionHelper.add(handler);
+            addToRecipeHandlerMap(handler.getGroup(), handler, distinctonMap);
         }
-
-
-        // Returns the handlerLists in the order defined in RecipeDistinction.order
-        for(Pair<RecipeDistinction, List<RecipeHandlerList>> handlerList: distinctionHelper){
-            // Distinct handlers have their contents checked one by one
-            if(handlerList.getFirst() == RecipeDistinction.BUS_DISTINCT){
-                for(RecipeHandlerList handler : handlerList.getSecond()) {
-                    var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
-                    if (res.isEmpty()) {
-                        if (!simulated) {
-                            handler.handleRecipe(io, recipe, recipeContents, false);
-                        }
-                        recipeContents.clear();
-                        return RecipeHandlingResult.SUCCESS;
-                    }
-                }
-            } else {
-                // Any others (both colors and indistinct) get their handlers checked at once
-                for (RecipeHandlerList handler : handlerList.getSecond()) {
-                    recipeContents = handler.handleRecipe(io, recipe, recipeContents, simulated);
-                    if (recipeContents.isEmpty()) {
-                        return RecipeHandlingResult.SUCCESS;
+        // Specifically check distinct handlers first
+        if(distinctonMap.containsKey(RecipeHandlerGroup.BUS_DISTINCT)){
+            for(RecipeHandlerList handler : distinctonMap.get(RecipeHandlerGroup.BUS_DISTINCT)) {
+                var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
+                if (res.isEmpty()) {
+                    if (!simulated) {
+                        handler.handleRecipe(io, recipe, recipeContents, false);
                     }
                     recipeContents.clear();
+                    return RecipeHandlingResult.SUCCESS;
                 }
+            }
+        }
+
+        // Check the others
+        for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
+            if(RecipeHandlerGroup.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
+            for (RecipeHandlerList handler : handlerListEntry.getValue()) {
+                recipeContents = handler.handleRecipe(io, recipe, recipeContents, simulated);
+                if (recipeContents.isEmpty()) {
+                    return RecipeHandlingResult.SUCCESS;
+                }
+                recipeContents.clear();
             }
         }
 
