@@ -121,23 +121,6 @@ class RecipeRunner {
     }
 
     private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler, Map<RecipeHandlerGroup, List<RecipeHandlerList>> map){
-        if(map.containsKey(key)){
-            if(key.equals(RecipeHandlerGroupColor.UNDYED)){
-                for(List<RecipeHandlerList> handlers : map.values()){
-                    handlers.add(handler);
-                }
-            } else {
-                map.get(key).add(handler);
-            }
-        } else {
-            map.put(key, new ArrayList<>());
-            List<RecipeHandlerList> handlerList = map.get(key);
-            if(map.containsKey(RecipeHandlerGroupColor.UNDYED)){
-                handlerList.addAll(map.get(RecipeHandlerGroupColor.UNDYED));
-            }
-            handlerList.add(handler);
-        }
-        /*
         if (key.equals(RecipeHandlerGroupColor.UNDYED)) {
             for (var group : map.values()) {
                 group.add(handler);
@@ -147,7 +130,6 @@ class RecipeRunner {
 
         map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)
         ).add(handler);
-         */
     }
 
     private RecipeHandlingResult handleContentsInternal(IO capIO) {
