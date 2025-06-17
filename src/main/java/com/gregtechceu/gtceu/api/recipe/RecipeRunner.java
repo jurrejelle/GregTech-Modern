@@ -3,11 +3,14 @@ package com.gregtechceu.gtceu.api.recipe;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.IRecipeCapabilityHolder;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeDistinction;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeDistinctionHelper;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
@@ -125,13 +128,41 @@ class RecipeRunner {
         if (!isTick && capIO == IO.OUT) {
             handlers.sort(RecipeHandlerList.COMPARATOR.reversed());
         }
-        List<RecipeHandlerList> distinct = new ArrayList<>();
-        List<RecipeHandlerList> indistinct = new ArrayList<>();
+
+        // Add the different types of handlers
+        RecipeDistinctionHelper distinctionHelper = new RecipeDistinctionHelper();
         for (var handler : handlers) {
-            if (handler.isDistinct()) distinct.add(handler);
-            else indistinct.add(handler);
+            distinctionHelper.add(handler);
         }
 
+
+        // Returns the handlerLists in the order defined in RecipeDistinction.order
+        for(Pair<RecipeDistinction, List<RecipeHandlerList>> handlerList: distinctionHelper){
+            // Distinct handlers have their contents checked one by one
+            if(handlerList.getFirst() == RecipeDistinction.BUS_DISTINCT){
+                for(RecipeHandlerList handler : handlerList.getSecond()) {
+                    var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
+                    if (res.isEmpty()) {
+                        if (!simulated) {
+                            handler.handleRecipe(io, recipe, recipeContents, false);
+                        }
+                        recipeContents.clear();
+                        return RecipeHandlingResult.SUCCESS;
+                    }
+                }
+            } else {
+                // Any others (both colors and indistinct) get their handlers checked at once
+                for (RecipeHandlerList handler : handlerList.getSecond()) {
+                    recipeContents = handler.handleRecipe(io, recipe, recipeContents, simulated);
+                    if (recipeContents.isEmpty()) {
+                        return RecipeHandlingResult.SUCCESS;
+                    }
+                    recipeContents.clear();
+                }
+            }
+        }
+
+        /*
         // handle distinct first
         for (var handler : distinct) {
             var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
@@ -158,7 +189,7 @@ class RecipeRunner {
                 return RecipeHandlingResult.SUCCESS;
             }
         }
-
+        */
         for (var entry : recipeContents.entrySet()) {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 return new RecipeHandlingResult(ActionResult.FAIL_NO_REASON, entry.getKey());
