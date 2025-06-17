@@ -36,23 +36,22 @@ public class RecipeHandlerList {
     @Getter
     private final IO handlerIO;
     @Getter
-    private boolean isDistinct = false;
-    @Getter
-    @Setter
     private int color = -1;
 
-    // Setting this distinctly will override the automatic generation
-    // from the isDistinct and color values
     @Setter
+    @Getter
     private RecipeHandlerGroup group = null;
 
-    public RecipeHandlerGroup getGroup(){
-        if(group != null) return group;
-        if(isDistinct) return RecipeHandlerGroup.BUS_DISTINCT;
-        if(color == -1) return RecipeHandlerGroup.INDISTINCT;
-        return new RecipeHandlerGroup(color);
+    public boolean isDistinct(){
+        return RecipeHandlerGroup.BUS_DISTINCT.equals(this.group);
     }
 
+    public void setColor(int color){
+        this.color = color;
+        if(!RecipeHandlerGroup.BUS_DISTINCT.equals(this.group)){
+            this.group = new RecipeHandlerGroup(color);
+        }
+    }
 
 
     protected RecipeHandlerList(IO handlerIO) {
@@ -117,10 +116,15 @@ public class RecipeHandlerList {
     }
 
     protected void setDistinct(boolean distinct, boolean notify) {
-        if (isDistinct != distinct) {
-            isDistinct = distinct;
+        boolean currentDistinct = isDistinct();
+        if (currentDistinct != distinct) {
+            if(currentDistinct == true){
+                this.group = new RecipeHandlerGroup(color);
+            } else {
+                this.group = RecipeHandlerGroup.BUS_DISTINCT;
+            }
             for (var rht : allHandlerTraits) {
-                rht.setDistinct(isDistinct);
+                rht.setDistinct(distinct);
                 if (notify) rht.notifyListeners();
             }
         }

@@ -148,18 +148,17 @@ class RecipeRunner {
             addToRecipeHandlerMap(handler.getGroup(), handler, distinctonMap);
         }
         // Specifically check distinct handlers first
-        if(distinctonMap.containsKey(RecipeHandlerGroup.BUS_DISTINCT)){
-            for(RecipeHandlerList handler : distinctonMap.get(RecipeHandlerGroup.BUS_DISTINCT)) {
-                var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
-                if (res.isEmpty()) {
-                    if (!simulated) {
-                        handler.handleRecipe(io, recipe, recipeContents, false);
-                    }
-                    recipeContents.clear();
-                    return RecipeHandlingResult.SUCCESS;
+        for(RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroup.BUS_DISTINCT, Collections.emptyList())) {
+            var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
+            if (res.isEmpty()) {
+                if (!simulated) {
+                    handler.handleRecipe(io, recipe, recipeContents, false);
                 }
+                recipeContents.clear();
+                return RecipeHandlingResult.SUCCESS;
             }
         }
+
 
         // Check the others
         for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
@@ -174,16 +173,15 @@ class RecipeRunner {
                     break;
                 }
             }
-            if(found) {
-                if(simulated) return RecipeHandlingResult.SUCCESS;
-                // Start actually removing items, keep track of the remaining items for this RecipeHandlerGroup
-                copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
-                for (RecipeHandlerList handler : handlerListEntry.getValue()) {
-                    copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, false);
-                    if (copiedRecipeContents.isEmpty()) {
-                        recipeContents.clear();
-                        return RecipeHandlingResult.SUCCESS;
-                    }
+            if(!found) continue;
+            if(simulated) return RecipeHandlingResult.SUCCESS;
+            // Start actually removing items, keep track of the remaining items for this RecipeHandlerGroup
+            copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
+            for (RecipeHandlerList handler : handlerListEntry.getValue()) {
+                copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, false);
+                if (copiedRecipeContents.isEmpty()) {
+                    recipeContents.clear();
+                    return RecipeHandlingResult.SUCCESS;
                 }
             }
         }

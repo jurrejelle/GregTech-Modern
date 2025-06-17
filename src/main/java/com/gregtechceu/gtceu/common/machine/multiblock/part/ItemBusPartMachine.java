@@ -126,6 +126,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
             serverLevel.getServer().tell(new TickTask(0, this::updateInventorySubscription));
         }
         getHandlerList().setDistinct(isDistinct);
+        getHandlerList().setColor(getPaintingColor());
         inventorySubs = getInventory().addChangedListener(this::updateInventorySubscription);
     }
 
@@ -136,6 +137,11 @@ public class ItemBusPartMachine extends TieredIOPartMachine implements IDistinct
             inventorySubs.unsubscribe();
             inventorySubs = null;
         }
+    }
+
+    @Override
+    public void onPaintingColorChanged(int color) {
+        getHandlerList().setColor(color);
     }
 
     @Override
