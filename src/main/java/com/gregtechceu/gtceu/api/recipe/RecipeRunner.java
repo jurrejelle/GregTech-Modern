@@ -165,7 +165,7 @@ class RecipeRunner {
         for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
             if(RecipeHandlerGroup.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
             // List to keep track of the remaining items for this RecipeHandlerGroup
-            Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new HashMap<>(searchRecipeContents);
+            Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
             boolean found = false;
             for (RecipeHandlerList handler : handlerListEntry.getValue()) {
                 copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, true);
@@ -177,7 +177,7 @@ class RecipeRunner {
             if(found) {
                 if(simulated) return RecipeHandlingResult.SUCCESS;
                 // Start actually removing items, keep track of the remaining items for this RecipeHandlerGroup
-                copiedRecipeContents = new HashMap<>(searchRecipeContents);
+                copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
                 for (RecipeHandlerList handler : handlerListEntry.getValue()) {
                     copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, false);
                     if (copiedRecipeContents.isEmpty()) {
