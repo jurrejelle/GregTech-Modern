@@ -107,9 +107,9 @@ public class RecipeHandlerList {
         boolean currentDistinct = isDistinct();
         if (currentDistinct != distinct) {
             if(currentDistinct == true){
-                this.group = new RecipeHandlerGroup(color);
+                this.group = new RecipeHandlerGroupColor(color);
             } else {
-                this.group = RecipeHandlerGroup.BUS_DISTINCT;
+                this.group = RecipeHandlerGroupDistinctness.BUS_DISTINCT;
             }
             for (var rht : allHandlerTraits) {
                 rht.setDistinct(distinct);
@@ -118,7 +118,7 @@ public class RecipeHandlerList {
         }
     }
     public boolean isDistinct(){
-        return RecipeHandlerGroup.BUS_DISTINCT.equals(this.group);
+        return RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(this.group);
     }
 
     public void setColor(int color){
@@ -126,8 +126,8 @@ public class RecipeHandlerList {
     }
     public void setColor(int color, boolean notify){
         this.color = color;
-        if(!RecipeHandlerGroup.BUS_DISTINCT.equals(this.group)){
-            this.group = new RecipeHandlerGroup(color);
+        if(!RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(this.group)){
+            this.group = new RecipeHandlerGroupColor(color);
         }
         if(notify) {
             for (var rht : allHandlerTraits) {

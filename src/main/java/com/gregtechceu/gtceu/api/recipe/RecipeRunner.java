@@ -4,6 +4,8 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.IRecipeCapabilityHolder;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroup;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupColor;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupDistinctness;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
@@ -119,15 +121,33 @@ class RecipeRunner {
     }
 
     private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler, Map<RecipeHandlerGroup, List<RecipeHandlerList>> map){
-        if (key.equals(RecipeHandlerGroup.INDISTINCT)) {
+        if(map.containsKey(key)){
+            if(key.equals(RecipeHandlerGroupColor.UNDYED)){
+                for(List<RecipeHandlerList> handlers : map.values()){
+                    handlers.add(handler);
+                }
+            } else {
+                map.get(key).add(handler);
+            }
+        } else {
+            map.put(key, new ArrayList<>());
+            List<RecipeHandlerList> handlerList = map.get(key);
+            if(map.containsKey(RecipeHandlerGroupColor.UNDYED)){
+                handlerList.addAll(map.get(RecipeHandlerGroupColor.UNDYED));
+            }
+            handlerList.add(handler);
+        }
+        /*
+        if (key.equals(RecipeHandlerGroupColor.UNDYED)) {
             for (var group : map.values()) {
                 group.add(handler);
             }
         }
-        List<RecipeHandlerList> indistinct = map.getOrDefault(RecipeHandlerGroup.INDISTINCT, Collections.emptyList());
+        List<RecipeHandlerList> undyed = map.getOrDefault(RecipeHandlerGroupColor.UNDYED, Collections.emptyList());
 
-        map.computeIfAbsent(key, $ -> new ArrayList<>(indistinct)
+        map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)
         ).add(handler);
+         */
     }
 
     private RecipeHandlingResult handleContentsInternal(IO capIO) {
@@ -148,7 +168,7 @@ class RecipeRunner {
             addToRecipeHandlerMap(handler.getGroup(), handler, distinctonMap);
         }
         // Specifically check distinct handlers first
-        for(RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroup.BUS_DISTINCT, Collections.emptyList())) {
+        for(RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroupDistinctness.BUS_DISTINCT, Collections.emptyList())) {
             var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
             if (res.isEmpty()) {
                 if (!simulated) {
@@ -162,7 +182,7 @@ class RecipeRunner {
 
         // Check the others
         for(Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()){
-            if(RecipeHandlerGroup.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
+            if(RecipeHandlerGroupDistinctness.BUS_DISTINCT.equals(handlerListEntry.getKey())) continue;
             // List to keep track of the remaining items for this RecipeHandlerGroup
             Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(searchRecipeContents);
             boolean found = false;
