@@ -143,12 +143,12 @@ class RecipeRunner {
             handlers.sort(RecipeHandlerList.COMPARATOR.reversed());
         }
 
-        Map<RecipeHandlerGroup, List<RecipeHandlerList>> distinctonMap = new HashMap<>();
+        Map<RecipeHandlerGroup, List<RecipeHandlerList>> handlerGroups = new HashMap<>();
         for (var handler : handlers) {
-            addToRecipeHandlerMap(handler.getGroup(), handler, distinctonMap);
+            addToRecipeHandlerMap(handler.getGroup(), handler, handlerGroups);
         }
         // Specifically check distinct handlers first
-        for (RecipeHandlerList handler : distinctonMap.getOrDefault(RecipeHandlerGroupDistinctness.BUS_DISTINCT,
+        for (RecipeHandlerList handler : handlerGroups.getOrDefault(RecipeHandlerGroupDistinctness.BUS_DISTINCT,
                 Collections.emptyList())) {
             var res = handler.handleRecipe(io, recipe, searchRecipeContents, true);
             if (res.isEmpty()) {
@@ -161,7 +161,7 @@ class RecipeRunner {
         }
 
         // Check the others
-        for (Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : distinctonMap.entrySet()) {
+        for (Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : handlerGroups.entrySet()) {
             if (RecipeHandlerGroupDistinctness.BUS_DISTINCT == handlerListEntry.getKey()) continue;
             // List to keep track of the remaining items for this RecipeHandlerGroup
             Map<RecipeCapability<?>, List<Object>> copiedRecipeContents = new Reference2ObjectOpenHashMap<>(
