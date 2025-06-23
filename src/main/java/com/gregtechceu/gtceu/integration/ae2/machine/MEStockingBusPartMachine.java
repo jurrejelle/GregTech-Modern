@@ -226,17 +226,12 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
         for (index = 0; index < CONFIG_SIZE; index++) {
             if (topItems.isEmpty()) break;
             Object2LongMap.Entry<AEKey> entry = topItems.poll();
+
             AEKey what = entry.getKey();
             long amount = entry.getLongValue();
 
-            if (amount <= 0) continue;
-            if (!(what instanceof AEItemKey itemKey)) continue;
-
+            // If we get here, the item has already been checked by the PQ.
             long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
-            if (request == 0) continue;
-
-            // Ensure that it is valid to configure with this stack
-            if (autoPullTest != null && !autoPullTest.test(new GenericStack(itemKey, amount))) continue;
 
             // Since we want our items to be displayed from highest to lowest, but poll() returns
             // the lowest first, we fill in the slots starting at itemAmount-1
