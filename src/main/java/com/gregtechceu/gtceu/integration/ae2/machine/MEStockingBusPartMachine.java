@@ -199,6 +199,18 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
                 Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
 
         for (Object2LongMap.Entry<AEKey> entry : counter) {
+            AEKey what = entry.getKey();
+            long amount = entry.getLongValue();
+
+            if (amount <= 0) continue;
+            if (!(what instanceof AEItemKey itemKey)) continue;
+
+            long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
+            if (request == 0) continue;
+
+            // Ensure that it is valid to configure with this stack
+            if (autoPullTest != null && !autoPullTest.test(new GenericStack(itemKey, amount))) continue;
+
             if (topItems.size() < CONFIG_SIZE) {
                 topItems.offer(entry);
             } else if (entry.getLongValue() > topItems.peek().getLongValue()) {

@@ -39,6 +39,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -173,9 +175,13 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
 
         MEStorage networkStorage = grid.getStorageService().getInventory();
         var counter = networkStorage.getAvailableStacks();
-        int index = 0;
+
+        // Use a PriorityQueue to sort the stacks on size, take the first CONFIG_SIZE
+        // biggest stacks.
+        PriorityQueue<Object2LongMap.Entry<AEKey>> topFluids = new PriorityQueue<>(
+                Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
+
         for (Object2LongMap.Entry<AEKey> entry : counter) {
-            if (index >= CONFIG_SIZE) break;
             AEKey what = entry.getKey();
             long amount = entry.getLongValue();
 
@@ -188,10 +194,37 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
             // Ensure that it is valid to configure with this stack
             if (autoPullTest != null && !autoPullTest.test(new GenericStack(fluidKey, amount))) continue;
 
-            var slot = this.aeFluidHandler.getInventory()[index];
+            if (topFluids.size() < CONFIG_SIZE) {
+                topFluids.offer(entry);
+            } else if (entry.getLongValue() > topFluids.peek().getLongValue()) {
+                topFluids.poll();
+                topFluids.offer(entry);
+            }
+        }
+
+        // Now, topFluids is a PQ with CONFIG_SIZE highest amount fluids in the system.
+        int index;
+        int fluidAmount = topFluids.size();
+        for (index = 0; index < CONFIG_SIZE; index++) {
+            if (topFluids.isEmpty()) break;
+            Object2LongMap.Entry<AEKey> entry = topFluids.poll();
+            AEKey what = entry.getKey();
+            long amount = entry.getLongValue();
+
+            if (amount <= 0) continue;
+            if (!(what instanceof AEFluidKey fluidKey)) continue;
+
+            long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
+            if (request == 0) continue;
+
+            // Ensure that it is valid to configure with this stack
+            if (autoPullTest != null && !autoPullTest.test(new GenericStack(fluidKey, amount))) continue;
+
+            // Since we want our fluids to be displayed from highest to lowest, but poll() returns
+            // the lowest first, we fill in the slots starting at fluidAmount-1
+            var slot = this.aeFluidHandler.getInventory()[fluidAmount - index - 1];
             slot.setConfig(new GenericStack(what, 1));
             slot.setStock(new GenericStack(what, request));
-            index++;
         }
 
         aeFluidHandler.clearInventory(index);
