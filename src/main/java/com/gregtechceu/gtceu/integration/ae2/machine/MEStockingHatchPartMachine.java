@@ -183,7 +183,7 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
 
         for (Object2LongMap.Entry<AEKey> entry : counter) {
             long amount = entry.getLongValue();
-            if (!topFluids.isEmpty() && amount <= topFluids.peek().getLongValue()) continue;
+            if (!topFluids.isEmpty() && amount < topFluids.peek().getLongValue()) continue;
 
             AEKey what = entry.getKey();
 

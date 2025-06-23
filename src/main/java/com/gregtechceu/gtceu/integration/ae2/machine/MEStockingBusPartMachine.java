@@ -200,7 +200,7 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
 
         for (Object2LongMap.Entry<AEKey> entry : counter) {
             long amount = entry.getLongValue();
-            if (!topItems.isEmpty() && amount <= topItems.peek().getLongValue()) continue;
+            if (!topItems.isEmpty() && amount < topItems.peek().getLongValue()) continue;
             AEKey what = entry.getKey();
 
             if (amount <= 0) continue;
