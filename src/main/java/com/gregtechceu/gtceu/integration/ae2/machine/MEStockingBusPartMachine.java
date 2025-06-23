@@ -199,8 +199,9 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
                 Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
 
         for (Object2LongMap.Entry<AEKey> entry : counter) {
-            AEKey what = entry.getKey();
             long amount = entry.getLongValue();
+            if (!topItems.isEmpty() && amount <= topItems.peek().getLongValue()) continue;
+            AEKey what = entry.getKey();
 
             if (amount <= 0) continue;
             if (!(what instanceof AEItemKey itemKey)) continue;
@@ -213,7 +214,7 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
 
             if (topItems.size() < CONFIG_SIZE) {
                 topItems.offer(entry);
-            } else if (entry.getLongValue() > topItems.peek().getLongValue()) {
+            } else if (amount > topItems.peek().getLongValue()) {
                 topItems.poll();
                 topItems.offer(entry);
             }

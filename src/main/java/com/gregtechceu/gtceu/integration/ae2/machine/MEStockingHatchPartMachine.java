@@ -182,8 +182,10 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
                 Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
 
         for (Object2LongMap.Entry<AEKey> entry : counter) {
-            AEKey what = entry.getKey();
             long amount = entry.getLongValue();
+            if (!topFluids.isEmpty() && amount <= topFluids.peek().getLongValue()) continue;
+
+            AEKey what = entry.getKey();
 
             if (amount <= 0) continue;
             if (!(what instanceof AEFluidKey fluidKey)) continue;
@@ -196,7 +198,7 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
 
             if (topFluids.size() < CONFIG_SIZE) {
                 topFluids.offer(entry);
-            } else if (entry.getLongValue() > topFluids.peek().getLongValue()) {
+            } else if (amount > topFluids.peek().getLongValue()) {
                 topFluids.poll();
                 topFluids.offer(entry);
             }
