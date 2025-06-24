@@ -62,6 +62,6 @@ public class BlockTagLoader {
                 .addTag(Tags.Blocks.SAND).addTag(BlockTags.SAND) // any sand blocks
                 .addTag(BlockTags.TERRACOTTA); // any terracotta
 
-        provider.addTag(CustomTags.CLEANROOM_DOOR).add(Blocks.IRON_DOOR);
+        provider.addTag(CustomTags.CLEANROOM_DOOR).add(Blocks.IRON_DOOR).addTag(BlockTags.WOODEN_DOORS);
     }
 }

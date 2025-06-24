@@ -121,7 +121,6 @@ public class CustomTags {
     public static final TagKey<Item> RUBBER_LOGS = TagUtil.createModItemTag("rubber_logs");
 
     public static final TagKey<Block> CLEANROOM_DOOR = TagUtil.createModBlockTag("cleanroom_door");
-    public static final TagKey<Block> CLEANROOM_DOOR_SPECIAL = TagUtil.createModBlockTag("cleanroom_door_special");
 
     public static final TagKey<Item> CHEM_BATH_WASHABLE = TagUtil.createModItemTag("chemical_bath_washable");
 
