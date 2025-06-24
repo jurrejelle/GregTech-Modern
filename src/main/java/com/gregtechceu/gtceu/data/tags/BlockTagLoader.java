@@ -61,5 +61,7 @@ public class BlockTagLoader {
                 .add(Blocks.DIRT_PATH) // path blocks
                 .addTag(Tags.Blocks.SAND).addTag(BlockTags.SAND) // any sand blocks
                 .addTag(BlockTags.TERRACOTTA); // any terracotta
+
+        provider.addTag(CustomTags.CLEANROOM_DOOR).add(Blocks.IRON_DOOR);
     }
 }
