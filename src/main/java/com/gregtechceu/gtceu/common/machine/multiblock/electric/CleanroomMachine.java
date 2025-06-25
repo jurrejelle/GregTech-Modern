@@ -416,8 +416,7 @@ public class CleanroomMachine extends WorkableElectricMultiblockMachine
 
     @NotNull
     protected static TraceabilityPredicate doorPredicate() {
-        return Predicates.custom(
-                blockWorldState -> blockWorldState.getBlockState().is(CustomTags.CLEANROOM_DOORS),
+        return Predicates.custom(blockWorldState -> blockWorldState.getBlockState().is(CustomTags.CLEANROOM_DOORS),
                 () -> new BlockInfo[] { new BlockInfo(Blocks.IRON_DOOR.defaultBlockState()), new BlockInfo(
                         Blocks.IRON_DOOR.defaultBlockState().setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER)) });
     }
