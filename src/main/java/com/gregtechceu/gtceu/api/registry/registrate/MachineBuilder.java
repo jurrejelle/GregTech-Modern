@@ -151,6 +151,9 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> extends Builde
     @Setter
     private boolean regressWhenWaiting = true;
 
+    @Getter
+    @Setter
+    private boolean allowCoverOnFront = false;
     @Setter
     private Supplier<BlockState> appearance;
     @Getter // getter for KJS
@@ -314,6 +317,11 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> extends Builde
         return this;
     }
 
+    public MachineBuilder<DEFINITION> allowCoverOnFront(boolean allowCoverOnFront) {
+        this.allowCoverOnFront = allowCoverOnFront;
+        return this;
+    }
+
     public MachineBuilder<DEFINITION> multiblockPreviewRenderer(boolean multiBlockWorldPreview,
                                                                 boolean multiBlockXEIPreview) {
         this.renderMultiblockWorldPreview = multiBlockWorldPreview;
@@ -379,6 +387,7 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> extends Builde
         definition.setOnWaiting(this.onWaiting);
         definition.setAfterWorking(this.afterWorking);
         definition.setRegressWhenWaiting(this.regressWhenWaiting);
+        definition.setAllowCoverOnFront(this.allowCoverOnFront);
 
         if (renderer == null) {
             renderer = () -> new MachineRenderer(new ResourceLocation(registrate.getModid(), "block/machine/" + name));
