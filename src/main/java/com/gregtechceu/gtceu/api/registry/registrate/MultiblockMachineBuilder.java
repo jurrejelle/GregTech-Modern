@@ -383,6 +383,11 @@ public class MultiblockMachineBuilder extends MachineBuilder<MultiblockMachineDe
     }
 
     @Override
+    public MultiblockMachineBuilder allowCoverOnFront(boolean allowCoverOnFront) {
+        return (MultiblockMachineBuilder) super.allowCoverOnFront(allowCoverOnFront);
+    }
+
+    @Override
     @HideFromJS
     public MultiblockMachineDefinition register() {
         var definition = super.register();

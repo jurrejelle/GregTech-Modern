@@ -151,7 +151,6 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> extends Builde
     @Setter
     private boolean regressWhenWaiting = true;
 
-    @Getter
     @Setter
     private boolean allowCoverOnFront = false;
     @Setter
@@ -314,11 +313,6 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> extends Builde
 
     public MachineBuilder<DEFINITION> addOutputLimit(RecipeCapability<?> capability, int limit) {
         this.recipeOutputLimits.put(capability, limit);
-        return this;
-    }
-
-    public MachineBuilder<DEFINITION> allowCoverOnFront(boolean allowCoverOnFront) {
-        this.allowCoverOnFront = allowCoverOnFront;
         return this;
     }
 
