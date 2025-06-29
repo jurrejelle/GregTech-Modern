@@ -2,6 +2,9 @@ package com.gregtechceu.gtceu.api.recipe;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.capability.recipe.*;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroup;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupColor;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
@@ -324,5 +327,17 @@ public class RecipeHelper {
         }
 
         return outputs;
+    }
+
+    public static void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler,
+                                             Map<RecipeHandlerGroup, List<RecipeHandlerList>> map) {
+        if (key.equals(RecipeHandlerGroupColor.UNDYED)) {
+            for (var group : map.values()) {
+                group.add(handler);
+            }
+        }
+        List<RecipeHandlerList> undyed = map.getOrDefault(RecipeHandlerGroupColor.UNDYED, Collections.emptyList());
+
+        map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)).add(handler);
     }
 }

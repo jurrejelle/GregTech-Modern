@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.IRecipeCapabilityHolder;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroup;
-import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupColor;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupDistinctness;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
@@ -21,6 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.gregtechceu.gtceu.api.recipe.RecipeHelper.addToRecipeHandlerMap;
 
 class RecipeRunner {
 
@@ -117,18 +118,6 @@ class RecipeRunner {
         var result = handleContentsInternal(io);
         if (result.isSuccess()) return result;
         return handleContentsInternal(IO.BOTH);
-    }
-
-    private void addToRecipeHandlerMap(RecipeHandlerGroup key, RecipeHandlerList handler,
-                                       Map<RecipeHandlerGroup, List<RecipeHandlerList>> map) {
-        if (key.equals(RecipeHandlerGroupColor.UNDYED)) {
-            for (var group : map.values()) {
-                group.add(handler);
-            }
-        }
-        List<RecipeHandlerList> undyed = map.getOrDefault(RecipeHandlerGroupColor.UNDYED, Collections.emptyList());
-
-        map.computeIfAbsent(key, $ -> new ArrayList<>(undyed)).add(handler);
     }
 
     private RecipeHandlingResult handleContentsInternal(IO capIO) {
