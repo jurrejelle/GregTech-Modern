@@ -24,9 +24,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 
 public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
 
@@ -76,6 +74,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
                         .map(ItemStack.class::cast)
                         .filter(s -> !s.isEmpty())
                         .findFirst())
+
                 .dropWhile(Optional::isEmpty)
                 .limit(inputsSize)
                 .map(o -> o.orElse(ItemStack.EMPTY))

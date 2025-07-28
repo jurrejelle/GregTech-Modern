@@ -76,10 +76,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.gregtechceu.gtceu.common.data.GTCreativeModeTabs.ITEM;
-import static com.gregtechceu.gtceu.common.data.GTCreativeModeTabs.TOOL;
-import static com.gregtechceu.gtceu.common.data.GTModels.createTextureModel;
-import static com.gregtechceu.gtceu.common.data.GTModels.overrideModel;
+import static com.gregtechceu.gtceu.common.data.GTCreativeModeTabs.*;
+import static com.gregtechceu.gtceu.common.data.models.GTModels.*;
 import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
 import static com.gregtechceu.gtceu.utils.FormattingUtil.toEnglishName;
 
@@ -2012,7 +2010,7 @@ public class GTItems {
                             .effect(() -> new MobEffectInstance(MobEffects.HUNGER, 400), .40f)
                             .effect(() -> new MobEffectInstance(MobEffects.POISON, 100), .05f)
                             .build())))
-            .tag(CustomTags.DOUGHS)
+            .tag(CustomTags.WHEAT_DOUGHS)
             .register();
     public static ItemEntry<ComponentItem> PLANT_BALL = REGISTRATE.item("plant_ball", ComponentItem::create)
             .onRegister(burnTime(75)).register();

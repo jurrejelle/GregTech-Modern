@@ -35,6 +35,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,12 +43,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.fluids.FluidStack;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.ftb.mods.ftbquests.quest.QuestObjectBase;
 import dev.latvian.mods.kubejs.fluid.FluidStackJS;
 import dev.latvian.mods.kubejs.fluid.InputFluid;
+import dev.latvian.mods.kubejs.fluid.OutputFluid;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.item.OutputItem;
 import dev.latvian.mods.kubejs.recipe.RecipeExceptionJS;
@@ -174,27 +177,43 @@ public interface GTRecipeSchema {
             return this;
         }
 
-        public GTRecipeJS inputEU(long eu) {
+        public GTRecipeJS inputEU(EnergyStack eu) {
             return input(EURecipeCapability.CAP, eu);
         }
 
-        public GTRecipeJS EUt(long eu) {
-            if (eu == 0) {
+        public GTRecipeJS inputEU(long voltage, long amperage) {
+            return inputEU(new EnergyStack(voltage, amperage));
+        }
+
+        @SuppressWarnings("ConstantValue")
+        public GTRecipeJS EUt(EnergyStack.WithIO eu) {
+            if (eu.isEmpty()) {
                 throw new RecipeExceptionJS(String.format("EUt can't be explicitly set to 0, id: %s", id));
+            }
+            if (eu.amperage() < 1) {
+                throw new RecipeExceptionJS(String.format("Amperage must be a positive integer, id: %s", id));
             }
             var lastPerTick = perTick;
             perTick = true;
-            if (eu > 0) {
-                inputEU(eu);
-            } else if (eu < 0) {
-                outputEU(-eu);
+            if (eu.isInput()) {
+                inputEU(eu.stack());
+            } else if (eu.isOutput()) {
+                outputEU(eu.stack());
             }
             perTick = lastPerTick;
             return this;
         }
 
-        public GTRecipeJS outputEU(long eu) {
+        public GTRecipeJS EUt(long voltage, long amperage) {
+            return EUt(EnergyStack.WithIO.fromVA(voltage, amperage));
+        }
+
+        public GTRecipeJS outputEU(EnergyStack eu) {
             return output(EURecipeCapability.CAP, eu);
+        }
+
+        public GTRecipeJS outputEU(long voltage, long amperage) {
+            return outputEU(new EnergyStack(voltage, amperage));
         }
 
         public GTRecipeJS inputCWU(int cwu) {
@@ -210,7 +229,7 @@ public interface GTRecipeSchema {
             if (cwu > 0) {
                 inputCWU(cwu);
             } else if (cwu < 0) {
-                outputCWU(cwu);
+                outputCWU(-cwu);
             }
             perTick = lastPerTick;
             return this;
@@ -664,7 +683,7 @@ public interface GTRecipeSchema {
 
         public GTRecipeJS inputFluids(GTRecipeComponents.FluidIngredientJS... inputs) {
             for (var fluidIng : inputs) {
-                for (var stack : fluidIng.getIngredient().getStacks()) {
+                for (var stack : fluidIng.ingredient().getStacks()) {
                     var mat = ChemicalHelper.getMaterial(stack.getFluid());
                     if (!mat.isNull()) {
                         fluidMaterialStacks.add(new MaterialStack(mat,
@@ -677,6 +696,16 @@ public interface GTRecipeSchema {
 
         public GTRecipeJS outputFluids(FluidStackJS... outputs) {
             return output(FluidRecipeCapability.CAP, (Object[]) outputs);
+        }
+
+        public GTRecipeJS outputFluidsRanged(FluidStackJS output, int min, int max) {
+            return outputFluidsRanged(output, UniformInt.of(min, max));
+        }
+
+        public GTRecipeJS outputFluidsRanged(FluidStackJS output, IntProvider range) {
+            FluidStack stack = new FluidStack(output.getFluid(), (int) output.getAmount(), output.getNbt());
+            return output(FluidRecipeCapability.CAP,
+                    IntProviderFluidIngredient.of(FluidIngredient.of(stack), range));
         }
 
         //////////////////////////////////////
@@ -1062,14 +1091,35 @@ public interface GTRecipeSchema {
         }
 
         @Override
-        public JsonElement writeInputFluid(InputFluid value) {
-            var fluid = ((FluidStackJS) value).getFluidStack();
-            return FluidIngredient.of((int) fluid.getAmount(), fluid.getFluid()).toJson();
+        public InputFluid readInputFluid(Object from) {
+            return GTRecipeComponents.FluidIngredientJS.of(from);
         }
 
         @Override
-        public InputFluid readInputFluid(Object from) {
-            return super.readInputFluid(from);
+        public JsonElement writeInputFluid(InputFluid value) {
+            if (value instanceof GTRecipeComponents.FluidIngredientJS ing) {
+                return ing.ingredient().toJson();
+            }
+
+            var fluid = ((FluidStackJS) value).getFluidStack();
+            return FluidIngredient.of(fluid.getFluid(), (int) fluid.getAmount(), fluid.getTag()).toJson();
+        }
+
+        @Override
+        public OutputFluid readOutputFluid(Object from) {
+            return GTRecipeComponents.FluidIngredientJS.of(from);
+        }
+
+        @Override
+        public JsonElement writeOutputFluid(OutputFluid value) {
+            if (value instanceof GTRecipeComponents.FluidIngredientJS ing) {
+                return ing.ingredient().toJson();
+            } else if (value instanceof FluidIngredient ingredient) {
+                return ingredient.toJson();
+            }
+
+            var fluid = ((FluidStackJS) value).getFluidStack();
+            return FluidIngredient.of(fluid.getFluid(), (int) fluid.getAmount(), fluid.getTag()).toJson();
         }
     }
 
@@ -1139,7 +1189,7 @@ public interface GTRecipeSchema {
         var outputs = map.get(FluidRecipeCapability.CAP);
         if (outputs != null && outputs.length > 0) {
             var output = GTRecipeComponents.FLUID_OUT.baseComponent().read(recipe, outputs[0].content);
-            var fluids = output.getIngredient().getStacks();
+            var fluids = output.ingredient().getStacks();
             if (fluids.length == 0) return null;
 
             var id = fluids[0].getFluid().builtInRegistryHolder().unwrapKey();

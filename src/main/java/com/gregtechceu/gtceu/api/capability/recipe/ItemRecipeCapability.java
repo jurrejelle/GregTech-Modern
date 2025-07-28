@@ -1,6 +1,8 @@
 package com.gregtechceu.gtceu.api.capability.recipe;
 
 import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroup;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerGroupDistinctness;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
@@ -22,8 +24,8 @@ import com.gregtechceu.gtceu.common.valueprovider.FlooredInt;
 import com.gregtechceu.gtceu.common.valueprovider.MultipliedFloat;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.core.mixins.IngredientAccessor;
-import com.gregtechceu.gtceu.core.mixins.IntersectionIngredientAccessor;
 import com.gregtechceu.gtceu.core.mixins.TagValueAccessor;
+import com.gregtechceu.gtceu.core.mixins.forge.IntersectionIngredientAccessor;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemEntryList;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemTagList;
@@ -52,6 +54,8 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+
+import static com.gregtechceu.gtceu.api.recipe.RecipeHelper.addToRecipeHandlerMap;
 
 public class ItemRecipeCapability extends RecipeCapability<Ingredient> {
 
@@ -288,53 +292,60 @@ public class ItemRecipeCapability extends RecipeCapability<Ingredient> {
             if (invMultiplier == limit) return limit;
             maxMultiplier = Math.max(maxMultiplier, invMultiplier);
         }
+
         return maxMultiplier;
     }
 
     private static List<Object2IntMap<ItemStack>> getInputContents(IRecipeCapabilityHolder holder) {
         var handlerLists = holder.getCapabilitiesForIO(IO.IN);
         if (handlerLists.isEmpty()) return Collections.emptyList();
-        List<RecipeHandlerList> distinct = new ArrayList<>();
-        List<IRecipeHandler<?>> indistinct = new ArrayList<>();
 
-        for (var handlerList : handlerLists) {
-            if (handlerList.isDistinct() && handlerList.hasCapability(ItemRecipeCapability.CAP)) {
-                distinct.add(handlerList);
-            } else if (handlerList.hasCapability(ItemRecipeCapability.CAP)) {
-                indistinct.addAll(handlerList.getCapability(ItemRecipeCapability.CAP));
-            }
+        Map<RecipeHandlerGroup, List<RecipeHandlerList>> handlerGroups = new HashMap<>();
+        for (var handler : handlerLists) {
+            if (!handler.hasCapability(ItemRecipeCapability.CAP)) continue;
+            addToRecipeHandlerMap(handler.getGroup(), handler, handlerGroups);
         }
 
         final var strat = ItemStackHashStrategy.comparingAllButCount();
 
-        List<Object2IntMap<ItemStack>> invs = new ArrayList<>(distinct.size() + 1);
-        Object2IntOpenCustomHashMap<ItemStack> combined = new Object2IntOpenCustomHashMap<>(strat);
-        for (var handler : indistinct) {
-            if (!handler.shouldSearchContent()) continue;
-            for (var content : handler.getContents()) {
-                if (content instanceof ItemStack stack && !stack.isEmpty()) {
-                    combined.addTo(stack, stack.getCount());
-                }
-            }
-        }
-
-        for (var handlerList : distinct) {
+        List<RecipeHandlerList> distinctHandlerLists = handlerGroups.getOrDefault(
+                RecipeHandlerGroupDistinctness.BUS_DISTINCT,
+                Collections.emptyList());
+        List<Object2IntMap<ItemStack>> invs = new ArrayList<>(distinctHandlerLists.size() + 1);
+        // Handle distinct groups first, adding an inventory based on their contents individually.
+        for (RecipeHandlerList handlerList : distinctHandlerLists) {
             var handlers = handlerList.getCapability(ItemRecipeCapability.CAP);
-            // Clone has the desired effect here - it will shallow copy the keys, which we don't change and deep copy
-            // the values, as they are primitives.
-            var inventory = combined.clone();
-            for (var handler : handlers) {
-                if (!handler.shouldSearchContent()) continue;
+            Object2IntOpenCustomHashMap<ItemStack> distinctInv = new Object2IntOpenCustomHashMap<>(strat);
+
+            for (IRecipeHandler<?> handler : handlers) {
                 for (var content : handler.getContents()) {
                     if (content instanceof ItemStack stack && !stack.isEmpty()) {
-                        inventory.addTo(stack, stack.getCount());
+                        distinctInv.addTo(stack, stack.getCount());
+                    }
+                }
+            }
+            if (!distinctInv.isEmpty()) invs.add(distinctInv);
+        }
+
+        // Then handle other groups. The logic of undyed buses belonging to
+        // everything has already been taken care of by addToRecipeMap()
+        for (Map.Entry<RecipeHandlerGroup, List<RecipeHandlerList>> handlerListEntry : handlerGroups.entrySet()) {
+            if (handlerListEntry.getKey() == RecipeHandlerGroupDistinctness.BUS_DISTINCT) continue;
+
+            Object2IntOpenCustomHashMap<ItemStack> inventory = new Object2IntOpenCustomHashMap<>(strat);
+            for (RecipeHandlerList handlerList : handlerListEntry.getValue()) {
+                var handlers = handlerList.getCapability(ItemRecipeCapability.CAP);
+                for (var handler : handlers) {
+                    for (var content : handler.getContents()) {
+                        if (content instanceof ItemStack stack && !stack.isEmpty()) {
+                            inventory.addTo(stack, stack.getCount());
+                        }
                     }
                 }
             }
             if (!inventory.isEmpty()) invs.add(inventory);
         }
 
-        if (!combined.isEmpty()) invs.add(combined);
         return invs;
     }
 

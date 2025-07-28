@@ -191,7 +191,7 @@ public class GuiTextures {
     public static final ResourceTexture MAINTENANCE_ICON = new ResourceTexture(
             "gtceu:textures/block/overlay/machine/overlay_maintenance.png");
     public static final ResourceTexture STORAGE_ICON = new ResourceTexture(
-            "gtceu:textures/item/storage_cover.png");
+            "gtceu:textures/item/storage.png");
     public static final ResourceTexture BUTTON_MINER_MODES = new ResourceTexture(
             "gtceu:textures/gui/widget/button_miner_modes.png");
 
@@ -496,7 +496,7 @@ public class GuiTextures {
 
     // Covers
     public static final ResourceTexture COVER_MACHINE_CONTROLLER = new ResourceTexture(
-            "gtceu:textures/items/metaitems/cover.controller.png");
+            "gtceu:textures/items/machine_controller_cover.png");
 
     // Terminal
     public static final ResourceTexture ICON_REMOVE = new ResourceTexture(
