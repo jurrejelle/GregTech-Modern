@@ -3,9 +3,12 @@ package com.gregtechceu.gtceu.integration.kjs.recipe.components;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 
+import net.minecraft.resources.ResourceLocation;
+
 import com.mojang.serialization.Codec;
 import dev.latvian.mods.kubejs.recipe.KubeRecipe;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
+import dev.latvian.mods.kubejs.recipe.component.RecipeComponentType;
 import dev.latvian.mods.kubejs.recipe.match.ReplacementMatchInfo;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.type.TypeInfo;
@@ -50,5 +53,9 @@ public record CapabilityMapComponent() implements RecipeComponent<CapabilityMap>
             }
         });
         return changed.get() ? new CapabilityMap(original) : original;
+    }
+
+    public @Override RecipeComponentType<CapabilityMap> type() {
+        return RecipeComponentType.<CapabilityMap>unit(ResourceLocation.parse("capability_map"), this);
     }
 }

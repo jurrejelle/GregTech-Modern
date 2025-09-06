@@ -1,5 +1,7 @@
 package com.gregtechceu.gtceu.integration.kjs.recipe.components;
 
+import net.minecraft.resources.ResourceLocation;
+
 import com.mojang.serialization.Codec;
 import dev.latvian.mods.kubejs.recipe.KubeRecipe;
 import dev.latvian.mods.kubejs.recipe.component.*;
@@ -44,5 +46,9 @@ public record JavaMapRecipeComponent<K, V>(RecipeComponent<K> key, RecipeCompone
     @Override
     public TypeInfo typeInfo() {
         return TypeInfo.RAW_MAP.withParams(key.typeInfo(), value.typeInfo());
+    }
+
+    public @Override RecipeComponentType<Map<K, V>> type() {
+        return RecipeComponentType.<Map<K, V>>unit(ResourceLocation.parse("java_map{" + key + ":" + value + "}"), this);
     }
 }
