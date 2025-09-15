@@ -160,13 +160,14 @@ public class GTRecipeComponents {
         }
     };
 
-    public static final ContentJS<SizedIngredient> ITEM = ContentJS.create(SizedIngredientComponent.NESTED,
+    public static final ContentJS<SizedIngredient> ITEM = ContentJS.create(SizedIngredientComponent.SIZED_INGREDIENT,
             GTRecipeCapabilities.ITEM);
     public static final ContentJS<SizedFluidIngredient> FLUID = ContentJS.create(SizedFluidIngredientComponent.NESTED,
             GTRecipeCapabilities.FLUID);
     public static final ContentJS<EnergyStack.WithIO> EU = ContentJS
             .create((RecipeComponentType<EnergyStack.WithIO>) ENERGY_STACK.type(), GTRecipeCapabilities.EU);
-    public static final ContentJS<Integer> CWU = ContentJS.create(NumberComponent.INT_TYPE, GTRecipeCapabilities.CWU);
+    public static final ContentJS<Integer> CWU = ContentJS.create(NumberComponent.NON_NEGATIVE_INT,
+            GTRecipeCapabilities.CWU);
 
     public static final RecipeComponent<Map<RecipeCapability<?>, ChanceLogic>> CHANCE_LOGIC_MAP = new JavaMapRecipeComponent<>(
             RECIPE_CAPABILITY, CHANCE_LOGIC);

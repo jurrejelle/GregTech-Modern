@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.integration.kjs.recipe;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
+import com.gregtechceu.gtceu.integration.kjs.recipe.components.StringGridComponent;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -16,10 +17,10 @@ import dev.latvian.mods.kubejs.recipe.component.*;
 import dev.latvian.mods.kubejs.recipe.ingredientaction.IngredientActionHolder;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
-import dev.latvian.mods.kubejs.recipe.schema.RecipeSchemaFunction;
+import dev.latvian.mods.kubejs.recipe.schema.function.RecipeFunctionInstance;
+import dev.latvian.mods.kubejs.recipe.schema.function.SetFunction;
 import dev.latvian.mods.kubejs.recipe.special.KubeJSCraftingRecipe;
 import dev.latvian.mods.kubejs.script.ConsoleJS;
-import dev.latvian.mods.kubejs.util.ErrorStack;
 import dev.latvian.mods.kubejs.util.TinyMap;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import it.unimi.dsi.fastutil.chars.CharArrayList;
@@ -53,10 +54,10 @@ public interface GTShapedRecipeSchema {
 
         // Adapted from KJS's ShapedRecipeSchema#ShapedKubeRecipe
         @Override
-        public void afterLoaded(ErrorStack stack) {
-            super.afterLoaded(stack);
-            var pattern = new ArrayList<>(getValue(PATTERN));
-            var key = getValue(KEY);
+        public void validate(RecipeValidationContext cx) {
+            // super.afterLoaded(stack);
+            var pattern = new ArrayList<>(cx.recipe().getValue(PATTERN));
+            var key = cx.recipe().getValue(KEY);
 
             if (pattern.isEmpty()) {
                 throw new KubeRuntimeException("Pattern is empty!");
@@ -138,6 +139,6 @@ public interface GTShapedRecipeSchema {
             .constructor(RESULT, PATTERN, KEY)
             .uniqueId(RESULT)
             .typeOverride(KubeJS.id("shaped"))
-            .function("noMirror", new RecipeSchemaFunction.SetFunction<>(MIRROR, false))
-            .function("noShrink", new RecipeSchemaFunction.SetFunction<>(SHRINK, false));
+            .function(new RecipeFunctionInstance("noMirror", new SetFunction.Resolved<>(MIRROR, false)))
+            .function(new RecipeFunctionInstance("noShrink", new SetFunction.Resolved<>(SHRINK, false)));
 }

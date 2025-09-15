@@ -3,10 +3,9 @@ package com.gregtechceu.gtceu.integration.kjs.recipe.components;
 import net.minecraft.resources.ResourceLocation;
 
 import com.mojang.serialization.Codec;
-import dev.latvian.mods.kubejs.recipe.KubeRecipe;
+import dev.latvian.mods.kubejs.recipe.RecipeScriptContext;
 import dev.latvian.mods.kubejs.recipe.component.*;
 import dev.latvian.mods.kubejs.recipe.match.ReplacementMatchInfo;
-import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.type.TypeInfo;
 
 import java.util.HashMap;
@@ -16,12 +15,12 @@ public record JavaMapRecipeComponent<K, V>(RecipeComponent<K> key, RecipeCompone
         implements RecipeComponent<Map<K, V>> {
 
     @Override
-    public Map<K, V> replace(Context cx, KubeRecipe recipe, Map<K, V> original, ReplacementMatchInfo match,
+    public Map<K, V> replace(RecipeScriptContext cx, Map<K, V> original, ReplacementMatchInfo match,
                              Object with) {
         var map = original;
 
         for (Map.Entry<K, V> entry : original.entrySet()) {
-            var r = value.replace(cx, recipe, entry.getValue(), match, with);
+            var r = value.replace(cx, entry.getValue(), match, with);
             if (r != entry.getValue()) {
                 if (map == original) {
                     map = new HashMap<>(original);
