@@ -7,8 +7,6 @@ import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
 import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetSlotTheme;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
-import com.gregtechceu.gtceu.api.mui.utils.Alignment;
-import com.gregtechceu.gtceu.api.mui.utils.Color;
 import com.gregtechceu.gtceu.api.mui.value.sync.ItemSlotSH;
 import com.gregtechceu.gtceu.api.mui.value.sync.SyncHandler;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
@@ -19,7 +17,6 @@ import com.gregtechceu.gtceu.core.mixins.client.AbstractContainerScreenAccessor;
 import com.gregtechceu.gtceu.core.mixins.client.ScreenAccessor;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
 import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
-import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -237,32 +234,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
                 if (amount < 0) {
                     amount = slotStack.getCount();
                 }
-                // render the amount overlay
-                if (amount > 1 || format != null) {
-                    String amountText = FormattingUtil.formatNumberReadable(amount, false);
-                    if (format != null) {
-                        amountText = format + amountText;
-                    }
-                    float scale = 1f;
-                    if (amountText.length() == 3) {
-                        scale = 0.8f;
-                    } else if (amountText.length() == 4) {
-                        scale = 0.6f;
-                    } else if (amountText.length() > 4) {
-                        scale = 0.5f;
-                    }
-                    textRenderer.setShadow(true);
-                    textRenderer.setScale(scale);
-                    textRenderer.setColor(Color.WHITE.main);
-                    textRenderer.setAlignment(Alignment.BottomRight, getArea().width - 1, getArea().height - 1);
-                    textRenderer.setPos(1, 1);
-                    RenderSystem.disableDepthTest();
-                    RenderSystem.disableBlend();
-                    context.getGraphics().pose().translate(0, 0, 100 + z);
-                    textRenderer.draw(context.getGraphics(), amountText);
-                    RenderSystem.enableDepthTest();
-                    RenderSystem.enableBlend();
-                }
+                GuiDraw.drawStandardSlotAmountText(context, amount, format, getArea(), z);
 
                 int cachedCount = slotStack.getCount();
                 slotStack.setCount(1); // required to not render the amount overlay
