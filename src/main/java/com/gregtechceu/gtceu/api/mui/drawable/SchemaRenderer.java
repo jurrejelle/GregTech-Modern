@@ -1,10 +1,12 @@
 package com.gregtechceu.gtceu.api.mui.drawable;
 
-import com.gregtechceu.gtceu.utils.fakelevel.*;
+import com.gregtechceu.gtceu.api.mui.schema.ISchema;
+import com.gregtechceu.gtceu.client.mui.schemarenderer.BaseSchemaRenderer;
+import com.gregtechceu.gtceu.client.mui.schemarenderer.BlockHighlight;
+import com.gregtechceu.gtceu.client.mui.schemarenderer.Camera;
 
 import net.minecraft.world.phys.BlockHitResult;
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -30,10 +32,6 @@ public class SchemaRenderer extends BaseSchemaRenderer {
     protected boolean isometric = false;
     @Setter
     private boolean rayTracing = false;
-
-    public SchemaRenderer(ISchema schema, RenderTarget renderTarget) {
-        super(schema, renderTarget);
-    }
 
     public SchemaRenderer(ISchema schema) {
         super(schema);

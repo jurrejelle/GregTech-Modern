@@ -2,16 +2,18 @@ package com.gregtechceu.gtceu.api.mui.widgets;
 
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.base.widget.Interactable;
+import com.gregtechceu.gtceu.api.mui.schema.ISchema;
 import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
 import com.gregtechceu.gtceu.api.mui.widget.Widget;
+import com.gregtechceu.gtceu.client.mui.schemarenderer.BaseSchemaRenderer;
 import com.gregtechceu.gtceu.client.mui.screen.viewport.ModularGuiContext;
 import com.gregtechceu.gtceu.utils.GTMath;
-import com.gregtechceu.gtceu.utils.fakelevel.BaseSchemaRenderer;
-import com.gregtechceu.gtceu.utils.fakelevel.ISchema;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -22,7 +24,7 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
     private boolean enableTranslation = true;
     private boolean enableScaling = true;
     private float scale = 10f;
-    private float pitch = GTMath.PI_QUART;
+    private float pitch = GTMath.QUART_PI;
     private float yaw = 0;
     private final Vector3f offset = new Vector3f();
 
@@ -30,8 +32,8 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
         this(new BaseSchemaRenderer(schema));
     }
 
-    public SchemaWidget(BaseSchemaRenderer schema) {
-        this.schema = schema;
+    public SchemaWidget(BaseSchemaRenderer schemaRenderer) {
+        this.schema = schemaRenderer;
     }
 
     @Override
@@ -60,16 +62,16 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
     public void onMouseDrag(double mouseX, double mouseY, int button, double dragX, double dragY) {
         float dx = (float) dragX;
         float dy = (float) dragY;
-        if (button == 0 && this.enableRotation) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && this.enableRotation) {
             float moveScale = 0.03f;
-            yaw(this.yaw - dx * moveScale);
+            yaw(this.yaw + dx * moveScale);
             pitch(this.pitch + dy * moveScale);
-        } else if (button == 2 && this.enableTranslation) {
+        } else if (button == InputConstants.MOUSE_BUTTON_MIDDLE && this.enableTranslation) {
             float moveScale = 0.09f;
             Vector3f look = this.schema.camera().getLookVec().normalize(); // direction camera is looking
-            Vector3f right = look.cross(0, 1, 0, new Vector3f()).normalize(); // right relative to screen
+            Vector3f right = look.cross(GTMath.UNIT_Y, new Vector3f()).normalize(); // right relative to screen
             Vector3f up = right.cross(look, new Vector3f()); // up relative to screen
-            this.offset.add(right.mul(dx * moveScale)).add(up.mul(dy * moveScale));
+            this.offset.sub(right.mul(dx * moveScale)).add(up.mul(dy * moveScale));
         }
     }
 
@@ -84,12 +86,13 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
     }
 
     public SchemaWidget pitch(float pitch) {
-        this.pitch = GTMath.clamp(pitch, -GTMath.PI_HALF + 0.001f, GTMath.PI_HALF - 0.001f);
+        // clamp pitch to [-180,180] degrees up/down
+        this.pitch = Mth.clamp(pitch, -Mth.HALF_PI + 0.001f, Mth.HALF_PI - 0.001f);
         return this;
     }
 
     public SchemaWidget yaw(float yaw) {
-        this.yaw = (yaw + GTMath.PI2) % GTMath.PI2;
+        this.yaw = (yaw + Mth.TWO_PI) % Mth.TWO_PI;
         return this;
     }
 

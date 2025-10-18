@@ -1,6 +1,8 @@
-package com.gregtechceu.gtceu.utils.fakelevel;
+package com.gregtechceu.gtceu.api.mui.schema;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.utils.BlockPosUtil;
+import com.gregtechceu.gtceu.utils.fakelevel.SchemaLevel;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -9,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -37,68 +39,63 @@ public class ArraySchema implements ISchema {
     }
 
     public static ArraySchema of(Level level, BlockPos center, int radius) {
-        int s = 2 * radius + 1;
-        BlockInfo[][][] blocks = new BlockInfo[s][s][s];
+        int d = 2 * radius + 1;
+        BlockState[][][] blocks = new BlockState[d][d][d];
 
-        MutableBlockPos pos = center.offset(-radius, -radius, -radius).mutable();
-        for (int x = 0; x < s; x++) {
-            for (int y = 0; y < s; y++) {
-                for (int z = 0; z < s; z++) {
-                    blocks[x][y][z] = BlockInfo.of(level, pos);
-                    pos.move(0, 0, 1);
+        BlockPos corner = center.offset(-radius, -radius, -radius);
+        MutableBlockPos pos = corner.mutable();
+        for (int x = 0; x < d; x++) {
+            for (int y = 0; y < d; y++) {
+                for (int z = 0; z < d; z++) {
+                    pos.setWithOffset(corner, x, y, z);
+                    blocks[x][y][z] = level.getBlockState(pos);
                 }
-                pos.move(0, 1, -s);
             }
-            pos.move(1, -s, 0);
         }
         return new ArraySchema(blocks);
     }
 
     public static ArraySchema of(Level level, Vec3 center, Vec3 p1, Vec3 p2) {
-        // todo: do what screret said to refactor this,
-        // (later me problem)
-        int x0 = (int) Math.min(p1.x, p2.x);
-        int y0 = (int) Math.min(p1.y, p2.y);
-        int z0 = (int) Math.min(p1.z, p2.z);
+        int x0 = (int) Math.min(p1.x, p2.x) - 1;
+        int y0 = (int) Math.min(p1.y, p2.y) - 1;
+        int z0 = (int) Math.min(p1.z, p2.z) - 1;
 
         int x1 = (int) Math.max(p1.x, p2.x);
         int y1 = (int) Math.max(p1.y, p2.y);
         int z1 = (int) Math.max(p1.z, p2.z);
-        x0--;
-        y0--;
-        z0--;
-        BlockInfo[][][] blocks = new BlockInfo[x1 - x0][y1 - y0][z1 - z0];
-        for (BlockPos pos : MutableBlockPos.betweenClosed(x0, y0, z0, x1, y1, z1)) {
-            blocks[pos.getX() - x0][pos.getY() - y0][pos.getZ() - z0] = BlockInfo.of(level, pos);
+
+        BlockState[][][] blocks = new BlockState[x1 - x0][y1 - y0][z1 - z0];
+        for (BlockPos pos : BlockPos.betweenClosed(x0, y0, z0, x1, y1, z1)) {
+            blocks[pos.getX() - x0][pos.getY() - y0][pos.getZ() - z0] = level.getBlockState(pos);
         }
         return new ArraySchema(blocks);
     }
 
     @Getter
     private final Level level;
-    private final BlockInfo[][][] blocks;
+    private final BlockState[][][] blocks;
     @Getter
     @Setter
-    private BiPredicate<BlockPos, BlockInfo> renderFilter = (__, ___) -> true;
+    private BiPredicate<BlockPos, BlockState> renderFilter = (pos, block) -> true;
     private final Vec3 center;
 
-    public ArraySchema(BlockInfo[][][] blocks) {
+    public ArraySchema(BlockState[][][] blocks) {
         this.blocks = blocks;
-        this.level = new DummyLevel();
+        this.level = new SchemaLevel();
         MutableBlockPos current = new MutableBlockPos();
         MutableBlockPos max = BlockPosUtil.MIN.mutable();
         for (int x = 0; x < blocks.length; x++) {
             for (int y = 0; y < blocks[x].length; y++) {
                 for (int z = 0; z < blocks[x][y].length; z++) {
-                    BlockInfo block = blocks[x][y][z];
-                    if (block == null) continue;
+                    BlockState block = blocks[x][y][z];
+                    if (block == null || block.isAir()) continue;
                     current.set(x, y, z);
                     BlockPosUtil.setMax(max, current);
-                    block.apply(this.level, current);
+                    level.setBlockAndUpdate(current, block);
                 }
             }
         }
-        this.center = BlockPosUtil.getCenterD(BlockPos.ZERO, BlockPosUtil.add(max, 1, 1, 1));
+        this.center = BlockPosUtil.getCenterD(BlockPos.ZERO, max.move(1, 1, 1));
     }
 
     @Override
@@ -113,16 +110,16 @@ public class ArraySchema implements ISchema {
 
     @NotNull
     @Override
-    public Iterator<Map.Entry<BlockPos, BlockInfo>> iterator() {
+    public Iterator<Map.Entry<BlockPos, BlockState>> iterator() {
         return new AbstractIterator<>() {
 
             private final MutableBlockPos pos = new MutableBlockPos();
-            private final MutablePair<BlockPos, BlockInfo> pair = new MutablePair<>(pos, null);
+            private final MutablePair<BlockPos, BlockState> pair = new MutablePair<>(pos, null);
             private int x = 0, y = 0, z = -1;
 
             @Override
-            protected Map.Entry<BlockPos, BlockInfo> computeNext() {
-                BlockInfo info;
+            protected Map.Entry<BlockPos, BlockState> computeNext() {
+                BlockState state;
                 while (true) {
                     if (++z >= blocks[x][y].length) {
                         z = 0;
@@ -134,9 +131,9 @@ public class ArraySchema implements ISchema {
                         }
                     }
                     pos.set(x, y, z);
-                    info = blocks[x][y][z];
-                    if (info != null && renderFilter.test(pos, info)) {
-                        pair.setRight(info);
+                    state = blocks[x][y][z];
+                    if (state != null && renderFilter.test(pos, state)) {
+                        pair.setRight(state);
                         return pair;
                     }
                 }
@@ -147,11 +144,11 @@ public class ArraySchema implements ISchema {
     public static class Builder {
 
         private final List<String[]> tensor = new ArrayList<>();
-        private final Char2ObjectMap<BlockInfo> blockMap = new Char2ObjectOpenHashMap<>();
+        private final Char2ObjectMap<BlockState> blockMap = new Char2ObjectOpenHashMap<>();
 
         public Builder() {
-            blockMap.put(' ', BlockInfo.EMPTY);
-            blockMap.put('#', BlockInfo.EMPTY);
+            blockMap.put(' ', Blocks.AIR.defaultBlockState());
+            blockMap.put('#', Blocks.AIR.defaultBlockState());
         }
 
         public Builder layer(String... layer) {
@@ -159,33 +156,25 @@ public class ArraySchema implements ISchema {
             return this;
         }
 
-        public Builder where(char c, BlockInfo info) {
-            this.blockMap.put(c, info);
+        public Builder whereAir(char c) {
+            return where(c, Blocks.AIR.defaultBlockState());
+        }
+
+        public Builder where(char c, BlockState state) {
+            this.blockMap.put(c, state);
             return this;
         }
 
-        public Builder whereAir(char c) {
-            return where(c, BlockInfo.EMPTY);
-        }
-
-        public Builder where(char c, BlockState blockState) {
-            return where(c, new BlockInfo(blockState));
-        }
-
-        public Builder where(char c, BlockState blockState, BlockEntity tile) {
-            return where(c, new BlockInfo(blockState, tile));
-        }
-
         public Builder where(char c, Block block) {
-            return where(c, new BlockInfo(block));
+            return where(c, block.defaultBlockState());
         }
 
         public Builder where(char c, ResourceLocation registryName) {
             Optional<Block> block = BuiltInRegistries.BLOCK.getOptional(registryName);
-            if (block.isEmpty())
-                throw new IllegalArgumentException("Block with name " + registryName + " doesn't exist!");
-            BlockState state = block.get().defaultBlockState();
-            return where(c, new BlockInfo(state));
+            if (block.isEmpty()) {
+                throw new IllegalArgumentException(registryName + " isn't a valid block");
+            }
+            return where(c, block.get());
         }
 
         private void validate() {
@@ -227,25 +216,28 @@ public class ArraySchema implements ISchema {
             }
             if (!errors.isEmpty()) {
                 GTCEu.LOGGER.error("Error validating ArrayScheme BlockArray:");
-                for (String e : errors) GTCEu.LOGGER.error("  - {}", e);
+                for (String e : errors) {
+                    GTCEu.LOGGER.error("  - {}", e);
+                }
                 throw new IllegalArgumentException("The ArraySchema builder was misconfigured. See message above.");
             }
         }
 
         public ArraySchema build() {
             validate();
-            BlockInfo[][][] blocks = new BlockInfo[this.tensor.size()][this.tensor.get(0).length][this.tensor.get(0)[0]
-                    .length()];
+            BlockState[][][] blocks = new BlockState[this.tensor
+                    .size()][this.tensor.get(0).length][this.tensor.get(0)[0]
+                            .length()];
             for (int x = 0; x < this.tensor.size(); x++) {
                 String[] xLayer = this.tensor.get(x);
                 for (int y = 0; y < xLayer.length; y++) {
                     String yRow = xLayer[y];
                     for (int z = 0; z < yRow.length(); z++) {
                         char zChar = yRow.charAt(z);
-                        BlockInfo info = this.blockMap.get(zChar);
+                        BlockState state = this.blockMap.get(zChar);
                         // null -> any allowed -> don't need to check
-                        if (info == null || info == BlockInfo.EMPTY) continue;
-                        blocks[x][y][z] = info;
+                        if (state == null || state.isAir()) continue;
+                        blocks[x][y][z] = state;
                     }
                 }
             }
