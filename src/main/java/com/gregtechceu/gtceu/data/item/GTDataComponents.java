@@ -1,5 +1,7 @@
 package com.gregtechceu.gtceu.data.item;
 
+import java.util.List;
+
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.cover.filter.SimpleFluidFilter;
 import com.gregtechceu.gtceu.api.cover.filter.SimpleItemFilter;
@@ -8,6 +10,7 @@ import com.gregtechceu.gtceu.api.item.LampBlockItem;
 import com.gregtechceu.gtceu.api.item.datacomponents.*;
 import com.gregtechceu.gtceu.api.material.material.Material;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
+import com.gregtechceu.gtceu.common.cover.MonitorCoverConfig;
 import com.gregtechceu.gtceu.common.item.behavior.ItemMagnetBehavior;
 import com.gregtechceu.gtceu.common.item.tool.behavior.ToolModeSwitchBehavior;
 import com.gregtechceu.gtceu.utils.ResearchManager;
@@ -25,6 +28,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.ListCodec;
+
 import io.netty.buffer.ByteBuf;
 
 public class GTDataComponents {
@@ -117,6 +122,9 @@ public class GTDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CustomData>> DATA_COPY_TAG = DATA_COMPONENTS
             .registerComponentType("data_copy_tag", builder -> builder.persistent(CustomData.CODEC)
                     .networkSynchronized(CustomData.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<MonitorCoverConfig>> MONITOR_COVER_CONFIG = DATA_COMPONENTS
+            .registerComponentType("monitor_cover_config", builder -> builder.persistent(MonitorCoverConfig.CODEC)
+                    .networkSynchronized(MonitorCoverConfig.STREAM_CODEC));
 
     // machine info
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<LargeItemContent>> LARGE_ITEM_CONTENT = DATA_COMPONENTS
@@ -146,4 +154,12 @@ public class GTDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> LIGHTER_OPEN = DATA_COMPONENTS
             .registerComponentType("lighter_open",
                     builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> COMPUTER_MONITOR_COVER_DATA = DATA_COMPONENTS
+            .registerComponentType("computer_monitor_cover_data", builder -> builder.persistent(Codec.list(Codec.STRING))
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COMPUTER_MONITOR_COVER_P = DATA_COMPONENTS
+            .registerComponentType("computer_monitor_cover_data", builder -> builder.persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT));
 }

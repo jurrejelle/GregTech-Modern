@@ -246,9 +246,5 @@ public class GTCEu {
         public static boolean isCCTweakedLoaded() {
             return isModLoaded(GTValues.MODID_CCTWEAKED);
         }
-
-        public static boolean isCreateLoaded() {
-            return isModLoaded(GTValues.MODID_CREATE);
-        }
     }
 }

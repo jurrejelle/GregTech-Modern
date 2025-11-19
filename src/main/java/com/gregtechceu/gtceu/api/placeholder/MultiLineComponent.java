@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.contents.PlainTextContents;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -88,14 +89,14 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
         if (lines.isEmpty()) return this;
         for (Component line : lines) {
             GTUtil.getLast(this).append(line);
-            this.add(MutableComponent.create(ComponentContents.EMPTY));
+            this.add(MutableComponent.create(PlainTextContents.EMPTY));
         }
         this.remove(this.size() - 1);
         return this;
     }
 
     public void appendNewline() {
-        this.add(MutableComponent.create(ComponentContents.EMPTY));
+        this.add(MutableComponent.create(PlainTextContents.EMPTY));
     }
 
     public MultiLineComponent withStyle(Style style) {

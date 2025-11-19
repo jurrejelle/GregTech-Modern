@@ -8,12 +8,14 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.settings.IKeyConflictContext;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.IKeyConflictContext;
+// import net.neoforged.neoforge.event.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
@@ -206,27 +208,25 @@ public final class SyncedKeyMapping {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            updatingKeyDown.clear();
-            for (var entry : KEYMAPPINGS.int2ObjectEntrySet()) {
-                SyncedKeyMapping keyMapping = entry.getValue();
-                boolean previousKeyDown = keyMapping.isKeyDown;
+    public static void onClientTick(ClientTickEvent.Pre event) {
+        updatingKeyDown.clear();
+        for (var entry : KEYMAPPINGS.int2ObjectEntrySet()) {
+            SyncedKeyMapping keyMapping = entry.getValue();
+            boolean previousKeyDown = keyMapping.isKeyDown;
 
-                if (keyMapping.keyMapping != null) {
-                    keyMapping.isKeyDown = keyMapping.keyMapping.isDown();
-                } else {
-                    long id = Minecraft.getInstance().getWindow().getWindow();
-                    keyMapping.isKeyDown = InputConstants.isKeyDown(id, keyMapping.keyCode);
-                }
+            if (keyMapping.keyMapping != null) {
+                keyMapping.isKeyDown = keyMapping.keyMapping.isDown();
+            } else {
+                long id = Minecraft.getInstance().getWindow().getWindow();
+                keyMapping.isKeyDown = InputConstants.isKeyDown(id, keyMapping.keyCode);
+            }
 
-                if (previousKeyDown != keyMapping.isKeyDown) {
-                    updatingKeyDown.put(entry.getIntKey(), keyMapping.isKeyDown);
-                }
+            if (previousKeyDown != keyMapping.isKeyDown) {
+                updatingKeyDown.put(entry.getIntKey(), keyMapping.isKeyDown);
             }
-            if (!updatingKeyDown.isEmpty()) {
-                GTNetwork.sendToServer(new CPacketKeyDown(updatingKeyDown));
-            }
+        }
+        if (!updatingKeyDown.isEmpty()) {
+            PacketDistributor.sendToServer(new CPacketKeyDown(updatingKeyDown));
         }
     }
 

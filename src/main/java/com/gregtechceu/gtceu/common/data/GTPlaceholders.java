@@ -6,18 +6,20 @@ import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
 import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.cover.filter.ItemFilter;
 import com.gregtechceu.gtceu.api.item.ComponentItem;
-import com.gregtechceu.gtceu.api.item.component.IDataItem;
 import com.gregtechceu.gtceu.api.item.component.IItemComponent;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMaintenanceMachine;
 import com.gregtechceu.gtceu.api.placeholder.*;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.*;
 import com.gregtechceu.gtceu.common.blockentity.CableBlockEntity;
+import com.gregtechceu.gtceu.common.item.behavior.DataItemBehavior;
+import com.gregtechceu.gtceu.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -29,10 +31,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import static com.gregtechceu.gtceu.data.item.GTDataComponents.*;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +61,7 @@ public class GTPlaceholders {
         int cnt = 0;
         for (int i = 0; i < fluidHandler.getTanks(); i++) {
             FluidStack fluidStack = fluidHandler.getFluidInTank(i);
-            String fluidId = Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid())).toString();
+            String fluidId = Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())).toString();
             if (id == null || fluidId.equals(id)) cnt += fluidStack.getAmount();
         }
         return cnt;
@@ -387,7 +390,8 @@ public class GTPlaceholders {
                     int capacity = -1;
                     if (stack.getItem() instanceof ComponentItem componentItem) {
                         for (IItemComponent component : componentItem.getComponents()) {
-                            if (component instanceof IDataItem dataComponent) {
+                            // component
+                            if (component instanceof DataItemBehavior dataComponent) {
                                 capacity = dataComponent.getCapacity();
                                 break;
                             }
@@ -395,27 +399,27 @@ public class GTPlaceholders {
                     }
                     if (capacity == -1) throw new MissingItemException("any data item", slot);
                     PlaceholderUtils.checkRange("index", 0, capacity - 1, PlaceholderUtils.toInt(args.get(2)));
-                    ListTag data = stack.getOrCreateTag().getList("computer_monitor_cover_data", Tag.TAG_STRING);
-                    while (data.size() <= PlaceholderUtils.toInt(args.get(2))) data.add(StringTag.valueOf(""));
-                    int p = stack.getOrCreateTag().getInt("computer_monitor_cover_p");
+                    List<String> data = stack.get(COMPUTER_MONITOR_COVER_DATA.get());
+                    while (data.size() <= PlaceholderUtils.toInt(args.get(2))) data.add("");
+                    int p = stack.get(COMPUTER_MONITOR_COVER_P.get());
                     if (GTStringUtils.equals(args.get(2), "")) args.set(2, MultiLineComponent.literal(p));
                     if (GTStringUtils.equals(args.get(0), "get"))
                         return MultiLineComponent
-                                .literal(data.getString(PlaceholderUtils.toInt(args.get(2)) % capacity));
+                                .literal(data.get(PlaceholderUtils.toInt(args.get(2)) % capacity));
                     else if (args.get(0).equalsString("set")) {
                         data.set(PlaceholderUtils.toInt(args.get(2)) % capacity,
-                                StringTag.valueOf(args.get(3).toString()));
-                        stack.getOrCreateTag().put("computer_monitor_cover_data", data);
+                                args.get(3).toString());
+                        stack.set(COMPUTER_MONITOR_COVER_DATA, data);
                         return MultiLineComponent.empty();
                     } else if (args.get(0).equalsString("setp")) {
-                        stack.getOrCreateTag().putInt("computer_monitor_cover_p",
+                        stack.set(COMPUTER_MONITOR_COVER_P,
                                 PlaceholderUtils.toInt(args.get(3)) % capacity);
                         return MultiLineComponent.empty();
                     } else if (args.get(0).equalsString("inc")) {
-                        stack.getOrCreateTag().putInt("computer_monitor_cover_p", (p + 1) % capacity);
+                        stack.set(COMPUTER_MONITOR_COVER_P, (p + 1) % capacity);
                         return MultiLineComponent.empty();
                     } else if (args.get(0).equalsString("dec")) {
-                        stack.getOrCreateTag().putInt("computer_monitor_cover_p", p == 0 ? capacity - 1 : p - 1);
+                        stack.set(COMPUTER_MONITOR_COVER_P, p == 0 ? capacity - 1 : p - 1);
                         return MultiLineComponent.empty();
                     } else throw new InvalidArgsException();
                 } catch (IndexOutOfBoundsException e) {

@@ -50,7 +50,6 @@ public class SPacketImageResponse implements CustomPacketPayload {
         buffer.writeByteArray(imagePart);
     }
 
-    @Override
     public void execute(IPayloadContext context) {
         if (imagePart == null) {
             return;
@@ -62,7 +61,7 @@ public class SPacketImageResponse implements CustomPacketPayload {
 
     public static void sendImage(String url, byte[] imageBytes, IPayloadContext context) throws IOException {
         if (imageBytes.length < MAX_BYTES_PER_PACKET) {
-            GTNetwork.reply(context, new SPacketImageResponse(url, imageBytes, 0, 1));
+            context.reply(new SPacketImageResponse(url, imageBytes, 0, 1));
         } else {
             int packetCount = GTMath.ceilDiv(imageBytes.length, MAX_BYTES_PER_PACKET);
             int arrayIndex = 0;
@@ -74,7 +73,7 @@ public class SPacketImageResponse implements CustomPacketPayload {
                 }
 
                 byte[] part = ArrayUtils.subarray(imageBytes, arrayIndex, arrayIndex + MAX_BYTES_PER_PACKET);
-                GTNetwork.reply(context, new SPacketImageResponse(url, part, i, packetCount));
+                context.reply(new SPacketImageResponse(url, part, i, packetCount));
 
                 arrayIndex += MAX_BYTES_PER_PACKET;
             }

@@ -7,6 +7,11 @@ import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectB
 import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectBedrockOre;
 import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectOre;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -34,9 +39,9 @@ public class GTNetwork {
     
         // spotless:on
 // =======
-//     public static void sendToServer(INetPacket packet) {
-//         INSTANCE.sendToServer(packet);
-//     }
+    public static void sendToServer(CustomPacketPayload packet) {
+        PacketDistributor.sendToServer(packet);
+    }
 
 //     public static void sendToPlayersInLevel(ResourceKey<Level> level, INetPacket packet) {
 //         INSTANCE.send(PacketDistributor.DIMENSION.with(() -> level), packet);
@@ -51,9 +56,9 @@ public class GTNetwork {
 //                 PacketDistributor.TRACKING_ENTITY.with(() -> entity), packet);
 //     }
 
-//     public static void sendToAllPlayersTrackingChunk(LevelChunk chunk, INetPacket packet) {
-//         INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
-//     }
+    public static void sendToAllPlayersTrackingChunk(LevelChunk chunk, CustomPacketPayload packet) {
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel)chunk.getLevel(), chunk.getPos(), packet);
+    }
 
 //     public static void sendToAll(INetPacket packet) {
 //         INSTANCE.send(PacketDistributor.ALL.noArg(), packet);

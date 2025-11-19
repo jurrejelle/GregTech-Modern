@@ -15,8 +15,7 @@ import com.gregtechceu.gtceu.api.placeholder.PlaceholderHandler;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.client.renderer.cover.CoverTextRenderer;
 import com.gregtechceu.gtceu.client.renderer.cover.IDynamicCoverRenderer;
-import com.gregtechceu.gtceu.data.lang.LangHandler;
-import com.gregtechceu.gtceu.integration.create.GTCreateIntegration;
+import com.gregtechceu.gtceu.data.datagen.lang.LangHandler;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
@@ -35,6 +34,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +42,8 @@ import net.minecraft.world.item.ItemStack;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+
+import static com.gregtechceu.gtceu.data.item.GTDataComponents.MONITOR_COVER_CONFIG;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -84,7 +86,7 @@ public class ComputerMonitorCover extends CoverBehavior
     public ComputerMonitorCover(CoverDefinition definition, ICoverable coverHolder, Direction attachedSide) {
         super(definition, coverHolder, attachedSide);
         renderer = new CoverTextRenderer(this::getText);
-        for (int i = 0; i < 100; i++) createDisplayTargetBuffer.add(MutableComponent.create(ComponentContents.EMPTY));
+        for (int i = 0; i < 100; i++) createDisplayTargetBuffer.add(MutableComponent.create(PlainTextContents.EMPTY));
     }
 
     public List<MutableComponent> getRenderedText() {
@@ -207,8 +209,8 @@ public class ComputerMonitorCover extends CoverBehavior
         ticksSincePlaced++;
         if (coverHolder.getOffsetTimer() % updateInterval == 0) {
             try {
-                if (GTCEu.Mods.isCreateLoaded())
-                    GTCreateIntegration.TemporaryRedstoneLinkTransmitter.destroyAll();
+                // if (GTCEu.Mods.isCreateLoaded())
+                //     GTCreateIntegration.TemporaryRedstoneLinkTransmitter.destroyAll();
                 setRedstoneSignalOutput(0);
                 text = getRenderedText();
             } catch (RuntimeException e) {
@@ -243,32 +245,26 @@ public class ComputerMonitorCover extends CoverBehavior
 
     @Override
     public InteractionResult onDataStickUse(Player player, ItemStack dataStick) {
-        CompoundTag tag = dataStick.getTagElement("computer_monitor_cover_config");
+        MonitorCoverConfig tag = dataStick.getOrDefault(MONITOR_COVER_CONFIG, null);
         if (tag == null) return InteractionResult.FAIL;
-        List<String> stringLines = new ArrayList<>();
-        ListTag stringLinesTag = tag.getList("lines", Tag.TAG_STRING);
-        for (int i = 0; i < stringLinesTag.size(); i++) stringLines.add(stringLinesTag.getString(i));
+        List<String> stringLines = tag.getLines();
         formatStringLines.clear();
         formatStringLines.addAll(stringLines);
-        List<String> stringArgs = new ArrayList<>();
-        ListTag stringArgsTag = tag.getList("args", Tag.TAG_STRING);
-        for (int i = 0; i < stringArgsTag.size(); i++) stringArgs.add(stringArgsTag.getString(i));
+        List<String> stringArgs = tag.getArgs();
         formatStringArgs.clear();
         formatStringArgs.addAll(stringArgs);
-        updateInterval = tag.getInt("updateInterval");
+        updateInterval = tag.getUpdateInterval();
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public InteractionResult onDataStickShiftUse(Player player, ItemStack dataStick) {
-        CompoundTag tag = dataStick.getOrCreateTagElement("computer_monitor_cover_config");
-        ListTag stringLinesTag = new ListTag();
-        formatStringLines.forEach(line -> stringLinesTag.add(StringTag.valueOf(line)));
-        tag.put("lines", stringLinesTag);
-        ListTag stringArgsTag = new ListTag();
-        formatStringArgs.forEach(line -> stringArgsTag.add(StringTag.valueOf(line)));
-        tag.put("args", stringArgsTag);
-        tag.putInt("updateInterval", updateInterval);
+        List<String> lines = new ArrayList<String>();
+        formatStringLines.forEach(line -> lines.add(line));
+        List<String> args = new ArrayList<String>();
+        formatStringArgs.forEach(line -> args.add(line));
+        MonitorCoverConfig tag = dataStick.getOrDefault(MONITOR_COVER_CONFIG, new MonitorCoverConfig(lines, args, updateInterval));
+        dataStick.set(MONITOR_COVER_CONFIG, tag);
         return InteractionResult.SUCCESS;
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -181,7 +182,7 @@ public class GTStringUtils {
         if (lines.isEmpty()) return;
         for (Component line : lines) {
             GTUtil.getLast(components).append(line);
-            components.add(MutableComponent.create(ComponentContents.EMPTY));
+            components.add(MutableComponent.create(PlainTextContents.EMPTY));
         }
         components.remove(components.size() - 1);
     }
