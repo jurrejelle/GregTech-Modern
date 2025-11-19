@@ -228,6 +228,10 @@ public class GTRegistrate extends AbstractRegistrate<GTRegistrate> {
         this.currentTab = currentTab.get();
     }
 
+    public void resetCreativeModeTab() {
+        this.currentTab = null;
+    }
+
     public void creativeModeTab(RegistryEntry<CreativeModeTab, ? extends CreativeModeTab> currentTab) {
         this.currentTab = currentTab;
     }

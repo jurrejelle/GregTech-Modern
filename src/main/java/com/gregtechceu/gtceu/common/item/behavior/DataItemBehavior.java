@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.item.component.IAddInformation;
+import com.gregtechceu.gtceu.api.item.component.IDataItem;
 import com.gregtechceu.gtceu.api.item.component.IInteractionItem;
 import com.gregtechceu.gtceu.api.machine.feature.IDataStickInteractable;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
@@ -26,11 +27,19 @@ import net.minecraft.world.item.context.UseOnContext;
 
 import java.util.List;
 
-public class DataItemBehavior implements IInteractionItem, IAddInformation {
+public class DataItemBehavior implements IInteractionItem, IAddInformation, IDataItem {
+    private final boolean requireDataBank;
+    @Getter
+    private final int capacity;
 
-    public static final DataItemBehavior INSTANCE = new DataItemBehavior();
+    @Override
+    public boolean requireDataBank() {
+        return requireDataBank;
+    }
 
-    protected DataItemBehavior() {
+    public DataItemBehavior(boolean requireDataBank, int capacity) {
+        this.requireDataBank = requireDataBank;
+        this.capacity = capacity;
     }
 
     // PORT TODO: Fix this shit up

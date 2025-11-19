@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
 import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.cover.filter.ItemFilter;
 import com.gregtechceu.gtceu.api.item.ComponentItem;
+import com.gregtechceu.gtceu.api.item.component.IDataItem;
 import com.gregtechceu.gtceu.api.item.component.IItemComponent;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMaintenanceMachine;
 import com.gregtechceu.gtceu.api.placeholder.*;
@@ -391,7 +392,7 @@ public class GTPlaceholders {
                     if (stack.getItem() instanceof ComponentItem componentItem) {
                         for (IItemComponent component : componentItem.getComponents()) {
                             // component
-                            if (component instanceof DataItemBehavior dataComponent) {
+                            if (component instanceof IDataItem dataComponent) {
                                 capacity = dataComponent.getCapacity();
                                 break;
                             }

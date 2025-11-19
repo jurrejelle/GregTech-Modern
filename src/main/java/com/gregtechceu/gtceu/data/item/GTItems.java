@@ -23,8 +23,6 @@ import com.gregtechceu.gtceu.api.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.tag.TagUtil;
 import com.gregtechceu.gtceu.common.item.armor.*;
 import com.gregtechceu.gtceu.common.item.behavior.*;
-import com.gregtechceu.gtceu.common.item.behavior.LighterBehavior;
-import com.gregtechceu.gtceu.common.item.behavior.MetaMachineConfigCopyBehaviour;
 import com.gregtechceu.gtceu.common.item.modules.ImageModuleBehaviour;
 import com.gregtechceu.gtceu.common.item.modules.TextModuleBehaviour;
 import com.gregtechceu.gtceu.config.ConfigHolder;
@@ -55,7 +53,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.material.Fluids;
@@ -1433,15 +1430,15 @@ public class GTItems {
             .register() : null;
 
     public static ItemEntry<ComponentItem> TOOL_DATA_STICK = REGISTRATE.item("data_stick", ComponentItem::new)
-            .lang("Data Stick").onRegister(attach(DataItemBehavior.INSTANCE))
+            .lang("Data Stick").onRegister(attach(new DataItemBehavior(false, 8)))
             .properties(p -> p.component(GTDataComponents.DATA_ITEM, false))
             .register();
     public static ItemEntry<ComponentItem> TOOL_DATA_ORB = REGISTRATE.item("data_orb", ComponentItem::new)
-            .lang("Data Orb").onRegister(attach(DataItemBehavior.INSTANCE))
+            .lang("Data Orb").onRegister(attach(new DataItemBehavior(false, 64)))
             .properties(p -> p.component(GTDataComponents.DATA_ITEM, false))
             .register();
     public static ItemEntry<ComponentItem> TOOL_DATA_MODULE = REGISTRATE.item("data_module", ComponentItem::new)
-            .lang("Data Module").onRegister(attach(DataItemBehavior.INSTANCE))
+            .lang("Data Module").onRegister(attach(new DataItemBehavior(true, 256)))
             .properties(p -> p.component(GTDataComponents.DATA_ITEM, true))
             .register();
 

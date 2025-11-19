@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.placeholder;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -133,7 +134,7 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
         MultiLineComponent out = MultiLineComponent.empty();
         out.clear();
         for (Tag i : tag) {
-            out.add(Component.Serializer.fromJson(i.getAsString()));
+            out.add(Component.Serializer.fromJson(i.getAsString(), Component.Serializer));
         }
         return out;
     }
