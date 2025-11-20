@@ -60,7 +60,7 @@ public class DataItemBehavior implements IInteractionItem, IAddInformation, IDat
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents,
                                 TooltipFlag isAdvanced) {
-
+        // PORT TODO: Fix this
         // if (stack.getOrCreateTag().contains("boundPlayerName")) {
         //     MutableComponent name = Component.Serializer.fromJson(stack.getOrCreateTag().getString("boundPlayerName"));
         //     tooltipComponents.add(Component.translatable("gtceu.tooltip.player_bind", name));

@@ -37,22 +37,22 @@ public final class GTRecipeConditions {
     public static final RecipeConditionType<DaytimeCondition> DAYTIME = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
             GTCEu.id("daytime"), new RecipeConditionType<>(DaytimeCondition::new, DaytimeCondition.CODEC));
     public static RecipeConditionType<FTBQuestCondition> FTB_QUEST;
-    public static RecipeConditionType<GameStageCondition> GAMESTAGE;
-    public static RecipeConditionType<HeraclesQuestCondition> HERACLES_QUEST;
+//     public static RecipeConditionType<GameStageCondition> GAMESTAGE;
+//     public static RecipeConditionType<HeraclesQuestCondition> HERACLES_QUEST;
 
     public static void init() {
         if (GTCEu.Mods.isFTBQuestsLoaded()) {
             FTB_QUEST = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
                     GTCEu.id("ftb_quest"), new RecipeConditionType<>(FTBQuestCondition::new, FTBQuestCondition.CODEC));
         }
-        if (GTCEu.Mods.isGameStagesLoaded()) {
-            GAMESTAGE = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
-                    GTCEu.id("game_stage"), new RecipeConditionType<>(GameStageCondition::new, GameStageCondition.CODEC));
-        }
-        if (GTCEu.Mods.isHeraclesLoaded()) {
-            HERACLES_QUEST = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
-                    GTCEu.id("heracles_quest"), new RecipeConditionType<>(HeraclesQuestCondition::new, HeraclesQuestCondition.CODEC));
-        }
+        // if (GTCEu.Mods.isGameStagesLoaded()) {
+        //     GAMESTAGE = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
+        //             GTCEu.id("game_stage"), new RecipeConditionType<>(GameStageCondition::new, GameStageCondition.CODEC));
+        // }
+        // if (GTCEu.Mods.isHeraclesLoaded()) {
+        //     HERACLES_QUEST = GTRegistries.register(GTRegistries.RECIPE_CONDITIONS,
+        //             GTCEu.id("heracles_quest"), new RecipeConditionType<>(HeraclesQuestCondition::new, HeraclesQuestCondition.CODEC));
+        // }
     }
     // spotless:on
 }

@@ -16,10 +16,17 @@ import com.gregtechceu.gtceu.common.item.tool.behavior.ToolModeSwitchBehavior;
 import com.gregtechceu.gtceu.utils.ResearchManager;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -155,11 +162,29 @@ public class GTDataComponents {
             .registerComponentType("lighter_open",
                     builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> COMPUTER_MONITOR_COVER_DATA = DATA_COMPONENTS
-            .registerComponentType("computer_monitor_cover_data", builder -> builder.persistent(Codec.list(Codec.STRING))
-                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+            .registerComponentType("computer_monitor_cover_data",
+                    builder -> builder.persistent(Codec.list(Codec.STRING))
+                            .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COMPUTER_MONITOR_COVER_P = DATA_COMPONENTS
-            .registerComponentType("computer_monitor_cover_data", builder -> builder.persistent(Codec.INT)
+            .registerComponentType("computer_monitor_cover_p", builder -> builder.persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> TEXT_MODULE_SCALE = DATA_COMPONENTS
+            .registerComponentType("text_module_scale", builder -> builder.persistent(Codec.DOUBLE)
+                    .networkSynchronized(ByteBufCodecs.DOUBLE));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> TEXT_MODULE_STRING_LINES = DATA_COMPONENTS
+            .registerComponentType("text_module_string_lines", builder -> builder.persistent(Codec.list(Codec.STRING))
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Component>>> TEXT_MODULE_TEXT = DATA_COMPONENTS
+            .registerComponentType("text_module_text", builder -> builder.persistent(Codec.list(ComponentSerialization.CODEC))
+                    .networkSynchronized(ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.list())));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> IMAGE_MODULE_URL = DATA_COMPONENTS
+            .registerComponentType("image_module_url", builder -> builder.persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> MONITOR_TARGET = DATA_COMPONENTS
+            .registerComponentType("monitor_target", builder -> builder.persistent(BlockPos.CODEC)
+                    .networkSynchronized(BlockPos.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Direction>> MONITOR_TARGET_FACE = DATA_COMPONENTS
+            .registerComponentType("monitor_target_face", builder -> builder.persistent(Direction.CODEC)
+                    .networkSynchronized(Direction.STREAM_CODEC));
 }

@@ -450,7 +450,7 @@ public class GTPlaceholders {
                 PlaceholderUtils.checkRange("slot index", 1, 8, slot);
                 if (ctx.itemStackHandler() == null) throw new NotSupportedException();
                 return MultiLineComponent
-                        .literal(ctx.itemStackHandler().getStackInSlot(slot - 1).getOrCreateTag().toString());
+                        .literal(ctx.itemStackHandler().getStackInSlot(slot - 1).getComponents().toString());
             }
         });
         PlaceholderHandler.addPlaceholder(new Placeholder("toChars") {
@@ -540,25 +540,25 @@ public class GTPlaceholders {
                     }
                 }
                 if (capacity == -1) throw new MissingItemException("any data item", slot);
-                ListTag tag = stack.getOrCreateTag().getList("computer_monitor_cover_data", Tag.TAG_STRING);
+                List<String> tag = stack.get(GTDataComponents.COMPUTER_MONITOR_COVER_DATA);
                 int operationsLeft = 1000;
                 int p = 0;
                 String code = args.get(1).toString();
                 Stack<Integer> loops = new Stack<>();
                 for (int i = 0; i < code.length() && operationsLeft > 0; i++) {
-                    while (tag.size() <= p) tag.add(StringTag.valueOf("0"));
-                    if (tag.getString(p).isEmpty()) tag.set(i, StringTag.valueOf("0"));
+                    while (tag.size() <= p) tag.add("0");
+                    if (tag.get(p).isEmpty()) tag.set(i, "0");
                     try {
                         switch (code.charAt(i)) {
                             case '+' -> tag.set(p,
-                                    StringTag.valueOf(String.valueOf(Integer.parseInt(tag.getString(p)) + 1)));
+                                    String.valueOf(Integer.parseInt(tag.get(p)) + 1));
                             case '-' -> tag.set(p,
-                                    StringTag.valueOf(String.valueOf(Integer.parseInt(tag.getString(p)) - 1)));
+                                    String.valueOf(Integer.parseInt(tag.get(p)) - 1));
                             case '>' -> p++;
                             case '<' -> p--;
                             case '[' -> loops.push(i);
                             case ']' -> {
-                                if (Integer.parseInt(tag.getString(p)) == 0) loops.pop();
+                                if (Integer.parseInt(tag.get(p)) == 0) loops.pop();
                                 else i = loops.peek();
                             }
                             default -> throw new PlaceholderException(Component
@@ -573,68 +573,68 @@ public class GTPlaceholders {
                 return MultiLineComponent.empty();
             }
         });
-        PlaceholderHandler.addPlaceholder(new Placeholder("cmd") {
+        // PlaceholderHandler.addPlaceholder(new Placeholder("cmd") {
 
-            @Override
-            public MultiLineComponent apply(PlaceholderContext ctx,
-                                            List<MultiLineComponent> args) throws PlaceholderException {
-                PlaceholderUtils.checkArgs(args, 2);
-                if (ctx.itemStackHandler() == null) throw new NotSupportedException();
-                int slot = PlaceholderUtils.toInt(args.get(0));
-                PlaceholderUtils.checkRange("slot index", 1, 8, slot);
-                ItemStack stack = ctx.itemStackHandler().getStackInSlot(slot - 1);
-                if (!stack.getOrCreateTag().contains("boundPlayerPermLevel"))
-                    throw new MissingItemException("any data item bound to player", slot);
-                int perm = stack.getOrCreateTag().getInt("boundPlayerPermLevel");
-                Component displayName = Component.Serializer
-                        .fromJson(stack.getOrCreateTag().getString("boundPlayerName"));
-                if (displayName == null) displayName = Component.literal("Placeholder processor");
-                if (ctx.level() instanceof ServerLevel serverLevel) {
-                    MinecraftServer server = serverLevel.getServer();
-                    MultiLineComponent output = MultiLineComponent.empty();
-                    UUID playerUUID = null;
-                    try {
-                        playerUUID = UUID.fromString(stack.getOrCreateTag().getString("boundPlayerUUID"));
-                    } catch (RuntimeException ignored) {}
-                    ServerPlayer player = playerUUID == null ? null : server.getPlayerList().getPlayer(playerUUID);
-                    CommandSource customSource = new CommandSource() {
+        //     @Override
+        //     public MultiLineComponent apply(PlaceholderContext ctx,
+        //                                     List<MultiLineComponent> args) throws PlaceholderException {
+        //         PlaceholderUtils.checkArgs(args, 2);
+        //         if (ctx.itemStackHandler() == null) throw new NotSupportedException();
+        //         int slot = PlaceholderUtils.toInt(args.get(0));
+        //         PlaceholderUtils.checkRange("slot index", 1, 8, slot);
+        //         ItemStack stack = ctx.itemStackHandler().getStackInSlot(slot - 1);
+        //         if (!stack.getOrCreateTag().contains("boundPlayerPermLevel"))
+        //             throw new MissingItemException("any data item bound to player", slot);
+        //         int perm = stack.getOrCreateTag().getInt("boundPlayerPermLevel");
+        //         Component displayName = Component.Serializer
+        //                 .fromJson(stack.getOrCreateTag().getString("boundPlayerName"));
+        //         if (displayName == null) displayName = Component.literal("Placeholder processor");
+        //         if (ctx.level() instanceof ServerLevel serverLevel) {
+        //             MinecraftServer server = serverLevel.getServer();
+        //             MultiLineComponent output = MultiLineComponent.empty();
+        //             UUID playerUUID = null;
+        //             try {
+        //                 playerUUID = UUID.fromString(stack.getOrCreateTag().getString("boundPlayerUUID"));
+        //             } catch (RuntimeException ignored) {}
+        //             ServerPlayer player = playerUUID == null ? null : server.getPlayerList().getPlayer(playerUUID);
+        //             CommandSource customSource = new CommandSource() {
 
-                        @Override
-                        public void sendSystemMessage(@NotNull Component message) {
-                            output.append(List.of(message));
-                            output.appendNewline();
-                        }
+        //                 @Override
+        //                 public void sendSystemMessage(@NotNull Component message) {
+        //                     output.append(List.of(message));
+        //                     output.appendNewline();
+        //                 }
 
-                        @Override
-                        public boolean acceptsSuccess() {
-                            return true;
-                        }
+        //                 @Override
+        //                 public boolean acceptsSuccess() {
+        //                     return true;
+        //                 }
 
-                        @Override
-                        public boolean acceptsFailure() {
-                            return true;
-                        }
+        //                 @Override
+        //                 public boolean acceptsFailure() {
+        //                     return true;
+        //                 }
 
-                        @Override
-                        public boolean shouldInformAdmins() {
-                            return false;
-                        }
-                    };
-                    CommandSourceStack source = new CommandSourceStack(
-                            customSource,
-                            ctx.pos() == null ? Vec3.ZERO : ctx.pos().getCenter(),
-                            Vec2.ZERO,
-                            serverLevel,
-                            perm,
-                            displayName.getString(),
-                            displayName,
-                            server,
-                            player);
-                    server.getCommands().performPrefixedCommand(source, args.get(1).toString());
-                    return output;
-                } else throw new NotSupportedException();
-            }
-        });
+        //                 @Override
+        //                 public boolean shouldInformAdmins() {
+        //                     return false;
+        //                 }
+        //             };
+        //             CommandSourceStack source = new CommandSourceStack(
+        //                     customSource,
+        //                     ctx.pos() == null ? Vec3.ZERO : ctx.pos().getCenter(),
+        //                     Vec2.ZERO,
+        //                     serverLevel,
+        //                     perm,
+        //                     displayName.getString(),
+        //                     displayName,
+        //                     server,
+        //                     player);
+        //             server.getCommands().performPrefixedCommand(source, args.get(1).toString());
+        //             return output;
+        //         } else throw new NotSupportedException();
+        //     }
+        // });
         PlaceholderHandler.addPlaceholder(new Placeholder("tm") {
 
             @Override

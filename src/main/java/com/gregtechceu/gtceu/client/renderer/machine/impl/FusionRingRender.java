@@ -9,7 +9,7 @@ import com.gregtechceu.gtceu.client.util.BloomUtils;
 import com.gregtechceu.gtceu.client.util.RenderBufferHelper;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.FusionReactorMachine;
 
-import com.lowdragmc.shimmer.client.shader.RenderUtils;
+// import com.lowdragmc.shimmer.client.shader.RenderUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -56,13 +56,13 @@ public class FusionRingRender extends DynamicRender<FusionReactorMachine, Fusion
         if (!machine.recipeLogic.isWorking() && delta <= 0) {
             return;
         }
-        if (GTCEu.Mods.isShimmerLoaded()) {
-            PoseStack finalStack = RenderUtils.copyPoseStack(poseStack);
-            BloomUtils.entityBloom(source -> renderLightRing(machine, partialTick, finalStack,
-                    source.getBuffer(GTRenderTypes.getLightRing())));
-        } else {
+        // if (GTCEu.Mods.isShimmerLoaded()) {
+            // PoseStack finalStack = RenderUtils.copyPoseStack(poseStack);
+            // BloomUtils.entityBloom(source -> renderLightRing(machine, partialTick, finalStack,
+            //         source.getBuffer(GTRenderTypes.getLightRing())));
+        // } else {
             renderLightRing(machine, partialTick, poseStack, buffer.getBuffer(GTRenderTypes.getLightRing()));
-        }
+        // }
     }
 
     @OnlyIn(Dist.CLIENT)

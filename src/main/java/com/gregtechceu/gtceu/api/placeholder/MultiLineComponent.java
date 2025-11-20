@@ -122,22 +122,22 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
         return new ArrayList<>(this);
     }
 
-    public Tag toTag() {
-        ListTag tag = new ListTag();
-        for (MutableComponent component : this) {
-            tag.add(StringTag.valueOf(Component.Serializer.toJson(component)));
-        }
-        return tag;
-    }
+    // public Tag toTag() {
+    //     ListTag tag = new ListTag();
+    //     for (MutableComponent component : this) {
+    //         tag.add(StringTag.valueOf(Component.Serializer.toJson(component)));
+    //     }
+    //     return tag;
+    // }
 
-    public static MultiLineComponent fromTag(ListTag tag) {
-        MultiLineComponent out = MultiLineComponent.empty();
-        out.clear();
-        for (Tag i : tag) {
-            out.add(Component.Serializer.fromJson(i.getAsString(), Component.Serializer));
-        }
-        return out;
-    }
+    // public static MultiLineComponent fromTag(ListTag tag) {
+    //     MultiLineComponent out = MultiLineComponent.empty();
+    //     out.clear();
+    //     for (Tag i : tag) {
+    //         out.add(Component.Serializer.fromJson(i.getAsString(), Component.Serializer));
+    //     }
+    //     return out;
+    // }
 
     public long toLong() {
         if (this.isEmpty()) return 0;

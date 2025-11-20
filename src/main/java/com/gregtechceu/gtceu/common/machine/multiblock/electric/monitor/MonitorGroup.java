@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.capability.IMonitorComponent;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
+import com.gregtechceu.gtceu.data.item.GTDataComponents;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -105,19 +106,16 @@ public class MonitorGroup {
         IMonitorComponent component = GTCapabilityHelper.getMonitorComponent(level, target, null);
         if (component != null && component.getDataItems() != null) {
             ItemStack stack = component.getDataItems().getStackInSlot(dataSlot);
-            CompoundTag tag = stack.getTag();
-            if (tag == null) {
+            BlockPos pos = stack.getOrDefault(GTDataComponents.MONITOR_TARGET, null);
+            if (pos == null) {
                 return null;
             }
-            int x = tag.getInt("targetX");
-            int y = tag.getInt("targetY");
-            int z = tag.getInt("targetZ");
-            Direction face = Direction.byName(tag.getString("face"));
+            Direction face = stack.getOrDefault(GTDataComponents.MONITOR_TARGET_FACE, null);
             if (face == null) {
                 return null;
             }
             setTargetCoverSide(face);
-            return new BlockPos(x, y, z);
+            return pos;
         }
         return target;
     }
