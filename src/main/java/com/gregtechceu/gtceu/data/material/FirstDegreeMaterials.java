@@ -738,7 +738,7 @@ public class FirstDegreeMaterials {
                 .components(Lead, 1, Molybdenum, 1, Oxygen, 4)
                 .buildAndRegister();
 
-        Limonite = new Material.Builder(GTCEu.id("limonite"))
+        YellowLimonite = new Material.Builder(GTCEu.id("yellow_limonite"))
                 .dust().ore()
                 .color(0xf5e315).secondaryColor(0xc06f33).iconSet(METALLIC)
                 .flags(DECOMPOSITION_BY_CENTRIFUGING, BLAST_FURNACE_CALCITE_DOUBLE)

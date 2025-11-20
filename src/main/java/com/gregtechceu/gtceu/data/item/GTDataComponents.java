@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.item.datacomponents.*;
 import com.gregtechceu.gtceu.api.material.material.Material;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.cover.MonitorCoverConfig;
+import com.gregtechceu.gtceu.common.item.behavior.DataItemBehavior;
 import com.gregtechceu.gtceu.common.item.behavior.ItemMagnetBehavior;
 import com.gregtechceu.gtceu.common.item.tool.behavior.ToolModeSwitchBehavior;
 import com.gregtechceu.gtceu.utils.ResearchManager;
@@ -187,4 +188,7 @@ public class GTDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Direction>> MONITOR_TARGET_FACE = DATA_COMPONENTS
             .registerComponentType("monitor_target_face", builder -> builder.persistent(Direction.CODEC)
                     .networkSynchronized(Direction.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataItemBehavior.BoundPlayer>> DATA_BOUND_PLAYER = DATA_COMPONENTS
+            .registerComponentType("data_bound_player", builder -> builder.persistent(DataItemBehavior.BoundPlayer.CODEC)
+                    .networkSynchronized(DataItemBehavior.BoundPlayer.STREAM_CODEC));
 }

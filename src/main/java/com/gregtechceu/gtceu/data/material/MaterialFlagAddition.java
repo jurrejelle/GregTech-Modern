@@ -103,7 +103,7 @@ public class MaterialFlagAddition {
         oreProp.setOreByProducts(Topaz);
 
         oreProp = Goethite.getProperty(PropertyKey.ORE);
-        oreProp.setOreByProducts(Malachite, Limonite);
+        oreProp.setOreByProducts(Malachite, YellowLimonite);
         oreProp.setSeparatedInto(Iron);
         oreProp.setDirectSmeltResult(Iron);
 
@@ -256,7 +256,7 @@ public class MaterialFlagAddition {
         oreProp = Uraninite.getProperty(PropertyKey.ORE);
         oreProp.setOreByProducts(Uraninite, Thorium, Silver);
 
-        oreProp = Limonite.getProperty(PropertyKey.ORE);
+        oreProp = YellowLimonite.getProperty(PropertyKey.ORE);
         oreProp.setOreByProducts(Nickel, Goethite, CobaltOxide);
         oreProp.setSeparatedInto(Iron);
         oreProp.setWashedIn(SodiumPersulfate);

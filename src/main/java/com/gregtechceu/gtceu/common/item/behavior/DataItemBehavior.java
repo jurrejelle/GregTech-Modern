@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.common.item.behavior;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.ICoverable;
+import com.gregtechceu.gtceu.api.item.LampBlockItem.LampData;
 import com.gregtechceu.gtceu.api.item.component.IAddInformation;
 import com.gregtechceu.gtceu.api.item.component.IDataItem;
 import com.gregtechceu.gtceu.api.item.component.IInteractionItem;
@@ -11,21 +12,35 @@ import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.ResearchManager;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DataItemBehavior implements IInteractionItem, IAddInformation, IDataItem {
     private final boolean requireDataBank;
@@ -42,46 +57,49 @@ public class DataItemBehavior implements IInteractionItem, IAddInformation, IDat
         this.capacity = capacity;
     }
 
-    // PORT TODO: Fix this shit up
-    // @Override
-    // public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand usedHand) {
-    //     if (player.isShiftKeyDown()) {
-    //         ItemStack stack = player.getItemInHand(usedHand);
-    //         stack.getOrCreateTag().putString("boundPlayerName", Component.Serializer.toJson(player.getDisplayName()));
-    //         int perm = 0;
-    //         while (player.hasPermissions(perm)) perm++;
-    //         stack.getOrCreateTag().putInt("boundPlayerPermLevel", perm - 1);
-    //         stack.getOrCreateTag().putString("boundPlayerUUID", player.getStringUUID());
-    //         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-    //     }
-    //     return IInteractionItem.super.use(item, level, player, usedHand);
-    // }
+    @Override
+    public InteractionResultHolder<ItemStack> use(ItemStack item, Level level, Player player, InteractionHand usedHand) {
+        if (player.isShiftKeyDown()) {
+            ItemStack stack = player.getItemInHand(usedHand);
+            // stack.getOrCreateTag().putString("boundPlayerName", Component.Serializer.toJson(player.getDisplayName()));
+            int perm = 0;
+            while (player.hasPermissions(perm)) perm++;
+            // stack.getOrCreateTag().putInt("boundPlayerPermLevel", perm - 1);
+            // stack.getOrCreateTag().putString("boundPlayerUUID", player.getStringUUID());
+            stack.set(GTDataComponents.DATA_BOUND_PLAYER, new BoundPlayer(player.getUUID(), perm, player.getName()));
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        }
+        return IInteractionItem.super.use(item, level, player, usedHand);
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents,
                                 TooltipFlag isAdvanced) {
-        // PORT TODO: Fix this
-        // if (stack.getOrCreateTag().contains("boundPlayerName")) {
-        //     MutableComponent name = Component.Serializer.fromJson(stack.getOrCreateTag().getString("boundPlayerName"));
-        //     tooltipComponents.add(Component.translatable("gtceu.tooltip.player_bind", name));
-        // }
-        // if (stack.getOrCreateTag().contains("targetX")) {
-        //     tooltipComponents.add(Component.translatable(
-        //             "gtceu.tooltip.wireless_transmitter_bind",
-        //             Component.literal("" + stack.getOrCreateTag().getInt("targetX")).withStyle(ChatFormatting.GOLD),
-        //             Component.literal("" + stack.getOrCreateTag().getInt("targetY")).withStyle(ChatFormatting.GOLD),
-        //             Component.literal("" + stack.getOrCreateTag().getInt("targetZ")).withStyle(ChatFormatting.GOLD),
-        //             Component.literal(stack.getOrCreateTag().getString("face")).withStyle(ChatFormatting.DARK_PURPLE)));
-        // }
-        // if (stack.getOrCreateTag().contains("computer_monitor_cover_config")) {
-        //     tooltipComponents.add(Component.translatable("gtceu.tooltip.computer_monitor_config"));
-        // }
-        // if (stack.getOrCreateTag().contains("computer_monitor_cover_data")) {
-        //     tooltipComponents.add(
-        //             Component.translatable("gtceu.tooltip.computer_monitor_data",
-        //                     GTStringUtils.toComponent(
-        //                             stack.getOrCreateTag().getList("computer_monitor_cover_data", Tag.TAG_STRING))));
-        // }
+        var boundPlayer = stack.getOrDefault(GTDataComponents.DATA_BOUND_PLAYER, null);
+        if (boundPlayer != null) {
+            MutableComponent name = MutableComponent.create(boundPlayer.displayName().getContents());
+            tooltipComponents.add(Component.translatable("gtceu.tooltip.player_bind", name));
+        }
+        var target = stack.getOrDefault(GTDataComponents.MONITOR_TARGET, null);
+        if (target != null) {
+            tooltipComponents.add(Component.translatable(
+                    "gtceu.tooltip.wireless_transmitter_bind",
+                    Component.literal("" + target.getX()).withStyle(ChatFormatting.GOLD),
+                    Component.literal("" + target.getY()).withStyle(ChatFormatting.GOLD),
+                    Component.literal("" + target.getZ()).withStyle(ChatFormatting.GOLD),
+                    Component.literal(stack.getOrDefault(GTDataComponents.MONITOR_TARGET_FACE,Direction.UP).getName()).withStyle(ChatFormatting.DARK_PURPLE)));
+        }
+        var conf = stack.getOrDefault(GTDataComponents.MONITOR_COVER_CONFIG, null);
+        if (conf != null) {
+            tooltipComponents.add(Component.translatable("gtceu.tooltip.computer_monitor_config"));
+        }
+        var coverData = stack.getOrDefault(GTDataComponents.COMPUTER_MONITOR_COVER_DATA, null);
+        if (coverData != null) {
+            tooltipComponents.add(
+                    Component.translatable("gtceu.tooltip.computer_monitor_data",
+                            GTStringUtils.toComponent(
+                                    coverData)));
+        }
         ResearchManager.ResearchItem researchData = stack.get(GTDataComponents.RESEARCH_ITEM);
         if (researchData == null) {
             BlockPos pos = stack.get(GTDataComponents.DATA_COPY_POS);
@@ -128,5 +146,22 @@ public class DataItemBehavior implements IInteractionItem, IAddInformation, IDat
             }
         }
         return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+    }
+
+    public static record BoundPlayer(UUID uuid, int perm, Component displayName) {
+        public static Codec<BoundPlayer> CODEC = RecordCodecBuilder.<BoundPlayer>create(instance -> instance.group(
+            UUIDUtil.CODEC.fieldOf("uuid").forGetter(val -> val.uuid),
+            Codec.INT.fieldOf("perm").forGetter(val -> val.perm),
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(val -> val.displayName)
+        ).apply(instance, BoundPlayer::new));
+        public static StreamCodec<RegistryFriendlyByteBuf, BoundPlayer> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, BoundPlayer::uuid,
+                ByteBufCodecs.INT, BoundPlayer::perm,
+                ComponentSerialization.STREAM_CODEC, BoundPlayer::displayName,
+                BoundPlayer::new);
+
+        public BoundPlayer(UUID uuid, Integer perm, Component name) {
+            this(uuid, perm.intValue(), name);
+        }
     }
 }
