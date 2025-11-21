@@ -87,6 +87,7 @@ import com.gregtechceu.gtceu.data.tag.GTIngredientTypes;
 import com.gregtechceu.gtceu.data.tools.GTToolBehaviors;
 import com.gregtechceu.gtceu.data.tools.GTToolTiers;
 import com.gregtechceu.gtceu.data.worldgen.GTFeatures;
+import com.gregtechceu.gtceu.integration.ae2.GTAEPlaceholders;
 import com.gregtechceu.gtceu.integration.cctweaked.CCTweakedPlugin;
 import com.gregtechceu.gtceu.integration.kjs.GTCEuStartupEvents;
 import com.gregtechceu.gtceu.integration.kjs.GTKubeJSPlugin;
@@ -195,6 +196,9 @@ public class CommonInit {
 
         if (GTCEu.Mods.isCreateLoaded()) {
             GTCreateIntegration.init();
+        }
+        if (GTCEu.Mods.isAE2Loaded()) {
+            GTAEPlaceholders.init();
         }
 
         GTElements.init();
