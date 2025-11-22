@@ -85,9 +85,9 @@ dependencies {
     extraLocalRuntime(forge.trenzalore)
     extraLocalRuntime(forge.curios)
 //    extraLocalRuntime(forge.worldstripper)
-    extraLocalRuntime(forge.cc.tweaked.forge.impl)
+    localRuntime(forge.cc.tweaked.forge.impl)
 
-    extraLocalRuntime(forge.bundles.kjs)
+    localRuntime(forge.bundles.kjs)
 
     extraLocalRuntime(forge.ftblibrary)
     extraLocalRuntime(forge.ftbteams)
