@@ -157,7 +157,11 @@ public class QuantumTankMachine extends TieredMachine implements IAutoOutputFlui
     public void saveCustomPersistedData(@NotNull CompoundTag tag, boolean forDrop) {
         super.saveCustomPersistedData(tag, forDrop);
         if (!forDrop) tag.put("lockedFluid", lockedFluid.serializeNBT(MixinHelpers.getCurrentBERegistries()));
-        tag.put("stored", stored.save(MixinHelpers.getCurrentBERegistries()));
+        if (stored.isEmpty()) {
+            tag.put("stored", stored.save(MixinHelpers.getCurrentBERegistries()));
+        } else {
+            tag.remove("stored");
+        }
         tag.putLong("storedAmount", storedAmount);
     }
 
@@ -168,8 +172,12 @@ public class QuantumTankMachine extends TieredMachine implements IAutoOutputFlui
         var from = tag.contains("cache") ? tag.getCompound("cache") : tag;
         this.lockedFluid.readFromNBT(MixinHelpers.getCurrentBERegistries(), from.getCompound("lockedFluid"));
 
-        var stored = FluidStack.parseOptional(MixinHelpers.getCurrentBERegistries(), tag.getCompound("stored"));
-        this.stored = stored.copyWithAmount(FluidType.BUCKET_VOLUME);
+        if (tag.contains("stored")) {
+            var stored = FluidStack.parseOptional(MixinHelpers.getCurrentBERegistries(), tag.getCompound("stored"));
+            this.stored = stored.copyWithAmount(FluidType.BUCKET_VOLUME);
+        } else {
+            this.stored = FluidStack.EMPTY;
+        }
 
         if (!tag.contains("storedAmount")) this.storedAmount = stored.getAmount();
         else this.storedAmount = tag.getLong("storedAmount");
