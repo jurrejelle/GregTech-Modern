@@ -14,8 +14,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.client.RenderTypeHelper;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;

@@ -44,7 +44,7 @@ public abstract sealed class MachineOwner permits PlayerOwner, FTBOwner {
         var event = new RegisterOwnerTypeEvent();
         if (GTCEu.Mods.isFTBTeamsLoaded()) {
             event.register(0, FTBOwner::new);
-        // } else if (GTCEu.Mods.isArgonautsLoaded()) {
+            // } else if (GTCEu.Mods.isArgonautsLoaded()) {
             // event.register(0, ArgonautsOwner::new);
         } else {
             event.register(0, PlayerOwner::new);

@@ -610,7 +610,7 @@ public class GTRecipeBuilder {
     }
 
     public GTRecipeBuilder outputItemsRanged(ItemStack output, IntProvider intProvider) {
-        Ingredient inner = IntProviderIngredient.of(RecipeHelper.makeItemIngredient(output), intProvider);
+        Ingredient inner = IntProviderIngredient.of(RecipeHelper.makeItemIngredient(output), intProvider).toVanilla();
         return outputItems(new SizedIngredient(inner, 1));
     }
 
@@ -1124,31 +1124,31 @@ public class GTRecipeBuilder {
     }
 
     // public GTRecipeBuilder heraclesQuest(String questId, boolean isReverse) {
-    //     if (!GTCEu.Mods.isHeraclesLoaded()) {
-    //         GTCEu.LOGGER.error("Heracles not loaded!");
-    //         return this;
-    //     }
-    //     if (questId.isEmpty()) {
-    //         GTCEu.LOGGER.error("Quest ID cannot be empty for recipe {}", this.id);
-    //         return this;
-    //     }
-    //     return addCondition(new HeraclesQuestCondition(isReverse, questId));
+    // if (!GTCEu.Mods.isHeraclesLoaded()) {
+    // GTCEu.LOGGER.error("Heracles not loaded!");
+    // return this;
+    // }
+    // if (questId.isEmpty()) {
+    // GTCEu.LOGGER.error("Quest ID cannot be empty for recipe {}", this.id);
+    // return this;
+    // }
+    // return addCondition(new HeraclesQuestCondition(isReverse, questId));
     // }
 
     // public GTRecipeBuilder heraclesQuest(String questId) {
-    //     return heraclesQuest(questId, false);
+    // return heraclesQuest(questId, false);
     // }
 
     // public GTRecipeBuilder gameStage(String stageName) {
-    //     return gameStage(stageName, false);
+    // return gameStage(stageName, false);
     // }
 
     // public GTRecipeBuilder gameStage(String stageName, boolean isReverse) {
-    //     if (!GTCEu.Mods.isGameStagesLoaded()) {
-    //         GTCEu.LOGGER.warn("GameStages is not loaded, ignoring recipe condition");
-    //         return this;
-    //     }
-    //     return addCondition(new GameStageCondition(isReverse, stageName));
+    // if (!GTCEu.Mods.isGameStagesLoaded()) {
+    // GTCEu.LOGGER.warn("GameStages is not loaded, ignoring recipe condition");
+    // return this;
+    // }
+    // return addCondition(new GameStageCondition(isReverse, stageName));
     // }
 
     public GTRecipeBuilder ftbQuest(String questId, boolean isReverse) {

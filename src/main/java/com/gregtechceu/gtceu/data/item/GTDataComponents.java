@@ -1,7 +1,5 @@
 package com.gregtechceu.gtceu.data.item;
 
-import java.util.List;
-
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.cover.filter.SimpleFluidFilter;
 import com.gregtechceu.gtceu.api.cover.filter.SimpleItemFilter;
@@ -19,29 +17,24 @@ import com.gregtechceu.gtceu.utils.ResearchManager;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.ListCodec;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.List;
 
 public class GTDataComponents {
 
@@ -194,8 +187,9 @@ public class GTDataComponents {
             .registerComponentType("text_module_string_lines", builder -> builder.persistent(Codec.list(Codec.STRING))
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Component>>> TEXT_MODULE_TEXT = DATA_COMPONENTS
-            .registerComponentType("text_module_text", builder -> builder.persistent(Codec.list(ComponentSerialization.CODEC))
-                    .networkSynchronized(ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.list())));
+            .registerComponentType("text_module_text",
+                    builder -> builder.persistent(Codec.list(ComponentSerialization.CODEC))
+                            .networkSynchronized(ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> IMAGE_MODULE_URL = DATA_COMPONENTS
             .registerComponentType("image_module_url", builder -> builder.persistent(Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8));
@@ -206,6 +200,7 @@ public class GTDataComponents {
             .registerComponentType("monitor_target_face", builder -> builder.persistent(Direction.CODEC)
                     .networkSynchronized(Direction.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataItemBehavior.BoundPlayer>> DATA_BOUND_PLAYER = DATA_COMPONENTS
-            .registerComponentType("data_bound_player", builder -> builder.persistent(DataItemBehavior.BoundPlayer.CODEC)
-                    .networkSynchronized(DataItemBehavior.BoundPlayer.STREAM_CODEC));
+            .registerComponentType("data_bound_player",
+                    builder -> builder.persistent(DataItemBehavior.BoundPlayer.CODEC)
+                            .networkSynchronized(DataItemBehavior.BoundPlayer.STREAM_CODEC));
 }

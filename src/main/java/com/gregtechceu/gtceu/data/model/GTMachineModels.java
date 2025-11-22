@@ -3,10 +3,6 @@ package com.gregtechceu.gtceu.data.model;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.block.IMachineBlock;
-import com.gregtechceu.gtceu.api.blockentity.IPaintable;
-import com.gregtechceu.gtceu.api.capability.IHPCAComponentHatch;
-import com.gregtechceu.gtceu.api.capability.IWorkable;
-import com.gregtechceu.gtceu.api.material.material.Material;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.material.material.Material;
@@ -19,7 +15,6 @@ import com.gregtechceu.gtceu.client.model.machine.overlays.HPCAOverlay;
 import com.gregtechceu.gtceu.client.model.machine.overlays.WorkableOverlays;
 import com.gregtechceu.gtceu.common.machine.electric.ChargerMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.DiodePartMachine;
-import com.gregtechceu.gtceu.common.machine.storage.CrateMachine;
 import com.gregtechceu.gtceu.data.datagen.model.builder.MachineModelBuilder;
 import com.gregtechceu.gtceu.data.material.GTMaterials;
 

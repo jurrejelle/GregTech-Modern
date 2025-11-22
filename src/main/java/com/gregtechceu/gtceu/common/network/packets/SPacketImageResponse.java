@@ -2,7 +2,6 @@ package com.gregtechceu.gtceu.common.network.packets;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.client.util.ClientImageCache;
-import com.gregtechceu.gtceu.common.network.GTNetwork;
 import com.gregtechceu.gtceu.utils.GTMath;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class SPacketImageResponse implements CustomPacketPayload {
+
     public static final ResourceLocation ID = GTCEu.id("packet_image_response");
     public static final Type<SPacketImageResponse> TYPE = new Type<>(ID);
     public static final StreamCodec<FriendlyByteBuf, SPacketImageResponse> CODEC = StreamCodec

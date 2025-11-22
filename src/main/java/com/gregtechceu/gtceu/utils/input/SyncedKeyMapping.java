@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.utils.input;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.common.network.GTNetwork;
 import com.gregtechceu.gtceu.common.network.packets.CPacketKeyDown;
 
 import net.minecraft.client.KeyMapping;
@@ -14,7 +13,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.IKeyConflictContext;
-// import net.neoforged.neoforge.event.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import com.mojang.blaze3d.platform.InputConstants;

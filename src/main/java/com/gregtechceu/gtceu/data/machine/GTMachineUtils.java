@@ -88,19 +88,16 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
+import static com.gregtechceu.gtceu.api.capability.recipe.IO.*;
 import static com.gregtechceu.gtceu.api.capability.recipe.IO.IN;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.*;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.autoAbilities;
-import static com.gregtechceu.gtceu.api.capability.recipe.IO.*;
-import static com.gregtechceu.gtceu.api.multiblock.Predicates.*;
-import static com.gregtechceu.gtceu.data.block.GTBlocks.*;
-import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.*;
-import static com.gregtechceu.gtceu.data.model.GTMachineModels.*;
 import static com.gregtechceu.gtceu.common.machine.storage.QuantumTankMachine.TANK_CAPACITY;
 import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
+import static com.gregtechceu.gtceu.data.block.GTBlocks.*;
 import static com.gregtechceu.gtceu.data.block.GTBlocks.ALL_FIREBOXES;
-import static com.gregtechceu.gtceu.data.misc.GTCreativeModeTabs.MACHINE;
 import static com.gregtechceu.gtceu.data.model.GTMachineModels.*;
+import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.*;
 import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.DUMMY_RECIPES;
 import static com.gregtechceu.gtceu.utils.FormattingUtil.toEnglishName;
 
@@ -431,7 +428,7 @@ public class GTMachineUtils {
         final var tab = registrate.creativeModeTab();
 
         if (!ConfigHolder.INSTANCE.compat.energy.enableFEConverters) {
-        //     REGISTRATE.creativeModeTab(null);
+            // REGISTRATE.creativeModeTab(null);
             registrate.creativeModeTab(() -> null);
         }
 
@@ -457,7 +454,7 @@ public class GTMachineUtils {
                 ALL_TIERS);
 
         if (!ConfigHolder.INSTANCE.compat.energy.enableFEConverters) {
-        //     REGISTRATE.creativeModeTab(MACHINE);
+            // REGISTRATE.creativeModeTab(MACHINE);
             registrate.creativeModeTab(() -> tab);
         }
         return converters;
@@ -550,17 +547,18 @@ public class GTMachineUtils {
         MachineDefinition[] definitions = new MachineDefinition[GTValues.TIER_COUNT];
         for (int tier : tiers) {
             long maxAmount = 4000 * FluidType.BUCKET_VOLUME * (long) Math.pow(2, tier - 1);
-// <<<<<<< HEAD:src/main/java/com/gregtechceu/gtceu/data/machine/GTMachineUtils.java
+            // <<<<<<< HEAD:src/main/java/com/gregtechceu/gtceu/data/machine/GTMachineUtils.java
             var register = REGISTRATE
                     .machine(GTValues.VN[tier].toLowerCase(Locale.ROOT) + "_" + name,
                             (holder) -> new QuantumTankMachine(holder, tier, maxAmount))
-// =======
-//             var register = registrate.machine(
-//                     GTValues.VN[tier].toLowerCase(Locale.ROOT) + "_" + name,
-//                     MachineDefinition::new, (holder) -> new QuantumTankMachine(holder, tier, maxAmount),
-//                     MetaMachineBlock::new, QuantumTankMachineItem::new,
-//                     MetaMachineBlockEntity::new)
-// >>>>>>> v7.1.0-1.20.1:src/main/java/com/gregtechceu/gtceu/common/data/machines/GTMachineUtils.java
+                    // =======
+                    // var register = registrate.machine(
+                    // GTValues.VN[tier].toLowerCase(Locale.ROOT) + "_" + name,
+                    // MachineDefinition::new, (holder) -> new QuantumTankMachine(holder, tier, maxAmount),
+                    // MetaMachineBlock::new, QuantumTankMachineItem::new,
+                    // MetaMachineBlockEntity::new)
+                    // >>>>>>>
+                    // v7.1.0-1.20.1:src/main/java/com/gregtechceu/gtceu/common/data/machines/GTMachineUtils.java
                     .langValue(toEnglishName(name) + " " + LVT[tier])
                     .blockProp(Block.Properties::dynamicShape)
                     .rotationState(RotationState.ALL)

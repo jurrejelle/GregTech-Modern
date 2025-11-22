@@ -234,7 +234,7 @@ public interface GTRecipeSchema {
 
         public GTKubeRecipe outputItemsRanged(Ingredient ingredient, int min, int max) {
             return output(ItemRecipeCapability.CAP,
-                    new SizedIngredient(IntProviderIngredient.of(ingredient, UniformInt.of(min, max)), 1));
+                    new SizedIngredient(IntProviderIngredient.of(ingredient, UniformInt.of(min, max)).toVanilla(), 1));
         }
 
         @HideFromJS
@@ -693,28 +693,28 @@ public interface GTRecipeSchema {
         }
 
         // public GTKubeRecipe heraclesQuest(String questId, boolean isReverse) {
-        //     if (!GTCEu.Mods.isHeraclesLoaded()) {
-        //         throw new KubeRuntimeException("Heracles not loaded!");
-        //     }
-        //     if (questId.isEmpty()) {
-        //         throw new KubeRuntimeException(String.format("Quest ID cannot be empty for recipe %s", this.id));
-        //     }
-        //     return addCondition(new HeraclesQuestCondition(isReverse, questId));
+        // if (!GTCEu.Mods.isHeraclesLoaded()) {
+        // throw new KubeRuntimeException("Heracles not loaded!");
+        // }
+        // if (questId.isEmpty()) {
+        // throw new KubeRuntimeException(String.format("Quest ID cannot be empty for recipe %s", this.id));
+        // }
+        // return addCondition(new HeraclesQuestCondition(isReverse, questId));
         // }
 
         // public GTKubeRecipe heraclesQuest(String questId) {
-        //     return heraclesQuest(questId, false);
+        // return heraclesQuest(questId, false);
         // }
 
         // public GTKubeRecipe gameStage(String stageName) {
-        //     return gameStage(stageName, false);
+        // return gameStage(stageName, false);
         // }
 
         // public GTKubeRecipe gameStage(String stageName, boolean isReverse) {
-        //     if (!GTCEu.Mods.isGameStagesLoaded()) {
-        //         throw new KubeRuntimeException("GameStages is not loaded, ignoring recipe condition");
-        //     }
-        //     return addCondition(new GameStageCondition(isReverse, stageName));
+        // if (!GTCEu.Mods.isGameStagesLoaded()) {
+        // throw new KubeRuntimeException("GameStages is not loaded, ignoring recipe condition");
+        // }
+        // return addCondition(new GameStageCondition(isReverse, stageName));
         // }
 
         public GTKubeRecipe ftbQuest(String questId, boolean isReverse) {

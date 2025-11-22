@@ -52,14 +52,14 @@ public class ComputerRecipes {
                 .addMaterialInfo(true, true).save(provider);
 
         // ASSEMBLER_RECIPES.recipeBuilder("wireless_transmitter_cover")
-        //         .inputItems(plate, EnderPearl)
-        //         .inputItems(foil, AnnealedCopper)
-        //         .inputItems(EMITTER_MV)
-        //         .inputItems(wireFine, Platinum)
-        //         .inputFluids(SolderingAlloy, L)
-        //         .outputItems(COVER_WIRELESS_TRANSMITTER)
-        //         .duration(1000).EUt(VA[MV])
-        //         .addMaterialInfo(true).save(provider);
+        // .inputItems(plate, EnderPearl)
+        // .inputItems(foil, AnnealedCopper)
+        // .inputItems(EMITTER_MV)
+        // .inputItems(wireFine, Platinum)
+        // .inputFluids(SolderingAlloy, L)
+        // .outputItems(COVER_WIRELESS_TRANSMITTER)
+        // .duration(1000).EUt(VA[MV])
+        // .addMaterialInfo(true).save(provider);
 
         ASSEMBLER_RECIPES.recipeBuilder("text_module")
                 .inputItems(PLASTIC_CIRCUIT_BOARD)

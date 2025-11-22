@@ -4,11 +4,9 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.CentralMonitorMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.monitor.MonitorGroup;
-import com.gregtechceu.gtceu.common.network.GTNetwork;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -19,16 +17,16 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.LogicalSidedProvider;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.Optional;
-
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class SCPacketMonitorGroupNBTChange implements CustomPacketPayload {
+
     public static final ResourceLocation ID = GTCEu.id("spacket_monitor_group_nbt_change");
     public static final Type<SCPacketMonitorGroupNBTChange> TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, SCPacketMonitorGroupNBTChange> CODEC = StreamCodec
             .ofMember(SCPacketMonitorGroupNBTChange::encode, SCPacketMonitorGroupNBTChange::new);
-
 
     private final ItemStack stack;
     private final int monitorGroupId;
@@ -57,7 +55,7 @@ public class SCPacketMonitorGroupNBTChange implements CustomPacketPayload {
         Level level = LogicalSidedProvider.CLIENTWORLD.get(context.flow().getReceptionSide())
                 .or(() -> {
                     if (context.player() instanceof ServerPlayer player) {
-                    return Optional.ofNullable(player).map(ServerPlayer::level);
+                        return Optional.ofNullable(player).map(ServerPlayer::level);
                     }
                     return Optional.empty();
                 })

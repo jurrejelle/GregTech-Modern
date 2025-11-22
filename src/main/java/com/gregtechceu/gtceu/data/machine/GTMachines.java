@@ -55,13 +55,13 @@ import java.util.function.BiConsumer;
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.capability.recipe.IO.*;
 import static com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties.*;
-import static com.gregtechceu.gtceu.data.misc.GTCreativeModeTabs.MACHINE;
-import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.DUMMY_RECIPES;
-import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.STEAM_BOILER_RECIPES;
+import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
 import static com.gregtechceu.gtceu.data.machine.GTMachineUtils.*;
 import static com.gregtechceu.gtceu.data.machine.GTMachineUtils.ALL_TIERS;
+import static com.gregtechceu.gtceu.data.misc.GTCreativeModeTabs.MACHINE;
 import static com.gregtechceu.gtceu.data.model.GTMachineModels.*;
-import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
+import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.DUMMY_RECIPES;
+import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.STEAM_BOILER_RECIPES;
 
 public class GTMachines {
 

@@ -16,7 +16,6 @@ import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.sound.AutoReleasedSound;
-import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.core.MixinHelpers;
 
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
@@ -273,13 +272,13 @@ public class RecipeLogic extends MachineTrait implements IEnhancedManaged, IWork
                 setWaiting(handleTick.reason());
 
                 // Machine isn't getting enough power, suspend after 5 attempts.
-                if (conditionResult.io() == IO.IN && conditionResult.capability() == EURecipeCapability.CAP) {
+                if (handleTick.io() == IO.IN && handleTick.capability() == EURecipeCapability.CAP) {
                     runAttempt++;
                     if (runAttempt > 5) {
                         runAttempt = 0;
                         setStatus(Status.SUSPEND);
                     }
-                    runDelay = runAttempt * 10;
+                    runDelay = runAttempt * 60;
                 }
             }
         } else {

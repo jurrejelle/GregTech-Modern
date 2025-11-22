@@ -24,77 +24,77 @@
 // @NoArgsConstructor
 // public class HeraclesQuestCondition extends RecipeCondition<HeraclesQuestCondition> {
 
-//     public static final MapCodec<HeraclesQuestCondition> CODEC = RecordCodecBuilder
-//             .mapCodec(instance -> RecipeCondition.isReverse(instance)
-//                     .and(Codec.STRING.fieldOf("questId").forGetter(val -> val.questId))
-//                     .apply(instance, HeraclesQuestCondition::new));
+// public static final MapCodec<HeraclesQuestCondition> CODEC = RecordCodecBuilder
+// .mapCodec(instance -> RecipeCondition.isReverse(instance)
+// .and(Codec.STRING.fieldOf("questId").forGetter(val -> val.questId))
+// .apply(instance, HeraclesQuestCondition::new));
 
-//     public final static HeraclesQuestCondition INSTANCE = new HeraclesQuestCondition();
+// public final static HeraclesQuestCondition INSTANCE = new HeraclesQuestCondition();
 
-//     private String questId;
+// private String questId;
 
-//     public HeraclesQuestCondition(String questId) {
-//         this.questId = questId;
-//     };
+// public HeraclesQuestCondition(String questId) {
+// this.questId = questId;
+// };
 
-//     public HeraclesQuestCondition(boolean isReverse, String questId) {
-//         super(isReverse);
-//         this.questId = questId;
-//     }
+// public HeraclesQuestCondition(boolean isReverse, String questId) {
+// super(isReverse);
+// this.questId = questId;
+// }
 
-//     @Override
-//     public RecipeConditionType<HeraclesQuestCondition> getType() {
-//         return GTRecipeConditions.HERACLES_QUEST;
-//     }
+// @Override
+// public RecipeConditionType<HeraclesQuestCondition> getType() {
+// return GTRecipeConditions.HERACLES_QUEST;
+// }
 
-//     @Override
-//     public Component getTooltips() {
-//         String questTitle = QuestHandler.get(questId).display().title().toString();
+// @Override
+// public Component getTooltips() {
+// String questTitle = QuestHandler.get(questId).display().title().toString();
 
-//         if (isReverse) {
-//             return Component.translatable("recipe.condition.quest.not_completed.tooltip", questTitle);
-//         } else {
-//             return Component.translatable("recipe.condition.quest.completed.tooltip", questTitle);
-//         }
-//     }
+// if (isReverse) {
+// return Component.translatable("recipe.condition.quest.not_completed.tooltip", questTitle);
+// } else {
+// return Component.translatable("recipe.condition.quest.completed.tooltip", questTitle);
+// }
+// }
 
-//     @Override
-//     public boolean testCondition(@NotNull GTRecipe recipe, @NotNull RecipeLogic recipeLogic) {
-//         MachineOwner owner = recipeLogic.machine.self().getOwner();
-//         if (owner == null) return false;
-//         for (var player : owner.getMembers()) {
-//             QuestsProgress questsProgress = QuestProgressHandler
-//                     .getProgress(GTCEu.getMinecraftServer(), player);
-//             var progress = questsProgress.getProgress(questId);
-//             if (progress != null && (progress.isComplete() || QuestHandler.get(questId).tasks().isEmpty())) {
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
+// @Override
+// public boolean testCondition(@NotNull GTRecipe recipe, @NotNull RecipeLogic recipeLogic) {
+// MachineOwner owner = recipeLogic.machine.self().getOwner();
+// if (owner == null) return false;
+// for (var player : owner.getMembers()) {
+// QuestsProgress questsProgress = QuestProgressHandler
+// .getProgress(GTCEu.getMinecraftServer(), player);
+// var progress = questsProgress.getProgress(questId);
+// if (progress != null && (progress.isComplete() || QuestHandler.get(questId).tasks().isEmpty())) {
+// return true;
+// }
+// }
+// return false;
+// }
 
-//     @Override
-//     public HeraclesQuestCondition createTemplate() {
-//         return new HeraclesQuestCondition();
-//     }
+// @Override
+// public HeraclesQuestCondition createTemplate() {
+// return new HeraclesQuestCondition();
+// }
 
-//     @Override
-//     public @NotNull JsonObject serialize() {
-//         var obj = super.serialize();
-//         obj.addProperty("questId", questId);
-//         return obj;
-//     }
+// @Override
+// public @NotNull JsonObject serialize() {
+// var obj = super.serialize();
+// obj.addProperty("questId", questId);
+// return obj;
+// }
 
-//     @Override
-//     public HeraclesQuestCondition fromNetwork(RegistryFriendlyByteBuf buf) {
-//         super.fromNetwork(buf);
-//         questId = buf.readUtf();
-//         return this;
-//     }
+// @Override
+// public HeraclesQuestCondition fromNetwork(RegistryFriendlyByteBuf buf) {
+// super.fromNetwork(buf);
+// questId = buf.readUtf();
+// return this;
+// }
 
-//     @Override
-//     public void toNetwork(RegistryFriendlyByteBuf buf) {
-//         super.toNetwork(buf);
-//         buf.writeUtf(questId);
-//     }
+// @Override
+// public void toNetwork(RegistryFriendlyByteBuf buf) {
+// super.toNetwork(buf);
+// buf.writeUtf(questId);
+// }
 // }

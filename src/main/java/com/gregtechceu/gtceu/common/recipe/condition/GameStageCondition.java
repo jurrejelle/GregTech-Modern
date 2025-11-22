@@ -21,70 +21,70 @@
 // @NoArgsConstructor
 // public class GameStageCondition extends RecipeCondition<GameStageCondition> {
 
-//     public static final MapCodec<GameStageCondition> CODEC = RecordCodecBuilder
-//             .mapCodec(instance -> RecipeCondition.isReverse(instance)
-//                     .and(Codec.STRING.fieldOf("stageName").forGetter(val -> val.stageName))
-//                     .apply(instance, GameStageCondition::new));
+// public static final MapCodec<GameStageCondition> CODEC = RecordCodecBuilder
+// .mapCodec(instance -> RecipeCondition.isReverse(instance)
+// .and(Codec.STRING.fieldOf("stageName").forGetter(val -> val.stageName))
+// .apply(instance, GameStageCondition::new));
 
-//     private String stageName;
+// private String stageName;
 
-//     public final static GameStageCondition INSTANCE = new GameStageCondition();
+// public final static GameStageCondition INSTANCE = new GameStageCondition();
 
-//     public GameStageCondition(String stageName) {
-//         this(false, stageName);
-//     }
+// public GameStageCondition(String stageName) {
+// this(false, stageName);
+// }
 
-//     public GameStageCondition(boolean isReverse, String stageName) {
-//         super(isReverse);
-//         this.stageName = stageName;
-//     }
+// public GameStageCondition(boolean isReverse, String stageName) {
+// super(isReverse);
+// this.stageName = stageName;
+// }
 
-//     @Override
-//     public RecipeConditionType<GameStageCondition> getType() {
-//         return GTRecipeConditions.GAMESTAGE;
-//     }
+// @Override
+// public RecipeConditionType<GameStageCondition> getType() {
+// return GTRecipeConditions.GAMESTAGE;
+// }
 
-//     @Override
-//     public Component getTooltips() {
-//         if (isReverse) return Component.translatable("recipe.condition.gamestage.locked_stage", stageName);
-//         return Component.translatable("recipe.condition.gamestage.unlocked_stage", stageName);
-//     }
+// @Override
+// public Component getTooltips() {
+// if (isReverse) return Component.translatable("recipe.condition.gamestage.locked_stage", stageName);
+// return Component.translatable("recipe.condition.gamestage.unlocked_stage", stageName);
+// }
 
-//     @Override
-//     public boolean testCondition(@NotNull GTRecipe recipe, @NotNull RecipeLogic recipeLogic) {
-//         MachineOwner owner = recipeLogic.machine.self().getOwner();
-//         if (owner == null) return false;
-//         for (var player : owner.getMembers()) {
-//             var playerData = GameStageSaveHandler.getPlayerData(player);
-//             if (playerData != null && playerData.hasStage(stageName)) {
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
+// @Override
+// public boolean testCondition(@NotNull GTRecipe recipe, @NotNull RecipeLogic recipeLogic) {
+// MachineOwner owner = recipeLogic.machine.self().getOwner();
+// if (owner == null) return false;
+// for (var player : owner.getMembers()) {
+// var playerData = GameStageSaveHandler.getPlayerData(player);
+// if (playerData != null && playerData.hasStage(stageName)) {
+// return true;
+// }
+// }
+// return false;
+// }
 
-//     @Override
-//     public RecipeCondition<GameStageCondition> createTemplate() {
-//         return new GameStageCondition();
-//     }
+// @Override
+// public RecipeCondition<GameStageCondition> createTemplate() {
+// return new GameStageCondition();
+// }
 
-//     @Override
-//     public @NotNull JsonObject serialize() {
-//         var obj = super.serialize();
-//         obj.addProperty("stageName", stageName);
-//         return obj;
-//     }
+// @Override
+// public @NotNull JsonObject serialize() {
+// var obj = super.serialize();
+// obj.addProperty("stageName", stageName);
+// return obj;
+// }
 
-//     @Override
-//     public GameStageCondition fromNetwork(RegistryFriendlyByteBuf buf) {
-//         super.fromNetwork(buf);
-//         stageName = buf.readUtf();
-//         return this;
-//     }
+// @Override
+// public GameStageCondition fromNetwork(RegistryFriendlyByteBuf buf) {
+// super.fromNetwork(buf);
+// stageName = buf.readUtf();
+// return this;
+// }
 
-//     @Override
-//     public void toNetwork(RegistryFriendlyByteBuf buf) {
-//         super.toNetwork(buf);
-//         buf.writeUtf(stageName);
-//     }
+// @Override
+// public void toNetwork(RegistryFriendlyByteBuf buf) {
+// super.toNetwork(buf);
+// buf.writeUtf(stageName);
+// }
 // }

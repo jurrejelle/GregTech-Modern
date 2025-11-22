@@ -30,7 +30,7 @@ public class SteamEnergyRecipeHandler implements IRecipeHandler<EnergyStack> {
 
     @Override
     public List<EnergyStack> handleRecipeInner(IO io, GTRecipe recipe, List<EnergyStack> left, boolean simulate) {
-// <<<<<<< HEAD
+        // <<<<<<< HEAD
         long eut = left.stream().reduce(EnergyStack.EMPTY, EnergyStack::sum).getTotalEU();
         int totalSteam = GTMath.saturatedCast((long) Math.ceil(eut * conversionRate));
         if (totalSteam > 0) {
@@ -42,30 +42,30 @@ public class SteamEnergyRecipeHandler implements IRecipeHandler<EnergyStack> {
             var leftSteam = steamTank.handleRecipeInner(io, recipe, list, simulate);
             if (leftSteam == null || leftSteam.isEmpty()) return null;
             eut = (long) (leftSteam.getFirst().amount() / conversionRate);
-// =======
-//         for (var it = left.listIterator(); it.hasNext();) {
-//             EnergyStack stack = it.next();
-//             if (stack.isEmpty()) {
-//                 it.remove();
-//                 continue;
-//             }
+            // =======
+            // for (var it = left.listIterator(); it.hasNext();) {
+            // EnergyStack stack = it.next();
+            // if (stack.isEmpty()) {
+            // it.remove();
+            // continue;
+            // }
 
-//             long totalEU = stack.getTotalEU();
-//             int totalSteam = GTMath.saturatedCast((long) Math.ceil(totalEU * conversionRate));
-//             if (totalSteam > 0) {
-//                 var steam = io == IO.IN ? FluidIngredient.of(GTMaterials.Steam.getFluidTag(), totalSteam) :
-//                         FluidIngredient.of(GTMaterials.Steam.getFluid(totalSteam));
-//                 var list = new ArrayList<FluidIngredient>();
-//                 list.add(steam);
-//                 var leftSteam = steamTank.handleRecipeInner(io, recipe, list, simulate);
-//                 if (leftSteam == null || leftSteam.isEmpty()) {
-//                     it.remove();
-//                 } else {
-//                     totalEU = (long) (leftSteam.get(0).getAmount() / conversionRate);
-//                     it.set(new EnergyStack(totalEU));
-//                 }
-//             }
-// >>>>>>> v7.1.0-1.20.1
+            // long totalEU = stack.getTotalEU();
+            // int totalSteam = GTMath.saturatedCast((long) Math.ceil(totalEU * conversionRate));
+            // if (totalSteam > 0) {
+            // var steam = io == IO.IN ? FluidIngredient.of(GTMaterials.Steam.getFluidTag(), totalSteam) :
+            // FluidIngredient.of(GTMaterials.Steam.getFluid(totalSteam));
+            // var list = new ArrayList<FluidIngredient>();
+            // list.add(steam);
+            // var leftSteam = steamTank.handleRecipeInner(io, recipe, list, simulate);
+            // if (leftSteam == null || leftSteam.isEmpty()) {
+            // it.remove();
+            // } else {
+            // totalEU = (long) (leftSteam.get(0).getAmount() / conversionRate);
+            // it.set(new EnergyStack(totalEU));
+            // }
+            // }
+            // >>>>>>> v7.1.0-1.20.1
         }
         return left.isEmpty() ? null : left;
     }

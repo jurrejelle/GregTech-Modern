@@ -66,9 +66,9 @@ public class RecipeOutputProvider extends CapabilityInfoProvider<RecipeLogic> {
                     ItemStack[] stacks;
                     SizedIngredient content = ItemRecipeCapability.CAP.of(item.content);
                     // if (content instanceof IntProviderIngredient provider) {
-                    //     stacks = provider.getInner().getItems();
+                    // stacks = provider.getInner().getItems();
                     // } else {
-                        stacks = content.getItems();
+                    stacks = content.getItems();
                     // }
                     if (stacks.length == 0) continue;
                     if (stacks[0].isEmpty()) continue;

@@ -568,6 +568,7 @@ public class Material {
     @SuppressWarnings("UnusedReturnValue")
     @RemapPrefixForJS("kjs$")
     public static class Builder {
+
         private final MaterialInfo materialInfo;
         private final MaterialProperties properties;
         private final MaterialFlags flags;

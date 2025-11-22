@@ -8,8 +8,8 @@ import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
-import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
+import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -89,7 +89,7 @@ public class RecipeLogicTest {
 
         recipeLogic.findAndHandleRecipe();
 
-        // no recipe found
+        // No recipe found
         helper.assertFalse(recipeLogic.isActive(), "Recipe logic is active, even when it shouldn't be");
         helper.assertTrue(recipeLogic.getLastRecipe() == null,
                 "Recipe logic has somehow found a recipe, when there should be none");

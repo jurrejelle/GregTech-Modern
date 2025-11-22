@@ -1,23 +1,21 @@
 package com.gregtechceu.gtceu.common.network.packets;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.common.network.GTNetwork;
-import com.gregtechceu.gtceu.common.network.packets.prospecting.SPacketProspectBedrockFluid;
 import com.gregtechceu.gtceu.utils.input.SyncedKeyMapping;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
 import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanOpenHashMap;
+import org.jetbrains.annotations.NotNull;
 
 public class CPacketKeyDown implements CustomPacketPayload {
+
     public static final ResourceLocation ID = GTCEu.id("key_down");
     public static final Type<CPacketKeyDown> TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketKeyDown> CODEC = StreamCodec

@@ -6,7 +6,6 @@ import com.gregtechceu.gtceu.data.tag.GTIngredientTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredientType;
@@ -16,10 +15,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
+/**
+ * Allows a {@link FluidIngredient} to be created with a ranged {@code amount}, which will be randomly rolled upon
+ * recipe completion.
+ * Only valid as a recipe fluid {@code output}.
+ * Instantiated using {@link IntProviderFluidIngredient#of()}, with a {@link FluidIngredient}
+ * and either an {@link IntProvider} or {@code int, int} range bounds (inclusive).
+ * Functions similarly to {@link IntProviderIngredient}.
+ */
 public class IntProviderFluidIngredient extends FluidIngredient {
 
     // spotless:
@@ -32,12 +38,18 @@ public class IntProviderFluidIngredient extends FluidIngredient {
 
     @Getter
     private final IntProvider countProvider;
+    /**
+     * The last result of {@link IntProviderFluidIngredient#getSampledCount()}. -1 if not rolled.
+     */
     @Setter
     protected int sampledCount = -1;
+    /**
+     * The {@link FluidIngredient} to have a ranged amount.
+     */
     @Getter
     private final FluidIngredient inner;
     @Setter
-    protected @NotNull FluidStack [] fluidStacks = null;
+    protected @NotNull FluidStack[] fluidStacks = null;
 
     public static final FluidStack[] EMPTY_STACK_ARRAY = new FluidStack[0];
 
@@ -53,11 +65,18 @@ public class IntProviderFluidIngredient extends FluidIngredient {
         return copied;
     }
 
-    public FluidStack[] getFluids() {
+    /**
+     * Gets a usable {@link FluidStack FluidStack[]} from this {@link IntProviderFluidIngredient}.
+     * If this ingredient has not yet had its {@link IntProviderFluidIngredient#sampledCount} rolled, rolls it.
+     *
+     * @return a {@link FluidStack FluidStack[]} with amount {@link IntProviderFluidIngredient#sampledCount}
+     */
+    @Override
+    public Stream<FluidStack> generateStacks() {
         if (fluidStacks == null) {
             int cachedAmount = getSampledCount(GTValues.RNG);
             if (cachedAmount == 0) {
-                return EMPTY_STACK_ARRAY;
+                return Stream.of(EMPTY_STACK_ARRAY);
             }
             var innerStacks = inner.getStacks();
             this.fluidStacks = new FluidStack[innerStacks.length];
@@ -66,17 +85,12 @@ public class IntProviderFluidIngredient extends FluidIngredient {
                 fluidStacks[i].setAmount(cachedAmount);
             }
         }
-        return fluidStacks;
+        return Stream.of(fluidStacks);
     }
 
     @Override
     public boolean test(@NotNull FluidStack stack) {
         return inner.test(stack);
-    }
-
-    @Override
-    protected Stream<FluidStack> generateStacks() {
-        return Stream.empty();
     }
 
     @Override
@@ -89,12 +103,40 @@ public class IntProviderFluidIngredient extends FluidIngredient {
         return GTIngredientTypes.INT_PROVIDER_FLUID_INGREDIENT.get();
     }
 
+    /**
+     * Gets a {@link FluidStack} containing the maximum possible output from this {@link IntProviderFluidIngredient}.
+     * Mainly used for things like Recipe provider simulations to see if there is enough tank space to handle
+     * the recipe output.
+     *
+     * @return a {@link FluidStack} with amount {@link IntProvider#getMaxValue()}
+     */
     public @NotNull FluidStack getMaxSizeStack() {
         FluidStack[] in = inner.getStacks();
         if (in.length == 0) return FluidStack.EMPTY;
         return in[0].copyWithAmount(countProvider.getMaxValue());
     }
 
+    /**
+     * If this ingredient has not yet had its {@link IntProviderFluidIngredient#sampledCount} rolled, rolls it and
+     * returns the roll.
+     * If it has, returns the existing roll.
+     * Passthrough method, invokes {@link IntProviderFluidIngredient#getSampledCount(RandomSource)} using the threadsafe
+     * {@link GTValues#RNG}.
+     *
+     * @return the amount rolled
+     */
+    public int getSampledCount() {
+        return getSampledCount(GTValues.RNG);
+    }
+
+    /**
+     * If this ingredient has not yet had its {@link IntProviderFluidIngredient#sampledCount} rolled, rolls it and
+     * returns the roll.
+     * If it has, returns the existing roll.
+     *
+     * @param random {@link RandomSource}, must be threadsafe, usually called using {@link GTValues#RNG}.
+     * @return the amount rolled
+     */
     public int getSampledCount(@NotNull RandomSource random) {
         if (sampledCount == -1) {
             sampledCount = countProvider.sample(random);
@@ -123,6 +165,10 @@ public class IntProviderFluidIngredient extends FluidIngredient {
         return o1.getMinValue() == o2.getMinValue() && o1.getMaxValue() == o2.getMaxValue();
     }
 
+    /**
+     * @param inner    {@link FluidIngredient}
+     * @param provider usually as {@link UniformInt#of(int, int)}
+     */
     public static IntProviderFluidIngredient of(FluidIngredient inner, IntProvider provider) {
         return new IntProviderFluidIngredient(inner, provider);
     }

@@ -118,6 +118,4 @@ public class GTCapabilityHelper {
     public static IMonitorComponent getMonitorComponent(Level level, BlockPos pos, @Nullable Direction side) {
         return level.getCapability(GTCapability.CAPABILITY_MONITOR_COMPONENT, pos, side);
     }
-
-
 }
