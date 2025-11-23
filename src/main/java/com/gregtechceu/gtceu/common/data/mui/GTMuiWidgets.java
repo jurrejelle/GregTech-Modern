@@ -14,6 +14,7 @@ import com.gregtechceu.gtceu.api.mui.drawable.text.TextRenderer;
 import com.gregtechceu.gtceu.api.mui.utils.Alignment;
 import com.gregtechceu.gtceu.api.mui.value.BoolValue;
 import com.gregtechceu.gtceu.api.mui.value.sync.*;
+import com.gregtechceu.gtceu.api.mui.widget.ParentWidget;
 import com.gregtechceu.gtceu.api.mui.widgets.*;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Column;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Flow;
@@ -21,6 +22,7 @@ import com.gregtechceu.gtceu.api.mui.widgets.layout.Grid;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Row;
 import com.gregtechceu.gtceu.api.mui.widgets.slot.ItemSlot;
 import com.gregtechceu.gtceu.api.mui.widgets.slot.ModularSlot;
+import com.gregtechceu.gtceu.api.recipe.gui.GTRecipeTypeUILayout;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
@@ -275,5 +277,9 @@ public class GTMuiWidgets {
         }
 
         return grid;
+    }
+
+    public static ParentWidget<?> createXEIWidget(GTRecipeTypeUILayout layout) {
+        return layout.getMainWidget();
     }
 }
