@@ -16,7 +16,9 @@ import com.lowdragmc.lowdraglib.syncdata.annotation.UpdateListener;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
@@ -155,5 +157,19 @@ public class MultiblockPartMachine extends MetaMachine implements IMultiPart {
         if (renderState.hasProperty(GTMachineModelProperties.IS_FORMED)) {
             setRenderState(renderState.setValue(GTMachineModelProperties.IS_FORMED, true));
         }
+    }
+
+    @Override
+    public boolean replacePartModelWhenFormed() {
+        var renderState = getRenderState();
+        return renderState.hasProperty(GTMachineModelProperties.IS_FORMED) &&
+                renderState.getValue(GTMachineModelProperties.IS_FORMED);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getFormedAppearance(BlockState sourceState, BlockPos sourcePos, Direction side) {
+        if (!replacePartModelWhenFormed()) return null;
+        return IMultiPart.super.getFormedAppearance(sourceState, sourcePos, side);
     }
 }

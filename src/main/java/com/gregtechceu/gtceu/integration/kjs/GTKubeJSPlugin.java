@@ -5,7 +5,6 @@ import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.cosmetics.CapeRegistry;
-import com.gregtechceu.gtceu.api.fluid.FluidBuilder;
 import com.gregtechceu.gtceu.api.fluid.FluidState;
 import com.gregtechceu.gtceu.api.fluid.attribute.FluidAttributes;
 import com.gregtechceu.gtceu.api.fluid.store.FluidStorageKeys;
@@ -17,6 +16,7 @@ import com.gregtechceu.gtceu.api.machine.SimpleGeneratorMachine;
 import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
+import com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties;
 import com.gregtechceu.gtceu.api.material.ChemicalHelper;
 import com.gregtechceu.gtceu.api.material.Element;
 import com.gregtechceu.gtceu.api.material.material.Material;
@@ -52,6 +52,7 @@ import com.gregtechceu.gtceu.api.worldgen.generator.indicators.NoopIndicatorGene
 import com.gregtechceu.gtceu.api.worldgen.generator.indicators.SurfaceIndicatorGenerator.IndicatorPlacement;
 import com.gregtechceu.gtceu.api.worldgen.generator.veins.DikeVeinGenerator;
 import com.gregtechceu.gtceu.api.worldgen.generator.veins.NoopVeinGenerator;
+import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderHelper;
 import com.gregtechceu.gtceu.common.cosmetics.GTCapes;
 import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitiveFancyUIWorkableMachine;
 import com.gregtechceu.gtceu.common.pack.GTDynamicResourcePack;
@@ -292,7 +293,6 @@ public class GTKubeJSPlugin implements KubeJSPlugin {
         event.add("MaterialEntry", MaterialEntry.class);
         event.add("GTMaterialFlags", MaterialFlags.class);
         event.add("GTFluidAttributes", FluidAttributes.class);
-        event.add("GTFluidBuilder", FluidBuilder.class);
         event.add("GTFluidStorageKeys", FluidStorageKeys.class);
         event.add("GTFluidState", FluidState.class);
         event.add("GTMaterialIconSet", MaterialIconSet.class);
@@ -343,6 +343,8 @@ public class GTKubeJSPlugin implements KubeJSPlugin {
         // Client/Server data related
         event.add("GTModels", GTModels.class);
         event.add("GTMachineModels", GTMachineModels.class);
+        event.add("GTModelProperties", GTMachineModelProperties.class);
+        event.add("GTDynamicRenders", DynamicRenderHelper.class);
 
         // Hazard Related
         event.add("HazardProperty", HazardProperty.class);

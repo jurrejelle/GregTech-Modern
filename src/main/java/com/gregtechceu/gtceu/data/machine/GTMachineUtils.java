@@ -89,7 +89,7 @@ import java.util.stream.IntStream;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.capability.recipe.IO.*;
-import static com.gregtechceu.gtceu.api.capability.recipe.IO.IN;
+import static com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties.IS_FORMED;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.*;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.autoAbilities;
 import static com.gregtechceu.gtceu.common.machine.storage.QuantumTankMachine.TANK_CAPACITY;
@@ -267,6 +267,7 @@ public class GTMachineUtils {
                             .rotationState(RotationState.ALL)
                             .colorOverlayTieredHullModel(ioOverlay, pipeOverlay, emissiveOverlay)
                             .abilities(abilities)
+                            .modelProperty(IS_FORMED, false)
                             .tooltips(Component.translatable("gtceu.machine." + tooltip + ".tooltip"))
                             .allowCoverOnFront(true);
 
@@ -483,6 +484,7 @@ public class GTMachineUtils {
                                                         EnergyHatchPartMachine.getHatchEnergyCapacity(tier, amperage))),
                                 Component.translatable("gtceu.part_sharing.disabled"))
                         .abilities(ability)
+                        .modelProperty(IS_FORMED, false)
                         .overlayTieredHullModel("laser_" + name + "_hatch")
                         .register(),
                 HIGH_TIERS);

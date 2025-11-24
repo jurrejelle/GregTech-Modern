@@ -45,6 +45,7 @@ import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
+import static com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties.IS_FORMED;
 import static com.gregtechceu.gtceu.api.multiblock.Predicates.*;
 import static com.gregtechceu.gtceu.common.registry.GTRegistration.REGISTRATE;
 import static com.gregtechceu.gtceu.data.block.GTBlocks.*;
@@ -113,6 +114,7 @@ public class GTResearchMachines {
             .tier(ZPM)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.OBJECT_HOLDER)
+            .modelProperty(IS_FORMED, false)
             .modelProperty(GTMachineModelProperties.RECIPE_LOGIC_STATUS, RecipeLogic.Status.IDLE)
             .model(createWorkableTieredHullMachineModel(GTCEu.id("block/machines/object_holder"))
                     .andThen((ctx, prov, model) -> {
@@ -365,6 +367,7 @@ public class GTResearchMachines {
             .tier(MAX)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.DATA_ACCESS)
+            .modelProperty(IS_FORMED, false)
             .tooltipBuilder((s, list) -> {
                 list.add(Component.translatable("gtceu.machine.data_access_hatch.tooltip.0"));
                 CREATIVE_TOOLTIPS.accept(s, list);
@@ -452,6 +455,7 @@ public class GTResearchMachines {
                 .langValue(displayName)
                 .rotationState(RotationState.ALL)
                 .abilities(PartAbility.HPCA_COMPONENT)
+                .modelProperty(GTMachineModelProperties.IS_FORMED, false)
                 .modelProperty(GTMachineModelProperties.IS_HPCA_PART_DAMAGED, false)
                 .modelProperty(GTMachineModelProperties.IS_ACTIVE, false)
                 .model(createHPCAPartModel(isAdvanced,

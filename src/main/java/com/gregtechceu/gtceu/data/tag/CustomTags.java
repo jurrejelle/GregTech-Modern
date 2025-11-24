@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.data.tag;
 import com.gregtechceu.gtceu.api.tag.TagUtil;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -206,8 +207,15 @@ public class CustomTags {
     public static final TagKey<Block> CLEANROOM_FLOORS = TagUtil.createModBlockTag("cleanroom_floors");
     public static final TagKey<Block> CHARCOAL_PILE_IGNITER_WALLS = TagUtil.createModBlockTag(
             "charcoal_pile_igniter_walls");
+    public static final TagKey<Block> CREATE_WRENCH_PICKUP = TagUtil.optionalTag(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath("create", "wrench_pickup"));
+
+    public static final TagKey<Block> TALL_PLANTS = TagUtil.createModBlockTag("tall_plants");
 
     public static final TagKey<Biome> HAS_RUBBER_TREE = TagUtil.createModTag(Registries.BIOME, "has_rubber_tree");
+
+    public static final TagKey<Block> CONCRETE_BLOCK = TagUtil.createBlockTag("concrete_blocks");
+    public static final TagKey<Block> CONCRETE_POWDER_BLOCK = TagUtil.createBlockTag("concrete_powder_blocks");
 
     public static final TagKey<EntityType<?>> HEAT_IMMUNE = TagUtil.createModTag(Registries.ENTITY_TYPE, "heat_immune");
     public static final TagKey<EntityType<?>> CHEMICAL_IMMUNE = TagUtil.createModTag(Registries.ENTITY_TYPE,
@@ -222,4 +230,6 @@ public class CustomTags {
     public static final TagKey<Fluid> MOLTEN_FLUIDS = TagUtil.createFluidTag("molten");
     public static final TagKey<Fluid> LIQUID_FLUIDS = TagUtil.createFluidTag("liquid");
     public static final TagKey<Fluid> PLASMA_FLUIDS = TagUtil.createFluidTag("plasmatic");
+
+    public static final TagKey<Fluid> HPCA_COOLANTS = TagUtil.createModFluidTag("hpca_coolants");
 }

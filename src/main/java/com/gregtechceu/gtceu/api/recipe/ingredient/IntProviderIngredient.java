@@ -27,8 +27,7 @@ import static com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngred
 
 /**
  * Allows an {@link Ingredient} to be created with a ranged {@code count}, which will be randomly rolled upon recipe
- * completion.
- * Only valid as a recipe item {@code output}.
+ * start (input) / completion (output).
  * Instantiated using {@link IntProviderIngredient#of()}, with a {@link Ingredient} or {@link ItemStack},
  * and an {@link IntProvider}.
  * Functions similarly to {@link IntProviderFluidIngredient}.
@@ -162,5 +161,12 @@ public class IntProviderIngredient implements ICustomIngredient {
             sampledCount = countProvider.sample(random);
         }
         return sampledCount;
+    }
+
+    /**
+     * @return the average roll of this ranged amount
+     */
+    public double getMidRoll() {
+        return ((countProvider.getMaxValue() + countProvider.getMinValue()) / 2.0);
     }
 }

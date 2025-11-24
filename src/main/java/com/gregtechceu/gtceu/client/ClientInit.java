@@ -10,9 +10,14 @@ import com.gregtechceu.gtceu.client.model.machine.MachineModelLoader;
 import com.gregtechceu.gtceu.client.particle.HazardParticle;
 import com.gregtechceu.gtceu.client.particle.MufflerParticle;
 import com.gregtechceu.gtceu.client.renderer.entity.GTExplosiveRenderer;
-import com.gregtechceu.gtceu.client.renderer.item.decorator.*;
+import com.gregtechceu.gtceu.client.renderer.item.decorator.GTComponentItemDecorator;
+import com.gregtechceu.gtceu.client.renderer.item.decorator.GTLampItemOverlayRenderer;
+import com.gregtechceu.gtceu.client.renderer.item.decorator.GTTankItemFluidPreview;
+import com.gregtechceu.gtceu.client.renderer.item.decorator.GTToolBarRenderer;
 import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderManager;
 import com.gregtechceu.gtceu.client.renderer.machine.impl.*;
+import com.gregtechceu.gtceu.common.item.DrumMachineItem;
+import com.gregtechceu.gtceu.common.item.QuantumTankMachineItem;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.entity.GTEntityTypes;
@@ -74,6 +79,12 @@ public class ClientInit {
             if (item instanceof LampBlockItem) {
                 event.register(item, GTLampItemOverlayRenderer.INSTANCE);
             }
+            if (item instanceof DrumMachineItem) {
+                event.register(item, GTTankItemFluidPreview.DRUM);
+            }
+            if (item instanceof QuantumTankMachineItem) {
+                event.register(item, GTTankItemFluidPreview.QUANTUM_TANK);
+            }
         }
     }
 
@@ -111,6 +122,7 @@ public class ClientInit {
         DynamicRenderManager.register(GTCEu.id("boiler_multi_parts"), BoilerMultiPartRender.TYPE);
 
         DynamicRenderManager.register(GTCEu.id("fluid_area"), FluidAreaRender.TYPE);
+        DynamicRenderManager.register(GTCEu.id("growing_plant"), GrowingPlantRender.TYPE);
 
         DynamicRenderManager.register(GTCEu.id("central_monitor"), CentralMonitorRender.TYPE);
     }

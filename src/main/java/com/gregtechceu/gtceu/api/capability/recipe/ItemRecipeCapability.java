@@ -19,10 +19,7 @@ import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.item.*;
 import com.gregtechceu.gtceu.api.recipe.modifier.ParallelLogic;
 import com.gregtechceu.gtceu.api.recipe.ui.GTRecipeTypeUI;
 import com.gregtechceu.gtceu.common.recipe.condition.ResearchCondition;
-import com.gregtechceu.gtceu.common.valueprovider.AddedFloat;
-import com.gregtechceu.gtceu.common.valueprovider.CastedFloat;
-import com.gregtechceu.gtceu.common.valueprovider.FlooredInt;
-import com.gregtechceu.gtceu.common.valueprovider.MultipliedFloat;
+import com.gregtechceu.gtceu.common.valueprovider.*;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemEntryList;
@@ -39,7 +36,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -75,17 +71,16 @@ public class ItemRecipeCapability extends RecipeCapability<SizedIngredient> {
 
     @Override
     public SizedIngredient copyWithModifier(SizedIngredient content, ContentModifier modifier) {
-        if (content.getContainedCustom() instanceof IntProviderIngredient intProviderIngredient) {
-            var newIntProvider = new FlooredInt(
-                    new AddedFloat(
-                            new MultipliedFloat(
-                                    new CastedFloat(intProviderIngredient.getCountProvider()),
-                                    ConstantFloat.of((float) modifier.multiplier())),
-                            ConstantFloat.of((float) modifier.addition())));
-            var newIngredient = IntProviderIngredient.of(intProviderIngredient.getInner(), newIntProvider).toVanilla();
-            return new SizedIngredient(newIngredient, 1);
+        if (content.getContainedCustom() instanceof IntProviderIngredient provider) {
+            return new SizedIngredient(IntProviderIngredient.of(provider.getInner(),
+                    ModifiedIntProvider.of(provider.getCountProvider(), modifier)).toVanilla(), content.count());
         }
         return content.copyWithCount(modifier.apply(content.count()));
+    }
+
+    public IntProviderIngredient copyWithModifier(IntProviderIngredient content, ContentModifier modifier) {
+        return IntProviderIngredient.of(content.getInner(),
+                ModifiedIntProvider.of(content.getCountProvider(), modifier));
     }
 
     @Override

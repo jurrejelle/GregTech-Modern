@@ -8,12 +8,9 @@
 // import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 
 // import net.darkhax.gamestages.data.GameStageSaveHandler;
-// import net.minecraft.network.RegistryFriendlyByteBuf;
 // import net.minecraft.network.chat.Component;
 
-// import com.google.gson.JsonObject;
 // import com.mojang.serialization.Codec;
-// import com.mojang.serialization.MapCodec;
 // import com.mojang.serialization.codecs.RecordCodecBuilder;
 // import lombok.NoArgsConstructor;
 // import org.jetbrains.annotations.NotNull;
@@ -64,27 +61,7 @@
 // }
 
 // @Override
-// public RecipeCondition<GameStageCondition> createTemplate() {
+// public RecipeCondition createTemplate() {
 // return new GameStageCondition();
-// }
-
-// @Override
-// public @NotNull JsonObject serialize() {
-// var obj = super.serialize();
-// obj.addProperty("stageName", stageName);
-// return obj;
-// }
-
-// @Override
-// public GameStageCondition fromNetwork(RegistryFriendlyByteBuf buf) {
-// super.fromNetwork(buf);
-// stageName = buf.readUtf();
-// return this;
-// }
-
-// @Override
-// public void toNetwork(RegistryFriendlyByteBuf buf) {
-// super.toNetwork(buf);
-// buf.writeUtf(stageName);
 // }
 // }

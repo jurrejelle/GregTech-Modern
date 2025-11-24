@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.capability;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.block.IAppearance;
 import com.gregtechceu.gtceu.api.blockentity.ITickSubscription;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.cover.CoverDefinition;
@@ -26,7 +25,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public interface ICoverable extends ITickSubscription, IAppearance {
+public interface ICoverable extends ITickSubscription {
 
     Level getLevel();
 
@@ -81,7 +79,7 @@ public interface ICoverable extends ITickSubscription, IAppearance {
     CoverBehavior getCoverAtSide(Direction side);
 
     default boolean placeCoverOnSide(Direction side, ItemStack itemStack, CoverDefinition coverDefinition,
-                                     ServerPlayer player) {
+                                     @Nullable ServerPlayer player) {
         CoverBehavior coverBehavior = coverDefinition.createCoverBehavior(this, side);
         if (!canPlaceCoverOnSide(coverDefinition, side) || !coverBehavior.canAttach()) {
             return false;
@@ -234,12 +232,13 @@ public interface ICoverable extends ITickSubscription, IAppearance {
     }
 
     @Nullable
-    static Direction traceCoverSide(BlockHitResult result) {
+    static Direction traceCoverSide(@Nullable BlockHitResult result) {
         return determineGridSideHit(result);
     }
 
     @Nullable
-    static Direction determineGridSideHit(BlockHitResult result) {
+    static Direction determineGridSideHit(@Nullable BlockHitResult result) {
+        if (result == null) return null;
         return GTUtil.determineWrenchingSide(result.getDirection(),
                 (float) (result.getLocation().x - result.getBlockPos().getX()),
                 (float) (result.getLocation().y - result.getBlockPos().getY()),
@@ -270,13 +269,10 @@ public interface ICoverable extends ITickSubscription, IAppearance {
     }
 
     @Nullable
-    @Override
-    default BlockState getBlockAppearance(@NotNull BlockState state, @NotNull BlockAndTintGetter level,
-                                          @NotNull BlockPos pos, @NotNull Direction side,
-                                          @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-        CoverBehavior cover = getCoverAtSide(side);
-        if (cover != null) {
-            return cover.getAppearance(sourceState, sourcePos);
+    default BlockState getBlockAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
+                                          BlockState sourceState, BlockPos sourcePos) {
+        if (hasCover(side)) {
+            return getCoverAtSide(side).getAppearance(sourceState, sourcePos);
         }
         return null;
     }

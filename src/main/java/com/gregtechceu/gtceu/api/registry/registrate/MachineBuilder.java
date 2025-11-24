@@ -248,7 +248,9 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
     }
 
     public MachineBuilder<DEFINITION> overlayTieredHullModel(String name) {
-        return overlayTieredHullModel(registrate.makeResourceLocation("block/machine/part/" + name));
+        modelProperty(GTMachineModelProperties.IS_FORMED, false);
+        return overlayTieredHullModel(
+                ResourceLocation.fromNamespaceAndPath(registrate.getModid(), "block/machine/part/" + name));
     }
 
     public MachineBuilder<DEFINITION> overlayTieredHullModel(ResourceLocation overlayModel) {
@@ -262,7 +264,9 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
     public MachineBuilder<DEFINITION> colorOverlayTieredHullModel(String overlay,
                                                                   @Nullable String pipeOverlay,
                                                                   @Nullable String emissiveOverlay) {
-        ResourceLocation overlayTex = registrate.makeResourceLocation("block/overlay/machine/" + overlay);
+        modelProperty(GTMachineModelProperties.IS_FORMED, false);
+        ResourceLocation overlayTex = ResourceLocation.fromNamespaceAndPath(registrate.getModid(),
+                "block/overlay/machine/" + overlay);
         ResourceLocation pipeOverlayTex = pipeOverlay == null ? null :
                 registrate.makeResourceLocation("block/overlay/machine/" + pipeOverlay);
         ResourceLocation emissiveOverlayTex = emissiveOverlay == null ? null :
@@ -271,6 +275,7 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
     }
 
     public MachineBuilder<DEFINITION> colorOverlayTieredHullModel(ResourceLocation overlay) {
+        modelProperty(GTMachineModelProperties.IS_FORMED, false);
         return colorOverlayTieredHullModel(overlay, null, null);
     }
 
@@ -282,7 +287,9 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
     }
 
     public MachineBuilder<DEFINITION> overlaySteamHullModel(String name) {
-        return overlaySteamHullModel(registrate.makeResourceLocation("block/machine/part/" + name));
+        modelProperty(GTMachineModelProperties.IS_FORMED, false);
+        return overlaySteamHullModel(
+                ResourceLocation.fromNamespaceAndPath(registrate.getModid(), "block/machine/part/" + name));
     }
 
     public MachineBuilder<DEFINITION> overlaySteamHullModel(ResourceLocation overlayModel) {
@@ -297,7 +304,9 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
     public MachineBuilder<DEFINITION> colorOverlaySteamHullModel(String overlay,
                                                                  @Nullable ResourceLocation pipeOverlay,
                                                                  @Nullable String emissiveOverlay) {
-        ResourceLocation overlayTex = registrate.makeResourceLocation("block/overlay/machine/" + overlay);
+        modelProperty(GTMachineModelProperties.IS_FORMED, false);
+        ResourceLocation overlayTex = ResourceLocation.fromNamespaceAndPath(registrate.getModid(),
+                "block/overlay/machine/" + overlay);
         ResourceLocation pipeOverlayTex = pipeOverlay == null ? null :
                 registrate.makeResourceLocation("block/overlay/machine/" + pipeOverlay);
         ResourceLocation emissiveOverlayTex = emissiveOverlay == null ? null :

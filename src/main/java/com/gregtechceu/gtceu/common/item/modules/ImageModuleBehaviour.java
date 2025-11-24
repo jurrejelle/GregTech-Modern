@@ -41,4 +41,17 @@ public class ImageModuleBehaviour implements IMonitorModuleItem {
         builder.addWidget(saveButton);
         return builder;
     }
+
+    @Override
+    public String getType() {
+        return "image";
+    }
+
+    public String getUrl(ItemStack stack) {
+        return stack.get(GTDataComponents.IMAGE_MODULE_URL);
+    }
+
+    public void setUrl(ItemStack stack, String url) {
+        stack.set(GTDataComponents.IMAGE_MODULE_URL, url);
+    }
 }

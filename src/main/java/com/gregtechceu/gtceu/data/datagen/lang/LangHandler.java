@@ -57,7 +57,7 @@ public class LangHandler {
         provider.add("recipe.condition.biome.tooltip", "Biome: %s");
         provider.add("recipe.condition.pos_y.tooltip", "Y Level: %d <= Y <= %d");
         provider.add("recipe.condition.steam_vent.tooltip", "Clean steam vent");
-        provider.add("recipe.condition.rock_breaker.tooltip", "Fluid blocks around");
+        provider.add("recipe.condition.adjacent_fluid.tooltip", "Fluid blocks around");
         provider.add("recipe.condition.adjacent_block.tooltip", "Blocks around");
         provider.add("recipe.condition.eu_to_start.tooltip", "EU to Start: %d%s");
         provider.add("recipe.condition.daytime.day.tooltip", "Requires day time to work");
@@ -197,6 +197,11 @@ public class LangHandler {
         provider.add("item.gtceu.tool.behavior.plunger", "§9Plumber: §fDrains Fluids");
         provider.add("item.gtceu.tool.behavior.block_rotation", "§2Mechanic: §fRotates Blocks");
         provider.add("item.gtceu.tool.behavior.damage_boost", "§4Damage Boost: §fExtra damage against %s");
+        provider.add("item.gtceu.tool.behavior.prospecting.ore", "Found ore: %s");
+        provider.add("item.gtceu.tool.behavior.prospecting.air", "Found an air pocket");
+        provider.add("item.gtceu.tool.behavior.prospecting.water", "Found water");
+        provider.add("item.gtceu.tool.behavior.prospecting.lava", "Found lava");
+        provider.add("item.gtceu.tool.behavior.prospecting.changing", "Detected material change");
         replace(provider, "item.gtceu.tool.sword", "%s Sword");
         replace(provider, "item.gtceu.tool.pickaxe", "%s Pickaxe");
         replace(provider, "item.gtceu.tool.shovel", "%s Shovel");
@@ -416,7 +421,7 @@ public class LangHandler {
         multilineLang(provider, "cover.conveyor.distribution.round_robin_global",
                 "Distribution Mode: §bRound Robin\n§7Splits items equally across connected inventories");
         multilineLang(provider, "cover.conveyor.distribution.round_robin_prio",
-                "Distribution Mode: §bRound Robin with Priority\n§7Tries to split items across connected inventories and considers higher priorities first.\n§7Restrictive item pipes lower the priority of a path.");
+                "Distribution Mode: §bRound Robin with Restriction\n§7Tries to split items equally across connected inventories.\n§7Will not send items down Restrictive item pipes unless no other paths are available.");
         multilineLang(provider, "cover.conveyor.distribution.insert_first",
                 "Distribution Mode: §bPriority\n§7Will insert into the first inventory with the highest priority it can find.\n§7Restrictive item pipes lower the priority of a path.");
         multilineLang(provider, "cover.conveyor.blocks_input.enabled",
@@ -460,6 +465,7 @@ public class LangHandler {
         multilineLang(provider, "cover.machine_controller.invert.disabled",
                 "§eNormal§r - in this mode, the cover will require a signal weaker than the set redstone level to run");
         provider.add("cover.machine_controller.redstone", "Min Redstone Strength: %d");
+        provider.add("cover.machine_controller.suspend_powerfail", "Prevent Power Failing:");
         provider.add("cover.machine_controller.mode.machine", "Control Machine");
         provider.add("cover.machine_controller.mode.cover_up", "Control Cover (Top)");
         provider.add("cover.machine_controller.mode.cover_down", "Control Cover (Bottom)");
@@ -469,6 +475,8 @@ public class LangHandler {
         provider.add("cover.machine_controller.mode.cover_west", "Control Cover (West)");
         provider.add("cover.machine_controller.mode.null", "Control Nothing");
         provider.add("cover.ender_fluid_link.title", "Ender Fluid Link");
+        provider.add("cover.ender_item_link.title", "Ender Item Link");
+        provider.add("cover.ender_redstone_link.title", "Ender Redstone Link");
         provider.add("cover.ender_fluid_link.iomode.enabled", "I/O Enabled");
         provider.add("cover.ender_fluid_link.iomode.disabled", "I/O Disabled");
         provider.add("cover.ender_fluid_link.tooltip.channel_description", "Set channel description with input text");
@@ -596,6 +604,11 @@ public class LangHandler {
         replace(provider, GTMaterials.IncoloyMA956.getUnlocalizedName(), "Incoloy MA-956");
         replace(provider, GTMaterials.Stellite100.getUnlocalizedName(), "Stellite-100");
         replace(provider, GTMaterials.HastelloyC276.getUnlocalizedName(), "Hastelloy C-276");
+        replace(provider, GTMaterials.HeavyOil.getUnlocalizedName(), "Heavy Oil");
+        replace(provider, GTMaterials.LightOil.getUnlocalizedName(), "Light Oil");
+        replace(provider, GTMaterials.RawOil.getUnlocalizedName(), "Raw Oil");
+        replace(provider, GTMaterials.Oil.getUnlocalizedName(), "Oil");
+        replace(provider, GTMaterials.Creosote.getUnlocalizedName(), "Creosote");
 
         replace(provider, GTBlocks.BATTERY_EMPTY_TIER_I.get().getDescriptionId(), "Empty Tier I Capacitor");
         replace(provider, GTBlocks.BATTERY_LAPOTRONIC_EV.get().getDescriptionId(), "EV Lapotronic Capacitor");
@@ -1273,6 +1286,7 @@ public class LangHandler {
         provider.add("config.jade.plugin_gtceu.multiblock_structure", "[GTCEu] MultiBlock Structure");
         provider.add("config.jade.plugin_gtceu.parallel_info", "[GTCEu] Parallel Info");
         provider.add("config.jade.plugin_gtceu.primitive_pump", "[GTCEu] Primitive Pump Info");
+        provider.add("config.jade.plugin_gtceu.data_bank", "[GTCEu] Data Bank Info");
         provider.add("config.jade.plugin_gtceu.transformer", "[GTCEu] Transformer Info");
         provider.add("config.jade.plugin_gtceu.stained_color", "[GTCEu] Stained Block Info");
         provider.add("config.jade.plugin_gtceu.me_pattern_buffer", "[GTCEu] Pattern Buffer Info");
@@ -1310,6 +1324,7 @@ public class LangHandler {
 
         provider.add("gtceu.gui.machinemode.title", "Active Machine Mode");
         provider.add("gtceu.gui.machinemode", "Active Machine Mode: %s");
+        provider.add("gtceu.gui.machinemode.tab_tooltip", "Change active Machine Mode");
         provider.add("gtceu.machine.available_recipe_map_1.tooltip", "Available Recipe Types: %s");
         provider.add("gtceu.machine.available_recipe_map_2.tooltip", "Available Recipe Types: %s, %s");
         provider.add("gtceu.machine.available_recipe_map_3.tooltip", "Available Recipe Types: %s, %s, %s");
@@ -1417,7 +1432,8 @@ public class LangHandler {
         provider.add("gtceu.tooltip.status.trinary.true", "True");
         provider.add("gtceu.tooltip.status.trinary.unknown", "Unknown");
 
-        provider.add("gtceu.tooltip.wireless_transmitter_bind", "Binding to a transmitter cover at %s %s %s facing %s");
+        provider.add("gtceu.tooltip.wireless_transmitter_bind",
+                "Binding to a transmitter cover at %s %s %s facing %s in %s");
         provider.add("gtceu.tooltip.computer_monitor_config", "Storing computer monitor cover configuration data");
         provider.add("gtceu.tooltip.computer_monitor_data", "Storing data: %s");
         provider.add("gtceu.tooltip.player_name.placeholder_processor", "Placeholder processor");
@@ -1594,7 +1610,7 @@ public class LangHandler {
         multiLang(provider, "gtceu.placeholder_info.nbt",
                 "Returns the nbt data of the item in the specified slot",
                 "Usage:",
-                "  {nbt <slot>} -> nbt data");
+                "  {nbt <slot> [key1] [key2] [key3] ...} -> item_nbt[key1][key2][key3][...]");
         multiLang(provider, "gtceu.placeholder_info.toChars",
                 "Returns the characters of the provided string with spaces between them",
                 "Example: {toChars example} -> 'e x a m p l e'",
@@ -1636,6 +1652,34 @@ public class LangHandler {
                 "Example: {formatInt 1236457} -> 1.24M",
                 "Usage:",
                 "  {formatInt <arg>} -> string representation of the int");
+        multiLang(provider, "gtceu.placeholder_info.click",
+                "Returns whether the targeted advanced monitor was clicked before the current tick",
+                "Usage:",
+                "  {click} -> \"1\" if the targeted advanced monitor was clicked, \"0\" otherwise",
+                "  {click x} -> the x position of the last click (between 0 and 1)",
+                "  {click y} -> the y position of the last click (between 0 and 1)");
+        multiLang(provider, "gtceu.placeholder_info.ender",
+                "Interacts with ender link covers",
+                "Can interact with private channels if provided with a data item bound to a player",
+                "Usage:",
+                "  {ender item <channel> [player_data_item_slot]} -> item count",
+                "  {ender itemPull <channel> [player_data_item_slot]} -> pull 1 item from the ender link's buffer",
+                "  {ender itemPush <channel> [player_data_item_slot]} -> push 1 item to the ender link's buffer",
+                "  {ender itemId <channel> [player_data_item_slot]} -> the id of the item in the ender link's buffer (ex. \"26 minecraft:dirt\")",
+                "  {ender fluid <channel> [player_data_item_slot]} -> fluid count",
+                "  {ender redstone <channel> [player_data_item_slot] -> redstone signal level",
+                "  {ender redstone <channel> <player_data_item_slot> <signal> -> sets the redstone signal outputed to the ender redstone link, returns empty string",
+                "The player_data_item_slot argument may be left empty (not 0, empty string)");
+        multiLang(provider, "gtceu.placeholder_info.eval",
+                "Returns the result of evaluating the provided string which may placeholders",
+                "Usage:",
+                "  {eval abcdefg} -> abcdefg",
+                "  {eval \"repeating a: {repeat 5 \\\"a \\\"}\" -> repeating a: a a a a a ",
+                "  {eval \\\"\"{some random text}\"\\\" -> {some random text}",
+                "  {eval \"text \"\\\"\"{something with spaces}\"\\\"\" more text\" -> text {something with spaces} more text");
+        provider.add("gtceu.ender_item_link_cover.title", "Ender Item Link");
+        provider.add("gtceu.ender_redstone_link_cover.title", "Ender Redstone Link");
+        provider.add("gtceu.ender_redstone_link_cover.label", "Redstone power: %d");
         provider.add("gtceu.gui.computer_monitor_cover.update_interval", "Update interval (in ticks)");
         provider.add("gtceu.gui.computer_monitor_cover.edit_blank_placeholders", "Edit blank placeholders");
         provider.add("gtceu.gui.computer_monitor_cover.edit_displayed_text", "Edit displayed text");

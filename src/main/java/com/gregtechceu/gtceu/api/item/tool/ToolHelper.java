@@ -189,6 +189,9 @@ public class ToolHelper {
                     }
                     if (user != null) {
                         user.breakItem(stack);
+                        user.onEquippedItemBroken(stack.getItem(),
+                                user.getSlotForHand(
+                                        user.isUsingItem() ? user.getUsedItemHand() : InteractionHand.MAIN_HAND));
                     }
                     stack.shrink(1);
                 }
@@ -471,7 +474,13 @@ public class ToolHelper {
         }
 
         BlockHitResult hitResult = getPlayerDefaultRaytrace(player);
-        UseOnContext context = new UseOnContext(player, player.getUsedItemHand(), hitResult);
+        var toolType = player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof GTToolItem toolItem ?
+                toolItem.toolType : null;
+        if (toolType == null) return Collections.emptyList();
+        var hand = is(player.getItemInHand(InteractionHand.MAIN_HAND), toolType) ?
+                InteractionHand.MAIN_HAND : null;
+        if (hand == null) return Collections.emptyList();
+        UseOnContext context = new UseOnContext(player, hand, hitResult);
         return getHarvestableBlocks(aoeDefinition, context);
     }
 

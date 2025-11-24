@@ -24,17 +24,21 @@ import com.gregtechceu.gtceu.integration.kjs.recipe.components.CapabilityMapComp
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.GTRecipeComponents;
 import com.gregtechceu.gtceu.utils.ResearchManager;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -684,12 +688,54 @@ public interface GTRecipeSchema {
             return environmentalHazard(condition, false);
         }
 
+        public GTKubeRecipe adjacentFluid(Fluid... fluids) {
+            return adjacentFluid(false, fluids);
+        }
+
+        public GTKubeRecipe adjacentFluid(boolean isReverse, Fluid... fluids) {
+            return addCondition(AdjacentFluidCondition.fromFluids(fluids).setReverse(isReverse));
+        }
+
+        public GTKubeRecipe adjacentFluid(ResourceLocation... tagNames) {
+            return adjacentFluid(false, tagNames);
+        }
+
+        public GTKubeRecipe adjacentFluid(boolean isReverse, ResourceLocation... tagNames) {
+            List<TagKey<Fluid>> tags = Arrays.stream(tagNames)
+                    .map(id -> TagKey.create(Registries.FLUID, id))
+                    .toList();
+            return addCondition(AdjacentFluidCondition.fromTags(tags).setReverse(isReverse));
+        }
+
+        public GTKubeRecipe adjacentBlock(Block... blocks) {
+            return adjacentBlock(false, blocks);
+        }
+
+        public GTKubeRecipe adjacentBlock(boolean isReverse, Block... blocks) {
+            return addCondition(AdjacentBlockCondition.fromBlocks(blocks).setReverse(isReverse));
+        }
+
+        public GTKubeRecipe adjacentBlock(ResourceLocation... tagNames) {
+            return adjacentBlock(false, tagNames);
+        }
+
+        public GTKubeRecipe adjacentBlock(boolean isReverse, ResourceLocation... tagNames) {
+            List<TagKey<Block>> tags = Arrays.stream(tagNames)
+                    .map(id -> TagKey.create(Registries.BLOCK, id))
+                    .toList();
+            return addCondition(AdjacentBlockCondition.fromTags(tags).setReverse(isReverse));
+        }
+
         public GTKubeRecipe daytime(boolean isNight) {
             return addCondition(new DaytimeCondition().setReverse(isNight));
         }
 
         public GTKubeRecipe daytime() {
             return daytime(false);
+        }
+
+        public GTKubeRecipe nighttime() {
+            return daytime(true);
         }
 
         // public GTKubeRecipe heraclesQuest(String questId, boolean isReverse) {

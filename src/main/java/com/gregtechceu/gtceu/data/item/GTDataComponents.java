@@ -17,6 +17,7 @@ import com.gregtechceu.gtceu.utils.ResearchManager;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -24,9 +25,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -35,6 +38,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 
 import java.util.List;
+import java.util.UUID;
 
 public class GTDataComponents {
 
@@ -199,8 +203,21 @@ public class GTDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Direction>> MONITOR_TARGET_FACE = DATA_COMPONENTS
             .registerComponentType("monitor_target_face", builder -> builder.persistent(Direction.CODEC)
                     .networkSynchronized(Direction.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceKey<Level>>> MONITOR_TARGET_DIMENSION = DATA_COMPONENTS
+            .registerComponentType("monitor_target_dimension",
+                    builder -> builder.persistent(ResourceKey.codec(Registries.DIMENSION))
+                            .networkSynchronized(ResourceKey.streamCodec(Registries.DIMENSION)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataItemBehavior.BoundPlayer>> DATA_BOUND_PLAYER = DATA_COMPONENTS
             .registerComponentType("data_bound_player",
                     builder -> builder.persistent(DataItemBehavior.BoundPlayer.CODEC)
                             .networkSynchronized(DataItemBehavior.BoundPlayer.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> ENDER_REDSTONE_LINK_TRANSMITTER_UUID = DATA_COMPONENTS
+            .registerComponentType("ender_redstone_link_transmitter_uuid",
+                    builder -> builder.persistent(UUIDUtil.CODEC)
+                            .networkSynchronized(UUIDUtil.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> PLACEHOLDER_UUID = DATA_COMPONENTS
+            .registerComponentType("placeholder_uuid",
+                    builder -> builder.persistent(UUIDUtil.CODEC)
+                            .networkSynchronized(UUIDUtil.STREAM_CODEC));
+    // enderRedstoneLinkTransmitterUUID
 }

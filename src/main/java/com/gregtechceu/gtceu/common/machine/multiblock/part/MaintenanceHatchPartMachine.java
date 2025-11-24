@@ -330,7 +330,7 @@ public class MaintenanceHatchPartMachine extends TieredPartMachine
             if (consumeDuctTape(player, stack)) {
                 fixAllMaintenanceProblems();
                 setTaped(true);
-                return ItemInteractionResult.CONSUME;
+                return ItemInteractionResult.SUCCESS;
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

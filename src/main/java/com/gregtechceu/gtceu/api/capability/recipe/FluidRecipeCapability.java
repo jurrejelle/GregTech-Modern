@@ -17,10 +17,7 @@ import com.gregtechceu.gtceu.api.recipe.modifier.ParallelLogic;
 import com.gregtechceu.gtceu.api.recipe.ui.GTRecipeTypeUI;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.client.TooltipsHandler;
-import com.gregtechceu.gtceu.common.valueprovider.AddedFloat;
-import com.gregtechceu.gtceu.common.valueprovider.CastedFloat;
-import com.gregtechceu.gtceu.common.valueprovider.FlooredInt;
-import com.gregtechceu.gtceu.common.valueprovider.MultipliedFloat;
+import com.gregtechceu.gtceu.common.valueprovider.*;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidEntryList;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidTagList;
@@ -82,6 +79,18 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
             return new SizedFluidIngredient(copy, 1);
         }
         return content.copyWithAmount(modifier.apply(content.amount()));
+    }
+
+    public IntProviderFluidIngredient copyWithModifier(IntProviderFluidIngredient content, ContentModifier modifier) {
+        if (content.hasNoFluids()) return content.copy();
+        IntProviderFluidIngredient copy = IntProviderFluidIngredient.of(content.getInner(),
+                new FlooredInt(
+                        new AddedFloat(
+                                new MultipliedFloat(
+                                        new CastedFloat(content.getCountProvider()),
+                                        ConstantFloat.of((float) modifier.multiplier())),
+                                ConstantFloat.of((float) modifier.addition()))));
+        return copy;
     }
 
     @Override

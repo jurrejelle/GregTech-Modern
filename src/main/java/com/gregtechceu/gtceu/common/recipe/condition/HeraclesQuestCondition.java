@@ -11,6 +11,8 @@
 // import net.minecraft.network.RegistryFriendlyByteBuf;
 // import net.minecraft.network.chat.Component;
 
+// import net.minecraft.network.chat.Component;
+// import net.neoforged.neoforge.server.ServerLifecycleHooks;
 // import com.google.gson.JsonObject;
 // import com.mojang.serialization.Codec;
 // import com.mojang.serialization.MapCodec;
@@ -96,5 +98,9 @@
 // public void toNetwork(RegistryFriendlyByteBuf buf) {
 // super.toNetwork(buf);
 // buf.writeUtf(questId);
+// }
+// @Override
+// public RecipeCondition createTemplate() {
+// return new HeraclesQuestCondition();
 // }
 // }

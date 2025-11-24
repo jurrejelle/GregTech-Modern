@@ -1272,7 +1272,7 @@ public class FirstDegreeMaterials {
         PotassiumFeldspar = new Material.Builder(GTCEu.id("potassium_feldspar"))
                 .dust(1)
                 .color(0xffe3bc).secondaryColor(0xd4918a).iconSet(FINE)
-                .components(Potassium, 1, Aluminium, 1, Silicon, 1, Oxygen, 8)
+                .components(Potassium, 1, Aluminium, 1, Silicon, 3, Oxygen, 8)
                 .buildAndRegister();
 
         NeodymiumMagnetic = new Material.Builder(GTCEu.id("magnetic_neodymium"))
@@ -1592,7 +1592,7 @@ public class FirstDegreeMaterials {
         CalciumCarbonate = new Material.Builder(GTCEu.id("calcium_carbonate"))
                 .dust()
                 .color(0xd9ca9c).secondaryColor(0xad913b)
-                .components(Calcium, 2, Carbon, 1, Oxygen, 3)
+                .components(Calcium, 1, Carbon, 1, Oxygen, 3)
                 .buildAndRegister();
 
         PotassiumCyanide = new Material.Builder(GTCEu.id("potassium_cyanide"))

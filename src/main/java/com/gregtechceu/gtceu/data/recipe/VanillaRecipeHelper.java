@@ -332,6 +332,15 @@ public class VanillaRecipeHelper {
         addShapedRecipe(provider, setMaterialInfoData, true, regName, result, recipe);
     }
 
+    /**
+     * @see #addShapedRecipe(RecipeOutput, boolean, boolean, ResourceLocation, ItemStack, Object...)
+     */
+    public static void addStrictShapedRecipe(RecipeOutput provider, boolean setMaterialInfoData,
+                                             @NotNull String regName, @NotNull ItemStack result,
+                                             @NotNull Object... recipe) {
+        addShapedRecipe(provider, setMaterialInfoData, true, GTCEu.id(regName), result, recipe);
+    }
+
     public static void addShapelessRecipe(RecipeOutput provider, @NotNull String regName,
                                           @NotNull ItemStack result, @NotNull Object... recipe) {
         addShapelessRecipe(provider, GTCEu.id(regName), result, recipe);

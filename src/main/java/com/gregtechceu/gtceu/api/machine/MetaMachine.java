@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.machine;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.block.IAppearance;
 import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.block.property.GTBlockStateProperties;
 import com.gregtechceu.gtceu.api.blockentity.IPaintable;
@@ -44,6 +43,7 @@ import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import com.lowdragmc.lowdraglib.utils.DummyWorld;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
@@ -82,13 +82,17 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * an abstract layer of a gregtech machine.
  * Because I have to implement BlockEntities for both fabric and forge platform.
  * All fundamental features will be implemented here.
  * To add additional features, you can see {@link IMachineFeature}
  */
-public class MetaMachine implements IEnhancedManaged, IToolable, ITickSubscription, IAppearance, IToolGridHighLight,
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class MetaMachine implements IEnhancedManaged, IToolable, ITickSubscription, IToolGridHighLight,
                          IFancyTooltip, IPaintable, IRedstoneSignalMachine {
 
     protected static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MetaMachine.class);
@@ -699,7 +703,6 @@ public class MetaMachine implements IEnhancedManaged, IToolable, ITickSubscripti
 
     public void animateTick(RandomSource random) {}
 
-    @Override
     @NotNull
     public BlockState getBlockAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
                                          @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {

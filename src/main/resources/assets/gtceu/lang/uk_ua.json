@@ -5103,7 +5103,6 @@
     "recipe.condition.rain.tooltip": "Рівень дощу: %d",
     "recipe.condition.thunder.tooltip": "Рівень грози: %d",
     "recipe.condition.pos_y.tooltip": "Рівень Y: %d <= Y <= %d",
-
     "mataarmor.hud.supply_mode": "Режим живлення: %s",
     "metaarmor.energy_share.disable": "Енергопостачання: Заряджання приладів вимкнена",
     "metaarmor.energy_share.enable": "Енергопостачання: Заряджання приладів увімкнено",
@@ -5148,7 +5147,6 @@
     "metaarmor.tooltip.potions": "Знешкоджує шкідливі ефекти",
     "metaarmor.tooltip.speed": "Збільшує швидкість бігу",
     "metaarmor.tooltip.stepassist": "Збільшує висоту кроку",
-
     "gtceu.subtitle.portable_scanner": "Сканування",
     "gtceu.subtitle.assembler": "Збирач конструює",
     "gtceu.subtitle.centrifuge": "Центрифуга обертається",

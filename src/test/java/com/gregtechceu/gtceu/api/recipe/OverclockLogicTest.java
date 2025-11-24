@@ -2,11 +2,8 @@ package com.gregtechceu.gtceu.api.recipe;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
+import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
-import com.gregtechceu.gtceu.common.machine.multiblock.part.FluidHatchPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
@@ -18,13 +15,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.gregtechceu.gtceu.api.recipe.OverclockingLogic.*;
 import static com.gregtechceu.gtceu.data.recipe.GTRecipeModifiers.*;
 import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.LARGE_CHEMICAL_RECIPES;
+import static com.gregtechceu.gtceu.gametest.util.TestUtils.getMetaMachine;
 
 @PrefixGameTestTemplate(false)
 @GameTestHolder(GTCEu.MOD_ID)
@@ -61,12 +58,8 @@ public class OverclockLogicTest {
                 .build());
     }
 
-    private static MetaMachine getMetaMachine(BlockEntity entity) {
-        return ((MetaMachineBlockEntity) entity).getMetaMachine();
-    }
-
     private record BusHolder(ItemBusPartMachine inputBus1, ItemBusPartMachine inputBus2, ItemBusPartMachine outputBus1,
-                             FluidHatchPartMachine outputHatch1, MultiblockControllerMachine controller) {}
+                             WorkableMultiblockMachine controller) {}
 
     /**
      * Retrieves the busses for this specific template and force a multiblock structure check
@@ -75,7 +68,7 @@ public class OverclockLogicTest {
      * @return the busses, in the BusHolder record.
      */
     private static BusHolder getBussesAndForm(GameTestHelper helper) {
-        MultiblockControllerMachine controller = (MultiblockControllerMachine) getMetaMachine(
+        WorkableMultiblockMachine controller = (WorkableMultiblockMachine) getMetaMachine(
                 helper.getBlockEntity(new BlockPos(1, 2, 0)));
         TestUtils.formMultiblock(controller);
         ItemBusPartMachine inputBus1 = (ItemBusPartMachine) getMetaMachine(
@@ -84,9 +77,7 @@ public class OverclockLogicTest {
                 helper.getBlockEntity(new BlockPos(2, 2, 0)));
         ItemBusPartMachine outputBus1 = (ItemBusPartMachine) getMetaMachine(
                 helper.getBlockEntity(new BlockPos(0, 1, 0)));
-        FluidHatchPartMachine outputHatch1 = (FluidHatchPartMachine) getMetaMachine(
-                helper.getBlockEntity(new BlockPos(0, 2, 0)));
-        return new BusHolder(inputBus1, inputBus2, outputBus1, outputHatch1, controller);
+        return new BusHolder(inputBus1, inputBus2, outputBus1, controller);
     }
 
     // Test for running HV recipe at HV
@@ -124,12 +115,12 @@ public class OverclockLogicTest {
     public static void overclockLogicOverTierNothingHappens(GameTestHelper helper) {
         BusHolder busHolder = getBussesAndForm(helper);
         busHolder.inputBus1.getInventory().setStackInSlot(0, new ItemStack(Items.BROWN_BED));
-        helper.failIfEver(() -> {
+        helper.onEachTick(() -> {
             helper.assertFalse(
                     busHolder.outputBus1.getInventory().getStackInSlot(0).getItem().equals(Blocks.STONE.asItem()),
                     "Item crafted at one tier over when it shouldn't have");
         });
-        helper.succeed();
+        TestUtils.succeedAfterTest(helper, 200);
     }
 
     // Test for code wise calculating perfect OC

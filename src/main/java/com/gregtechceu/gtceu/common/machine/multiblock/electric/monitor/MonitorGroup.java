@@ -118,4 +118,19 @@ public class MonitorGroup {
         }
         return target;
     }
+
+    public Level getTargetLevel(Level level) {
+        if (target == null) return level;
+
+        IMonitorComponent component = GTCapabilityHelper.getMonitorComponent(level, target, null);
+        if (component != null && component.getDataItems() != null) {
+            ItemStack stack = component.getDataItems().getStackInSlot(dataSlot);
+            var dim = stack.getOrDefault(GTDataComponents.MONITOR_TARGET_DIMENSION, null);
+            if (dim == null) return level;
+            if (level.getServer() == null) return level;
+            return level.getServer()
+                    .getLevel(dim);
+        }
+        return level;
+    }
 }

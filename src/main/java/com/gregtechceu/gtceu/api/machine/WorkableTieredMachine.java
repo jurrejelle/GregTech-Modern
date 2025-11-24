@@ -233,4 +233,20 @@ public abstract class WorkableTieredMachine extends TieredEnergyMachine implemen
     public GTRecipeType getRecipeType() {
         return recipeTypes[activeRecipeType];
     }
+
+    // Recipe compat
+    public void setRecipeType(@NotNull GTRecipeType type) {
+        GTRecipeType[] recipeTypes = getRecipeTypes();
+        int recipeIndex = -1;
+        for (int i = 0; i < recipeTypes.length; i++) {
+            if (type.equals(recipeTypes[i])) {
+                recipeIndex = i;
+                break;
+            }
+        }
+        if (recipeIndex == -1) {
+            throw new RuntimeException("Error!");
+        }
+        setActiveRecipeType(recipeIndex);
+    }
 }

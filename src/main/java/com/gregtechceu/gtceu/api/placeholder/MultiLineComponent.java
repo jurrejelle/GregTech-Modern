@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 
 import com.mojang.serialization.Codec;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -28,6 +29,9 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
             }, MultiLineComponent::toImmutable);
 
     public MultiLineComponent() {}
+
+    @Getter
+    private boolean ignoreSpaces = false;
 
     public MultiLineComponent(List<MutableComponent> components) {
         super(components);
@@ -122,6 +126,7 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
             out.append(MultiLineComponent.of(c.withStyle(style)));
             out.appendNewline();
         }
+        if (!out.isEmpty()) out.remove(out.size() - 1);
         return out;
     }
 
@@ -131,10 +136,16 @@ public class MultiLineComponent extends ArrayList<MutableComponent> {
             out.append(c.withStyle(style));
             out.appendNewline();
         }
+        if (!out.isEmpty()) out.remove(out.size() - 1);
         return out;
     }
 
     public @UnmodifiableView List<Component> toImmutable() {
         return Collections.unmodifiableList(this);
+    }
+
+    public MultiLineComponent setIgnoreSpaces(boolean ignoreSpaces) {
+        this.ignoreSpaces = ignoreSpaces;
+        return this;
     }
 }

@@ -24,6 +24,7 @@ import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -291,5 +292,21 @@ public abstract class WorkableMultiblockMachine extends MultiblockControllerMach
     @NotNull
     public GTRecipeType getRecipeType() {
         return recipeTypes[activeRecipeType];
+    }
+
+    // Recipe compat
+    public void setRecipeType(@NotNull GTRecipeType type) {
+        GTRecipeType[] recipeTypes = getRecipeTypes();
+        int recipeIndex = -1;
+        for (int i = 0; i < recipeTypes.length; i++) {
+            if (type.equals(recipeTypes[i])) {
+                recipeIndex = i;
+                break;
+            }
+        }
+        if (recipeIndex == -1) {
+            throw new RuntimeException("Error!");
+        }
+        setActiveRecipeType(recipeIndex);
     }
 }

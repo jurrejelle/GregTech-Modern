@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceu.api.recipe.ingredient;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.tag.GTIngredientTypes;
 
 import net.minecraft.util.RandomSource;
@@ -20,8 +21,7 @@ import java.util.stream.Stream;
 
 /**
  * Allows a {@link FluidIngredient} to be created with a ranged {@code amount}, which will be randomly rolled upon
- * recipe completion.
- * Only valid as a recipe fluid {@code output}.
+ * recipe start (input) / completion (output).
  * Instantiated using {@link IntProviderFluidIngredient#of()}, with a {@link FluidIngredient}
  * and either an {@link IntProvider} or {@code int, int} range bounds (inclusive).
  * Functions similarly to {@link IntProviderIngredient}.
@@ -63,6 +63,19 @@ public class IntProviderFluidIngredient extends FluidIngredient {
         copied.setSampledCount(this.sampledCount);
         copied.setFluidStacks(this.fluidStacks);
         return copied;
+    }
+
+    /**
+     * An {@link IntProviderFluidIngredient} does not have an amount.
+     * You probably want either {@link IntProviderFluidIngredient#getStacks()} or
+     * {@link IntProviderFluidIngredient#getMaxSizeStack()}.
+     */
+    @Deprecated
+    public int getAmount() {
+        if (ConfigHolder.INSTANCE.dev.debug) {
+            throw new IllegalCallerException("An IPFI should never have getAmount() called on it!");
+        }
+        return -1;
     }
 
     /**
@@ -142,6 +155,13 @@ public class IntProviderFluidIngredient extends FluidIngredient {
             sampledCount = countProvider.sample(random);
         }
         return sampledCount;
+    }
+
+    /**
+     * @return the average roll of this ranged amount
+     */
+    public double getMidRoll() {
+        return ((countProvider.getMaxValue() + countProvider.getMinValue()) / 2.0);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderHelper;
 import com.gregtechceu.gtceu.client.util.TooltipHelper;
 import com.gregtechceu.gtceu.common.machine.electric.*;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.*;
+import com.gregtechceu.gtceu.common.machine.multiblock.part.monitor.AdvancedMonitorPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.monitor.MonitorPartMachine;
 import com.gregtechceu.gtceu.common.machine.steam.SteamLiquidBoilerMachine;
 import com.gregtechceu.gtceu.common.machine.steam.SteamMinerMachine;
@@ -162,6 +163,7 @@ public class GTMachines {
                     .rotationState(RotationState.ALL)
                     .overlayTieredHullModel("hull")
                     .abilities(PartAbility.PASSTHROUGH_HATCH)
+                    .modelProperty(IS_FORMED, false)
                     .langValue("%s §fMachine Hull".formatted(VNF[tier]))
                     .tooltips(Component.translatable("gtceu.machine.hull.tooltip"))
                     .register(),
@@ -609,6 +611,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " Input Bus")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.IMPORT_ITEMS)
+                    .modelProperty(IS_FORMED, false)
                     .colorOverlayTieredHullModel("overlay_pipe_in_emissive", null, OVERLAY_ITEM_HATCH)
                     .tooltips(Component.translatable("gtceu.machine.item_bus.import.tooltip"),
                             Component.translatable("gtceu.universal.tooltip.item_storage_capacity",
@@ -623,6 +626,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " Output Bus")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.EXPORT_ITEMS)
+                    .modelProperty(IS_FORMED, false)
                     .colorOverlayTieredHullModel("overlay_pipe_out_emissive", null, OVERLAY_ITEM_HATCH)
                     .tooltips(Component.translatable("gtceu.machine.item_bus.export.tooltip"),
                             Component.translatable("gtceu.universal.tooltip.item_storage_capacity",
@@ -673,6 +677,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " Energy Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.INPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_in",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_in", 2),
@@ -690,6 +695,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " Dynamo Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.OUTPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_out", 2),
@@ -707,6 +713,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 4A Energy Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.INPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_in",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_in", 4),
@@ -724,6 +731,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 4A Dynamo Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.OUTPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_out", 4),
@@ -741,6 +749,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 16A Energy Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.INPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_in",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_in", 16),
@@ -758,6 +767,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 16A Dynamo Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.OUTPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_out", 16),
@@ -776,6 +786,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 64A Substation Energy Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.SUBSTATION_INPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_in",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_in", 64),
@@ -794,6 +805,7 @@ public class GTMachines {
                     .langValue(VNF[tier] + " 64A Substation Dynamo Hatch")
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.SUBSTATION_OUTPUT_ENERGY)
+                    .modelProperty(IS_FORMED, false)
                     .tooltips(Component.translatable("gtceu.universal.tooltip.voltage_out",
                             FormattingUtil.formatNumbers(V[tier]), VNF[tier]),
                             Component.translatable("gtceu.universal.tooltip.amperage_out", 64),
@@ -811,6 +823,7 @@ public class GTMachines {
                     .langValue("Muffler Hatch " + VNF[tier])
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.MUFFLER)
+                    .modelProperty(IS_FORMED, false)
                     .overlayTieredHullModel("muffler_hatch")
                     .tooltips(LangHandler.getFromMultiLang("gtceu.machine.muffler_hatch.tooltip", 0),
                             Component.translatable("gtceu.muffler.recovery_tooltip", Math.max(1, tier * 10)),
@@ -824,6 +837,7 @@ public class GTMachines {
             .machine("steam_input_bus", holder -> new SteamItemBusPartMachine(holder, IN))
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.STEAM_IMPORT_ITEMS)
+            .modelProperty(IS_FORMED, false)
             .colorOverlaySteamHullModel("overlay_pipe_in_emissive", null, OVERLAY_ITEM_HATCH)
             .langValue("Steam Input Bus")
             .tooltips(Component.translatable("gtceu.machine.item_bus.import.tooltip"),
@@ -836,6 +850,7 @@ public class GTMachines {
             .machine("steam_output_bus", holder -> new SteamItemBusPartMachine(holder, OUT))
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.STEAM_EXPORT_ITEMS)
+            .modelProperty(IS_FORMED, false)
             .colorOverlaySteamHullModel("overlay_pipe_out_emissive", null, OVERLAY_ITEM_HATCH)
             .langValue("Steam Output Bus")
             .tooltips(Component.translatable("gtceu.machine.item_bus.export.tooltip"),
@@ -848,6 +863,7 @@ public class GTMachines {
             .machine("steam_input_hatch", SteamHatchPartMachine::new)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.STEAM)
+            .modelProperty(IS_FORMED, false)
             .overlaySteamHullModel("steam_hatch")
             .tooltips(Component.translatable("gtceu.universal.tooltip.fluid_storage_capacity",
                     SteamHatchPartMachine.INITIAL_TANK_CAPACITY),
@@ -857,6 +873,7 @@ public class GTMachines {
 
     public static final MachineDefinition COKE_OVEN_HATCH = REGISTRATE.machine("coke_oven_hatch", CokeOvenHatch::new)
             .rotationState(RotationState.ALL)
+            .modelProperty(IS_FORMED, false)
             .tooltips(Component.translatable("gtceu.part_sharing.disabled"))
             .simpleModel(GTCEu.id("block/machine/part/coke_oven_hatch"))
             .register();
@@ -864,6 +881,7 @@ public class GTMachines {
     public static final MachineDefinition PUMP_HATCH = REGISTRATE.machine("pump_hatch", PumpHatchPartMachine::new)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.PUMP_FLUID_HATCH)
+            .modelProperty(IS_FORMED, false)
             .model(createBasicReplaceableTextureMachineModel(GTCEu.id("block/machine/part/pump_hatch")))
             .register();
 
@@ -871,6 +889,7 @@ public class GTMachines {
             .machine("maintenance_hatch", (blockEntity) -> new MaintenanceHatchPartMachine(blockEntity, false))
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.MAINTENANCE)
+            .modelProperty(IS_FORMED, false)
             .tooltips(Component.translatable("gtceu.part_sharing.disabled"))
             .modelProperty(GTMachineModelProperties.IS_TAPED, false)
             .model(createMaintenanceModel(GTCEu.id("block/machine/part/maintenance_hatch")))
@@ -883,6 +902,7 @@ public class GTMachines {
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.MAINTENANCE)
             .tooltips(Component.translatable("gtceu.part_sharing.disabled"))
+            .modelProperty(IS_FORMED, false)
             .modelProperty(GTMachineModelProperties.IS_TAPED, false)
             .model(createMaintenanceModel(GTCEu.id("block/machine/part/configurable_maintenance_hatch")))
             .tier(HV)
@@ -893,6 +913,7 @@ public class GTMachines {
                     holder -> new CleaningMaintenanceHatchPartMachine(holder, CleanroomType.CLEANROOM))
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.MAINTENANCE)
+            .modelProperty(IS_FORMED, false)
             .tooltips(Component.translatable("gtceu.part_sharing.disabled"),
                     Component.translatable("gtceu.machine.maintenance_hatch_cleanroom_auto.tooltip.0"),
                     Component.translatable("gtceu.machine.maintenance_hatch_cleanroom_auto.tooltip.1"))
@@ -908,6 +929,7 @@ public class GTMachines {
             .machine("auto_maintenance_hatch", AutoMaintenanceHatchPartMachine::new)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.MAINTENANCE)
+            .modelProperty(IS_FORMED, false)
             .tooltips(Component.translatable("gtceu.part_sharing.disabled"))
             .overlayTieredHullModel(GTCEu.id("block/machine/part/auto_maintenance_hatch"))
             .tier(HV)
@@ -919,6 +941,7 @@ public class GTMachines {
                     .langValue("%s Item Passthrough Hatch".formatted(VNF[tier]))
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.PASSTHROUGH_HATCH)
+                    .modelProperty(IS_FORMED, false)
                     .overlayTieredHullModel("item_passthrough_hatch")
                     .tooltips(
                             Component.translatable("gtceu.universal.tooltip.item_storage_capacity",
@@ -934,6 +957,7 @@ public class GTMachines {
                     .langValue("%s Fluid Passthrough Hatch".formatted(VNF[tier]))
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.PASSTHROUGH_HATCH)
+                    .modelProperty(IS_FORMED, false)
                     .overlayTieredHullModel("fluid_passthrough_hatch")
                     .tooltips(
                             Component.translatable("gtceu.universal.tooltip.fluid_storage_capacity_mult", tier + 1,
@@ -948,6 +972,7 @@ public class GTMachines {
             .tier(EV)
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.IMPORT_FLUIDS)
+            .modelProperty(IS_FORMED, false)
             .tooltips(
                     Component.translatable("gtceu.universal.tooltip.fluid_storage_capacity",
                             FormattingUtil.formatNumbers(ReservoirHatchPartMachine.FLUID_AMOUNT)),
@@ -962,6 +987,7 @@ public class GTMachines {
                     .langValue("%s Dual Input Hatch".formatted(VNF[tier]))
                     .rotationState(RotationState.ALL)
                     .abilities(DUAL_INPUT_HATCH_ABILITIES)
+                    .modelProperty(IS_FORMED, false)
                     .overlayTieredHullModel("dual_input_hatch")
                     .tooltips(
                             Component.translatable("gtceu.machine.dual_hatch.import.tooltip"),
@@ -984,6 +1010,7 @@ public class GTMachines {
                     .langValue("%s Dual Output Hatch".formatted(VNF[tier]))
                     .rotationState(RotationState.ALL)
                     .abilities(DUAL_OUTPUT_HATCH_ABILITIES)
+                    .modelProperty(IS_FORMED, false)
                     .overlayTieredHullModel("dual_output_hatch")
                     .tooltips(
                             Component.translatable("gtceu.machine.dual_hatch.export.tooltip"),
@@ -1005,6 +1032,7 @@ public class GTMachines {
                     .langValue("%s Diode".formatted(VNF[tier]))
                     .rotationState(RotationState.ALL)
                     .abilities(PartAbility.PASSTHROUGH_HATCH)
+                    .modelProperty(IS_FORMED, false)
                     .modelProperty(GTMachineModelProperties.DIODE_AMP_MODE, DiodePartMachine.AmpMode.MODE_1A)
                     .model(createDiodeModel())
                     .tooltips(Component.translatable("gtceu.machine.diode.tooltip_general"),
@@ -1050,6 +1078,14 @@ public class GTMachines {
             .model(createOverlayCasingMachineModel(GTCEu.id("block/casings/solid/machine_casing_frost_proof"),
                     GTCEu.id("block/machine/part/computer_monitor")))
             .tier(MV)
+            .register();
+    public static final MachineDefinition ADVANCED_MONITOR = REGISTRATE
+            .machine("advanced_monitor", AdvancedMonitorPartMachine::new)
+            .rotationState(RotationState.ALL)
+            .model(createOverlayCasingMachineModel(GTCEu.id("block/casings/solid/machine_casing_clean_stainless_steel"),
+                    GTCEu.id("block/machine/part/computer_monitor")))
+            .tier(HV)
+            .allowExtendedFacing(true)
             .register();
 
     public static void init() {

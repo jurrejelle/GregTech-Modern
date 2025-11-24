@@ -48,7 +48,7 @@ public class SeparationRecipes {
         CENTRIFUGE_RECIPES.recipeBuilder("oilsands_ore_separation")
                 .inputItems(ore, Oilsands)
                 .chancedOutput(new ItemStack(Blocks.SAND), 7500, 0)
-                .outputFluids(Oil.getFluid(2000))
+                .outputFluids(HeavyOil.getFluid(2000))
                 .duration(200).EUt(30).save(provider);
 
         CENTRIFUGE_RECIPES.recipeBuilder("oilsands_dust_separation")
