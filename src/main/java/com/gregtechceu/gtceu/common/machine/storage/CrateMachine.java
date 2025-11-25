@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.*;
+import com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.material.material.Material;
 import com.gregtechceu.gtceu.data.item.GTDataComponents;
@@ -27,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -36,6 +38,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import lombok.Getter;
+
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NotNull;
 
 public class CrateMachine extends MetaMachine implements IUIMachine, IMachineLife,
@@ -120,6 +125,17 @@ public class CrateMachine extends MetaMachine implements IUIMachine, IMachineLif
             contents.copyInto(inventory.storage.getStacks());
             setRenderState(getRenderState().setValue(TAPED_PROPERTY, false));
         }
+    }
+    
+    public void onMachinePlaced(@Nullable LivingEntity player, ItemStack stack) {
+        IMachineLife.super.onMachinePlaced(player, stack);
+        // CompoundTag tag = stack.getTag();
+        if (stack.getOrDefault(GTDataComponents.TAPED, null) != null) {
+            var contents = stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+            contents.copyInto(inventory.storage.getStacks());
+            setRenderState(getRenderState().setValue(TAPED_PROPERTY, false));
+        }
+        setRenderState(getRenderState().setValue(GTMachineModelProperties.IS_TAPED, isTaped));
     }
 
     @Override

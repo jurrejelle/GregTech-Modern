@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -30,8 +31,8 @@ public class RecipeLogicTest {
 
     @BeforeBatch(batch = "RecipeLogic")
     public static void prepare(ServerLevel level) {
-        LCR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_lcr");
-        CR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_cr");
+        LCR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_lcr", GTRecipeTypes.LARGE_CHEMICAL_RECIPES);
+        CR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_cr", GTRecipeTypes.CHEMICAL_RECIPES);
 
         LCR_RECIPE_TYPE.getLookup().addRecipe(LCR_RECIPE_TYPE
                 .recipeBuilder(GTCEu.id("test_multiblock_recipelogic"))

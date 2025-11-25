@@ -202,6 +202,10 @@ public class ConfigHolder {
         @Configurable.Comment({ "Whether dimension markers should show the dimension tier value.", "Default: false" })
         public boolean showDimensionTier = false;
 
+        @Configurable
+        @Configurable.Comment({ "Whether Create compatibility will be available.", "Default: true" })
+        public boolean createCompat = true;
+
         public static class EnergyCompatConfig {
 
             @Configurable

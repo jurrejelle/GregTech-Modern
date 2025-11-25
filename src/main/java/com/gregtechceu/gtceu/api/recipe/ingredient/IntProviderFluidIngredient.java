@@ -16,6 +16,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
@@ -56,6 +57,12 @@ public class IntProviderFluidIngredient extends FluidIngredient {
     protected IntProviderFluidIngredient(FluidIngredient inner, IntProvider provider) {
         this.inner = inner;
         this.countProvider = provider;
+    }
+
+    protected IntProviderFluidIngredient(FluidIngredient inner, IntProvider provider, int sampledCount) {
+        this.inner = inner;
+        this.countProvider = provider;
+        this.sampledCount = sampledCount;
     }
 
     public IntProviderFluidIngredient copy() {
@@ -183,6 +190,14 @@ public class IntProviderFluidIngredient extends FluidIngredient {
         if (o1 == o2) return true;
         if (o1.getType() != o2.getType()) return false;
         return o1.getMinValue() == o2.getMinValue() && o1.getMaxValue() == o2.getMaxValue();
+    }
+
+    /**
+     * Resets the random roll on this ingredient
+     */
+    public void reroll() {
+        sampledCount = -1;
+        fluidStacks = null;
     }
 
     /**

@@ -93,17 +93,23 @@ public class WorkableElectricMultiblockMachine extends WorkableMultiblockMachine
     @Override
     public void addDisplayText(@NotNull List<Component> textList) {
         int numParallels;
+        int subtickParallels;
         int batchParallels;
+        int totalRuns;
         boolean exact = false;
         if (recipeLogic.isActive() && recipeLogic.getLastRecipe() != null) {
             numParallels = recipeLogic.getLastRecipe().parallels;
+            subtickParallels = recipeLogic.getLastRecipe().subtickParallels;
             batchParallels = recipeLogic.getLastRecipe().batchParallels;
+            totalRuns = recipeLogic.getLastRecipe().getTotalRuns();
             exact = true;
         } else {
             numParallels = getParallelHatch()
                     .map(IParallelHatch::getCurrentParallel)
                     .orElse(0);
+            subtickParallels = 0;
             batchParallels = 0;
+            totalRuns = 0;
         }
 
         MultiblockDisplayText.builder(textList, isFormed())
@@ -111,7 +117,9 @@ public class WorkableElectricMultiblockMachine extends WorkableMultiblockMachine
                 .addEnergyUsageLine(energyContainer)
                 .addEnergyTierLine(tier)
                 .addMachineModeLine(getRecipeType(), getRecipeTypes().length > 1)
+                .addTotalRunsLine(totalRuns)
                 .addParallelsLine(numParallels, exact)
+                .addSubtickParallelsLine(subtickParallels)
                 .addBatchModeLine(isBatchEnabled(), batchParallels)
                 .addWorkingStatusLine()
                 .addProgressLine(recipeLogic.getProgress(), recipeLogic.getMaxProgress(),

@@ -1,47 +1,64 @@
 package com.gregtechceu.gtceu.integration.kjs.recipe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.capability.recipe.*;
+import com.gregtechceu.gtceu.api.capability.recipe.CWURecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.EURecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
+import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 import com.gregtechceu.gtceu.api.material.ChemicalHelper;
 import com.gregtechceu.gtceu.api.material.material.Material;
+import com.gregtechceu.gtceu.api.material.material.stack.MaterialEntry;
 import com.gregtechceu.gtceu.api.material.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.medicalcondition.MedicalCondition;
-import com.gregtechceu.gtceu.api.recipe.*;
+import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
+import com.gregtechceu.gtceu.api.recipe.ResearchData;
+import com.gregtechceu.gtceu.api.recipe.ResearchRecipeBuilder;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeCondition;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
-import com.gregtechceu.gtceu.api.recipe.ingredient.*;
+import com.gregtechceu.gtceu.api.recipe.ingredient.EnergyStack;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IntCircuitIngredient;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngredient;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderIngredient;
+import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.recipe.builder.GTRecipeBuilder;
-import com.gregtechceu.gtceu.common.recipe.condition.*;
+import com.gregtechceu.gtceu.common.recipe.condition.AdjacentBlockCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.AdjacentFluidCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.BiomeCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.CleanroomCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.DaytimeCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.DimensionCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.EnvironmentalHazardCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.FTBQuestCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.PositionYCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.RainingCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.ResearchCondition;
+import com.gregtechceu.gtceu.common.recipe.condition.ThunderCondition;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.CapabilityMap;
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.CapabilityMapComponent;
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.GTRecipeComponents;
 import com.gregtechceu.gtceu.utils.ResearchManager;
-
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import dev.ftb.mods.ftbquests.quest.QuestObjectBase;
 import dev.latvian.mods.kubejs.error.KubeRuntimeException;
@@ -58,12 +75,25 @@ import dev.latvian.mods.rhino.util.HideFromJS;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public interface GTRecipeSchema {
 
@@ -87,8 +117,11 @@ public interface GTRecipeSchema {
         private final Collection<GTRecipeBuilder.ResearchRecipeEntry> researchRecipeEntries = new ArrayList<>();
         private boolean generatingRecipes = true;
 
+        // material stacks that are from already resolved inputs
         public List<MaterialStack> itemMaterialStacks = new ArrayList<>();
         public List<MaterialStack> fluidMaterialStacks = new ArrayList<>();
+        // temporary buffer for unresolved item stacks where decomp is found post recipe addition
+        public List<ItemStack> tempItemStacks = new ArrayList<>();
         public boolean itemMaterialInfo = false;
         public boolean fluidMaterialInfo = false;
         public boolean removeMaterialInfo = false;
@@ -213,15 +246,128 @@ public interface GTRecipeSchema {
 
         public GTKubeRecipe inputItems(SizedIngredient... inputs) {
             for (var stack : inputs) {
-                var matInfo = ChemicalHelper.getMaterialInfo(stack.ingredient());
-                if (matInfo != null && chance == maxChance && chance != 0) {
-                    for (var matStack : matInfo.getMaterials()) {
+                // test simple item that have pure singular material stack
+                var matStack = ChemicalHelper.getMaterialStack(stack.getItems()[0].getItem());
+                // test item that has multiple material stacks
+                var matInfo = ChemicalHelper.getMaterialInfo(stack.getItems()[0].getItem());
+                if (chance == maxChance && chance != 0) {
+                    if (!matStack.isEmpty()) {
                         itemMaterialStacks.add(matStack.multiply(stack.count()));
+                    }
+                    if (matInfo != null) {
+                        for (var ms : matInfo.getMaterials()) {
+                            itemMaterialStacks.add(ms.multiply(stack.count()));
+                        }
+                    } else {
+                        tempItemStacks.add(stack.getItems()[0].copyWithCount(stack.count()));
                     }
                 }
             }
             return input(ItemRecipeCapability.CAP, (Object[]) inputs);
         }
+
+        public GTKubeRecipe inputItems(ItemStack... inputs) {
+            for (ItemStack itemStack : inputs) {
+                // test simple item that have pure singular material stack
+                var matStack = ChemicalHelper.getMaterialStack(itemStack);
+                // test item that has multiple material stacks
+                var matInfo = ChemicalHelper.getMaterialInfo(itemStack);
+                if (chance == maxChance && chance != 0) {
+                    if (!matStack.isEmpty()) {
+                        itemMaterialStacks.add(matStack.multiply(itemStack.getCount()));
+                    }
+                    if (matInfo != null) {
+                        for (var ms : matInfo.getMaterials()) {
+                            itemMaterialStacks.add(ms.multiply(itemStack.getCount()));
+                        }
+                    } else {
+                        tempItemStacks.add(itemStack);
+                    }
+                }
+                if (itemStack.isEmpty()) {
+                    throw new KubeRuntimeException(String.format("Input items is empty, id: %s", id));
+                }
+            }
+            return input(ItemRecipeCapability.CAP,
+                    Arrays.stream(inputs)
+                            .map(stack -> new SizedIngredient(
+                                    Ingredient.of(stack),
+                                    stack.getCount()))
+                            .toArray());
+        }
+
+        public GTKubeRecipe inputItems(TagKey<Item> tag, int amount) {
+            return inputItems(new SizedIngredient(Ingredient.of(tag), amount));
+        }
+
+        public GTKubeRecipe inputItems(Item input, int amount) {
+            return inputItems(new ItemStack(input, amount));
+        }
+
+        public GTKubeRecipe inputItems(Item input) {
+            return inputItems(new SizedIngredient(Ingredient.of(input), 1));
+        }
+
+        public GTKubeRecipe inputItems(Supplier<? extends Item> input) {
+            return inputItems(input.get());
+        }
+
+        public GTKubeRecipe inputItems(Supplier<? extends Item> input, int amount) {
+            return inputItems(new ItemStack(input.get(), amount));
+        }
+
+        public GTKubeRecipe inputItems(TagPrefix orePrefix, Material material) {
+            return inputItems(orePrefix, material, 1);
+        }
+
+        public GTKubeRecipe inputItems(MaterialEntry input) {
+            return inputItems(input.tagPrefix(), input.material(), 1);
+        }
+
+        public GTKubeRecipe inputItems(MaterialEntry input, int count) {
+            return inputItems(input.tagPrefix(), input.material(), count);
+        }
+
+        public GTKubeRecipe inputItems(TagPrefix orePrefix, Material material, int count) {
+            itemMaterialStacks.add(new MaterialStack(material, orePrefix.getMaterialAmount(material) * count));
+            return inputItems(ChemicalHelper.getTag(orePrefix, material), count);
+        }
+
+        public GTKubeRecipe inputItems(MachineDefinition machine) {
+            return inputItems(machine, 1);
+        }
+
+        public GTKubeRecipe inputItems(MachineDefinition machine, int count) {
+            return inputItems(machine.asStack(count));
+        }
+
+        public GTKubeRecipe itemInputsRanged(SizedIngredient ingredient, int min, int max) {
+            return inputItemsRanged(ingredient.ingredient(), min, max);
+        }
+
+        public GTKubeRecipe inputItemsRanged(Ingredient ingredient, int min, int max) {
+            return input(ItemRecipeCapability.CAP, new SizedIngredient(IntProviderIngredient.of(ingredient, UniformInt.of(min, max)).toVanilla(), 1));
+        }
+
+        public GTKubeRecipe inputItemsRanged(ItemStack stack, int min, int max) {
+            return input(ItemRecipeCapability.CAP, new SizedIngredient(IntProviderIngredient.of(Ingredient.of(stack), UniformInt.of(min, max)).toVanilla(), 1));
+        }
+
+        public GTKubeRecipe itemInputsRanged(TagPrefix orePrefix, Material material, int min, int max) {
+            return inputItemsRanged(ChemicalHelper.get(orePrefix, material), min, max);
+        }
+
+        public GTKubeRecipe itemOutputs(SizedIngredient... outputs) {
+            return outputItems(outputs);
+        }
+
+        // public GTKubeRecipe itemOutput(MaterialEntry materialEntry) {
+        //     return outputItems(materialEntry.tagPrefix(), materialEntry.material());
+        // }
+
+        // public GTKubeRecipe itemOutput(MaterialEntry materialEntry, int count) {
+        //     return outputItems(materialEntry.tagPrefix(), materialEntry.material(), count);
+        // }
 
         public GTKubeRecipe outputItems(SizedIngredient... outputs) {
             for (SizedIngredient itemStack : outputs) {
@@ -688,6 +834,14 @@ public interface GTRecipeSchema {
             return environmentalHazard(condition, false);
         }
 
+        public GTKubeRecipe adjacentFluids(Fluid... fluids) {
+            return adjacentFluids(false, fluids);
+        }
+
+        public GTKubeRecipe adjacentFluids(boolean isReverse, Fluid... fluids) {
+            return addCondition(AdjacentFluidCondition.fromFluids(fluids).setReverse(isReverse));
+        }
+
         public GTKubeRecipe adjacentFluid(Fluid... fluids) {
             return adjacentFluid(false, fluids);
         }
@@ -707,12 +861,42 @@ public interface GTRecipeSchema {
             return addCondition(AdjacentFluidCondition.fromTags(tags).setReverse(isReverse));
         }
 
+        public GTKubeRecipe adjacentFluidTag(ResourceLocation... tagNames) {
+            return adjacentFluidTag(false, tagNames);
+        }
+
+        public GTKubeRecipe adjacentFluidTag(boolean isReverse, ResourceLocation... tagNames) {
+            List<TagKey<Fluid>> tags = Arrays.stream(tagNames)
+                    .map(id -> TagKey.create(Registries.FLUID, id))
+                    .toList();
+            return addCondition(AdjacentFluidCondition.fromTags(tags).setReverse(isReverse));
+        }
+
+        public GTKubeRecipe adjacentBlocks(Block... blocks) {
+            return adjacentBlocks(false, blocks);
+        }
+
+        public GTKubeRecipe adjacentBlocks(boolean isReverse, Block... blocks) {
+            return addCondition(AdjacentBlockCondition.fromBlocks(blocks).setReverse(isReverse));
+        }
+
         public GTKubeRecipe adjacentBlock(Block... blocks) {
             return adjacentBlock(false, blocks);
         }
 
         public GTKubeRecipe adjacentBlock(boolean isReverse, Block... blocks) {
             return addCondition(AdjacentBlockCondition.fromBlocks(blocks).setReverse(isReverse));
+        }
+
+        public GTKubeRecipe adjacentBlockTag(ResourceLocation... tagNames) {
+            return adjacentBlockTag(false, tagNames);
+        }
+
+        public GTKubeRecipe adjacentBlockTag(boolean isReverse, ResourceLocation... tagNames) {
+            List<TagKey<Block>> tags = Arrays.stream(tagNames)
+                    .map(id -> TagKey.create(Registries.BLOCK, id))
+                    .toList();
+            return addCondition(AdjacentBlockCondition.fromTags(tags).setReverse(isReverse));
         }
 
         public GTKubeRecipe adjacentBlock(ResourceLocation... tagNames) {

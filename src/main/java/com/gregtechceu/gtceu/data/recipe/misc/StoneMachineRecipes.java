@@ -523,14 +523,14 @@ public class StoneMachineRecipes {
 
     public static void registerStoneTypeRecipes(RecipeOutput provider, @NotNull StoneTypeEntry entry) {
         if (entry.stone == null) {
-            GTCEu.LOGGER.error("could not find stone form of StoneTypeEntry, id: {}", entry.stoneName);
+            GTCEu.LOGGER.error("Could not find stone form of StoneTypeEntry, id: {}", entry.stoneName);
             return;
         }
 
         if (entry.polishedStone != null) {
             if (ConfigHolder.INSTANCE.recipes.removeVanillaBlockRecipes) {
                 VanillaRecipeHelper.addShapedRecipe(provider, entry.stoneName + "_polish_hammer",
-                        new ItemStack(entry.polishedStone),
+                        new ItemStack(entry.polishedStone, 4),
                         "hSS", " SS",
                         'S', entry.stone);
             }
@@ -582,7 +582,7 @@ public class StoneMachineRecipes {
                 if (ConfigHolder.INSTANCE.recipes.removeVanillaBlockRecipes) {
                     VanillaRecipeHelper.addShapedRecipe(provider, entry.stoneName + "_polished_hammer",
                             new ItemStack(entry.chiselStone),
-                            "mSd", " S ", " S ",
+                            "mSd", " S ",
                             'S', entry.slab);
                 }
                 GTRecipeTypes.FORMING_PRESS_RECIPES.recipeBuilder("form_" + entry.stoneName + "_slab_into_pillar")

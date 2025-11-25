@@ -96,7 +96,7 @@ public class RecipeRunner {
             if (!chancedContents.isEmpty()) {
                 var cache = this.chanceCaches.get(cap);
                 chancedContents = logic.roll(chancedContents, function, recipeTier, chanceTier, cache,
-                        recipe.parallels * recipe.batchParallels);
+                        recipe.getTotalRuns());
 
                 for (Content cont : chancedContents) {
                     contentList.add(cont.content);
@@ -183,12 +183,10 @@ public class RecipeRunner {
             if (simulated) return ActionResult.SUCCESS;
             // Start actually removing items.
             // Keep track of the remaining items for this RecipeHandlerGroup
-            copiedRecipeContents = recipeContents;
             // First go through the handlers of the group
             for (RecipeHandlerList handler : handlerListEntry.getValue()) {
-                copiedRecipeContents = handler.handleRecipe(io, recipe, copiedRecipeContents, false);
-                if (copiedRecipeContents.isEmpty()) {
-                    recipeContents.clear();
+                recipeContents = handler.handleRecipe(io, recipe, recipeContents, false);
+                if (recipeContents.isEmpty()) {
                     return ActionResult.SUCCESS;
                 }
             }
@@ -197,9 +195,8 @@ public class RecipeRunner {
             if (!handlerListEntry.getKey().equals(BYPASS_DISTINCT)) {
                 for (RecipeHandlerList bypassHandler : handlerGroups.getOrDefault(BYPASS_DISTINCT,
                         Collections.emptyList())) {
-                    copiedRecipeContents = bypassHandler.handleRecipe(io, recipe, copiedRecipeContents, false);
-                    if (copiedRecipeContents.isEmpty()) {
-                        recipeContents.clear();
+                    recipeContents = bypassHandler.handleRecipe(io, recipe, recipeContents, false);
+                    if (recipeContents.isEmpty()) {
                         return ActionResult.SUCCESS;
                     }
                 }

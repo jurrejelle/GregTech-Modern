@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -26,19 +27,23 @@ import static com.gregtechceu.gtceu.gametest.util.TestUtils.getMetaMachine;
 @PrefixGameTestTemplate(false)
 @GameTestHolder(GTCEu.MOD_ID)
 public class OverclockLogicTest {
+    static GTRecipeType LCR_RECIPE_TYPE;
+    static GTRecipeType CR_RECIPE_TYPE;
 
     @BeforeBatch(batch = "OverclockLogic")
     public static void prepare(ServerLevel level) {
-        LARGE_CHEMICAL_RECIPES.getLookup().addRecipe(LARGE_CHEMICAL_RECIPES
-                .recipeBuilder(GTCEu.id("test-overlock-logic"))
-                .id(GTCEu.id("test-overlock-logic"))
+        LCR_RECIPE_TYPE = TestUtils.createRecipeType("overclock_logic_lcr_tests", GTRecipeTypes.LARGE_CHEMICAL_RECIPES);
+        CR_RECIPE_TYPE = TestUtils.createRecipeType("overclock_logic_cr_tests", GTRecipeTypes.CHEMICAL_RECIPES);
+
+        LCR_RECIPE_TYPE.getLookup().addRecipe(LCR_RECIPE_TYPE
+                .recipeBuilder(GTCEu.id("test_overclock_logic"))
                 .inputItems(new ItemStack(Items.RED_BED))
                 .outputItems(new ItemStack(Blocks.STONE))
                 .EUt(GTValues.VA[GTValues.HV])
                 .duration(20)
                 // NBT has a schematic in it with an HV energy input hatch
                 .build());
-        LARGE_CHEMICAL_RECIPES.getLookup().addRecipe(LARGE_CHEMICAL_RECIPES
+        LCR_RECIPE_TYPE.getLookup().addRecipe(LCR_RECIPE_TYPE
                 .recipeBuilder(GTCEu.id("test-overlock-logic-2"))
                 .id(GTCEu.id("test-overlock-logic-2"))
                 .inputItems(new ItemStack(Items.STICK))
@@ -47,7 +52,7 @@ public class OverclockLogicTest {
                 .duration(1)
                 // NBT has a schematic in it with an HV energy input hatch
                 .build());
-        LARGE_CHEMICAL_RECIPES.getLookup().addRecipe(LARGE_CHEMICAL_RECIPES
+        LCR_RECIPE_TYPE.getLookup().addRecipe(LARGE_CHEMICAL_RECIPES
                 .recipeBuilder(GTCEu.id("test-overlock-logic-3"))
                 .id(GTCEu.id("test-overlock-logic-3"))
                 .inputItems(new ItemStack(Items.BROWN_BED))
@@ -194,7 +199,7 @@ public class OverclockLogicTest {
         GTRecipe newRecipe = OC_PERFECT_SUBTICK.applyModifier(busHolder.controller, recipeBeforeModifiers);
 
         helper.assertTrue(newRecipe != null, "Could not apply overclock to recipe");
-        helper.assertTrue(newRecipe.parallels == PERFECT_DURATION_FACTOR_INV,
+        helper.assertTrue(newRecipe.subtickParallels == PERFECT_DURATION_FACTOR_INV,
                 "Perfect subtick overclock didn't multiply parallels by 4");
         helper.assertTrue(
                 newRecipe.getInputEUt().getTotalEU() ==
@@ -222,7 +227,7 @@ public class OverclockLogicTest {
         GTRecipe newRecipe = OC_NON_PERFECT_SUBTICK.applyModifier(busHolder.controller, recipeBeforeModifiers);
 
         helper.assertTrue(newRecipe != null, "Could not apply overclock to recipe");
-        helper.assertTrue(newRecipe.parallels == STD_DURATION_FACTOR_INV,
+        helper.assertTrue(newRecipe.subtickParallels == STD_DURATION_FACTOR_INV,
                 "Non-Perfect subtick overclock didn't multiply parallels by 2");
         helper.assertTrue(
                 newRecipe.getInputEUt().getTotalEU() ==
@@ -250,7 +255,7 @@ public class OverclockLogicTest {
         GTRecipe newRecipe = OC_NON_PERFECT.applyModifier(busHolder.controller, recipeBeforeModifiers);
 
         helper.assertTrue(newRecipe != null, "Could not apply overclock to recipe");
-        helper.assertTrue(newRecipe.parallels == 1,
+        helper.assertTrue(newRecipe.subtickParallels == 1,
                 "Non-Perfect Non-subtick overclock overclocked when it shouldn't have");
         helper.assertTrue(
                 newRecipe.getInputEUt().getTotalEU() == recipeBeforeModifiers.getInputEUt().getTotalEU(),
