@@ -305,11 +305,13 @@ public class MachineBuilder<DEFINITION extends MachineDefinition> {
                                                                  @Nullable String pipeOverlay,
                                                                  @Nullable String emissiveOverlay) {
         modelProperty(GTMachineModelProperties.IS_FORMED, false);
-        ResourceLocation overlayTex = ResourceLocation.fromNamespaceAndPath(registrate.getModid(), "block/overlay/machine/" + overlay);
+        ResourceLocation overlayTex = ResourceLocation.fromNamespaceAndPath(registrate.getModid(),
+                "block/overlay/machine/" + overlay);
         ResourceLocation pipeOverlayTex = pipeOverlay == null ? null :
                 ResourceLocation.fromNamespaceAndPath(registrate.getModid(), "block/overlay/machine/" + pipeOverlay);
         ResourceLocation emissiveOverlayTex = emissiveOverlay == null ? null :
-                ResourceLocation.fromNamespaceAndPath(registrate.getModid(), "block/overlay/machine/" + emissiveOverlay);
+                ResourceLocation.fromNamespaceAndPath(registrate.getModid(),
+                        "block/overlay/machine/" + emissiveOverlay);
         return colorOverlaySteamHullModel(overlayTex, pipeOverlayTex, emissiveOverlayTex);
     }
 

@@ -38,10 +38,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.NotNull;
 
 public class CrateMachine extends MetaMachine implements IUIMachine, IMachineLife,
                           IDropSaveMachine, IInteractedMachine {
@@ -126,7 +125,7 @@ public class CrateMachine extends MetaMachine implements IUIMachine, IMachineLif
             setRenderState(getRenderState().setValue(TAPED_PROPERTY, false));
         }
     }
-    
+
     public void onMachinePlaced(@Nullable LivingEntity player, ItemStack stack) {
         IMachineLife.super.onMachinePlaced(player, stack);
         // CompoundTag tag = stack.getTag();

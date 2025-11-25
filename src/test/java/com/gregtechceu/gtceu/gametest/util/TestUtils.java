@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.ELECTRIC;
 

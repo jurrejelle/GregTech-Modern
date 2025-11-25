@@ -27,6 +27,7 @@ import static com.gregtechceu.gtceu.gametest.util.TestUtils.getMetaMachine;
 @PrefixGameTestTemplate(false)
 @GameTestHolder(GTCEu.MOD_ID)
 public class OverclockLogicTest {
+
     static GTRecipeType LCR_RECIPE_TYPE;
     static GTRecipeType CR_RECIPE_TYPE;
 

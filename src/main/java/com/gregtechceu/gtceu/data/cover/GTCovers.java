@@ -44,6 +44,7 @@ public class GTCovers {
             EnderRedstoneLinkCover::new);
     public final static CoverDefinition SHUTTER = register("shutter", ShutterCover::new);
     public final static CoverDefinition COVER_STORAGE = register("storage", StorageCover::new);
+    public final static CoverDefinition WIRELESS_TRANSMITTER = register("wireless_transmitter", WirelessTransmitterCover::new);
 
     public final static CoverDefinition[] CONVEYORS = registerTiered("conveyor", ConveyorCover::new,
             () -> tier -> new IOCoverRenderer(

@@ -11,13 +11,13 @@ import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
-import com.gregtechceu.gtceu.api.multiblock.util.RelativeDirection;
-import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
+import com.gregtechceu.gtceu.api.multiblock.util.RelativeDirection;
 import com.gregtechceu.gtceu.api.recipe.ActionResult;
 import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
+import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
@@ -110,7 +110,8 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
             var currentBus = itemInventory.get(i);
             if (!(currentBus instanceof NotifiableItemStackHandler itemBus)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's ItemRecipeCapability.IN was not of type NotifiableItemStackHandler");
-            List<SizedIngredient> left = itemBus.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)), true);
+            List<SizedIngredient> left = itemBus.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)),
+                    true);
             if (!(left == null || left.isEmpty())) return ActionResult.FAIL_NO_REASON;
         }
         // If we get here, the recipe should be consumable
@@ -120,7 +121,8 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
             var currentBus = itemInventory.get(i);
             if (!(currentBus instanceof NotifiableItemStackHandler itemBus)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's ItemRecipeCapability.IN was not of type NotifiableItemStackHandler");
-            List<SizedIngredient> left = itemBus.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)), false);
+            List<SizedIngredient> left = itemBus.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)),
+                    false);
             if (!(left == null || left.isEmpty())) {
                 GTCEu.LOGGER.error(
                         "Recipe in Assline.consumeItemContents was true when simulating, but false when consuming.");
@@ -180,7 +182,8 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
             var currentBus = fluidInventory.get(i);
             if (!(currentBus instanceof NotifiableFluidTank fluidTank)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's FluidRecipeCapability.IN was not of type NotifiableFluidTank");
-            List<SizedFluidIngredient> left = fluidTank.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)), true);
+            List<SizedFluidIngredient> left = fluidTank.handleRecipeInner(IO.IN, recipe,
+                    new ArrayList<>(List.of(recipeStack)), true);
             if (!(left == null || left.isEmpty())) return ActionResult.FAIL_NO_REASON;
         }
         // If we get here, the recipe should be consumable
@@ -190,7 +193,8 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
             var currentBus = fluidInventory.get(i);
             if (!(currentBus instanceof NotifiableFluidTank fluidTank)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's FluidRecipeCapability.IN was not of type NotifiableFluidTank");
-            List<SizedFluidIngredient> left = fluidTank.handleRecipeInner(IO.IN, recipe, new ArrayList<>(List.of(recipeStack)), false);
+            List<SizedFluidIngredient> left = fluidTank.handleRecipeInner(IO.IN, recipe,
+                    new ArrayList<>(List.of(recipeStack)), false);
             if (!(left == null || left.isEmpty())) {
                 GTCEu.LOGGER.error(
                         "Recipe in Assline.consumeFluidContents was true when simulating, but false when consuming.");

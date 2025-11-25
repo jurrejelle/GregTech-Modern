@@ -64,7 +64,7 @@ public class GTRecipes {
         // com.gregtechceu.gtceu.data.recipe.generated.*
         for (Material material : GTCEuAPI.materialManager) {
             if (material.hasFlag(MaterialFlags.NO_UNIFICATION) ||
-                material.hasFlag(MaterialFlags.DISABLE_MATERIAL_RECIPES)) {
+                    material.hasFlag(MaterialFlags.DISABLE_MATERIAL_RECIPES)) {
                 continue;
             }
 

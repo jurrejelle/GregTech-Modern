@@ -12,7 +12,6 @@ import com.gregtechceu.gtceu.api.material.material.stack.MaterialEntry;
 import com.gregtechceu.gtceu.api.material.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.recipe.builder.*;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -24,12 +23,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
+import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import it.unimi.dsi.fastutil.chars.*;
 import it.unimi.dsi.fastutil.objects.Reference2LongOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
 public class VanillaRecipeHelper {
-    
+
     public static void addSmeltingRecipe(RecipeOutput provider, @NotNull String regName, TagKey<Item> input,
                                          ItemStack output) {
         addSmeltingRecipe(provider, GTCEu.id(regName), input, output);
@@ -88,7 +88,7 @@ public class VanillaRecipeHelper {
         SimpleCookingRecipeBuilder.smelting(regName).input(input).output(output).cookingTime(200).experience(experience)
                 .save(provider);
     }
-    
+
     public static void addBlastingRecipe(RecipeOutput provider, @NotNull String regName, TagKey<Item> input,
                                          ItemStack output) {
         addBlastingRecipe(provider, GTCEu.id(regName), input, output);
@@ -147,62 +147,62 @@ public class VanillaRecipeHelper {
         SimpleCookingRecipeBuilder.blasting(regName).input(input).output(output).cookingTime(200).experience(experience)
                 .save(provider);
     }
-    
+
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, TagKey<Item> input,
-                                         ItemStack output) {
+                                        ItemStack output) {
         addSmokingRecipe(provider, GTCEu.id(regName), input, output);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull ResourceLocation regName,
-                                         TagKey<Item> input, ItemStack output) {
+                                        TagKey<Item> input, ItemStack output) {
         addSmokingRecipe(provider, regName, input, output, 0.0f);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, TagKey<Item> input,
-                                         ItemStack output, float experience) {
+                                        ItemStack output, float experience) {
         addSmokingRecipe(provider, GTCEu.id(regName), input, output, experience);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, Ingredient input,
-                                         ItemStack output, float experience) {
+                                        ItemStack output, float experience) {
         addSmokingRecipe(provider, GTCEu.id(regName), input, output, experience);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull ResourceLocation regName,
-                                         Ingredient input, ItemStack output, float experience) {
+                                        Ingredient input, ItemStack output, float experience) {
         SimpleCookingRecipeBuilder.smelting(regName).input(input).output(output).cookingTime(200).experience(experience)
                 .save(provider);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull ResourceLocation regName,
-                                         TagKey<Item> input, ItemStack output, float experience) {
+                                        TagKey<Item> input, ItemStack output, float experience) {
         SimpleCookingRecipeBuilder.smelting(regName).input(input).output(output).cookingTime(200).experience(experience)
                 .save(provider);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, ItemStack input,
-                                         ItemStack output) {
+                                        ItemStack output) {
         addSmokingRecipe(provider, GTCEu.id(regName), input, output, 0.0f);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, Item input,
-                                         Item output) {
+                                        Item output) {
         addSmokingRecipe(provider, GTCEu.id(regName), input.getDefaultInstance(), output.getDefaultInstance(), 0.0f);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, Item input,
-                                         Item output, float experience) {
+                                        Item output, float experience) {
         addSmokingRecipe(provider, GTCEu.id(regName), input.getDefaultInstance(), output.getDefaultInstance(),
                 experience);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull String regName, ItemStack input,
-                                         ItemStack output, float experience) {
+                                        ItemStack output, float experience) {
         addSmokingRecipe(provider, GTCEu.id(regName), input, output, experience);
     }
 
     public static void addSmokingRecipe(RecipeOutput provider, @NotNull ResourceLocation regName,
-                                         ItemStack input, ItemStack output, float experience) {
+                                        ItemStack input, ItemStack output, float experience) {
         SimpleCookingRecipeBuilder.smoking(regName).input(input).output(output).cookingTime(200).experience(experience)
                 .save(provider);
     }
@@ -596,7 +596,7 @@ public class VanillaRecipeHelper {
                 if (tag != null) {
                     builder.requires(tag);
                 } else builder.requires(ChemicalHelper.get(entry.tagPrefix(), entry.material()));
-            } else if (content instanceof ItemProviderEntry<?,?> entry) {
+            } else if (content instanceof ItemProviderEntry<?, ?> entry) {
                 builder.requires(entry.asStack());
             } else if (content instanceof Character c) {
                 builder.requires(ToolHelper.getToolFromSymbol(c).craftingTags.get(0));

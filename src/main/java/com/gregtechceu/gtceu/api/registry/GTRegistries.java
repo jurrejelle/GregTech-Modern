@@ -18,8 +18,6 @@ import com.gregtechceu.gtceu.api.worldgen.DimensionMarker;
 import com.gregtechceu.gtceu.api.worldgen.OreVeinDefinition;
 import com.gregtechceu.gtceu.api.worldgen.bedrockfluid.BedrockFluidDefinition;
 import com.gregtechceu.gtceu.api.worldgen.bedrockore.BedrockOreDefinition;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.MappedRegistry;
@@ -27,7 +25,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
@@ -36,7 +33,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.IdMappingEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -45,12 +41,11 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
-
-import java.util.function.Function;
 
 public final class GTRegistries {
 

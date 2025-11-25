@@ -13,11 +13,11 @@ import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
-import com.gregtechceu.gtceu.data.material.GTMaterials;
-import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.FluidHatchPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ParallelHatchPartMachine;
+import com.gregtechceu.gtceu.data.material.GTMaterials;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -222,35 +222,36 @@ public class IntProviderFluidIngredientTest {
     }
 
     // test for IntProviderFluidIngredient.toJson()
-//     @GameTest(template = "empty", batch = "RangedFluidIngredients")
-//     public static void rangedIngredientJsonTest(GameTestHelper helper) {
-//         var ingredient = IntProviderFluidIngredient.of(GTMaterials.Water.getFluid(1), 1, 500000);
+    // @GameTest(template = "empty", batch = "RangedFluidIngredients")
+    // public static void rangedIngredientJsonTest(GameTestHelper helper) {
+    // var ingredient = IntProviderFluidIngredient.of(GTMaterials.Water.getFluid(1), 1, 500000);
 
-//         // serialize/deserialize before rolling count
-//         var jsonPreRoll = ingredient.toJson();
-//         var ingredientDeserializedPreRoll = IntProviderFluidIngredient.fromJson(jsonPreRoll);
+    // // serialize/deserialize before rolling count
+    // var jsonPreRoll = ingredient.toJson();
+    // var ingredientDeserializedPreRoll = IntProviderFluidIngredient.fromJson(jsonPreRoll);
 
-//         var stacks = ingredient.getStacks();
-//         var stacksDeserializedPreRoll = ingredientDeserializedPreRoll.getStacks();
+    // var stacks = ingredient.getStacks();
+    // var stacksDeserializedPreRoll = ingredientDeserializedPreRoll.getStacks();
 
-//         // serialize/deserialize after rolling count
-//         var jsonPostRoll = ingredient.toJson();
-//         var ingredientDeserializedPostRoll = IntProviderFluidIngredient.fromJson(jsonPostRoll);
-//         var stacksDeserializedPostRoll = ingredientDeserializedPostRoll.getStacks();
+    // // serialize/deserialize after rolling count
+    // var jsonPostRoll = ingredient.toJson();
+    // var ingredientDeserializedPostRoll = IntProviderFluidIngredient.fromJson(jsonPostRoll);
+    // var stacksDeserializedPostRoll = ingredientDeserializedPostRoll.getStacks();
 
-//         helper.assertTrue(
-//                 stacks.length == stacksDeserializedPreRoll.length && stacks.length == stacksDeserializedPostRoll.length,
-//                 "IntProviderFluidIngredient should only return 1 fluid when made with 1 fluid, even after serializing");
-//         helper.assertTrue(stacksDeserializedPreRoll[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
-//                 "IntProviderFluidIngredient should have fluid equal to what it was made with after serializing");
-//         helper.assertTrue(stacksDeserializedPostRoll[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
-//                 "IntProviderFluidIngredient should have fluid equal to what it was made with after serializing");
-//         helper.assertFalse(TestUtils.areFluidStacksEqual(stacksDeserializedPreRoll, ingredient.getStacks()),
-//                 "IntProviderFluidIngredient.getStacks should be different if it wasn't rolled before serializing");
-//         helper.assertTrue(TestUtils.areFluidStacksEqual(stacksDeserializedPostRoll, ingredient.getStacks()),
-//                 "IntProviderFluidIngredient.getStacks shouldn't change between getStacks calls if it was rolled before serializing");
-//         helper.succeed();
-//     }
+    // helper.assertTrue(
+    // stacks.length == stacksDeserializedPreRoll.length && stacks.length == stacksDeserializedPostRoll.length,
+    // "IntProviderFluidIngredient should only return 1 fluid when made with 1 fluid, even after serializing");
+    // helper.assertTrue(stacksDeserializedPreRoll[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
+    // "IntProviderFluidIngredient should have fluid equal to what it was made with after serializing");
+    // helper.assertTrue(stacksDeserializedPostRoll[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
+    // "IntProviderFluidIngredient should have fluid equal to what it was made with after serializing");
+    // helper.assertFalse(TestUtils.areFluidStacksEqual(stacksDeserializedPreRoll, ingredient.getStacks()),
+    // "IntProviderFluidIngredient.getStacks should be different if it wasn't rolled before serializing");
+    // helper.assertTrue(TestUtils.areFluidStacksEqual(stacksDeserializedPostRoll, ingredient.getStacks()),
+    // "IntProviderFluidIngredient.getStacks shouldn't change between getStacks calls if it was rolled before
+    // serializing");
+    // helper.succeed();
+    // }
 
     // Test for singleblock machine with ranged fluid input.
     // Forcibly sabotages the first recipe run, setting its output amount to 0 to ensure that doesn't break the recipe.

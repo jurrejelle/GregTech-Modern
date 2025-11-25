@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.recipe.content;
 
 import com.gregtechceu.gtceu.api.recipe.ingredient.SizedIngredientExtensions;
-import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngredient;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.neoforge.fluids.FluidStack;

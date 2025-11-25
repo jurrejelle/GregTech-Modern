@@ -53,7 +53,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;

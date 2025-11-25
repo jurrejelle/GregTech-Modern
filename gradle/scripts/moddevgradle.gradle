@@ -52,7 +52,7 @@ neoForge {
     interfaceInjectionData = project.files('injected_interfaces/interfaces.json')
 
     addModdingDependenciesTo(sourceSets.test)
-//    addModdingDependenciesTo(sourceSets.extra)
+    addModdingDependenciesTo(sourceSets.extra)
 
     mods {
         // define mod <-> source bindings
@@ -121,6 +121,16 @@ neoForge {
             type = "gameTestServer"
             sourceSet = sourceSets.test
             ideName = "Game Tests"
+
+            gameDirectory.set(file('run/gametest'))
+            systemProperty('neoforge.enabledGameTestNamespaces', project.mod_id)
+            environment('TEST', 'true')
+        }
+
+        gameTestClient {
+            client()
+            sourceSet = sourceSets.test
+            ideName = "Game Tests (Client)"
 
             gameDirectory.set(file('run/gametest'))
             systemProperty('neoforge.enabledGameTestNamespaces', project.mod_id)

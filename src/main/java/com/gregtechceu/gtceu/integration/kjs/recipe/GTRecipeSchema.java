@@ -1,18 +1,5 @@
 package com.gregtechceu.gtceu.integration.kjs.recipe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.capability.recipe.CWURecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.EURecipeCapability;
@@ -37,7 +24,6 @@ import com.gregtechceu.gtceu.api.recipe.ingredient.EnergyStack;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntCircuitIngredient;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngredient;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderIngredient;
-import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.recipe.builder.GTRecipeBuilder;
@@ -60,21 +46,6 @@ import com.gregtechceu.gtceu.integration.kjs.recipe.components.CapabilityMapComp
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.GTRecipeComponents;
 import com.gregtechceu.gtceu.utils.ResearchManager;
 
-import dev.ftb.mods.ftbquests.quest.QuestObjectBase;
-import dev.latvian.mods.kubejs.error.KubeRuntimeException;
-import dev.latvian.mods.kubejs.recipe.KubeRecipe;
-import dev.latvian.mods.kubejs.recipe.RecipeKey;
-import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
-import dev.latvian.mods.kubejs.recipe.component.TimeComponent;
-import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
-import dev.latvian.mods.kubejs.recipe.schema.RecipeConstructor;
-import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
-import dev.latvian.mods.kubejs.util.KubeResourceLocation;
-import dev.latvian.mods.kubejs.util.TickDuration;
-import dev.latvian.mods.rhino.util.HideFromJS;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -95,6 +66,34 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+
+import dev.ftb.mods.ftbquests.quest.QuestObjectBase;
+import dev.latvian.mods.kubejs.error.KubeRuntimeException;
+import dev.latvian.mods.kubejs.recipe.KubeRecipe;
+import dev.latvian.mods.kubejs.recipe.RecipeKey;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
+import dev.latvian.mods.kubejs.recipe.component.TimeComponent;
+import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeConstructor;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import dev.latvian.mods.kubejs.util.KubeResourceLocation;
+import dev.latvian.mods.kubejs.util.TickDuration;
+import dev.latvian.mods.rhino.util.HideFromJS;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public interface GTRecipeSchema {
 
@@ -364,12 +363,14 @@ public interface GTRecipeSchema {
 
         public GTKubeRecipe inputItemsRanged(Ingredient ingredient, int min, int max) {
             validateItems("ranged input", ingredient);
-            return input(ItemRecipeCapability.CAP, new SizedIngredient(IntProviderIngredient.of(ingredient, UniformInt.of(min, max)).toVanilla(), 1));
+            return input(ItemRecipeCapability.CAP,
+                    new SizedIngredient(IntProviderIngredient.of(ingredient, UniformInt.of(min, max)).toVanilla(), 1));
         }
 
         public GTKubeRecipe inputItemsRanged(ItemStack stack, int min, int max) {
             validateItems("ranged input", stack);
-            return input(ItemRecipeCapability.CAP, new SizedIngredient(IntProviderIngredient.of(Ingredient.of(stack), UniformInt.of(min, max)).toVanilla(), 1));
+            return input(ItemRecipeCapability.CAP, new SizedIngredient(
+                    IntProviderIngredient.of(Ingredient.of(stack), UniformInt.of(min, max)).toVanilla(), 1));
         }
 
         public GTKubeRecipe itemInputsRanged(TagPrefix orePrefix, Material material, int min, int max) {
@@ -381,11 +382,11 @@ public interface GTRecipeSchema {
         }
 
         // public GTKubeRecipe itemOutput(MaterialEntry materialEntry) {
-        //     return outputItems(materialEntry.tagPrefix(), materialEntry.material());
+        // return outputItems(materialEntry.tagPrefix(), materialEntry.material());
         // }
 
         // public GTKubeRecipe itemOutput(MaterialEntry materialEntry, int count) {
-        //     return outputItems(materialEntry.tagPrefix(), materialEntry.material(), count);
+        // return outputItems(materialEntry.tagPrefix(), materialEntry.material(), count);
         // }
 
         public GTKubeRecipe outputItems(SizedIngredient... outputs) {
@@ -715,18 +716,18 @@ public interface GTRecipeSchema {
         }
 
         // public GTKubeRecipe inputFluids(SizedFluidIngredient... inputs) {
-        //     validateFluids("input", inputs);
+        // validateFluids("input", inputs);
 
-        //     for (var fluidIng : inputs) {
-        //         for (var stack : fluidIng.ingredient().getStacks()) {
-        //             var mat = ChemicalHelper.getMaterial(stack.getFluid());
-        //             if (!mat.isNull()) {
-        //                 fluidMaterialStacks.add(new MaterialStack(mat,
-        //                         ((long) stack.getAmount() * GTValues.M) / GTValues.L));
-        //             }
-        //         }
-        //     }
-        //     return input(FluidRecipeCapability.CAP, (Object[]) inputs);
+        // for (var fluidIng : inputs) {
+        // for (var stack : fluidIng.ingredient().getStacks()) {
+        // var mat = ChemicalHelper.getMaterial(stack.getFluid());
+        // if (!mat.isNull()) {
+        // fluidMaterialStacks.add(new MaterialStack(mat,
+        // ((long) stack.getAmount() * GTValues.M) / GTValues.L));
+        // }
+        // }
+        // }
+        // return input(FluidRecipeCapability.CAP, (Object[]) inputs);
         // }
 
         public GTKubeRecipe inputFluidsRanged(FluidStack input, int min, int max) {
@@ -802,7 +803,8 @@ public interface GTRecipeSchema {
         private void validateFluids(@NotNull String type, FluidStack... fluids) {
             for (var fluid : fluids) {
                 if (fluid == null || fluid.getAmount() == 0) {
-                    throw new KubeRuntimeException(String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
+                    throw new KubeRuntimeException(
+                            String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
                 }
             }
         }
@@ -810,7 +812,8 @@ public interface GTRecipeSchema {
         private void validateFluids(@NotNull String type, FluidIngredient... fluids) {
             for (var fluid : fluids) {
                 if (fluid == null || fluid.getStacks() == null) {
-                    throw new KubeRuntimeException(String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
+                    throw new KubeRuntimeException(
+                            String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
                 }
 
                 for (var stack : fluid.getStacks()) {
@@ -825,7 +828,8 @@ public interface GTRecipeSchema {
         private void validateFluids(@NotNull String type, SizedFluidIngredient... stacks) {
             for (var stack : stacks) {
                 if (stack == null || stack.getFluids() == null || stack.getFluids().length == 0) {
-                    throw new KubeRuntimeException(String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
+                    throw new KubeRuntimeException(
+                            String.format("Invalid or empty %s fluid (recipe ID: %s)", type, id));
                 }
             }
         }
