@@ -560,7 +560,7 @@ public class GTRecipeBuilder {
     }
     
     public GTRecipeBuilder outputItems(Ingredient input) {
-        return output(ItemRecipeCapability.CAP, new SizedIngredient(input, 1));
+        return outputItems(input, 1);
     }
 
     public GTRecipeBuilder outputItems(Ingredient input, int count) {
