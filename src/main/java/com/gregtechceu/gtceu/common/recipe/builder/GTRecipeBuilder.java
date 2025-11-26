@@ -526,6 +526,7 @@ public class GTRecipeBuilder {
     public GTRecipeBuilder outputItems(Object output) {
         return switch (output) {
             case Item item -> outputItems(item);
+            case Ingredient ingredient -> outputItems(ingredient);
             case Supplier<?> supplier when supplier.get() instanceof ItemLike item -> outputItems(item.asItem());
             case ItemStack stack -> outputItems(stack);
             case MaterialEntry entry -> outputItems(entry);
@@ -543,6 +544,7 @@ public class GTRecipeBuilder {
     public GTRecipeBuilder outputItems(Object output, int count) {
         return switch (output) {
             case Item item -> outputItems(item, count);
+            case Ingredient ingredient -> outputItems(ingredient, count);
             case Supplier<?> supplier when supplier.get() instanceof ItemLike item -> outputItems(item.asItem(), count);
             case ItemStack stack -> outputItems(stack.copyWithCount(count));
             case MaterialEntry entry -> outputItems(entry, count);
@@ -555,6 +557,10 @@ public class GTRecipeBuilder {
                 yield this;
             }
         };
+    }
+    
+    public GTRecipeBuilder outputItems(Ingredient input) {
+        return output(ItemRecipeCapability.CAP, new SizedIngredient(input, 1));
     }
 
     public GTRecipeBuilder outputItems(Ingredient input, int count) {
