@@ -21,8 +21,6 @@ import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeCondition;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.*;
-// import com.gregtechceu.gtceu.api.recipe.ingredient.nbtpredicate.NBTPredicate;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.recipe.builder.GTRecipeBuilder;
@@ -351,12 +349,12 @@ public interface GTRecipeSchema {
         }
 
         // public GTKubeRecipe inputItemNbtPredicate(ItemStack itemStack, NBTPredicate predicate) {
-        //     if (itemStack.isEmpty()) {
-        //         throw new KubeRuntimeException(String.format("Input items is empty, id: %s", id));
-        //     }
-        //     gatherMaterialInfoFromStacks(itemStack);
+        // if (itemStack.isEmpty()) {
+        // throw new KubeRuntimeException(String.format("Input items is empty, id: %s", id));
+        // }
+        // gatherMaterialInfoFromStacks(itemStack);
 
-        //     return itemInputs(InputItem.of(new NBTPredicateIngredient(itemStack, predicate), itemStack.getCount()));
+        // return itemInputs(InputItem.of(new NBTPredicateIngredient(itemStack, predicate), itemStack.getCount()));
         // }
 
         public GTKubeRecipe itemOutputs(SizedIngredient... outputs) {

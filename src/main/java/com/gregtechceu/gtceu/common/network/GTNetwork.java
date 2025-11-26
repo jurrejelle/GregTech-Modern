@@ -34,7 +34,7 @@ public class GTNetwork {
         registar.playBidirectional(SCPacketShareProspection.TYPE, SCPacketShareProspection.CODEC, SCPacketShareProspection::execute);
         // spotless:on        
     }
-    
+
     public static void sendToServer(CustomPacketPayload packet) {
         PacketDistributor.sendToServer(packet);
     }

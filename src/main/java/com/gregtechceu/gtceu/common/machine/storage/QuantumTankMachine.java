@@ -60,7 +60,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -174,7 +173,8 @@ public class QuantumTankMachine extends TieredMachine implements IAutoOutputFlui
         super.loadCustomPersistedData(tag);
 
         var from = tag.contains("cache") ? tag.getCompound("cache") : tag;
-        var registry = Objects.requireNonNullElse(MixinHelpers.getCurrentBERegistries(), GTRegistries.builtinRegistry());
+        var registry = Objects.requireNonNullElse(MixinHelpers.getCurrentBERegistries(),
+                GTRegistries.builtinRegistry());
         this.lockedFluid.readFromNBT(registry, from.getCompound("lockedFluid"));
 
         if (tag.contains("stored")) {

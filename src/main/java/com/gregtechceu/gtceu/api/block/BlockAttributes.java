@@ -1,7 +1,5 @@
 package com.gregtechceu.gtceu.api.block;
 
-import java.util.UUID;
-
 import com.gregtechceu.gtceu.GTCEu;
 
 import net.minecraft.resources.ResourceLocation;

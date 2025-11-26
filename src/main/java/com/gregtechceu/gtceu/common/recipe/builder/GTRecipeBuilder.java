@@ -67,7 +67,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Stream;
 
 @SuppressWarnings({ "unchecked", "UnusedReturnValue" })
 @ExtensionMethod(SizedIngredientExtensions.class)
@@ -517,11 +516,11 @@ public class GTRecipeBuilder {
     }
 
     // public GTRecipeBuilder inputItemNbtPredicate(ItemStack stack, NBTPredicate predicate) {
-    //     if (missingIngredientError(0, true, ItemRecipeCapability.CAP, stack::isEmpty)) {
-    //         return this;
-    //     }
-    //     gatherMaterialInfoFromStack(stack);
-    //     return inputItems(NBTPredicateIngredient.of(stack, predicate));
+    // if (missingIngredientError(0, true, ItemRecipeCapability.CAP, stack::isEmpty)) {
+    // return this;
+    // }
+    // gatherMaterialInfoFromStack(stack);
+    // return inputItems(NBTPredicateIngredient.of(stack, predicate));
     // }
 
     public GTRecipeBuilder outputItems(Object output) {
@@ -1029,8 +1028,11 @@ public class GTRecipeBuilder {
     public GTRecipeBuilder inputFluids(SizedFluidIngredient... inputs) {
         return input(FluidRecipeCapability.CAP, inputs);
     }
+
     public GTRecipeBuilder inputFluids(IntProviderFluidIngredient... inputs) {
-        return input(FluidRecipeCapability.CAP, Arrays.stream(inputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, 1)).toList().toArray(new SizedFluidIngredient[0]));
+        return input(FluidRecipeCapability.CAP,
+                Arrays.stream(inputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, 1))
+                        .toList().toArray(new SizedFluidIngredient[0]));
     }
 
     public GTRecipeBuilder outputFluids(FluidStack output) {
@@ -1045,10 +1047,12 @@ public class GTRecipeBuilder {
     public GTRecipeBuilder outputFluids(SizedFluidIngredient... outputs) {
         return output(FluidRecipeCapability.CAP, outputs);
     }
-    public GTRecipeBuilder outputFluids(IntProviderFluidIngredient... outputs) {
-        return output(FluidRecipeCapability.CAP, Arrays.stream(outputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, 1)).toList().toArray(new SizedFluidIngredient[0]));
-    }
 
+    public GTRecipeBuilder outputFluids(IntProviderFluidIngredient... outputs) {
+        return output(FluidRecipeCapability.CAP,
+                Arrays.stream(outputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, 1))
+                        .toList().toArray(new SizedFluidIngredient[0]));
+    }
 
     public GTRecipeBuilder outputFluidsRanged(IntProviderFluidIngredient provider) {
         return outputFluids(provider);

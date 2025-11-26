@@ -114,9 +114,10 @@ public class ForgeClientEventListener {
 
     private static double getValueWithoutWalkingBoost(AttributeInstance attrib) {
         double base = attrib.getBaseValue();
-        Map<AttributeModifier.Operation, List<AttributeModifier>> mods = attrib.getModifiers().stream().collect(Collectors.groupingBy(t -> t.operation()));
+        Map<AttributeModifier.Operation, List<AttributeModifier>> mods = attrib.getModifiers().stream()
+                .collect(Collectors.groupingBy(t -> t.operation()));
 
-    for (AttributeModifier mod : mods.get(AttributeModifier.Operation.ADD_VALUE)) {
+        for (AttributeModifier mod : mods.get(AttributeModifier.Operation.ADD_VALUE)) {
             base += mod.amount();
         }
 

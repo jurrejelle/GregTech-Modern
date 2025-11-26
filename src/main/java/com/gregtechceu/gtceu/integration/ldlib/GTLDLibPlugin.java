@@ -1,11 +1,11 @@
 package com.gregtechceu.gtceu.integration.ldlib;
 
-import org.apache.logging.log4j.LogManager;
-
 import com.gregtechceu.gtceu.data.inject.GTSyncedFieldAccessors;
 
 import com.lowdragmc.lowdraglib.plugin.ILDLibPlugin;
 import com.lowdragmc.lowdraglib.plugin.LDLibPlugin;
+
+import org.apache.logging.log4j.LogManager;
 
 @SuppressWarnings("unused")
 @LDLibPlugin

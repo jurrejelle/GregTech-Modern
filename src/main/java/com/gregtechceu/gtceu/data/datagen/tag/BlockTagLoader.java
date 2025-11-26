@@ -1,10 +1,10 @@
 package com.gregtechceu.gtceu.data.datagen.tag;
 
+import com.gregtechceu.gtceu.common.block.StoneTypes;
 import com.gregtechceu.gtceu.data.block.GTBlocks;
 import com.gregtechceu.gtceu.data.machine.GTMachines;
 import com.gregtechceu.gtceu.data.material.GTMaterials;
 import com.gregtechceu.gtceu.data.tag.CustomTags;
-import com.gregtechceu.gtceu.common.block.StoneTypes;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;

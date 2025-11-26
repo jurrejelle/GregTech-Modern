@@ -9,15 +9,15 @@
 
 // public abstract class NBTPredicate implements Predicate<CompoundTag> {
 
-//     // FromJson is handled by the NBTPredicates
-//     @MustBeInvokedByOverriders
-//     public JsonObject toJson() {
-//         JsonObject object = new JsonObject();
-//         object.addProperty("type", getType());
-//         return object;
-//     };
+// // FromJson is handled by the NBTPredicates
+// @MustBeInvokedByOverriders
+// public JsonObject toJson() {
+// JsonObject object = new JsonObject();
+// object.addProperty("type", getType());
+// return object;
+// };
 
-//     public abstract String getType();
+// public abstract String getType();
 
-//     public abstract boolean test(CompoundTag tag);
+// public abstract boolean test(CompoundTag tag);
 // }
