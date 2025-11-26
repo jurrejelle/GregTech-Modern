@@ -558,7 +558,7 @@ public class GTRecipeBuilder {
             }
         };
     }
-    
+
     public GTRecipeBuilder outputItems(Ingredient input) {
         return outputItems(input, 1);
     }
