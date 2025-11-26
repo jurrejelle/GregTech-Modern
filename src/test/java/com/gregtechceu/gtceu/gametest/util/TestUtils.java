@@ -16,10 +16,14 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.placeholder.MultiLineComponent;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
+import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.item.behavior.CoverPlaceBehavior;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -214,14 +218,14 @@ public class TestUtils {
      */
     public static GTRecipeType createRecipeType(String name, int maxInputs, int maxOutputs, int maxFluidInputs,
                                                 int maxFluidOutputs) {
-        // NeoForgeRegistries.RECIPE_TYPES.unfreeze();
-        // GTRegistries.RECIPE_CATEGORIES.unfreeze();
+        ((MappedRegistry<GTRecipeCategory>) GTRegistries.RECIPE_CATEGORIES).unfreeze();
+        ((MappedRegistry<RecipeType<?>>) BuiltInRegistries.RECIPE_TYPE).unfreeze();
         GTRecipeType type = new GTRecipeType(GTCEu.id(name), ELECTRIC, RecipeType.SMELTING)
                 .setEUIO(IO.IN)
                 .setMaxIOSize(maxInputs, maxOutputs, maxFluidInputs, maxFluidOutputs);
 
-        // GTRegistries.RECIPE_CATEGORIES.freeze();
-        // NeoForgeRegistries.RECIPE_TYPES.freeze();
+        ((MappedRegistry<GTRecipeCategory>) GTRegistries.RECIPE_CATEGORIES).freeze();
+        ((MappedRegistry<RecipeType<?>>) BuiltInRegistries.RECIPE_TYPE).freeze();
         return type;
     }
 

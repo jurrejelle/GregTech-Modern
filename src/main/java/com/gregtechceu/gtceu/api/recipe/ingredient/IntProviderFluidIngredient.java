@@ -16,6 +16,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
@@ -49,7 +50,7 @@ public class IntProviderFluidIngredient extends FluidIngredient {
     @Getter
     private final FluidIngredient inner;
     @Setter
-    protected @NotNull FluidStack[] fluidStacks = null;
+    protected @Nullable FluidStack @NotNull[] fluidStacks = null;
 
     public static final FluidStack[] EMPTY_STACK_ARRAY = new FluidStack[0];
 
