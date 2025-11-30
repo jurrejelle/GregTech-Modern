@@ -344,18 +344,14 @@ public class GTRecipeBuilder {
     }
 
     public GTRecipeBuilder inputItems(Ingredient input) {
-        if (intProviderInputError(input, 0)) {
-            return this;
-        } else if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input::isEmpty)) {
+        if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input::isEmpty)) {
             return this;
         }
         return input(ItemRecipeCapability.CAP, new SizedIngredient(input, 1));
     }
 
     public GTRecipeBuilder inputItems(Ingredient input, int count) {
-        if (intProviderInputError(input, 0)) {
-            return this;
-        } else if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input::isEmpty)) {
+        if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input::isEmpty)) {
             return this;
         }
         return input(ItemRecipeCapability.CAP, new SizedIngredient(input, count));
@@ -375,9 +371,7 @@ public class GTRecipeBuilder {
     }
 
     public GTRecipeBuilder inputItems(SizedIngredient input) {
-        if (intProviderInputError(input.ingredient(), 0)) {
-            return this;
-        } else if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input.ingredient()::isEmpty)) {
+        if (missingIngredientError(0, true, ItemRecipeCapability.CAP, input.ingredient()::isEmpty)) {
             return this;
         }
         return input(ItemRecipeCapability.CAP, input);
@@ -387,9 +381,7 @@ public class GTRecipeBuilder {
         List<SizedIngredient> ingredients = new ArrayList<>();
         for (int i = 0; i < inputs.length; i++) {
             var ingredient = inputs[i];
-            if (intProviderInputError(ingredient.ingredient(), i)) {
-                return this;
-            } else if (missingIngredientError(i, true, ItemRecipeCapability.CAP, ingredient.ingredient()::isEmpty)) {
+            if (missingIngredientError(i, true, ItemRecipeCapability.CAP, ingredient.ingredient()::isEmpty)) {
                 return this;
             } else {
                 ingredients.add(ingredient);
@@ -1699,15 +1691,6 @@ public class GTRecipeBuilder {
         }
     }
 
-    protected boolean intProviderInputError(Ingredient ingredient, int index) {
-        if (ingredient.getCustomIngredient() instanceof IntProviderIngredient) {
-            int size = (perTick ? tickOutput : output).getOrDefault(ItemRecipeCapability.CAP, List.of()).size();
-            GTCEu.LOGGER.error("Using int provider ingredients as inputs is not supported!" +
-                    "Input {} in recipe {} will be skipped.", size + index, id);
-//            return true;
-        }
-        return false;
-    }
 
     protected boolean missingIngredientError(int index, boolean isInput,
                                              RecipeCapability<?> cap, BooleanSupplier empty) {

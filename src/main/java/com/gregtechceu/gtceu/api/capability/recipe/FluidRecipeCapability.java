@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.content.ContentModifier;
 import com.gregtechceu.gtceu.api.recipe.content.SerializerFluidIngredient;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngredient;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderIngredient;
 import com.gregtechceu.gtceu.api.recipe.ingredient.SizedIngredientExtensions;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.AbstractMapIngredient;
@@ -70,12 +71,7 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
         if (content.ingredient().hasNoFluids()) return content.copy();
         if (content.ingredient() instanceof IntProviderFluidIngredient provider) {
             IntProviderFluidIngredient copy = IntProviderFluidIngredient.of(provider.getInner(),
-                    new FlooredInt(
-                            new AddedFloat(
-                                    new MultipliedFloat(
-                                            new CastedFloat(provider.getCountProvider()),
-                                            ConstantFloat.of((float) modifier.multiplier())),
-                                    ConstantFloat.of((float) modifier.addition()))));
+                    ModifiedIntProvider.of(provider.getCountProvider(), modifier));
             return new SizedFluidIngredient(copy, 1);
         }
         return content.copyWithAmount(modifier.apply(content.amount()));
@@ -83,14 +79,8 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
 
     public IntProviderFluidIngredient copyWithModifier(IntProviderFluidIngredient content, ContentModifier modifier) {
         if (content.hasNoFluids()) return content.copy();
-        IntProviderFluidIngredient copy = IntProviderFluidIngredient.of(content.getInner(),
-                new FlooredInt(
-                        new AddedFloat(
-                                new MultipliedFloat(
-                                        new CastedFloat(content.getCountProvider()),
-                                        ConstantFloat.of((float) modifier.multiplier())),
-                                ConstantFloat.of((float) modifier.addition()))));
-        return copy;
+        return IntProviderFluidIngredient.of(content.getInner(),
+                ModifiedIntProvider.of(content.getCountProvider(), modifier));
     }
 
     @Override

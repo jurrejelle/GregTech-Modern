@@ -895,7 +895,7 @@ public class IntProviderIngredientTest {
                         .copyWithCount((int) Math.round(itemOut.getTotalContentAmount())),
                         STONE.copyWithCount(completed)),
                         "Batched Parallel LCent didn't complete correct number of recipes, completed [" +
-                                ((int) Math.round(itemOut.getTotalContentAmount())) + "] not [" +
+                                Math.round(itemOut.getTotalContentAmount()) + "] not [" +
                                 completed + "]");
                 helper.assertTrue(TestUtils.isItemWithinRange(results, lowerLimit, upperLimit),
                         "Batched Parallel LCent didn't consume correct number of items, consumed " +
@@ -966,7 +966,7 @@ public class IntProviderIngredientTest {
                 int runs = finalI * batches * parallels;
                 helper.assertTrue(itemIn.isEmpty(),
                         "Batched Parallel LCent didn't complete correct number of recipes, completed [" +
-                                itemIn.getTotalContentAmount() + "] not [" + runs + "]");
+                                Math.round(runs - itemIn.getTotalContentAmount()) + "] not [" + runs + "]");
                 int resultCount = (int) Math.round(itemOut.getTotalContentAmount());
                 int lowerLimit = runs * 0;
                 int upperLimit = runs * 4;
