@@ -33,6 +33,8 @@ public class RecipeLogicTest {
     public static void prepare(ServerLevel level) {
         LCR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_lcr", GTRecipeTypes.LARGE_CHEMICAL_RECIPES);
         CR_RECIPE_TYPE = TestUtils.createRecipeType("recipe_logic_test_cr", GTRecipeTypes.CHEMICAL_RECIPES);
+        LCR_RECIPE_TYPE.getLookup().removeAllRecipes();
+        CR_RECIPE_TYPE.getLookup().removeAllRecipes();
 
         LCR_RECIPE_TYPE.getLookup().addRecipe(LCR_RECIPE_TYPE
                 .recipeBuilder(GTCEu.id("test_multiblock_recipelogic"))
@@ -234,10 +236,13 @@ public class RecipeLogicTest {
         RecipeLogicTest.BusHolder busHolder = getBussesAndForm(helper);
         busHolder.inputBus1.getInventory().setStackInSlot(0, new ItemStack(Blocks.STONE, 10));
         busHolder.inputBus1.getInventory().setStackInSlot(1, new ItemStack(Blocks.STONE, 6));
+        busHolder.controller.recipeLogic.findAndHandleRecipe();
+        helper.assertTrue(busHolder.controller.recipeLogic.isWorking(), "Controller should be working!");
+        busHolder.controller.recipeLogic.isWorking();
         helper.succeedWhen(() -> {
             helper.assertTrue(
                     TestUtils.isItemStackEqual(busHolder.outputBus1.getInventory().getStackInSlot(0),
-                            new ItemStack(Blocks.STONE)),
+                            new ItemStack(Blocks.STONE, 1)),
                     "Crafting items in same bus failed, expected STONE but was " +
                             busHolder.outputBus1.getInventory().getStackInSlot(0).getDisplayName());
         });

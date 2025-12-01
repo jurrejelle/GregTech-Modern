@@ -217,10 +217,10 @@ public class IntProviderFluidIngredientTest {
                 "IntProviderFluidIngredient should only return 1 fluid when made with 1 fluid");
 //        helper.assertTrue(stacks[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
 //                "IntProviderFluidIngredient should have fluid equal to what it was made with");
-        helper.assertTrue(stacks[0].isFluidStackIdentical(ingredient.getStacks()[0]),
+        helper.assertTrue(FluidStack.matches(stacks[0], ingredient.getStacks()[0]),
                 "IntProviderFluidIngredient.getStacks shouldn't change between getStacks calls");
         ingredient.reroll();
-        helper.assertFalse(stacks[0].isFluidStackIdentical(ingredient.getStacks()[0]),
+        helper.assertFalse(FluidStack.matches(stacks[0], ingredient.getStacks()[0]),
                 "IntProviderFluidIngredient.getStacks should have changed after rerolling");
         helper.succeed();
     }
@@ -266,10 +266,8 @@ public class IntProviderFluidIngredientTest {
                 helper.getBlockEntity(new BlockPos(0, 1, 0)));
 
         machine.setRecipeType(CR_RECIPE_TYPE);
-        NotifiableFluidTank fluidIn = (NotifiableFluidTank) machine
-                .getCapabilitiesFlat(IO.IN, FluidRecipeCapability.CAP).get(0);
-        NotifiableFluidTank fluidOut = (NotifiableFluidTank) machine
-                .getCapabilitiesFlat(IO.OUT, FluidRecipeCapability.CAP).get(0);
+        NotifiableFluidTank fluidIn = machine.importFluids;
+        NotifiableFluidTank fluidOut = machine.exportFluids;
 
         int runs = 7;
         fluidIn.setFluidInTank(0, CR_OUT.copyWithAmount(runs));

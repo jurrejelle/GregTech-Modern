@@ -36,7 +36,7 @@ public class FluidStackMapIngredient extends AbstractMapIngredient {
 
     @Override
     protected int hash() {
-        return stack.hashCode();
+        return stack.getFluid().hashCode();
     }
 
     @Override
