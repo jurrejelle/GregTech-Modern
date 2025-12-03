@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.api.recipe.ingredient;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.tag.GTIngredientTypes;
@@ -55,7 +56,7 @@ public class IntProviderFluidIngredient extends FluidIngredient implements IRang
     @Getter
     private final FluidIngredient inner;
     @Setter
-    protected @Nullable FluidStack [] fluidStacks = null;
+    protected FluidStack @Nullable [] fluidStacks = null;
 
     protected IntProviderFluidIngredient(FluidIngredient inner, IntProvider provider) {
         this.inner = inner;
@@ -167,7 +168,7 @@ public class IntProviderFluidIngredient extends FluidIngredient implements IRang
      * @param random {@link RandomSource}, must be threadsafe, usually called using {@link GTValues#RNG}.
      * @return the amount rolled
      */
-    public int rollSampledCount(@NotNull RandomSource random) {
+    public int rollSampledCount(RandomSource random) {
         if (sampledCount == -1) {
             sampledCount = countProvider.sample(random);
         }

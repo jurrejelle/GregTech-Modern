@@ -63,10 +63,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.COBBLESTONE));
         // 1t to turn on, 8t to run the recipe
@@ -85,10 +83,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.COBBLESTONE));
         helper.onEachTick(() -> {
@@ -108,10 +104,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.COBBLESTONE));
         // 1t to turn on, 8t to run the recipe
@@ -133,10 +127,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.OAK_WOOD));
         // 1t to turn on, 8t to run the recipe
@@ -157,10 +149,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.OAK_WOOD));
         helper.onEachTick(() -> {
@@ -180,10 +170,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.OAK_WOOD));
         helper.onEachTick(() -> {
@@ -201,10 +189,8 @@ public class AdjacentFluidConditionTest {
                 helper.getBlockEntity(new BlockPos(1, 1, 1)));
 
         machine.setRecipeType(ROCK_BREAKER_RECIPE_TYPE);
-        NotifiableItemStackHandler itemIn = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.IN, ItemRecipeCapability.CAP).get(0);
-        NotifiableItemStackHandler itemOut = (NotifiableItemStackHandler) machine
-                .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).get(0);
+        NotifiableItemStackHandler itemIn = machine.importItems;
+        NotifiableItemStackHandler itemOut = machine.exportItems;
 
         itemIn.setStackInSlot(0, new ItemStack(Items.OAK_WOOD));
         helper.onEachTick(() -> {

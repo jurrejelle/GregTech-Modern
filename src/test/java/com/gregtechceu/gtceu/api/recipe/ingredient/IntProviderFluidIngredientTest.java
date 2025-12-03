@@ -212,15 +212,15 @@ public class IntProviderFluidIngredientTest {
     @GameTest(template = "empty", batch = "RangedFluidIngredients")
     public static void rangedFluidIngredientGetStacksTest(GameTestHelper helper) {
         var ingredient = IntProviderFluidIngredient.of(GTMaterials.Water.getFluid(1), 1, 500000);
-        var stacks = ingredient.getStacks();
+        var stacks = ingredient.getFluidStacks();
         helper.assertTrue(stacks.length == 1,
                 "IntProviderFluidIngredient should only return 1 fluid when made with 1 fluid");
 //        helper.assertTrue(stacks[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
 //                "IntProviderFluidIngredient should have fluid equal to what it was made with");
-        helper.assertTrue(FluidStack.matches(stacks[0], ingredient.getStacks()[0]),
+        helper.assertTrue(FluidStack.matches(stacks[0], ingredient.getFluidStacks()[0]),
                 "IntProviderFluidIngredient.getStacks shouldn't change between getStacks calls");
         ingredient.reset();
-        helper.assertFalse(FluidStack.matches(stacks[0], ingredient.getStacks()[0]),
+        helper.assertFalse(FluidStack.matches(stacks[0], ingredient.getFluidStacks()[0]),
                 "IntProviderFluidIngredient.getStacks should have changed after rerolling");
         helper.succeed();
     }

@@ -5,29 +5,6 @@ static def isJetBrainsRuntime() {
 neoForge {
     // Specify NeoForge version
     version = libs.versions.neoForge.get()
-// =======
-// import org.gradle.internal.os.OperatingSystem
-
-// ext.isJetbrainsRuntime = System.getProperty('java.vm.vendor').contains('JetBrains')
-
-// mixin {
-//     var refmap = add sourceSets.main, "gtceu.refmap.json"
-//     slimJar.from refmap
-//     config 'gtceu.mixins.json'
-// }
-
-// // we have to force LWJGL version 3.3.2, because RenderNurse requires Java 21, and LWJGL 3.3.1 cannot run on Java 21.
-// configurations.configureEach {
-//     resolutionStrategy {
-//         eachDependency {
-//             if (it.requested.group == "org.lwjgl") {
-//                 it.useVersion("3.3.2")
-//                 it.because("We need a version of LWJGL that supports java 21 for RenderDoc support")
-//             }
-//         }
-//     }
-// }
-// >>>>>>> v7.1.0-1.20.1
 
     parchment {
         minecraftVersion = libs.versions.minecraft.get()
@@ -41,7 +18,7 @@ neoForge {
         publish(file)
     }
     // I'd have it on but it just doesn't work :( (fails on some neoforge classes)
-    // validateAccessTransformers = true
+    validateAccessTransformers = true
 
     interfaceInjectionData {
         var file = project.file('injected_interfaces/interfaces.json')
