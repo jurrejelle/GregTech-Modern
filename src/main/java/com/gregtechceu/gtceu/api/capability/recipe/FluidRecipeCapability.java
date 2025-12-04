@@ -96,7 +96,7 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
                             break;
                         }
                     } else if (obj instanceof FluidStack fluidStack) {
-                        if (fluid.test(fluidStack)) {
+                        if (fluid.ingredient().test(fluidStack)) {
                             isEqual = true;
                             break;
                         }
@@ -108,7 +108,7 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
                 boolean isEqual = false;
                 for (Object obj : list) {
                     if (obj instanceof SizedFluidIngredient fluidIngredient) {
-                        if (fluidIngredient.test(fluidStack)) {
+                        if (fluidIngredient.ingredient().test(fluidStack)) {
                             isEqual = true;
                             break;
                         }
@@ -220,7 +220,7 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
                 boolean has = false;
                 for (var recipeIng : consumables.object2LongEntrySet()) {
                     var stack = ing.getFluids()[0];
-                    if (recipeIng.getKey().test(stack)) {
+                    if (recipeIng.getKey().ingredient().test(stack)) {
                         recipeIng.setValue(recipeIng.getLongValue() + stack.getAmount());
                         has = true;
                         break;

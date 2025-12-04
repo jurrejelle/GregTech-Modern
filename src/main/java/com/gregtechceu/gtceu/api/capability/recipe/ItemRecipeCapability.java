@@ -96,7 +96,7 @@ public class ItemRecipeCapability extends RecipeCapability<SizedIngredient> {
                             break;
                         }
                     } else if (obj instanceof ItemStack stack) {
-                        if (ingredient.test(stack)) {
+                        if (ingredient.ingredient().test(stack)) {
                             isEqual = true;
                             break;
                         }
@@ -260,7 +260,7 @@ public class ItemRecipeCapability extends RecipeCapability<SizedIngredient> {
                 SizedIngredient ingredient = ncEntry.getKey();
                 long needed = ncEntry.getLongValue();
                 for (var stackEntry : Object2LongMaps.fastIterable(group)) {
-                    if (ingredient.test(stackEntry.getKey())) {
+                    if (ingredient.ingredient().test(stackEntry.getKey())) {
                         long count = stackEntry.getLongValue();
                         long lesser = Math.min(needed, count);
                         count -= lesser;
@@ -289,7 +289,7 @@ public class ItemRecipeCapability extends RecipeCapability<SizedIngredient> {
                 long available = 0;
                 // Search stacks in our inventory group, summing them up
                 for (var stackEntry : Object2LongMaps.fastIterable(group)) {
-                    if (ingredient.test(stackEntry.getKey())) {
+                    if (ingredient.ingredient().test(stackEntry.getKey())) {
                         available += stackEntry.getLongValue();
                         // We can stop if we already have enough for max parallel
                         if (available >= maxNeeded) break;

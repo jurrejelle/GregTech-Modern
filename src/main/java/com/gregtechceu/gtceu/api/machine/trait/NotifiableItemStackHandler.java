@@ -167,7 +167,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
 
                 if (io == IO.IN) {
                     if (current.isEmpty()) continue;
-                    if (ingredient.test(current)) {
+                    if (ingredient.ingredient().test(current)) {
                         var extracted = getActioned(storage, slot, recipe.ingredientActions);
                         if (extracted == null) extracted = storage.extractItem(slot, Math.min(count, amount), simulate);
                         if (!extracted.isEmpty()) {
