@@ -133,10 +133,6 @@ public class NotifiableFluidTank extends NotifiableRecipeHandlerTrait<SizedFluid
                 }
             } else {
                 fluids = ingredient.getFluids();
-                if (fluids.length == 0 || fluids[0].isEmpty()) {
-                    it.remove();
-                    continue;
-                }
             }
             if (fluids.length == 0 || fluids[0].isEmpty()) {
                 it.remove();
