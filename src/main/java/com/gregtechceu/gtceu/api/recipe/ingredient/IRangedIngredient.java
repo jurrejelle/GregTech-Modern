@@ -35,7 +35,9 @@ public interface IRangedIngredient {
         return ((getCountProvider().getMaxValue() + getCountProvider().getMinValue()) / 2.0);
     }
 
-    boolean isRolled();
+    default boolean isRolled() {
+        return getSampledCount() != -1;
+    }
 
     void reset();
 }

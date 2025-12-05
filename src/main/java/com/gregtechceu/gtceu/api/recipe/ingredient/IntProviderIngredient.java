@@ -176,11 +176,6 @@ public class IntProviderIngredient implements ICustomIngredient, IRangedIngredie
         return sampledCount;
     }
 
-    @Override
-    public boolean isRolled() {
-        return sampledCount == -1;
-    }
-
     /**
      * Resets the random roll on this ingredient
      */

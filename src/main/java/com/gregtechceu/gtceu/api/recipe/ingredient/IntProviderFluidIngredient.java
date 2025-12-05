@@ -195,11 +195,6 @@ public class IntProviderFluidIngredient extends FluidIngredient implements IRang
         return o1.getMinValue() == o2.getMinValue() && o1.getMaxValue() == o2.getMaxValue();
     }
 
-    @Override
-    public boolean isRolled() {
-        return sampledCount == -1;
-    }
-
     /**
      * Resets the random roll on this ingredient
      */
