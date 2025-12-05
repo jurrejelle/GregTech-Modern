@@ -4,8 +4,6 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
@@ -215,8 +213,8 @@ public class IntProviderFluidIngredientTest {
         var stacks = ingredient.getFluidStacks();
         helper.assertTrue(stacks.length == 1,
                 "IntProviderFluidIngredient should only return 1 fluid when made with 1 fluid");
-//        helper.assertTrue(stacks[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
-//                "IntProviderFluidIngredient should have fluid equal to what it was made with");
+        // helper.assertTrue(stacks[0].isFluidEqual(GTMaterials.Water.getFluid(1)),
+        // "IntProviderFluidIngredient should have fluid equal to what it was made with");
         helper.assertTrue(FluidStack.matches(stacks[0], ingredient.getFluidStacks()[0]),
                 "IntProviderFluidIngredient.getStacks shouldn't change between getStacks calls");
         ingredient.reset();
@@ -311,7 +309,6 @@ public class IntProviderFluidIngredientTest {
             helper.assertTrue(TestUtils.isFluidWithinRange(results, runs, runs * 9),
                     "Sabotaged Singleblock Ranged Fluid Output didn't produce correct number of fluids, " +
                             "produced [" + results.getAmount() + "] not [" + runs + "-" + (runs * 9) + "]");
-
 
             // check if all the rolls were equal, but not min/max
             int[] rolls = new int[runs];

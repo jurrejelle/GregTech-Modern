@@ -1,7 +1,5 @@
 package com.gregtechceu.gtceu.integration.ae2.machine;
 
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEKey;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
@@ -13,7 +11,6 @@ import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.BeforeBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -84,7 +81,8 @@ public class PatternBufferTest {
                 helper.getBlockEntity(new BlockPos(0, 2, 0)));
         MEPatternBufferPartMachine patternBuffer = (MEPatternBufferPartMachine) getMetaMachine(
                 helper.getBlockEntity(new BlockPos(2, 2, 1)));
-        patternBuffer.getTerminalPatternInventory().setItemDirect(0, patternBuffer.getTerminalPatternInventory().getStackInSlot(0));
+        patternBuffer.getTerminalPatternInventory().setItemDirect(0,
+                patternBuffer.getTerminalPatternInventory().getStackInSlot(0));
         return new BusHolder(inputBus1, inputBus2, outputBus1, outputHatch1, patternBuffer, controller);
     }
 
@@ -175,7 +173,8 @@ public class PatternBufferTest {
                 helper.fail("Job didn't get queued in 40 ticks");
                 throw new RuntimeException("Oopsie, could not get job to start craft");
             }
-            ICraftingSubmitResult result = craftingService.submitJob(job, null, null, true, IActionSource.ofMachine(terminal));
+            ICraftingSubmitResult result = craftingService.submitJob(job, null, null, true,
+                    IActionSource.ofMachine(terminal));
 
             helper.assertTrue(result.successful(), "Could not queue crafting job");
 

@@ -11,7 +11,6 @@ import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.fluid.FluidStackMapIng
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.item.ItemStackMapIngredient;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.data.material.GTMaterials;
-import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,12 +27,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
-import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.ELECTRIC;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.ELECTRIC;
 
 @PrefixGameTestTemplate(false)
 @GameTestHolder(GTCEu.MOD_ID)
@@ -42,7 +41,7 @@ public class GTRecipeLookupTest {
     private static GTRecipeLookup lookup;
     private static final Predicate<GTRecipe> ALWAYS_TRUE = gtRecipe -> true;
     private static final Predicate<GTRecipe> ALWAYS_FALSE = gtRecipe -> false;
-//     private static GTRecipeType RECIPE_TYPE;
+    // private static GTRecipeType RECIPE_TYPE;
     private static GTRecipe SMELT_STONE, SMELT_ACACIA_WOOD, SMELT_BIRCH_WOOD, SMELT_CHERRY_WOOD;
     private static GTRecipe RANGED_INPUT_ITEM, RANGED_INPUT_FLUID, RANGED_INPUT_BOTH;
 
@@ -52,49 +51,49 @@ public class GTRecipeLookupTest {
         ((MappedRegistry<RecipeType<?>>) BuiltInRegistries.RECIPE_TYPE).unfreeze();
         RecipeType<?> proxyRecipes = RecipeType.SMELTING;
         GTRecipeType type = new GTRecipeType(GTCEu.id("test_recipes"), ELECTRIC, proxyRecipes)
-        .setEUIO(IO.IN)
-        .setMaxIOSize(1, 1, 1, 1);
+                .setEUIO(IO.IN)
+                .setMaxIOSize(1, 1, 1, 1);
         lookup = new GTRecipeLookup(type);
 
         SMELT_STONE = type.recipeBuilder("smelt_stone")
-        .inputItems(Items.COBBLESTONE, 1)
-        .outputItems(Items.STONE, 1)
-        .build();
+                .inputItems(Items.COBBLESTONE, 1)
+                .outputItems(Items.STONE, 1)
+                .build();
         SMELT_ACACIA_WOOD = type.recipeBuilder("smelt_acacia_wood")
-        .inputItems(Items.ACACIA_WOOD, 1)
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputItems(Items.ACACIA_WOOD, 1)
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
         SMELT_BIRCH_WOOD = type.recipeBuilder("smelt_birch_wood")
-        .inputItems(Items.BIRCH_WOOD, 1)
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputItems(Items.BIRCH_WOOD, 1)
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
         SMELT_CHERRY_WOOD = type.recipeBuilder("smelt_cherry_wood")
-        .inputItems(Items.CHERRY_WOOD, 16)
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputItems(Items.CHERRY_WOOD, 16)
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
         RANGED_INPUT_ITEM = type.recipeBuilder("ranged_input_item")
-        .inputItemsRanged(Items.RED_WOOL, UniformInt.of(0, 4))
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputItemsRanged(Items.RED_WOOL, UniformInt.of(0, 4))
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
         RANGED_INPUT_FLUID = type.recipeBuilder("ranged_input_fluid")
-        .inputFluidsRanged(GTMaterials.Helium.getFluid(1), UniformInt.of(0, 4))
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputFluidsRanged(GTMaterials.Helium.getFluid(1), UniformInt.of(0, 4))
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
         RANGED_INPUT_BOTH = type.recipeBuilder("ranged_input_both")
-        .inputItemsRanged(Items.BLUE_WOOL, UniformInt.of(0, 4))
-        .inputFluidsRanged(GTMaterials.Iron.getFluid(1), UniformInt.of(0, 4))
-        .outputItems(Items.CHARCOAL, 1)
-        .build();
+                .inputItemsRanged(Items.BLUE_WOOL, UniformInt.of(0, 4))
+                .inputFluidsRanged(GTMaterials.Iron.getFluid(1), UniformInt.of(0, 4))
+                .outputItems(Items.CHARCOAL, 1)
+                .build();
 
         lookup.removeAllRecipes();
         for (GTRecipe recipe : List.of(SMELT_STONE,
-        SMELT_ACACIA_WOOD,
-        SMELT_BIRCH_WOOD,
-        SMELT_CHERRY_WOOD,
-        RANGED_INPUT_ITEM,
-        RANGED_INPUT_FLUID,
-        RANGED_INPUT_BOTH)) {
-        lookup.addRecipe(recipe);
+                SMELT_ACACIA_WOOD,
+                SMELT_BIRCH_WOOD,
+                SMELT_CHERRY_WOOD,
+                RANGED_INPUT_ITEM,
+                RANGED_INPUT_FLUID,
+                RANGED_INPUT_BOTH)) {
+            lookup.addRecipe(recipe);
         }
 
         ((MappedRegistry<GTRecipeCategory>) GTRegistries.RECIPE_CATEGORIES).freeze();

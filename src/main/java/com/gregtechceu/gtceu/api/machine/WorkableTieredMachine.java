@@ -17,9 +17,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
@@ -256,7 +256,7 @@ public abstract class WorkableTieredMachine extends TieredEnergyMachine implemen
             System.arraycopy(recipeTypes, 0, newer, 0, recipeTypes.length);
             newer[recipeTypes.length] = type;
             recipeTypes = newer;
-            recipeIndex = recipeTypes.length-1;
+            recipeIndex = recipeTypes.length - 1;
         }
         setActiveRecipeType(recipeIndex);
     }

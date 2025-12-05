@@ -57,7 +57,8 @@ public class AdvancedDetectorCoverTest {
     @GameTest(template = "electrolyzer", batch = "coverTests")
     public static void testAdvancedFluidDetectorCover(GameTestHelper helper) {
         helper.pullLever(new BlockPos(2, 2, 2));
-        SimpleTieredMachine machine = (SimpleTieredMachine)((IMachineBlockEntity) helper.getBlockEntity(new BlockPos(1, 2, 1))).getMetaMachine();
+        SimpleTieredMachine machine = (SimpleTieredMachine) ((IMachineBlockEntity) helper
+                .getBlockEntity(new BlockPos(1, 2, 1))).getMetaMachine();
         machine.importFluids.setFluidInTank(0, new FluidStack(Fluids.WATER, 10000));
         AdvancedFluidDetectorCover cover = (AdvancedFluidDetectorCover) TestUtils.placeCover(helper, machine,
                 GTItems.COVER_FLUID_DETECTOR_ADVANCED.asStack(), Direction.WEST);

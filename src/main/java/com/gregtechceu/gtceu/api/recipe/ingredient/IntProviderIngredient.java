@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.data.tag.GTIngredientTypes;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -12,14 +11,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import com.google.common.base.Preconditions;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.Setter;
-import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
-import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,13 +35,13 @@ import static com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderFluidIngred
  * and an {@link IntProvider}.
  * Functions similarly to {@link IntProviderFluidIngredient}.
  */
-public class IntProviderIngredient implements ICustomIngredient, IRangedIngredient{
+public class IntProviderIngredient implements ICustomIngredient, IRangedIngredient {
 
     public static final MapCodec<IntProviderIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("inner").forGetter(IntProviderIngredient::getInner),
             IntProvider.CODEC.fieldOf("count_provider").forGetter(IntProviderIngredient::getCountProvider),
-                    NeoForgeExtraCodecs.optionalFieldAlwaysWrite(Codec.INT, "sampledCount", FluidType.BUCKET_VOLUME)
-                            .forGetter(IRangedIngredient::getSampledCount))
+            NeoForgeExtraCodecs.optionalFieldAlwaysWrite(Codec.INT, "sampledCount", FluidType.BUCKET_VOLUME)
+                    .forGetter(IRangedIngredient::getSampledCount))
             .apply(instance, IntProviderIngredient::new));
     public static final ResourceLocation TYPE = GTCEu.id("int_provider");
     public static final ItemStack[] EMPTY_STACK_ARRAY = new ItemStack[0];

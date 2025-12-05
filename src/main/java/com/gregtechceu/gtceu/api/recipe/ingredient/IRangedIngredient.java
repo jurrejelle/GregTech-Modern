@@ -1,8 +1,10 @@
 package com.gregtechceu.gtceu.api.recipe.ingredient;
 
 import com.gregtechceu.gtceu.api.GTValues;
+
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
+
 import org.jetbrains.annotations.NotNull;
 
 public interface IRangedIngredient {
@@ -10,6 +12,7 @@ public interface IRangedIngredient {
     IntProvider getCountProvider();
 
     int getSampledCount();
+
     void setSampledCount(int count);
 
     /**
@@ -35,5 +38,4 @@ public interface IRangedIngredient {
     boolean isRolled();
 
     void reset();
-
 }

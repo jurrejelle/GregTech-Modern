@@ -298,7 +298,6 @@ public class IntProviderIngredientTest {
                     "Sabotaged Singleblock Ranged Item Output didn't produce correct number of items, " +
                             "produced [" + results.getCount() + "] not [" + runs + "-" + (runs * 9) + "]");
 
-
             // check if all the rolls were equal, but not min/max
             int[] rolls = new int[runs];
             rolls[0] = addedRolls[0];

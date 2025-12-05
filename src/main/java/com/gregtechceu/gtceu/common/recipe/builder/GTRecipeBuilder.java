@@ -307,7 +307,8 @@ public class GTRecipeBuilder {
             case MaterialEntry entry -> inputItems(entry);
             case TagKey<?> tag -> inputItems((TagKey<Item>) tag);
             case MachineDefinition machine -> inputItems(machine);
-            case IntProviderIngredient ingredient -> inputItems(new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
+            case IntProviderIngredient ingredient -> inputItems(
+                    new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
             default -> {
                 GTCEu.LOGGER.error(
                         """
@@ -330,7 +331,8 @@ public class GTRecipeBuilder {
             case MaterialEntry entry -> inputItems(entry, count);
             case TagKey<?> tag -> inputItems((TagKey<Item>) tag, count);
             case MachineDefinition machine -> inputItems(machine, count);
-            case IntProviderIngredient ingredient -> inputItems(new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
+            case IntProviderIngredient ingredient -> inputItems(
+                    new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
             default -> {
                 GTCEu.LOGGER.error(
                         """
@@ -525,7 +527,8 @@ public class GTRecipeBuilder {
             case ItemStack stack -> outputItems(stack);
             case MaterialEntry entry -> outputItems(entry);
             case MachineDefinition machine -> outputItems(machine);
-            case IntProviderIngredient ingredient -> outputItems(new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
+            case IntProviderIngredient ingredient -> outputItems(
+                    new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
             default -> {
                 GTCEu.LOGGER.error("""
                         Output item is not one of:
@@ -544,7 +547,8 @@ public class GTRecipeBuilder {
             case ItemStack stack -> outputItems(stack.copyWithCount(count));
             case MaterialEntry entry -> outputItems(entry, count);
             case MachineDefinition machine -> outputItems(machine, count);
-            case IntProviderIngredient ingredient -> outputItems(new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
+            case IntProviderIngredient ingredient -> outputItems(
+                    new SizedIngredient(ingredient.toVanilla(), ingredient.getCountProvider().getMaxValue()));
             default -> {
                 GTCEu.LOGGER.error("""
                         Output item is not one of:
@@ -1033,7 +1037,8 @@ public class GTRecipeBuilder {
 
     public GTRecipeBuilder inputFluids(IntProviderFluidIngredient... inputs) {
         return input(FluidRecipeCapability.CAP,
-                Arrays.stream(inputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, ingredient.getCountProvider().getMaxValue()))
+                Arrays.stream(inputs).<SizedFluidIngredient>map(
+                        ingredient -> new SizedFluidIngredient(ingredient, ingredient.getCountProvider().getMaxValue()))
                         .toList().toArray(new SizedFluidIngredient[0]));
     }
 
@@ -1052,7 +1057,8 @@ public class GTRecipeBuilder {
 
     public GTRecipeBuilder outputFluids(IntProviderFluidIngredient... outputs) {
         return output(FluidRecipeCapability.CAP,
-                Arrays.stream(outputs).<SizedFluidIngredient>map(ingredient -> new SizedFluidIngredient(ingredient, ingredient.getCountProvider().getMaxValue()))
+                Arrays.stream(outputs).<SizedFluidIngredient>map(
+                        ingredient -> new SizedFluidIngredient(ingredient, ingredient.getCountProvider().getMaxValue()))
                         .toList().toArray(new SizedFluidIngredient[0]));
     }
 
@@ -1690,7 +1696,6 @@ public class GTRecipeBuilder {
                     id, io, capability.name, io, max);
         }
     }
-
 
     protected boolean missingIngredientError(int index, boolean isInput,
                                              RecipeCapability<?> cap, BooleanSupplier empty) {

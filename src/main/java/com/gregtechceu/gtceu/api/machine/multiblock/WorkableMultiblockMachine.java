@@ -317,7 +317,7 @@ public abstract class WorkableMultiblockMachine extends MultiblockControllerMach
             System.arraycopy(recipeTypes, 0, newer, 0, recipeTypes.length);
             newer[recipeTypes.length] = type;
             recipeTypes = newer;
-            recipeIndex = recipeTypes.length-1;
+            recipeIndex = recipeTypes.length - 1;
         }
         setActiveRecipeType(recipeIndex);
     }
