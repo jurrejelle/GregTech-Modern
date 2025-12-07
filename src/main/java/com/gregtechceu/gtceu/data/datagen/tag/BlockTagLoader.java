@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.data.tag.CustomTags;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
@@ -47,25 +48,34 @@ public class BlockTagLoader {
         provider.addTag(CustomTags.NEEDS_NEUTRONIUM_TOOL);
         provider.addTag(CustomTags.NEEDS_DURANIUM_TOOL);
 
-        provider.addTag(CustomTags.INCORRECT_FOR_DURANIUM_TOOL)
-                .addTag(CustomTags.NEEDS_NEUTRONIUM_TOOL);
-        provider.addTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)
-                .addTag(Tags.Blocks.NEEDS_NETHERITE_TOOL)
-                .addTag(CustomTags.NEEDS_DURANIUM_TOOL)
-                .addTag(CustomTags.NEEDS_NEUTRONIUM_TOOL);
-        provider.addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL)
-                .addTag(CustomTags.NEEDS_DURANIUM_TOOL)
-                .addTag(CustomTags.NEEDS_NEUTRONIUM_TOOL);
+        @SuppressWarnings("unchecked")
+        TagKey<Block>[] newToolRequirements = new TagKey[] {
+                CustomTags.NEEDS_NEUTRONIUM_TOOL,
+                CustomTags.NEEDS_DURANIUM_TOOL
+        };
+        @SuppressWarnings("unchecked")
+        TagKey<Block>[] incorrectForToolTags = new TagKey[] {
+                BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
+                BlockTags.INCORRECT_FOR_DIAMOND_TOOL,
+                BlockTags.INCORRECT_FOR_IRON_TOOL,
+                BlockTags.INCORRECT_FOR_GOLD_TOOL,
+                BlockTags.INCORRECT_FOR_STONE_TOOL,
+                BlockTags.INCORRECT_FOR_WOODEN_TOOL
+        };
+        for (TagKey<Block> tag : incorrectForToolTags) {
+            provider.addTag(tag).addTags(newToolRequirements);
+        }
+        // do these manually
+        provider.addTag(CustomTags.INCORRECT_FOR_NEUTRONIUM_TOOL);
+        provider.addTag(CustomTags.INCORRECT_FOR_DURANIUM_TOOL).addTag(CustomTags.NEEDS_NEUTRONIUM_TOOL);
 
         // this is awful. I don't care, though.
-        // spotless:off
         provider.addTag(BlockTags.REPLACEABLE)
                 .add(GTMaterials.Oil.getFluid().defaultFluidState().createLegacyBlock().getBlock())
                 .add(GTMaterials.LightOil.getFluid().defaultFluidState().createLegacyBlock().getBlock())
                 .add(GTMaterials.HeavyOil.getFluid().defaultFluidState().createLegacyBlock().getBlock())
                 .add(GTMaterials.RawOil.getFluid().defaultFluidState().createLegacyBlock().getBlock())
                 .add(GTMaterials.NaturalGas.getFluid().defaultFluidState().createLegacyBlock().getBlock());
-        // spotless:on
 
         provider.addTag(BlockTags.MINEABLE_WITH_AXE)
                 .add(GTMachines.WOODEN_DRUM.getBlock())
