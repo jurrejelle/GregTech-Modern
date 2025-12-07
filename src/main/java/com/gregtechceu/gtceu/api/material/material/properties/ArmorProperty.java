@@ -107,7 +107,7 @@ public class ArmorProperty implements IMaterialProperty {
         }
         if (this.armorMaterial == null) {
             GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(this.material.getModid());
-            this.armorMaterial = registrate.generic(this.name, Registries.ARMOR_MATERIAL,
+            this.armorMaterial = registrate.generic(this.material.getName(), Registries.ARMOR_MATERIAL,
                     () -> new ArmorMaterial(protectionValues, enchantability, sound, repairIngredient,
                             layers, toughness, knockbackResistance))
                     .register();
