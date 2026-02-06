@@ -109,6 +109,7 @@ public class GTMultiMachines {
                     .build())
             .workableCasingModel(GTCEu.id("block/casings/solid/machine_coke_bricks"),
                     GTCEu.id("block/multiblock/coke_oven"))
+            .themeId((i) -> GTGuiTheme.PRIMITIVE.getId())
             .register();
 
     public static final MultiblockMachineDefinition PRIMITIVE_BLAST_FURNACE = REGISTRATE
