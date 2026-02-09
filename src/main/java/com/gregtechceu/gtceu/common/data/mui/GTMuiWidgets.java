@@ -6,10 +6,10 @@ import com.gregtechceu.gtceu.api.cover.filter.Filter;
 import com.gregtechceu.gtceu.api.cover.filter.FilterHandler;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IAutoOutputItem;
 import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
+import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
@@ -31,7 +31,6 @@ import com.gregtechceu.gtceu.api.mui.widgets.*;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Column;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Flow;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Grid;
-import com.gregtechceu.gtceu.api.mui.widgets.layout.Row;
 import com.gregtechceu.gtceu.api.mui.widgets.slot.FluidSlot;
 import com.gregtechceu.gtceu.api.mui.widgets.slot.ItemSlot;
 import com.gregtechceu.gtceu.api.mui.widgets.slot.ModularSlot;
@@ -90,9 +89,10 @@ public class GTMuiWidgets {
 
         int rowWidth = Math.min((int) (0.9 * panelWidth), (iconSize + (borderRadius * 4) + textTitleWidth));
 
-        return new Row()
+        return Flow.row()
                 .coverChildrenHeight()
                 .mainAxisAlignment(Alignment.MainAxis.CENTER)
+                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
                 .width(rowWidth)
                 .top(-(textHeight + borderRadius))
                 .rightRel(0.45f)
@@ -101,10 +101,8 @@ public class GTMuiWidgets {
                         .asIcon().size(iconSize)
                         .asWidget()
                         .marginLeft(borderRadius))
-                .mainAxisAlignment(Alignment.MainAxis.START)
                 .child(IKey.str(machineName)
                         .asWidget()
-                        .paddingTop(3)
                         .margin(borderRadius, borderRadius, borderRadius, 1)
                         .size(Math.min(minPanelWidth, textTitleWidth), textHeight));
     }
@@ -158,9 +156,9 @@ public class GTMuiWidgets {
         // EnumSyncValue voidMode = new EnumSyncValue(IVoidable.VoidingMode.class, machine.)
     }
 
-    public static ToggleButton createAutoOutputItemButton(IAutoOutputItem machine, PanelSyncManager syncManager) {
-        BooleanSyncValue itemOutputs = new BooleanSyncValue(machine::isAutoOutputItems,
-                machine::setAutoOutputItems);
+    public static ToggleButton createAutoOutputItemButton(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
+        BooleanSyncValue itemOutputs = new BooleanSyncValue(autoOutput::isAutoOutputItems,
+                autoOutput::setAllowAutoOutputItems);
         syncManager.syncValue("auto_output_items", itemOutputs);
         return new ToggleButton()
                 .value(new BoolValue.Dynamic(itemOutputs::getBoolValue, itemOutputs::setBoolValue))
@@ -171,9 +169,9 @@ public class GTMuiWidgets {
                                 "cover.voiding.label.disabled")))));
     }
 
-    public static ToggleButton createAutoOutputFluidButton(SimpleTieredMachine machine, PanelSyncManager syncManager) {
-        BooleanSyncValue fluidOutputs = new BooleanSyncValue(machine::isAutoOutputFluids,
-                machine::setAutoOutputFluids);
+    public static ToggleButton createAutoOutputFluidButton(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
+        BooleanSyncValue fluidOutputs = new BooleanSyncValue(autoOutput::isAutoOutputFluids,
+                autoOutput::setAllowAutoOutputFluids);
         syncManager.syncValue("auto_output_fluids", fluidOutputs);
         return new ToggleButton()
                 .value(new BoolValue.Dynamic(fluidOutputs::getBoolValue, fluidOutputs::setBoolValue))
@@ -184,9 +182,9 @@ public class GTMuiWidgets {
                                 "cover.voiding.label.disabled")))));
     }
 
-    public static ToggleButton createInputFromOutputItem(SimpleTieredMachine machine, PanelSyncManager syncManager) {
-        BooleanSyncValue inputFromOutputItem = new BooleanSyncValue(machine::isAllowInputFromOutputSideItems,
-                machine::setAllowInputFromOutputSideItems);
+    public static ToggleButton createInputFromOutputItem(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
+        BooleanSyncValue inputFromOutputItem = new BooleanSyncValue(autoOutput::allowsItemInputFromOutputSide,
+                autoOutput::setAllowItemInputFromOutputSide);
         syncManager.syncValue("input_from_output_item", inputFromOutputItem);
         return new ToggleButton()
                 .value(new BoolValue.Dynamic(inputFromOutputItem::getBoolValue, inputFromOutputItem::setBoolValue))
@@ -197,9 +195,9 @@ public class GTMuiWidgets {
                                 "cover.voiding.label.disabled")))));
     }
 
-    public static ToggleButton createInputFromOutputFluid(SimpleTieredMachine machine, PanelSyncManager syncManager) {
-        BooleanSyncValue inputFromOutputFluid = new BooleanSyncValue(machine::isAllowInputFromOutputSideFluids,
-                machine::setAllowInputFromOutputSideFluids);
+    public static ToggleButton createInputFromOutputFluid(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
+        BooleanSyncValue inputFromOutputFluid = new BooleanSyncValue(autoOutput::allowsFluidInputFromOutputSide,
+                autoOutput::setAllowFluidInputFromOutputSide);
         syncManager.syncValue("input_from_output_fluid", inputFromOutputFluid);
         return new ToggleButton()
                 .value(new BoolValue.Dynamic(inputFromOutputFluid::getBoolValue, inputFromOutputFluid::setBoolValue))
