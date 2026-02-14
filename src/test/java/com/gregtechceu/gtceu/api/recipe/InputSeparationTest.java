@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import static com.gregtechceu.gtceu.api.recipe.OverclockLogicTest.LCR_RECIPE_TYPE;
 import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.LARGE_CHEMICAL_RECIPES;
 import static com.gregtechceu.gtceu.gametest.util.TestUtils.getMetaMachine;
 
@@ -29,15 +30,15 @@ public class InputSeparationTest {
     public static void prepare(ServerLevel level) {
         // LARGE_CHEMICAL_RECIPES = TestUtils.createRecipeType("input_separation_tests", 3, 3, 3, 3);
         // Force insert the recipe into the manager.
-        LARGE_CHEMICAL_RECIPES.getLookup().removeAllRecipes();
-        LARGE_CHEMICAL_RECIPES.getLookup().addRecipe(LARGE_CHEMICAL_RECIPES
-                .recipeBuilder(GTCEu.id("test-multiblock-input-separation"))
-                .id(GTCEu.id("test-multiblock-input-separation"))
+        LCR_RECIPE_TYPE.getAdditionHandler().beginStaging();
+        LCR_RECIPE_TYPE.getAdditionHandler().addStaging(LCR_RECIPE_TYPE
+                .recipeBuilder(GTCEu.id("test_multiblock_input_separation"))
                 .inputItems(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.ACACIA_WOOD))
                 .outputItems(new ItemStack(Blocks.STONE))
                 .EUt(GTValues.VA[GTValues.HV]).duration(1)
                 // NBT has a schematic in it with an HV energy input hatch
                 .build());
+        LCR_RECIPE_TYPE.getAdditionHandler().completeStaging();
     }
 
     private record BusHolder(ItemBusPartMachine inputBus1, ItemBusPartMachine inputBus2, ItemBusPartMachine outputBus1,

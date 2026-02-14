@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.SavedData;
 
@@ -115,7 +116,7 @@ public class BedrockFluidVeinSavedData extends SavedData {
                 }
             }
 
-            var random = RandomSource.create(31L * 31 * chunkX + chunkZ * 31L + Long.hashCode(serverLevel.getSeed()));
+            var random = RandomSource.create(serverLevel.getSeed() ^ ChunkPos.asLong(chunkX, chunkZ));
 
             int maximumYield = 0;
             if (definition != null) {

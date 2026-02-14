@@ -11,7 +11,6 @@ import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 import net.minecraft.network.chat.Component;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbquests.api.FTBQuestsAPI;
 import dev.ftb.mods.ftbquests.quest.BaseQuestFile;
@@ -25,12 +24,11 @@ import org.jetbrains.annotations.NotNull;
 public class FTBQuestCondition extends RecipeCondition<FTBQuestCondition> {
 
     private static final Long2ObjectMap<QuestObject> QUEST_CACHE = new Long2ObjectOpenHashMap<>();
-    public static final MapCodec<FTBQuestCondition> CODEC = RecordCodecBuilder
-            .mapCodec(instance -> RecipeCondition.isReverse(instance)
-                    .and(Codec.LONG.fieldOf("questId").forGetter(val -> val.parsedQuestId))
-                    .apply(instance, FTBQuestCondition::new));
-
-    public final static FTBQuestCondition INSTANCE = new FTBQuestCondition();
+    // spotless:off
+    public static final Codec<FTBQuestCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+            Codec.LONG.fieldOf("questId").forGetter(val -> val.parsedQuestId)
+    ).apply(instance, FTBQuestCondition::new));
+    // spotless:on
 
     private long parsedQuestId;
 
@@ -74,7 +72,7 @@ public class FTBQuestCondition extends RecipeCondition<FTBQuestCondition> {
     }
 
     @Override
-    public RecipeCondition<FTBQuestCondition> createTemplate() {
+    public FTBQuestCondition createTemplate() {
         return new FTBQuestCondition();
     }
 }

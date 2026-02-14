@@ -8,19 +8,34 @@ import com.gregtechceu.gtceu.api.item.IGTTool;
 import com.gregtechceu.gtceu.api.item.LampBlockItem;
 import com.gregtechceu.gtceu.client.model.item.FacadeUnbakedModel;
 import com.gregtechceu.gtceu.client.model.machine.MachineModelLoader;
+import com.gregtechceu.gtceu.client.model.pipe.PipeModel;
+import com.gregtechceu.gtceu.client.model.pipe.PipeModelLoader;
 import com.gregtechceu.gtceu.client.particle.HazardParticle;
 import com.gregtechceu.gtceu.client.particle.MufflerParticle;
+import com.gregtechceu.gtceu.client.renderer.block.MaterialBlockRenderer;
+import com.gregtechceu.gtceu.client.renderer.block.OreBlockRenderer;
+import com.gregtechceu.gtceu.client.renderer.block.SurfaceRockRenderer;
 import com.gregtechceu.gtceu.client.renderer.entity.GTExplosiveRenderer;
+import com.gregtechceu.gtceu.client.renderer.item.ArmorItemRenderer;
+import com.gregtechceu.gtceu.client.renderer.item.TagPrefixItemRenderer;
+import com.gregtechceu.gtceu.client.renderer.item.ToolItemRenderer;
 import com.gregtechceu.gtceu.client.renderer.item.decorator.GTComponentItemDecorator;
 import com.gregtechceu.gtceu.client.renderer.item.decorator.GTLampItemOverlayRenderer;
 import com.gregtechceu.gtceu.client.renderer.item.decorator.GTTankItemFluidPreview;
 import com.gregtechceu.gtceu.client.renderer.item.decorator.GTToolBarRenderer;
 import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderManager;
 import com.gregtechceu.gtceu.client.renderer.machine.impl.*;
+import com.gregtechceu.gtceu.client.renderer.machine.impl.BoilerMultiPartRender;
 import com.gregtechceu.gtceu.common.item.DrumMachineItem;
 import com.gregtechceu.gtceu.common.item.QuantumTankMachineItem;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.config.ConfigHolder;
+import com.gregtechceu.gtceu.data.block.GTMaterialBlocks;
+import com.gregtechceu.gtceu.data.datagen.model.builder.PipeModelBuilder;
+import com.gregtechceu.gtceu.data.model.GTModels;
+import com.gregtechceu.gtceu.data.pack.event.RegisterDynamicResourcesEvent;
+import com.gregtechceu.gtceu.forge.ForgeCommonEventListener;
+import com.gregtechceu.gtceu.integration.kjs.GregTechKubeJSPlugin;
 import com.gregtechceu.gtceu.data.entity.GTEntityTypes;
 import com.gregtechceu.gtceu.data.fluid.GTFluids;
 import com.gregtechceu.gtceu.data.particle.GTParticleTypes;
@@ -31,6 +46,7 @@ import com.gregtechceu.gtceu.integration.map.ftbchunks.FTBChunksPlugin;
 import com.gregtechceu.gtceu.integration.map.layer.Layers;
 import com.gregtechceu.gtceu.integration.map.layer.builtin.FluidRenderLayer;
 import com.gregtechceu.gtceu.integration.map.layer.builtin.OreRenderLayer;
+import com.gregtechceu.gtceu.utils.data.RuntimeBlockstateProvider;
 import com.gregtechceu.gtceu.utils.input.SyncedKeyMapping;
 
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -39,6 +55,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -46,6 +63,8 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -131,6 +150,7 @@ public class ClientInit {
     @SubscribeEvent
     public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders event) {
         event.register(MachineModelLoader.ID, MachineModelLoader.INSTANCE);
+        event.register(PipeModelLoader.ID, PipeModelLoader.INSTANCE);
         event.register(GTCEu.id("facade"), FacadeUnbakedModel.Loader.INSTANCE);
     }
 
@@ -156,5 +176,48 @@ public class ClientInit {
                         .getColor() | 0xff000000;
             }
         }, GTFluids.POTION.getType());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void preRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
+        PipeModel.DYNAMIC_MODELS.clear();
+    }
+
+    @SubscribeEvent
+    public void registerDynamicAssets(RegisterDynamicResourcesEvent event) {
+        // regenerate all pipe models in case their textures changed
+        // cables may do this, others too if something's removed
+        for (var block : GTMaterialBlocks.CABLE_BLOCKS.values()) {
+            if (block == null) continue;
+            block.get().createPipeModel(RuntimeBlockstateProvider.INSTANCE).dynamicModel();
+        }
+        for (var block : GTMaterialBlocks.FLUID_PIPE_BLOCKS.values()) {
+            if (block == null) continue;
+            block.get().createPipeModel(RuntimeBlockstateProvider.INSTANCE).dynamicModel();
+        }
+        for (var block : GTMaterialBlocks.ITEM_PIPE_BLOCKS.values()) {
+            if (block == null) continue;
+            block.get().createPipeModel(RuntimeBlockstateProvider.INSTANCE).dynamicModel();
+        }
+
+        MaterialBlockRenderer.reinitModels();
+        TagPrefixItemRenderer.reinitModels();
+        OreBlockRenderer.reinitModels();
+        ToolItemRenderer.reinitModels();
+        ArmorItemRenderer.reinitModels();
+        SurfaceRockRenderer.reinitModels();
+        GTModels.registerMaterialFluidModels();
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void postRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
+        // do this last so addons can easily add new variants to the registered model set
+        PipeModel.initDynamicModels();
+
+        if (GTCEu.Mods.isKubeJSLoaded()) {
+            GregTechKubeJSPlugin.generateMachineBlockModels();
+        }
+        RuntimeBlockstateProvider.INSTANCE.run();
+        PipeModelBuilder.clearRestrictorModelCache();
     }
 }

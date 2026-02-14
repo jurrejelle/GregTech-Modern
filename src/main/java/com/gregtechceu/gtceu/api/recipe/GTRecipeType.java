@@ -6,7 +6,8 @@ import com.gregtechceu.gtceu.api.gui.SteamTexture;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.recipe.chance.boost.ChanceBoostFunction;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
-import com.gregtechceu.gtceu.api.recipe.lookup.GTRecipeLookup;
+import com.gregtechceu.gtceu.api.recipe.lookup.RecipeAdditionHandler;
+import com.gregtechceu.gtceu.api.recipe.lookup.RecipeDB;
 import com.gregtechceu.gtceu.api.recipe.ui.GTRecipeTypeUI;
 import com.gregtechceu.gtceu.api.sound.SoundEntry;
 import com.gregtechceu.gtceu.common.recipe.builder.GTRecipeBuilder;
@@ -88,8 +89,10 @@ public class GTRecipeType implements RecipeType<GTRecipe> {
     private final GTRecipeCategory category;
     @Getter
     private final Map<GTRecipeCategory, Set<GTRecipe>> categoryMap = new Object2ObjectOpenHashMap<>();
+    private final RecipeDB db = new RecipeDB();
+    @ApiStatus.Internal
     @Getter
-    private final GTRecipeLookup lookup = new GTRecipeLookup(this);
+    private final RecipeAdditionHandler additionHandler = new RecipeAdditionHandler(db);
     @Setter
     @Getter
     private boolean offsetVoltageText = false;
@@ -204,7 +207,10 @@ public class GTRecipeType implements RecipeType<GTRecipe> {
 
     public @NotNull Iterator<GTRecipe> searchRecipe(IRecipeCapabilityHolder holder, Predicate<GTRecipe> canHandle) {
         if (!holder.hasCapabilityProxies()) return Collections.emptyIterator();
-        var iterator = getLookup().getRecipeIterator(holder, canHandle);
+        var iterator = db.iterator(holder, canHandle);
+        if (iterator == null) {
+            return Collections.emptyIterator();
+        }
         boolean any = false;
         while (iterator.hasNext()) {
             GTRecipe recipe = iterator.next();
@@ -338,6 +344,10 @@ public class GTRecipeType implements RecipeType<GTRecipe> {
 
     public Component getName() {
         return Component.translatable(getTranslationKey());
+    }
+
+    public @NotNull RecipeDB db() {
+        return db;
     }
 
     public interface ICustomRecipeLogic {

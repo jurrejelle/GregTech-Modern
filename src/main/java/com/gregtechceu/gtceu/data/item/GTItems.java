@@ -26,6 +26,8 @@ import com.gregtechceu.gtceu.common.item.behavior.*;
 import com.gregtechceu.gtceu.common.item.datacomponents.DataItem;
 import com.gregtechceu.gtceu.common.item.modules.ImageModuleBehaviour;
 import com.gregtechceu.gtceu.common.item.modules.TextModuleBehaviour;
+import com.gregtechceu.gtceu.common.item.behavior.*;
+import com.gregtechceu.gtceu.common.item.tool.behavior.MachineConfigCopyBehaviour;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.cover.GTCovers;
 import com.gregtechceu.gtceu.data.datagen.lang.LangHandler;
@@ -2197,7 +2199,7 @@ public class GTItems {
             .item("machine_memory_card", ComponentItem::new)
             .lang("Machine Memory Card")
             .properties(p -> p.stacksTo(1))
-            .onRegister(attach(new MetaMachineConfigCopyBehaviour()))
+            .onRegister(attach(new MachineConfigCopyBehaviour()))
             .register();
 
     public static final ItemEntry<DyeItem>[] DYE_ONLY_ITEMS = new ItemEntry[DyeColor.values().length];

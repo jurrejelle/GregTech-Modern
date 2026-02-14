@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.api.recipe.condition;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,7 @@ public class RecipeConditionType<T extends RecipeCondition<T>> {
 
     public final ConditionFactory<T> factory;
     @Getter
-    public final MapCodec<T> codec;
+    public final Codec<T> codec;
 
     @FunctionalInterface
     public interface ConditionFactory<T extends RecipeCondition<T>> {

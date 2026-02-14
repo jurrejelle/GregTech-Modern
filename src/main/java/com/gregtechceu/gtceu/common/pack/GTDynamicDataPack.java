@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.common.pack;
 
+import com.google.gson.JsonObject;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.addon.AddonFinder;
 import com.gregtechceu.gtceu.config.ConfigHolder;
@@ -121,20 +122,20 @@ public class GTDynamicDataPack implements PackResources {
     }
 
     /**
-     * if {@code subDir} is null, no file ending is appended.
+     * if subdir is null, no file ending is appended.
      *
      * @param id     the resource location of the file to be written.
-     * @param subDir a nullable subdirectory for the data.
+     * @param subdir a nullable subdirectory for the data.
      * @param parent the parent folder where to write data to.
      * @param json   the json to write.
      */
     @ApiStatus.Internal
-    public static void writeJson(ResourceLocation id, @Nullable String subDir, Path parent, byte[] json) {
+    public static void writeJson(ResourceLocation id, @Nullable String subdir, Path parent, byte[] json) {
         try {
             Path file;
-            if (subDir != null) {
+            if (subdir != null) {
                 // assume JSON
-                file = parent.resolve(id.getNamespace()).resolve(subDir).resolve(id.getPath() + ".json");
+                file = parent.resolve(id.getNamespace()).resolve(subdir).resolve(id.getPath() + ".json");
             } else {
                 // assume the file type is also appended if a full path is given.
                 file = parent.resolve(id.getNamespace()).resolve(id.getPath());
@@ -146,6 +147,11 @@ public class GTDynamicDataPack implements PackResources {
         } catch (IOException e) {
             GTCEu.LOGGER.error("Failed to write JSON export for file {}", id, e);
         }
+    }
+
+    public static void addAdvancement(ResourceLocation loc, JsonObject obj) {
+        ResourceLocation l = getAdvancementLocation(loc);
+        addToData(l, obj.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     @Nullable
@@ -178,9 +184,9 @@ public class GTDynamicDataPack implements PackResources {
         return type == PackType.SERVER_DATA ? SERVER_DOMAINS : Set.of();
     }
 
-    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public @Nullable <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
+    public <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
         if (metaReader == PackMetadataSection.TYPE) {
             return (T) new PackMetadataSection(Component.literal("GTCEu dynamic data"),
                     SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA));

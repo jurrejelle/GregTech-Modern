@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.medicalcondition.GTMedicalConditions;
 import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
@@ -24,11 +25,11 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class EnvironmentalHazardCondition extends RecipeCondition<EnvironmentalHazardCondition> {
 
-    public static final MapCodec<EnvironmentalHazardCondition> CODEC = RecordCodecBuilder
-            .mapCodec(instance -> RecipeCondition.isReverse(instance)
-                    .and(
-                            MedicalCondition.CODEC.fieldOf("condition").forGetter(val -> val.condition))
-                    .apply(instance, EnvironmentalHazardCondition::new));
+    // spotless:off
+    public static final Codec<EnvironmentalHazardCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+            MedicalCondition.CODEC.fieldOf("condition").forGetter(EnvironmentalHazardCondition::getCondition)
+    ).apply(instance, EnvironmentalHazardCondition::new));
+    // spotless:on
 
     @Getter
     private MedicalCondition condition = GTMedicalConditions.CARBON_MONOXIDE_POISONING;

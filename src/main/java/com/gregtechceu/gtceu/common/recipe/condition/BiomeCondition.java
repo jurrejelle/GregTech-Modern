@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -26,10 +27,10 @@ import org.jetbrains.annotations.NotNull;
 public class BiomeCondition extends RecipeCondition<BiomeCondition> {
 
     // spotless:off
-    public static final StreamCodec<ByteBuf, ResourceKey<Biome>> RESOURCE_KEY_STREAM_CODEC = ResourceKey.streamCodec(Registries.BIOME);
-    public static final MapCodec<BiomeCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance)
-            .and(ResourceKey.codec(Registries.BIOME).fieldOf("biome").forGetter(val -> val.biome)
-            ).apply(instance, BiomeCondition::new));
+    public static final Codec<BiomeCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+            ResourceKey.codec(Registries.BIOME).fieldOf("biome").forGetter(val -> val.biome)
+    ).apply(instance, BiomeCondition::new));
+    // spotless:on
 
     @Getter
     private ResourceKey<Biome> biome = ResourceKey.create(Registries.BIOME, ResourceLocation.withDefaultNamespace("dummy"));

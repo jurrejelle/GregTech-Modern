@@ -10,7 +10,6 @@ import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 import net.minecraft.network.chat.Component;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +17,11 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class EUToStartCondition extends RecipeCondition<EUToStartCondition> {
 
-    public static final MapCodec<EUToStartCondition> CODEC = RecordCodecBuilder
-            .mapCodec(instance -> RecipeCondition.isReverse(instance)
-                    .and(Codec.LONG.fieldOf("eu_to_start").forGetter(val -> val.euToStart))
-                    .apply(instance, EUToStartCondition::new));
-    public static final EUToStartCondition INSTANCE = new EUToStartCondition();
+    // spotless:off
+    public static final Codec<EUToStartCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+            Codec.LONG.fieldOf("eu_to_start").forGetter(val -> val.euToStart)
+    ).apply(instance, EUToStartCondition::new));
+    // spotless:on
 
     private long euToStart;
 
@@ -52,7 +51,7 @@ public class EUToStartCondition extends RecipeCondition<EUToStartCondition> {
     }
 
     @Override
-    public RecipeCondition createTemplate() {
+    public EUToStartCondition createTemplate() {
         return new EUToStartCondition();
     }
 }

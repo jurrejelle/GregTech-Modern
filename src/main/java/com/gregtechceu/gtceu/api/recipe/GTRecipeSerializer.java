@@ -128,7 +128,7 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
         return RecipeCondition.fromNetwork(buf);
     }
 
-    public static void conditionWriter(RegistryFriendlyByteBuf buf, RecipeCondition<?> condition) {
+    public static void conditionWriter(FriendlyByteBuf buf, RecipeCondition<?> condition) {
         buf.writeResourceLocation(GTRegistries.RECIPE_CONDITIONS.getKey(condition.getType()));
         condition.toNetwork(buf);
     }
@@ -159,7 +159,8 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
         Map<RecipeCapability<?>, List<Content>> tickOutputs = tuplesToMap(
                 readCollection(buf, GTRecipeSerializer::entryReader));
 
-        List<RecipeCondition<?>> conditions = readCollection(buf, GTRecipeSerializer::conditionReader);
+        List<RecipeCondition<?>> conditions = buf.readCollection(c -> new ArrayList<>(),
+                GTRecipeSerializer::conditionReader);
 
         Map<RecipeCapability<?>, ChanceLogic> inputChanceLogics = logicTuplesToMap(
                 readCollection(buf, GTRecipeSerializer::changeLogicEntryReader));
@@ -178,6 +179,7 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
         if (data == null) {
             data = new CompoundTag();
         }
+        int groupColor = buf.readInt();
         ResourceLocation categoryLoc = buf.readResourceLocation();
 
         GTRecipeType type = (GTRecipeType) BuiltInRegistries.RECIPE_TYPE.get(recipeType);
@@ -186,7 +188,7 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
         GTRecipe recipe = new GTRecipe(type, id,
                 inputs, outputs, tickInputs, tickOutputs,
                 inputChanceLogics, outputChanceLogics, tickInputChanceLogics, tickOutputChanceLogics,
-                conditions, ingredientActions, data, duration, category);
+                conditions, ingredientActions, data, duration, category, groupColor);
 
         recipe.recipeCategory.addRecipe(recipe);
 
@@ -225,6 +227,7 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
             KJSCallWrapper.writeIngredientActions(recipe.ingredientActions, buf);
         }
         buf.writeNbt(recipe.data);
+        buf.writeInt(recipe.groupColor);
         buf.writeResourceLocation(recipe.recipeCategory.registryKey);
     }
 
@@ -265,7 +268,8 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
                     RecipeCondition.CODEC.listOf().optionalFieldOf("recipeConditions", List.of()).forGetter(val -> val.conditions),
                     CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(val -> val.data),
                     quietExceptionCodec(ExtraCodecs.NON_NEGATIVE_INT,"duration",isKubeLoaded).forGetter(val -> val.duration),
-                    GTRegistries.RECIPE_CATEGORIES.byNameCodec().optionalFieldOf("category", GTRecipeCategory.DEFAULT).forGetter(val -> val.recipeCategory)
+                    GTRegistries.RECIPE_CATEGORIES.byNameCodec().optionalFieldOf("category", GTRecipeCategory.DEFAULT).forGetter(val -> val.recipeCategory),
+                    Codec.INT.fieldOf("groupColor").forGetter(val -> val.groupColor))
             ).apply(instance, GTRecipe::new));
         } else {
             return RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -282,7 +286,8 @@ public class GTRecipeSerializer implements RecipeSerializer<GTRecipe> {
                     IngredientActionHolder.CODEC.listOf().optionalFieldOf("kubejs:actions", List.of()).forGetter(val -> (List<IngredientActionHolder>) val.ingredientActions),
                     CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(val -> val.data),
                     quietExceptionCodec(ExtraCodecs.NON_NEGATIVE_INT,"duration",isKubeLoaded).forGetter(val -> val.duration),
-                    GTRegistries.RECIPE_CATEGORIES.byNameCodec().optionalFieldOf("category", GTRecipeCategory.DEFAULT).forGetter(val -> val.recipeCategory)
+                    GTRegistries.RECIPE_CATEGORIES.byNameCodec().optionalFieldOf("category", GTRecipeCategory.DEFAULT).forGetter(val -> val.recipeCategory),
+                    Codec.INT.optionalFieldOf("groupColor", -1).forGetter(val -> val.groupColor))
             ).apply(instance, GTRecipe::new));
         }
         // spotless:on
