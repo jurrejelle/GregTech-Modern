@@ -84,6 +84,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine
         this.circuitSlotEnabled = true;
         this.circuitInventory = createCircuitItemHandler(io).shouldSearchContent(false);
         filterHandler = FilterHandlers.item(this);
+
         inventory.setFilter(this::matchesFilter);
     }
 
