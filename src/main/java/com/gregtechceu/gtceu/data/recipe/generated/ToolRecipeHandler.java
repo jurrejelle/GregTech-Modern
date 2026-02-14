@@ -280,9 +280,9 @@ public final class ToolRecipeHandler {
             }
 
             // buzzsaw
-            if (property.hasType(GTToolType.BUZZSAW)) {
+            if (property.hasType(GTToolType.BUZZSAW_LV)) {
                 toolPrefix = TagPrefix.toolHeadBuzzSaw;
-                addElectricToolRecipe(provider, toolPrefix, new GTToolType[] { GTToolType.BUZZSAW }, material);
+                addElectricToolRecipe(provider, toolPrefix, new GTToolType[] { GTToolType.BUZZSAW_LV }, material);
 
                 VanillaRecipeHelper.addShapedRecipe(provider, String.format("buzzsaw_blade_%s", material.getName()),
                         ChemicalHelper.get(toolPrefix, material),

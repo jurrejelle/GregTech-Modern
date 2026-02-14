@@ -1,4 +1,4 @@
-package com.gregtechceu.gtceu.common.item.tool.behavior;
+package com.gregtechceu.gtceu.common.item.behavior;
 
 import com.gregtechceu.gtceu.api.blockentity.PipeBlockEntity;
 import com.gregtechceu.gtceu.api.item.component.IAddInformation;
@@ -6,8 +6,8 @@ import com.gregtechceu.gtceu.api.item.component.IInteractionItem;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.*;
-import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
+import com.gregtechceu.gtceu.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.utils.GTTransferUtils;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
@@ -21,10 +21,11 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 
 import joptsimple.internal.Strings;
 import org.jetbrains.annotations.Nullable;
@@ -75,10 +76,10 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
                 !MachineOwner.canOpenOwnerMachine(context.getPlayer(), machineBlockEntity.getMetaMachine()))
             return InteractionResult.FAIL;
 
+        var configElem = stack.getOrDefault(GTDataComponents.DATA_COPY_TAG, CustomData.of(new CompoundTag()));
+        var configTag = configElem.copyTag();
+
         if (context.isSecondaryUseActive()) {
-
-            var configTag = stack.getOrCreateTagElement(CONFIG_DATA);
-
             if (blockEntity instanceof IMachineBlockEntity machineBlockEntity) {
                 configTag.putString(COPY_SOURCE,
                         (new ItemStack(blockEntity.getBlockState().getBlock().asItem())).getDisplayName().getString());
@@ -86,7 +87,7 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
 
                 ListTag itemsTag = new ListTag();
                 machineBlockEntity.getMetaMachine().getItemsRequiredToPaste()
-                        .forEach(v -> itemsTag.add(v.serializeNBT()));
+                        .forEach(v -> itemsTag.add(v.save(context.getLevel().registryAccess())));
                 configTag.put(ITEMS_TO_PASTE, itemsTag);
             } else if (blockEntity instanceof PipeBlockEntity<?, ?> pipeBE) {
                 configTag.putString(COPY_SOURCE,
@@ -94,10 +95,10 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
                 configTag.merge(gatherPipeConfig(pipeBE));
 
                 ListTag itemsTag = new ListTag();
-                pipeBE.getItemsRequiredToPaste().forEach(v -> itemsTag.add(v.serializeNBT()));
+                pipeBE.getItemsRequiredToPaste().forEach(v -> itemsTag.add(v.save(context.getLevel().registryAccess())));
                 configTag.put(ITEMS_TO_PASTE, itemsTag);
             } else {
-                stack.removeTagKey(CONFIG_DATA);
+                stack.remove(GTDataComponents.DATA_COPY_TAG);
                 player.displayClientMessage(Component.translatable("behaviour.memory_card.client_msg.cleared"), true);
                 return InteractionResult.SUCCESS;
             }
@@ -105,25 +106,22 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
             player.displayClientMessage(Component.translatable("behaviour.memory_card.client_msg.copied"), true);
 
         } else {
-            var tag = stack.getTagElement(CONFIG_DATA);
-            if (tag == null) return InteractionResult.FAIL;
-
             List<ItemStack> items = new ArrayList<>();
-            tag.getList("itemsToPaste", CompoundTag.TAG_COMPOUND).forEach(t -> {
-                if (t instanceof CompoundTag c) items.add(ItemStack.of(c));
+            configTag.getList("itemsToPaste", CompoundTag.TAG_COMPOUND).forEach(t -> {
+                if (t instanceof CompoundTag c) items.add(ItemStack.parse(context.getLevel().registryAccess(), c).orElse(ItemStack.EMPTY));
             });
 
             if (!player.isCreative() && !GTTransferUtils.extractItemsFromPlayerInv(player, items, true)) {
                 player.displayClientMessage(Component.translatable("behaviour.memory_card.client_msg.missing_items"),
                         true);
                 return InteractionResult.FAIL;
-            } ;
+            }
             if (!player.isCreative()) GTTransferUtils.extractItemsFromPlayerInv(player, items, false);
 
             if (blockEntity instanceof IMachineBlockEntity machineBlockEntity)
-                pasteMachineConfig((ServerPlayer) player, machineBlockEntity.getMetaMachine(), tag);
+                pasteMachineConfig((ServerPlayer) player, machineBlockEntity.getMetaMachine(), configTag);
             if (blockEntity instanceof PipeBlockEntity<?, ?> pipeBE)
-                pastePipeConfig((ServerPlayer) player, pipeBE, tag);
+                pastePipeConfig((ServerPlayer) player, pipeBE, configTag);
 
             player.displayClientMessage(Component.translatable("behaviour.memory_card.client_msg.pasted"), true);
 
@@ -252,7 +250,10 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
         machine.pasteConfig(player, tag);
     }
 
-    private static void addConfigTooltips(List<Component> tooltip, CompoundTag tag) {
+    private static void addConfigTooltips(List<Component> tooltip, CompoundTag tag, Item.TooltipContext context) {
+
+        if (context.level() == null) return;
+
         tooltip.add(Component.translatable("behaviour.memory_card.copy_target", tag.getString(COPY_SOURCE)));
         tooltip.add(Component.empty());
 
@@ -306,7 +307,7 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
         if (tag.contains("itemsToPaste")) {
             List<ItemStack> items = new ArrayList<>();
             tag.getList("itemsToPaste", CompoundTag.TAG_COMPOUND).forEach(t -> {
-                if (t instanceof CompoundTag c) items.add(ItemStack.of(c));
+                if (t instanceof CompoundTag c) items.add(ItemStack.parse(context.level().registryAccess(), c).orElse(ItemStack.EMPTY));
             });
 
             if (items.isEmpty()) return;
@@ -322,17 +323,17 @@ public class MachineConfigCopyBehaviour implements IInteractionItem, IAddInforma
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents,
-                                TooltipFlag isAdvanced) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         tooltipComponents.add(Component.translatable("behaviour.memory_card.tooltip.copy"));
         tooltipComponents.add(Component.translatable("behaviour.memory_card.tooltip.paste"));
-        CompoundTag data = stack.getTagElement(CONFIG_DATA);
+        CustomData data = stack.get(GTDataComponents.DATA_COPY_TAG);
         if (data == null) return;
         if (Screen.hasShiftDown()) {
             tooltipComponents.add(CommonComponents.EMPTY);
-            addConfigTooltips(tooltipComponents, data);
+            addConfigTooltips(tooltipComponents, data.copyTag(), context);
         } else {
             tooltipComponents.add(Component.translatable("behaviour.memory_card.tooltip.view_stored"));
         }
+
     }
 }

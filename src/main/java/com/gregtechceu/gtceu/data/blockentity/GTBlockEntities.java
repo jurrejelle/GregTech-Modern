@@ -15,21 +15,18 @@ public class GTBlockEntities {
     @SuppressWarnings("unchecked")
     public static final BlockEntityEntry<CableBlockEntity> CABLE = REGISTRATE
             .blockEntity("cable", CableBlockEntity::new)
-            .onRegister(CableBlockEntity::onBlockEntityRegister)
             .validBlocks(GTMaterialBlocks.CABLE_BLOCKS.values().toArray(BlockEntry[]::new))
             .register();
 
     @SuppressWarnings("unchecked")
     public static final BlockEntityEntry<FluidPipeBlockEntity> FLUID_PIPE = REGISTRATE
             .blockEntity("fluid_pipe", FluidPipeBlockEntity::new)
-            .onRegister(FluidPipeBlockEntity::onBlockEntityRegister)
             .validBlocks(GTMaterialBlocks.FLUID_PIPE_BLOCKS.values().toArray(BlockEntry[]::new))
             .register();
 
     @SuppressWarnings("unchecked")
     public static final BlockEntityEntry<ItemPipeBlockEntity> ITEM_PIPE = REGISTRATE
             .blockEntity("item_pipe", ItemPipeBlockEntity::new)
-            .onRegister(ItemPipeBlockEntity::onBlockEntityRegister)
             .validBlocks(GTMaterialBlocks.ITEM_PIPE_BLOCKS.values().toArray(BlockEntry[]::new))
             .register();
 

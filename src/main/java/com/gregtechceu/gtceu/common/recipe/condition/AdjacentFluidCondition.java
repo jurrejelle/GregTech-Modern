@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
 import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 public class AdjacentFluidCondition extends RecipeCondition<AdjacentFluidCondition> {
 
     // spotless:off
-    public static final Codec<AdjacentFluidCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+    public static final MapCodec<AdjacentFluidCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance).and(
             GTCodecUtils.lazyParsingCodec(RegistryCodecs.homogeneousList(Registries.FLUID)).listOf()
                     .fieldOf("fluids").forGetter(AdjacentFluidCondition::getFluidSuppliers)
     ).apply(instance, AdjacentFluidCondition::new));

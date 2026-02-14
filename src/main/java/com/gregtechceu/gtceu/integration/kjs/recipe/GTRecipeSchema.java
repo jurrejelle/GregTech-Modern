@@ -919,7 +919,7 @@ public interface GTRecipeSchema {
         }
 
         public GTKubeRecipe dimension(ResourceKey<Level> dimension) {
-            return dimension(dimension, false);
+            return dimension(dimension.location(), false);
         }
 
         public GTKubeRecipe biome(ResourceKey<Biome> biome, boolean reverse) {

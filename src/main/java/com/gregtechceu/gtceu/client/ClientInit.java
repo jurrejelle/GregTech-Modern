@@ -34,12 +34,11 @@ import com.gregtechceu.gtceu.data.block.GTMaterialBlocks;
 import com.gregtechceu.gtceu.data.datagen.model.builder.PipeModelBuilder;
 import com.gregtechceu.gtceu.data.model.GTModels;
 import com.gregtechceu.gtceu.data.pack.event.RegisterDynamicResourcesEvent;
-import com.gregtechceu.gtceu.forge.ForgeCommonEventListener;
-import com.gregtechceu.gtceu.integration.kjs.GregTechKubeJSPlugin;
+import com.gregtechceu.gtceu.forge.CommonEventListener;
 import com.gregtechceu.gtceu.data.entity.GTEntityTypes;
 import com.gregtechceu.gtceu.data.fluid.GTFluids;
 import com.gregtechceu.gtceu.data.particle.GTParticleTypes;
-import com.gregtechceu.gtceu.forge.CommonEventListener;
+import com.gregtechceu.gtceu.integration.kjs.GTKubeJSPlugin;
 import com.gregtechceu.gtceu.integration.map.ClientCacheManager;
 import com.gregtechceu.gtceu.integration.map.cache.client.GTClientCache;
 import com.gregtechceu.gtceu.integration.map.ftbchunks.FTBChunksPlugin;
@@ -63,8 +62,6 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -215,7 +212,7 @@ public class ClientInit {
         PipeModel.initDynamicModels();
 
         if (GTCEu.Mods.isKubeJSLoaded()) {
-            GregTechKubeJSPlugin.generateMachineBlockModels();
+            GTKubeJSPlugin.generateMachineBlockModels();
         }
         RuntimeBlockstateProvider.INSTANCE.run();
         PipeModelBuilder.clearRestrictorModelCache();

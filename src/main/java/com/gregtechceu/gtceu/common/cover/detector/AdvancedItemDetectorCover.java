@@ -153,7 +153,7 @@ public class AdvancedItemDetectorCover extends ItemDetectorCover implements IUIC
         tag.putInt("min", minValue);
         tag.putInt("max", maxValue);
         tag.putBoolean("latched", isLatched);
-        tag.put("filter", filterHandler.getFilterItem().serializeNBT());
+        tag.put("filter", filterHandler.getFilterItem().save(coverHolder.getLevel().registryAccess()));
         return super.copyConfig(tag);
     }
 
@@ -162,7 +162,7 @@ public class AdvancedItemDetectorCover extends ItemDetectorCover implements IUIC
         setMinValue(tag.getInt("min"));
         setMaxValue(tag.getInt("max"));
         setLatched(tag.getBoolean("latched"));
-        filterHandler.setFilterItem(ItemStack.of(tag.getCompound("filter")));
+        filterHandler.setFilterItem(ItemStack.parse(coverHolder.getLevel().registryAccess(), tag.getCompound("filter")).orElse(ItemStack.EMPTY));
         super.pasteConfig(player, tag);
     }
 }

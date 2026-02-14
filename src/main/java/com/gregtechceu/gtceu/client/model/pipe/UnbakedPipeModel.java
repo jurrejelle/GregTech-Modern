@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.client.model.pipe;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
@@ -19,7 +20,9 @@ import static com.gregtechceu.gtceu.client.model.machine.MachineModelLoader.MISS
 
 public class UnbakedPipeModel implements IUnbakedGeometry<UnbakedPipeModel> {
 
+    @Getter
     private final Map<@Nullable Direction, UnbakedModel> parts;
+    @Getter
     private final Map<@NotNull Direction, UnbakedModel> restrictors;
 
     public UnbakedPipeModel(Map<@Nullable Direction, UnbakedModel> parts,
@@ -31,14 +34,14 @@ public class UnbakedPipeModel implements IUnbakedGeometry<UnbakedPipeModel> {
     @Override
     public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
                            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
-                           ItemOverrides overrides, ResourceLocation modelLocation) {
+                           ItemOverrides overrides) {
         Map<Direction, BakedModel> bakedParts = new IdentityHashMap<>();
         this.parts.forEach((direction, unbaked) -> {
-            bakedParts.put(direction, unbaked.bake(baker, spriteGetter, modelState, modelLocation));
+            bakedParts.put(direction, unbaked.bake(baker, spriteGetter, modelState));
         });
         Map<Direction, BakedModel> bakedRestrictors = new IdentityHashMap<>();
         this.restrictors.forEach((direction, unbaked) -> {
-            bakedRestrictors.put(direction, unbaked.bake(baker, spriteGetter, modelState, modelLocation));
+            bakedRestrictors.put(direction, unbaked.bake(baker, spriteGetter, modelState));
         });
         return new BakedPipeModel(bakedParts, bakedRestrictors);
     }

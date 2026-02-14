@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.common.machine.owner.FTBOwner;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
 
 import com.mojang.serialization.Codec;
@@ -25,7 +26,7 @@ public class FTBQuestCondition extends RecipeCondition<FTBQuestCondition> {
 
     private static final Long2ObjectMap<QuestObject> QUEST_CACHE = new Long2ObjectOpenHashMap<>();
     // spotless:off
-    public static final Codec<FTBQuestCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+    public static final MapCodec<FTBQuestCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance).and(
             Codec.LONG.fieldOf("questId").forGetter(val -> val.parsedQuestId)
     ).apply(instance, FTBQuestCondition::new));
     // spotless:on

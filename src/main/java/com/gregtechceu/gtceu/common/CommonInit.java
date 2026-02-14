@@ -79,7 +79,7 @@ import com.gregtechceu.gtceu.data.material.GTMaterials;
 import com.gregtechceu.gtceu.data.misc.GTAttachmentTypes;
 import com.gregtechceu.gtceu.data.misc.GTCreativeModeTabs;
 import com.gregtechceu.gtceu.data.misc.GTDimensionMarkers;
-import com.gregtechceu.gtceu.data.misc.GTValueProviderTypes;
+import com.gregtechceu.gtceu.data.valueprovider.GTValueProviderTypes;
 import com.gregtechceu.gtceu.data.particle.GTParticleTypes;
 import com.gregtechceu.gtceu.data.placeholder.GTPlaceholders;
 import com.gregtechceu.gtceu.data.recipe.*;
@@ -247,7 +247,7 @@ public class CommonInit {
         GTParticleTypes.PARTICLE_TYPES.register(modBus);
 
         GTRegistrateDatagen.initPost();
-        GTValueProviderTypes.register(modBus);
+        GTValueProviderTypes.init(modBus);
         GTFeatures.register(modBus);
         WorldGenLayers.registerAll();
         VeinGenerators.registerAddonGenerators();

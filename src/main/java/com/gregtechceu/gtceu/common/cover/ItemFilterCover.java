@@ -148,7 +148,7 @@ public class ItemFilterCover extends CoverBehavior implements IUICover {
     public CompoundTag copyConfig(CompoundTag tag) {
         tag.putInt("manualIO", getAllowFlow().ordinal());
         tag.putInt("filterMode", getFilterMode().ordinal());
-        tag.put("filter", attachItem.serializeNBT());
+        tag.put("filter", attachItem.save(coverHolder.getLevel().registryAccess()));
         return super.copyConfig(tag);
     }
 
@@ -156,7 +156,7 @@ public class ItemFilterCover extends CoverBehavior implements IUICover {
     public void pasteConfig(ServerPlayer player, CompoundTag tag) {
         setAllowFlow(ManualIOMode.values()[tag.getInt("manualIO")]);
         setFilterMode(FilterMode.values()[tag.getInt("filterMode")]);
-        itemFilter = ItemFilter.loadFilter(ItemStack.of(tag.getCompound("filter")));
+        itemFilter = ItemFilter.loadFilter(ItemStack.parse(coverHolder.getLevel().registryAccess(), tag.getCompound("filter")).orElse(ItemStack.EMPTY));
         super.pasteConfig(player, tag);
     }
 }

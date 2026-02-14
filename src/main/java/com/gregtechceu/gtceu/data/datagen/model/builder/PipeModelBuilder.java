@@ -1,9 +1,13 @@
 package com.gregtechceu.gtceu.data.datagen.model.builder;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.PipeBlockEntity;
 import com.gregtechceu.gtceu.api.registry.registrate.provider.GTBlockstateProvider;
 import com.gregtechceu.gtceu.client.model.pipe.PipeModelLoader;
+import com.gregtechceu.gtceu.core.mixins.neoforge.ConfiguredModelListAccessor;
 import com.gregtechceu.gtceu.utils.GTMath;
 import com.gregtechceu.gtceu.utils.GTUtil;
 import com.gregtechceu.gtceu.utils.memoization.GTMemoizer;
@@ -21,12 +25,20 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.joml.Vector3f;
+
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider.ConfiguredModelList;
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
+import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import com.gregtechceu.gtceu.core.mixins.neoforge.ConfiguredModelBuilderAccessor;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -51,7 +63,7 @@ public class PipeModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBui
 
     protected PipeModelBuilder(T parent, ExistingFileHelper existingFileHelper,
                                float thickness, GTBlockstateProvider provider) {
-        super(PipeModelLoader.ID, parent, existingFileHelper);
+        super(PipeModelLoader.ID, parent, existingFileHelper, true);
 
         Preconditions.checkArgument(thickness > 0.0f && thickness <= 16.0f,
                 "Thickness must be between 0 (exclusive) and 16 (inclusive). It is %s", thickness);
@@ -319,6 +331,22 @@ public class PipeModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBui
         return json;
     }
 
+    public static JsonElement modelToJson(ModelFile model) {
+        // serialize nested models as objects instead of `"model": "dummy:dummy"`
+        if (model instanceof ModelBuilder<?> builder) {
+            var currentProvider = GTBlockstateProvider.getCurrentProvider();
+            // check if it's a nested model, and if not, only save the model name
+            if (currentProvider != null &&
+                    currentProvider.models().generatedModels.containsKey(builder.getLocation())) {
+                return new JsonPrimitive(builder.getLocation().toString());
+            } else {
+                return builder.toJson();
+            }
+        } else {
+            return new JsonPrimitive(model.getLocation().toString());
+        }
+    }
+
     private static final ResourceLocation PIPE_BLOCKED_OVERLAY = GTCEu.id("block/pipe/blocked/pipe_blocked");
     private static final ResourceLocation PIPE_BLOCKED_OVERLAY_UP = GTCEu.id("block/pipe/blocked/pipe_blocked_up");
     private static final ResourceLocation PIPE_BLOCKED_OVERLAY_DOWN = GTCEu.id("block/pipe/blocked/pipe_blocked_down");
@@ -379,8 +407,8 @@ public class PipeModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBui
             }
 
             var coords = GTMath.getCoordinates(dir, min, max);
-            Vector3f minPos = coords.getLeft();
-            Vector3f maxPos = coords.getRight();
+            Vector3f minPos = coords.getFirst();
+            Vector3f maxPos = coords.getSecond();
             BlockModelBuilder model = provider.getBuilder(modelPath);
             model.texture("restrictor", PIPE_BLOCKED_OVERLAY)
                     .element()
@@ -451,6 +479,33 @@ public class PipeModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBui
             }
         }
         return borderMask;
+    }
+
+    public static JsonElement configuredModelListToJSON(ConfiguredModelList list) {
+        List<ConfiguredModel> models = ((ConfiguredModelListAccessor) list).gtceu$getModels();
+
+        if (models.size() == 1) {
+            return configuredModelToJSON(models.getFirst(), false);
+        } else {
+            JsonArray ret = new JsonArray();
+            for (ConfiguredModel m : models) {
+                ret.add(configuredModelToJSON(m, true));
+            }
+            return ret;
+        }
+    }
+
+    public static JsonObject configuredModelToJSON(ConfiguredModel model, boolean includeWeight) {
+        JsonObject modelJson = new JsonObject();
+        modelJson.add("model", modelToJson(model.model));
+
+        if (model.rotationX != 0) modelJson.addProperty("x", model.rotationX);
+        if (model.rotationY != 0) modelJson.addProperty("y", model.rotationY);
+        if (model.uvLock) modelJson.addProperty("uvlock", true);
+        if (includeWeight && model.weight != ConfiguredModel.DEFAULT_WEIGHT) {
+            modelJson.addProperty("weight", model.weight);
+        }
+        return modelJson;
     }
 
     private enum Border {

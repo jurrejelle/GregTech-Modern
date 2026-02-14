@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class BiomeCondition extends RecipeCondition<BiomeCondition> {
 
     // spotless:off
-    public static final Codec<BiomeCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+    public static final MapCodec<BiomeCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance).and(
             ResourceKey.codec(Registries.BIOME).fieldOf("biome").forGetter(val -> val.biome)
     ).apply(instance, BiomeCondition::new));
     // spotless:on

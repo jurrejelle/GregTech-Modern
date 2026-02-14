@@ -172,7 +172,7 @@ public final class CustomToolRecipes {
                 'S', stick);
     }
 
-    private static void registerSoftToolRecipes(@NotNull Consumer<FinishedRecipe> provider) {
+    private static void registerSoftToolRecipes(@NotNull RecipeOutput provider) {
         final ItemStack stick = new ItemStack(Items.STICK);
 
         for (int i = 0; i < softMaterials.length; i++) {

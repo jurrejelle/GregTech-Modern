@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class RockBreakerCondition extends RecipeCondition<RockBreakerCondition> {
 
-    public static final Codec<RockBreakerCondition> CODEC = RecordCodecBuilder
-            .create(instance -> RecipeCondition.isReverse(instance)
+    public static final MapCodec<RockBreakerCondition> CODEC = RecordCodecBuilder
+            .mapCodec(instance -> RecipeCondition.isReverse(instance)
                     .apply(instance, RockBreakerCondition::new));
 
     public final static RockBreakerCondition INSTANCE = new RockBreakerCondition();

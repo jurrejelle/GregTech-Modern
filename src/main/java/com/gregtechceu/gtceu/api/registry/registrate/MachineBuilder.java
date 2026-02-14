@@ -29,6 +29,7 @@ import com.gregtechceu.gtceu.data.recipe.GTRecipeModifiers;
 import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 
 import dev.latvian.mods.kubejs.registry.BuilderBase;
+import lombok.Setter;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -87,7 +88,8 @@ public class MachineBuilder<DEFINITION extends MachineDefinition, TYPE extends M
     protected final BiFunction<IMachineBlock, Item.Properties, MetaMachineItem> itemFactory;
     protected final TriFunction<BlockEntityType<?>, BlockPos, BlockState, IMachineBlockEntity> blockEntityFactory;
 
-    protected final Function<ResourceLocation, DEFINITION> definition;
+    @Setter
+    protected Function<ResourceLocation, DEFINITION> definition;
     protected Function<IMachineBlockEntity, MetaMachine> machine;
     @Nullable
     @Getter

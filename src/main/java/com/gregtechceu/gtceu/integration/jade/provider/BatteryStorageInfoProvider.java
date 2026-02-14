@@ -50,8 +50,8 @@ public class BatteryStorageInfoProvider implements IBlockComponentProvider, ISer
                     }
                     if (Minecraft.getInstance().player.isShiftKeyDown()) {
                         CustomItemStackHandler handler = new CustomItemStackHandler();
-                        handler.deserializeNBT(tag.getCompound("storage"));
-                        IElementHelper helper = iTooltip.getElementHelper();
+                        handler.deserializeNBT(blockAccessor.getLevel().registryAccess(), tag.getCompound("storage"));
+                        IElementHelper helper = IElementHelper.get();
                         for (int i = 0; i < handler.getSlots(); i++) {
                             if (handler.getStackInSlot(i).getCount() != 0) {
                                 ItemStack stack = handler.getStackInSlot(i);
@@ -83,13 +83,13 @@ public class BatteryStorageInfoProvider implements IBlockComponentProvider, ISer
             if (blockEntity.getMetaMachine() instanceof ChargerMachine machine) {
                 CompoundTag tag = new CompoundTag();
                 tag.put("energy", getEnergyData(machine.energyContainer));
-                tag.put("storage", machine.getChargerInventory().serializeNBT());
+                tag.put("storage", machine.getChargerInventory().serializeNBT(blockAccessor.getLevel().registryAccess()));
                 compoundTag.put("batteries", tag);
             } else if (blockEntity.getMetaMachine() instanceof BatteryBufferMachine machine) {
                 CompoundTag tag = new CompoundTag();
                 IEnergyContainer container = machine.energyContainer;
                 tag.put("energy", getEnergyData(machine.energyContainer));
-                tag.put("storage", machine.getBatteryInventory().serializeNBT());
+                tag.put("storage", machine.getBatteryInventory().serializeNBT(blockAccessor.getLevel().registryAccess()));
                 compoundTag.put("batteries", tag);
             }
         }

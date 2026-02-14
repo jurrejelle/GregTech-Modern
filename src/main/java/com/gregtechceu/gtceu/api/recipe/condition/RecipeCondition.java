@@ -10,6 +10,7 @@ import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
 import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.nbt.NbtOps;
@@ -42,8 +43,8 @@ public abstract class RecipeCondition<T extends RecipeCondition<T>> {
     }
     // spotless:on
 
-    public static <RC extends RecipeCondition<RC>> Codec<RC> simpleCodec(Function<Boolean, RC> function) {
-        return RecordCodecBuilder.create(instance -> isReverse(instance).apply(instance, function));
+    public static <RC extends RecipeCondition<RC>> MapCodec<RC> simpleCodec(Function<Boolean, RC> function) {
+        return RecordCodecBuilder.mapCodec(instance -> isReverse(instance).apply(instance, function));
     }
 
     @Getter

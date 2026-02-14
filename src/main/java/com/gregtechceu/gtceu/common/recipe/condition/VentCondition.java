@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class VentCondition extends RecipeCondition<VentCondition> {
 
-    public static final Codec<VentCondition> CODEC = RecipeCondition.simpleCodec(VentCondition::new);
+    public static final MapCodec<VentCondition> CODEC = RecipeCondition.simpleCodec(VentCondition::new);
     public final static VentCondition INSTANCE = new VentCondition();
 
     public VentCondition(boolean isReverse) {

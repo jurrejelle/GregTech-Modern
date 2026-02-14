@@ -4,8 +4,9 @@ import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeCondition;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
-import com.gregtechceu.gtceu.common.data.GTRecipeConditions;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeConditions;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -23,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class BiomeTagCondition extends RecipeCondition<BiomeTagCondition> {
 
-    public static final Codec<BiomeTagCondition> CODEC = RecordCodecBuilder
-            .create(instance -> RecipeCondition.isReverse(instance)
+    public static final MapCodec<BiomeTagCondition> CODEC = RecordCodecBuilder
+            .mapCodec(instance -> RecipeCondition.isReverse(instance)
                     .and(TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(val -> val.biome))
                     .apply(instance, BiomeTagCondition::new));
 

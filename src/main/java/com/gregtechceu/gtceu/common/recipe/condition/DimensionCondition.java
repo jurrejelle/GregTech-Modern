@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class DimensionCondition extends RecipeCondition<DimensionCondition> {
 
     // spotless:off
-    public static final Codec<DimensionCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+    public static final MapCodec<DimensionCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance).and(
             ResourceKey.codec(Registries.DIMENSION).fieldOf("dimension").forGetter(DimensionCondition::getDimension)
     ).apply(instance, DimensionCondition::new));
     // spotless:on

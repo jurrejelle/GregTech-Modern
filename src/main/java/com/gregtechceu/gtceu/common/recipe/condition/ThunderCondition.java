@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class ThunderCondition extends RecipeCondition<ThunderCondition> {
 
     // spotless:off
-    public static final Codec<ThunderCondition> CODEC = RecordCodecBuilder.create(instance -> RecipeCondition.isReverse(instance).and(
+    public static final MapCodec<ThunderCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> RecipeCondition.isReverse(instance).and(
             Codec.FLOAT.fieldOf("level").forGetter(ThunderCondition::getLevel)
     ).apply(instance, ThunderCondition::new));
     // spotless:on
