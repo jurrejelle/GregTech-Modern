@@ -3,8 +3,10 @@ package com.gregtechceu.gtceu.api.recipe;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
+import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.FluidHatchPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -18,18 +20,18 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
-import static com.gregtechceu.gtceu.api.recipe.OverclockLogicTest.LCR_RECIPE_TYPE;
-import static com.gregtechceu.gtceu.data.recipe.GTRecipeTypes.LARGE_CHEMICAL_RECIPES;
 import static com.gregtechceu.gtceu.gametest.util.TestUtils.getMetaMachine;
 
 @PrefixGameTestTemplate(false)
 @GameTestHolder(GTCEu.MOD_ID)
 public class InputSeparationTest {
 
+
+    static GTRecipeType LCR_RECIPE_TYPE;
+
     @BeforeBatch(batch = "InputSeparation")
     public static void prepare(ServerLevel level) {
-        // LARGE_CHEMICAL_RECIPES = TestUtils.createRecipeType("input_separation_tests", 3, 3, 3, 3);
-        // Force insert the recipe into the manager.
+        LCR_RECIPE_TYPE = TestUtils.createRecipeType("input_separation_logic_lcr_tests", GTRecipeTypes.LARGE_CHEMICAL_RECIPES);
         LCR_RECIPE_TYPE.getAdditionHandler().beginStaging();
         LCR_RECIPE_TYPE.getAdditionHandler().addStaging(LCR_RECIPE_TYPE
                 .recipeBuilder(GTCEu.id("test_multiblock_input_separation"))
@@ -51,9 +53,10 @@ public class InputSeparationTest {
      * @return the busses, in the BusHolder record.
      */
     private static BusHolder getBussesAndForm(GameTestHelper helper) {
-        MultiblockControllerMachine controller = (MultiblockControllerMachine) getMetaMachine(
+        WorkableMultiblockMachine controller = (WorkableMultiblockMachine) getMetaMachine(
                 helper.getBlockEntity(new BlockPos(1, 2, 0)));
         TestUtils.formMultiblock(controller);
+        controller.setRecipeType(LCR_RECIPE_TYPE);
         ItemBusPartMachine inputBus1 = (ItemBusPartMachine) getMetaMachine(
                 helper.getBlockEntity(new BlockPos(2, 1, 0)));
         ItemBusPartMachine inputBus2 = (ItemBusPartMachine) getMetaMachine(

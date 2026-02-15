@@ -8,9 +8,9 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.lookup.RecipeDB;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.AbstractMapIngredient;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.MapIngredientTypeManager;
-import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.FluidHatchPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
+import com.gregtechceu.gtceu.data.recipe.GTRecipeTypes;
 import com.gregtechceu.gtceu.gametest.util.TestUtils;
 
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,7 @@ public class RecipeIteratorStressTest {
                 .outputItems(new ItemStack(Blocks.STONE))
                 .EUt(GTValues.VA[GTValues.HV]).duration(1)
                 // NBT has a schematic in it with an HV energy input hatch
-                .buildRawRecipe());
+                .build());
         LCR_RECIPE_TYPE.getAdditionHandler().completeStaging();
     }
 

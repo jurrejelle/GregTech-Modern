@@ -61,7 +61,7 @@ public class OverclockLogicTest {
                 .EUt(GTValues.VA[GTValues.EV])
                 .duration(1)
                 // NBT has a schematic in it with an HV energy input hatch
-                .buildRawRecipe());
+                .build());
         CR_RECIPE_TYPE.getAdditionHandler().addStaging(CR_RECIPE_TYPE
                 .recipeBuilder(GTCEu.id("test_overclock_logic_4"))
                 .inputItems(new ItemStack(Items.RED_BED))

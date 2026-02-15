@@ -176,12 +176,12 @@ public class ClientInit {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void preRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
+    public static void preRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
         PipeModel.DYNAMIC_MODELS.clear();
     }
 
     @SubscribeEvent
-    public void registerDynamicAssets(RegisterDynamicResourcesEvent event) {
+    public static void registerDynamicAssets(RegisterDynamicResourcesEvent event) {
         // regenerate all pipe models in case their textures changed
         // cables may do this, others too if something's removed
         for (var block : GTMaterialBlocks.CABLE_BLOCKS.values()) {
@@ -207,7 +207,7 @@ public class ClientInit {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void postRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
+    public static void postRegisterDynamicAssets(RegisterDynamicResourcesEvent event) {
         // do this last so addons can easily add new variants to the registered model set
         PipeModel.initDynamicModels();
 
