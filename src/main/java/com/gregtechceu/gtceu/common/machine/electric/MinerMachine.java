@@ -28,12 +28,15 @@ import com.gregtechceu.gtceu.common.item.PortableScannerBehavior;
 import com.gregtechceu.gtceu.common.machine.trait.miner.MinerLogic;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.config.ConfigHolder;
+import com.gregtechceu.gtceu.data.lang.LangHandler;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -95,8 +98,8 @@ public class MinerMachine extends WorkableTieredMachine
         super.onMachineDestroyed();
         // Remove the miner pipes below this miner
         getRecipeLogic().onRemove();
-        clearInventory(exportItems.storage);
-        clearInventory(chargerInventory);
+        exportItems.dropInventoryInWorld();
+        chargerInventory.dropInventoryInWorld(getLevel(), getBlockPos());
     }
 
     @Override

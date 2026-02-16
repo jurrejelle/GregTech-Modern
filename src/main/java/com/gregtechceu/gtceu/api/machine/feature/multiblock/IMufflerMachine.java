@@ -3,12 +3,21 @@ package com.gregtechceu.gtceu.api.machine.feature.multiblock;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.IHazardParticleContainer;
+import com.gregtechceu.gtceu.api.gui.GuiTextures;
+import com.gregtechceu.gtceu.api.gui.fancy.IFancyTooltip;
+import com.gregtechceu.gtceu.api.gui.fancy.TooltipsPanel;
 import com.gregtechceu.gtceu.api.machine.feature.IEnvironmentalHazardEmitter;
+import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.common.data.GTParticleTypes;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public interface IMufflerMachine extends IMultiPart, IEnvironmentalHazardEmitter {
 
@@ -82,7 +91,7 @@ public interface IMufflerMachine extends IMultiPart, IEnvironmentalHazardEmitter
      * default void attachFancyTooltipsToController(IMultiController controller, TooltipsPanel tooltipsPanel) {
      * attachTooltips(tooltipsPanel);
      * }
-     * 
+     *
      * @Override
      * default void attachTooltips(TooltipsPanel tooltipsPanel) {
      * tooltipsPanel.attachTooltips(new IFancyTooltip.Basic(

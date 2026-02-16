@@ -5,6 +5,12 @@ import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.cover.filter.ItemFilter;
+import com.gregtechceu.gtceu.api.gui.GuiTextures;
+import com.gregtechceu.gtceu.api.gui.WidgetUtils;
+import com.gregtechceu.gtceu.api.gui.editor.EditableMachineUI;
+import com.gregtechceu.gtceu.api.gui.editor.EditableUI;
+import com.gregtechceu.gtceu.api.gui.widget.IntInputWidget;
+import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
@@ -32,10 +38,13 @@ import com.gregtechceu.gtceu.common.data.mui.GTMuiMachineUtil;
 import com.gregtechceu.gtceu.common.data.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.config.ConfigHolder;
+import com.gregtechceu.gtceu.data.lang.LangHandler;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -112,6 +121,7 @@ public class ItemCollectorMachine extends TieredEnergyMachine
         this.output = createOutputItemHandler();
         this.chargerInventory = createChargerItemHandler();
         this.filterInventory = createFilterItemHandler();
+        environmentalExplosionTrait.setEnableEnvironmentalExplosions(false);
         this.autoOutput = AutoOutputTrait.ofItems(this, output);
         maxRange = (int) Math.pow(2, tier + 2);
         range = maxRange;
@@ -174,8 +184,8 @@ public class ItemCollectorMachine extends TieredEnergyMachine
     @Override
     public void onMachineDestroyed() {
         super.onMachineDestroyed();
-        clearInventory(chargerInventory);
-        clearInventory(output.storage);
+        chargerInventory.dropInventoryInWorld(getLevel(), getBlockPos());
+        output.dropInventoryInWorld();
     }
 
     //////////////////////////////////////

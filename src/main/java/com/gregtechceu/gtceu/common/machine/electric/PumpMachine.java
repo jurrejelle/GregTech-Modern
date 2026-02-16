@@ -3,7 +3,13 @@ package com.gregtechceu.gtceu.common.machine.electric;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.gui.GuiTextures;
+import com.gregtechceu.gtceu.api.gui.UITemplate;
+import com.gregtechceu.gtceu.api.gui.widget.TankWidget;
+import com.gregtechceu.gtceu.api.gui.widget.ToggleButtonWidget;
 import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IUIMachine;
+import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
@@ -24,6 +30,10 @@ import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
+
+import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
+import com.lowdragmc.lowdraglib.gui.widget.ImageWidget;
+import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
@@ -76,11 +86,16 @@ public class PumpMachine extends TieredEnergyMachine implements IMuiMachine {
     @SyncToClient
     public final AutoOutputTrait autoOutput;
 
+    @SaveField
+    @SyncToClient
+    public final AutoOutputTrait autoOutput;
+
     public PumpMachine(BlockEntityCreationInfo info, int tier) {
         super(info, tier);
         this.cache = new NotifiableFluidTank(this, 1, 16 * FluidType.BUCKET_VOLUME * Math.max(1, getTier()), IO.NONE,
                 IO.OUT);
         this.autoOutput = AutoOutputTrait.ofFluids(this, cache);
+        environmentalExplosionTrait.setEnableEnvironmentalExplosions(false);
     }
 
     //////////////////////////////////////
@@ -91,11 +106,6 @@ public class PumpMachine extends TieredEnergyMachine implements IMuiMachine {
     public void onLoad() {
         super.onLoad();
         subscribeServerTick(this::update);
-    }
-
-    @Override
-    public boolean shouldWeatherOrTerrainExplosion() {
-        return false;
     }
 
     //////////////////////////////////////

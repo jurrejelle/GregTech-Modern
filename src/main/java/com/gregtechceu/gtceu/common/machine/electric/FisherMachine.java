@@ -5,9 +5,10 @@ import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.machine.*;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
+import com.gregtechceu.gtceu.api.machine.TickableSubscription;
+import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
 import com.gregtechceu.gtceu.api.mui.drawable.ItemDrawable;
@@ -35,6 +36,7 @@ import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.lang.LangHandler;
 import com.gregtechceu.gtceu.utils.ISubscription;
+
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -127,6 +129,7 @@ public class FisherMachine extends TieredEnergyMachine
                         GTCapabilityHelper.getForgeEnergyItem(item) != null));
 
         autoOutput = AutoOutputTrait.ofItems(this, cache);
+        environmentalExplosionTrait.setEnableEnvironmentalExplosions(false);
     }
 
     public void setWorkingEnabled(boolean enabled) {
@@ -166,16 +169,11 @@ public class FisherMachine extends TieredEnergyMachine
     }
 
     @Override
-    public boolean shouldWeatherOrTerrainExplosion() {
-        return false;
-    }
-
-    @Override
     public void onMachineDestroyed() {
         super.onMachineDestroyed();
-        clearInventory(chargerInventory);
-        clearInventory(baitHandler.storage);
-        clearInventory(cache.storage);
+        chargerInventory.dropInventoryInWorld(getLevel(), getBlockPos());
+        baitHandler.dropInventoryInWorld();
+        cache.dropInventoryInWorld();
     }
 
     public static int calcMaxProgress(int tier) {

@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.api.item.IComponentItem;
 import com.gregtechceu.gtceu.api.item.component.IItemComponent;
 import com.gregtechceu.gtceu.api.item.component.IMonitorModuleItem;
 import com.gregtechceu.gtceu.api.machine.feature.IDataInfoProvider;
+import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockDisplayText;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
@@ -658,8 +659,8 @@ public class CentralMonitorMachine extends WorkableElectricMultiblockMachine
     public void onMachineDestroyed() {
         super.onMachineDestroyed();
         for (MonitorGroup group : monitorGroups) {
-            clearInventory(group.getItemStackHandler());
-            clearInventory(group.getPlaceholderSlotsHandler());
+            group.getItemStackHandler().dropInventoryInWorld(getLevel(), getBlockPos());;
+            group.getPlaceholderSlotsHandler().dropInventoryInWorld(getLevel(), getBlockPos());
         }
     }
 }

@@ -19,6 +19,8 @@ import com.gregtechceu.gtceu.api.mui.widgets.SlotGroupWidget;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Column;
 import com.gregtechceu.gtceu.api.mui.widgets.layout.Row;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
+import com.gregtechceu.gtceu.common.data.GTRecipeModifiers;
+import com.gregtechceu.gtceu.common.machine.multiblock.part.ParallelHatchPartMachine;
 import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
 import com.gregtechceu.gtceu.client.mui.screen.UISettings;
 import com.gregtechceu.gtceu.common.data.mui.GTMuiWidgets;
@@ -59,6 +61,11 @@ public class WorkableElectricMultiblockMachine extends WorkableMultiblockMachine
 
     public WorkableElectricMultiblockMachine(BlockEntityCreationInfo info) {
         super(info);
+    }
+
+    @Override
+    public WorkableElectricMultiblockMachine self() {
+        return this;
     }
 
     //////////////////////////////////////
