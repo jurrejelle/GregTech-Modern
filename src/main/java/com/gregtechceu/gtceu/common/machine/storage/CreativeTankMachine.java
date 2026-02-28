@@ -18,7 +18,6 @@ import com.lowdragmc.lowdraglib.gui.widget.*;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -83,18 +82,6 @@ public class CreativeTankMachine extends QuantumTankMachine {
         if (value.isEmpty()) return;
         mBPerCycle = Integer.parseInt(value);
         onFluidChanged();
-    }
-
-    @Override
-    public void saveToItem(@NotNull CompoundTag tag) {
-        tag.putInt("mBPerCycle", mBPerCycle);
-        tag.putInt("ticksPerCycle", ticksPerCycle);
-    }
-
-    @Override
-    public void loadFromItem(@NotNull CompoundTag tag) {
-        mBPerCycle = tag.getInt("mBPerCycle");
-        ticksPerCycle = tag.getInt("ticksPerCycle");
     }
 
     @Override
@@ -173,7 +160,7 @@ public class CreativeTankMachine extends QuantumTankMachine {
     }
 
     @Override
-    public void applyImplicitComponents(@NotNull ExDataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         CreativeMachineInfo info = componentInput.get(GTDataComponents.CREATIVE_MACHINE_INFO);
         if (info != null) {
@@ -186,13 +173,6 @@ public class CreativeTankMachine extends QuantumTankMachine {
     public void collectImplicitComponents(DataComponentMap.@NotNull Builder components) {
         super.collectImplicitComponents(components);
         components.set(GTDataComponents.CREATIVE_MACHINE_INFO, new CreativeMachineInfo(mBPerCycle, ticksPerCycle));
-    }
-
-    @Override
-    public void removeItemComponentsFromTag(@NotNull CompoundTag tag) {
-        super.removeItemComponentsFromTag(tag);
-        tag.remove("mBPerCycle");
-        tag.remove("ticksPerCycle");
     }
 
     private class InfiniteCache extends FluidCache {

@@ -9,8 +9,6 @@ import com.gregtechceu.gtceu.api.machine.feature.IDropSaveMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
-import com.gregtechceu.gtceu.config.ConfigHolder;
-import com.gregtechceu.gtceu.utils.GTTransferUtils;
 
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
@@ -20,7 +18,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +32,7 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -114,7 +112,7 @@ public class DrumMachine extends MetaMachine implements IDropSaveMachine {
     //////////////////////////////////////
 
     @Override
-    public void applyImplicitComponents(@NotNull ExDataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         stored = componentInput.getOrDefault(GTDataComponents.FLUID_CONTENT, SimpleFluidContent.EMPTY).copy();
         // "stored" may not be same as cache (due to item's fluid cap). we should update it.
@@ -125,13 +123,6 @@ public class DrumMachine extends MetaMachine implements IDropSaveMachine {
     public void collectImplicitComponents(DataComponentMap.@NotNull Builder components) {
         super.collectImplicitComponents(components);
         components.set(GTDataComponents.FLUID_CONTENT, SimpleFluidContent.copyOf(stored));
-    }
-
-    @Override
-    public void removeItemComponentsFromTag(@NotNull CompoundTag tag) {
-        super.removeItemComponentsFromTag(tag);
-        tag.remove("Fluid");
-        tag.remove("cache");
     }
 
     @Override

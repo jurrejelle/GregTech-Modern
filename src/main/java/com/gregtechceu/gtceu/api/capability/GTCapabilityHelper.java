@@ -80,11 +80,6 @@ public class GTCapabilityHelper {
     }
 
     @Nullable
-    public static ICleanroomReceiver getCleanroomReceiver(Level level, BlockPos pos, @Nullable Direction side) {
-        return level.getCapability(GTCapability.CAPABILITY_CLEANROOM_RECEIVER, pos, side);
-    }
-
-    @Nullable
     public static IMaintenanceMachine getMaintenanceMachine(Level level, BlockPos pos, @Nullable Direction side) {
         return level.getCapability(GTCapability.CAPABILITY_MAINTENANCE_MACHINE, pos, side);
     }

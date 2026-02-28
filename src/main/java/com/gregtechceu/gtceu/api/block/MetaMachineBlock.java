@@ -16,7 +16,7 @@ import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.misc.EnergyInfoProviderList;
 import com.gregtechceu.gtceu.api.misc.LaserContainerList;
-import com.gregtechceu.gtceu.common.data.GTBlockStateProperties;
+import com.gregtechceu.gtceu.api.block.property.GTBlockStateProperties;
 import com.gregtechceu.gtceu.api.sync_system.ManagedSyncBlockEntity;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
@@ -327,7 +327,7 @@ public class MetaMachineBlock extends Block implements EntityBlock {
     // ***** Redstone Signals ****//
     //////////////////////////////////////
 
-    public boolean canConnectRedstone(BlockGetter level, BlockPos pos, Direction side) {
+    public boolean canConnectRedstone(BlockGetter level, BlockPos pos, @Nullable Direction side) {
         var machine = MetaMachine.getMachine(level, pos);
         if (machine == null) return false;
         return machine.canConnectRedstone(side);

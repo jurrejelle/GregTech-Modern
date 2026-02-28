@@ -8,7 +8,6 @@ import com.gregtechceu.gtceu.api.item.datacomponents.CreativeMachineInfo;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
-import com.gregtechceu.gtceu.utils.GTUtil;
 
 import com.lowdragmc.lowdraglib.gui.texture.GuiTextureGroup;
 import com.lowdragmc.lowdraglib.gui.texture.ResourceBorderTexture;
@@ -17,8 +16,6 @@ import com.lowdragmc.lowdraglib.gui.widget.*;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -29,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 public class CreativeChestMachine extends QuantumChestMachine {
 
@@ -131,7 +127,7 @@ public class CreativeChestMachine extends QuantumChestMachine {
     }
 
     @Override
-    public void applyImplicitComponents(@NotNull ExDataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         CreativeMachineInfo info = componentInput.get(GTDataComponents.CREATIVE_MACHINE_INFO);
         if (info != null) {
@@ -141,16 +137,9 @@ public class CreativeChestMachine extends QuantumChestMachine {
     }
 
     @Override
-    public void collectImplicitComponents(DataComponentMap.@NotNull Builder components) {
+    public void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(GTDataComponents.CREATIVE_MACHINE_INFO, new CreativeMachineInfo(itemsPerCycle, ticksPerCycle));
-    }
-
-    @Override
-    public void removeItemComponentsFromTag(@NotNull CompoundTag tag) {
-        super.removeItemComponentsFromTag(tag);
-        tag.remove("itemsPerCycle");
-        tag.remove("ticksPerCycle");
     }
 
     private class InfiniteCache extends ItemCache {
@@ -160,7 +149,7 @@ public class CreativeChestMachine extends QuantumChestMachine {
         }
 
         @Override
-        public @NotNull ItemStack getStackInSlot(int slot) {
+        public ItemStack getStackInSlot(int slot) {
             return stored;
         }
 
@@ -170,19 +159,19 @@ public class CreativeChestMachine extends QuantumChestMachine {
         }
 
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             if (!stored.isEmpty() && ItemStack.isSameItemSameComponents(stored, stack)) return ItemStack.EMPTY;
             return stack;
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (!stored.isEmpty()) return stored.copyWithCount(itemsPerCycle);
             return ItemStack.EMPTY;
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isItemValid(int slot, ItemStack stack) {
             return true;
         }
 

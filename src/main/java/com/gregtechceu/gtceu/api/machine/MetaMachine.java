@@ -11,7 +11,6 @@ import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.capability.IToolable;
-import com.gregtechceu.gtceu.api.capability.*;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.data.RotationState;
@@ -42,7 +41,7 @@ import com.gregtechceu.gtceu.client.util.ModelUtils;
 import com.gregtechceu.gtceu.common.cover.FluidFilterCover;
 import com.gregtechceu.gtceu.common.cover.ItemFilterCover;
 import com.gregtechceu.gtceu.common.cover.data.ManualIOMode;
-import com.gregtechceu.gtceu.common.data.GTBlockStateProperties;
+import com.gregtechceu.gtceu.api.block.property.GTBlockStateProperties;
 import com.gregtechceu.gtceu.common.data.item.GTItemAbilities;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.common.machine.owner.PlayerOwner;
@@ -57,7 +56,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -74,7 +72,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -94,7 +91,6 @@ import org.jetbrains.annotations.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBlockEntity, IToolable, IToolGridHighlight,
                          IFancyTooltip, IPaintable, IMachineFeature, ICopyable {
@@ -202,28 +198,17 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
     public void modifyDrops(List<ItemStack> drops) {}
 
-    public void applyImplicitComponents(ExDataComponentInput componentInput) {}
-
-    public void collectImplicitComponents(DataComponentMap.Builder components) {}
-
-    public void removeItemComponentsFromTag(CompoundTag tag) {
-        // Just clear the tag by default.
-        Set.copyOf(tag.getAllKeys()).forEach(tag::remove);
-    }
+    /**
+     * Applies item stack component data when this machine is placed.
+     * @param componentInput Component Input
+     */
+    protected void applyImplicitComponents(DataComponentInput componentInput) {}
 
     /**
-     * Extending interface to make {@link BlockEntity.DataComponentInput} public as it's protected by default.
+     * Saves this machine's data to item stack components.
+     * @param components Component Builder
      */
-    public interface ExDataComponentInput extends BlockEntity.DataComponentInput {
-
-        default boolean has(DataComponentType<?> type) {
-            return get(type) != null;
-        }
-
-        default boolean has(Supplier<? extends DataComponentType<?>> type) {
-            return has(type.get());
-        }
-    }
+    public void collectImplicitComponents(DataComponentMap.Builder components) {}
 
     //////////////////////////////////////
     // ***** Tickable Manager ****//
@@ -331,7 +316,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
                 result = Pair.of(GTToolType.SOFT_MALLET, coverBehavior.onSoftMalletClick(playerIn, hand, itemStack, hitResult));
             } else result = Pair.of(GTToolType.SOFT_MALLET, onSoftMalletClick(playerIn, hand, itemStack, gridSide, hitResult));
         } else if (toolType.contains(GTToolType.WRENCH)) {
-            result = Pair.of(GTToolType.WRENCH, onWrenchClick(playerIn, hand, gridSide, hitResult));
+            result = Pair.of(GTToolType.WRENCH, onWrenchClick(playerIn, hand, itemStack, gridSide, hitResult));
         } else if (toolType.contains(GTToolType.CROWBAR)) {
             if (coverBehavior != null && itemStack.canPerformAction(GTItemAbilities.CROWBAR_REMOVE_COVER)) {
                 if (!isRemote()) {
@@ -348,7 +333,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
         for (var trait : getTraitHolder().getAllTraits()) {
             if (trait instanceof IInteractionTrait interactionTrait) {
-                var r = interactionTrait.onToolClick(toolType, playerIn, hand, gridSide, itemStack, hitResult);
+                var r = interactionTrait.onToolClick(toolType, playerIn, hand, gridSide, hitResult);
                 if (r.getSecond() != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return r;
             }
         }
@@ -377,14 +362,14 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    protected ItemInteractionResult onWrenchClick(Player playerIn, InteractionHand hand, Direction gridSide,
-                                              BlockHitResult hitResult) {
+    protected ItemInteractionResult onWrenchClick(Player player, InteractionHand hand, ItemStack held, Direction gridSide,
+                                                  BlockHitResult hitResult) {
         if (gridSide == getFrontFacing() && allowExtendedFacing()) {
-            setUpwardsFacing(playerIn.isShiftKeyDown() ? getUpwardsFacing().getCounterClockWise() :
+            setUpwardsFacing(player.isShiftKeyDown() ? getUpwardsFacing().getCounterClockWise() :
                     getUpwardsFacing().getClockWise());
             return ItemInteractionResult.sidedSuccess(isRemote());
         }
-        if (playerIn.isShiftKeyDown()) {
+        if (player.isShiftKeyDown()) {
             if (gridSide == getFrontFacing() || !isFacingValid(gridSide)) {
                 return ItemInteractionResult.FAIL;
             }
@@ -661,7 +646,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
     }
 
     @Override
-    public @NotNull ModelData getModelData() {
+    public ModelData getModelData() {
         ModelData.Builder data = super.getModelData().derive();
         updateModelData(data);
         return data.build();
@@ -672,7 +657,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
                 Direction.NORTH;
     }
 
-    public void setUpwardsFacing(@NotNull Direction upwardsFacing) {
+    public void setUpwardsFacing(Direction upwardsFacing) {
         if (!getDefinition().isAllowExtendedFacing()) {
             return;
         }
@@ -712,7 +697,6 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
     public void animateTick(RandomSource random) {}
 
-    @NotNull
     public BlockState getBlockAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
                                          @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         var appearance = getCoverContainer().getBlockAppearance(state, level, pos, side, sourceState, sourcePos);
@@ -768,7 +752,8 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         return 0;
     }
 
-    public boolean canConnectRedstone(@NotNull Direction side) {
+    public boolean canConnectRedstone(@Nullable Direction side) {
+        if (side == null) return false;
         // For some reason, Minecraft requests the output signal from the opposite side...
         CoverBehavior cover = getCoverContainer().getCoverAtSide(side);
         if (cover == null) return false;
@@ -903,7 +888,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         String mainKey = String.format("%s.machine.%s.tooltip", getDefinition().getId().getNamespace(),
                 getDefinition().getId().getPath());
         if (Language.getInstance().has(mainKey)) {
-            tooltips.add(0, Component.translatable(mainKey));
+            tooltips.addFirst(Component.translatable(mainKey));
         }
     }
 

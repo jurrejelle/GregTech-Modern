@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.machine.trait.feature.IRenderingTrait;
 import com.gregtechceu.gtceu.api.sync_system.annotations.RerenderOnChanged;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
+import com.gregtechceu.gtceu.common.data.item.GTItemAbilities;
 import com.gregtechceu.gtceu.common.item.tool.behavior.ToolModeSwitchBehavior;
 import com.gregtechceu.gtceu.utils.GTTransferUtils;
 import com.gregtechceu.gtceu.utils.ISubscription;
@@ -23,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -42,8 +43,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-
-import static com.gregtechceu.gtceu.api.item.tool.ToolHelper.getBehaviorsTag;
 
 public class AutoOutputTrait extends MachineTrait implements IRenderingTrait, IInteractionTrait, IFrontFacingTrait {
 
@@ -324,9 +323,9 @@ public class AutoOutputTrait extends MachineTrait implements IRenderingTrait, II
     }
 
     @Override
-    public Pair<GTToolType, InteractionResult> onToolClick(Set<GTToolType> toolType, Player player,
-                                                           InteractionHand hand, Direction gridSide,
-                                                           BlockHitResult hitResult) {
+    public Pair<GTToolType, ItemInteractionResult> onToolClick(Set<GTToolType> toolType,
+                                                               Player player, InteractionHand hand, Direction gridSide,
+                                                               BlockHitResult hitResult) {
         if (useDefaultToolHandlers) {
             if (toolType.contains(GTToolType.WRENCH)) {
                 return Pair.of(GTToolType.WRENCH, onWrenchClick(player, hand, gridSide, hitResult));
@@ -338,32 +337,29 @@ public class AutoOutputTrait extends MachineTrait implements IRenderingTrait, II
         return IInteractionTrait.super.onToolClick(toolType, player, hand, gridSide, hitResult);
     }
 
-    private InteractionResult onWrenchClick(Player player, InteractionHand hand, Direction gridSide,
+    private ItemInteractionResult onWrenchClick(Player player, InteractionHand hand, Direction gridSide,
                                             BlockHitResult hitResult) {
         var itemStack = player.getItemInHand(hand);
-        var tagCompound = getBehaviorsTag(itemStack);
-        ToolModeSwitchBehavior.WrenchModeType type = ToolModeSwitchBehavior.WrenchModeType.VALUES[tagCompound
-                .getByte("Mode")];
 
         boolean hasChanged = false;
-        if (type.isItem()) {
+        if (ToolModeSwitchBehavior.INSTANCE.canPerformAction(itemStack, GTItemAbilities.WRENCH_CONFIGURE_ITEMS)) {
             if ((!machine.hasFrontFacing() || gridSide != machine.getFrontFacing()) &&
                     itemOutputDirectionValidator.test(gridSide)) {
                 setItemOutputDirection(gridSide);
                 hasChanged = true;
             }
         }
-        if (type.isFluid()) {
+        if (ToolModeSwitchBehavior.INSTANCE.canPerformAction(itemStack, GTItemAbilities.WRENCH_CONFIGURE_FLUIDS)) {
             if ((!machine.hasFrontFacing() || gridSide != machine.getFrontFacing()) &&
                     fluidOutputDirectionValidator.test(gridSide)) {
                 setFluidOutputDirection(gridSide);
                 hasChanged = true;
             }
         }
-        return hasChanged ? InteractionResult.sidedSuccess(machine.isRemote()) : InteractionResult.PASS;
+        return hasChanged ? ItemInteractionResult.sidedSuccess(machine.isRemote()) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    private InteractionResult onScrewdriverClick(Player player, InteractionHand hand, Direction gridSide,
+    private ItemInteractionResult onScrewdriverClick(Player player, InteractionHand hand, Direction gridSide,
                                                  BlockHitResult hitResult) {
         boolean hasChanged = false;
         if (player.isShiftKeyDown()) {
@@ -395,6 +391,6 @@ public class AutoOutputTrait extends MachineTrait implements IRenderingTrait, II
                 hasChanged = true;
             }
         }
-        return hasChanged ? InteractionResult.sidedSuccess(player.level().isClientSide) : InteractionResult.PASS;
+        return hasChanged ? ItemInteractionResult.sidedSuccess(player.level().isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

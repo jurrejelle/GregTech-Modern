@@ -34,7 +34,6 @@ import com.lowdragmc.lowdraglib.gui.widget.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -48,7 +47,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +54,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-@NotNullByDefault
 public class QuantumChestMachine extends TieredMachine implements IControllable,
                                  IDropSaveMachine, IFancyUIMachine {
 
@@ -125,7 +122,7 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
     }
 
     @Override
-    public void applyImplicitComponents(ExDataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         LargeItemContent storage = componentInput.getOrDefault(GTDataComponents.LARGE_ITEM_CONTENT,
                 LargeItemContent.EMPTY);
@@ -137,13 +134,6 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
     public void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(GTDataComponents.LARGE_ITEM_CONTENT, new LargeItemContent(stored, storedAmount));
-    }
-
-    @Override
-    public void removeItemComponentsFromTag(CompoundTag tag) {
-        super.removeItemComponentsFromTag(tag);
-        tag.remove("stored");
-        tag.remove("storedAmount");
     }
 
     //////////////////////////////////////
@@ -322,7 +312,7 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
         return group;
     }
 
-    private @NotNull CustomItemStackHandler createImportItems() {
+    private CustomItemStackHandler createImportItems() {
         var importItems = new CustomItemStackHandler();
         importItems.setFilter(cache::canInsert);
         importItems.setOnContentsChanged(() -> {
@@ -339,9 +329,10 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
     //////////////////////////////////////
     // ******* Rendering ********//
     //////////////////////////////////////
+
     @Override
-    public @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
-                                              Direction side) {
+    public @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state,
+                                              Set<GTToolType> toolTypes, ItemStack held, Direction side) {
         if (toolTypes.contains(GTToolType.SOFT_MALLET)) {
             if (side == getFrontFacing()) return null;
         }
@@ -372,12 +363,12 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
         }
 
         @Override
-        public @NotNull ItemStack getStackInSlot(int slot) {
+        public ItemStack getStackInSlot(int slot) {
             return stored.copyWithCount(GTMath.saturatedCast(storedAmount));
         }
 
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             long free = isVoiding ? Long.MAX_VALUE : maxAmount - storedAmount;
             long canStore = 0;
             if ((stored.isEmpty() || ItemStack.isSameItemSameComponents(stored, stack)) && filter.test(stack)) {
@@ -392,7 +383,7 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (stored.isEmpty()) return ItemStack.EMPTY;
             long toExtract = Math.min(storedAmount, amount);
             var copy = stored.copyWithCount((int) toExtract);
@@ -415,11 +406,11 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isItemValid(int slot, ItemStack stack) {
             return filter.test(stack);
         }
 
-        public void exportToNearby(@NotNull Direction... facings) {
+        public void exportToNearby(Direction... facings) {
             if (stored.isEmpty()) return;
             var level = getMachine().getLevel();
             var pos = getMachine().getBlockPos();

@@ -19,6 +19,7 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.SizedIngredientExtensions;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.data.GTEnchantmentProviders;
 import com.gregtechceu.gtceu.common.data.GTItems;
@@ -27,14 +28,13 @@ import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.common.data.item.GTItemAbilities;
-import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
-import com.gregtechceu.gtceu.utils.DummyMachineBlockEntity;
 import com.gregtechceu.gtceu.utils.DummyRecipeCapabilityHolder;
 import com.gregtechceu.gtceu.utils.InfiniteEnergyContainer;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -367,14 +367,14 @@ public class ToolHelper {
                         new InfiniteEnergyContainer(null, GTValues.V[GTValues.LV],
                                 GTValues.V[GTValues.LV], 1, GTValues.V[GTValues.LV], 1),
                         new NotifiableItemStackHandler(null, 1, IO.IN, IO.IN,
-                                (slots) -> new CustomItemStackHandler(silktouchDrop)));
+                                (slots) -> new CustomItemStackHandler(silkTouchDrop)));
 
                 RecipeHandlerList dummyOutputs = RecipeHandlerList.of(IO.OUT,
                         new NotifiableItemStackHandler(null, 2, IO.OUT));
                 DummyRecipeCapabilityHolder capHolder = new DummyRecipeCapabilityHolder(dummyInputs, dummyOutputs);
 
                 Map<RecipeCapability<?>, Object2IntMap<?>> cacheChances = new IdentityHashMap<>();
-                for (RecipeCapability<?> cap : GTRegistries.RECIPE_CAPABILITIES.values()) {
+                for (RecipeCapability<?> cap : GTRegistries.RECIPE_CAPABILITIES) {
                     cacheChances.put(cap, cap.makeChanceCache());
                 }
 

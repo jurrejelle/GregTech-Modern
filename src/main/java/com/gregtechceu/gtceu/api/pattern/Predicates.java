@@ -34,14 +34,13 @@ import net.minecraft.world.level.material.Fluid;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.gregtechceu.gtceu.common.data.GTBlockStateProperties.ACTIVE;
+import static com.gregtechceu.gtceu.api.block.property.GTBlockStateProperties.ACTIVE;
 import static com.gregtechceu.gtceu.common.data.GTBlocks.BORDERLESS_LAMPS;
 import static com.gregtechceu.gtceu.common.data.GTBlocks.LAMPS;
 import static com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine.PMC_BATTERY_HEADER;

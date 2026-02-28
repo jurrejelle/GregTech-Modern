@@ -33,7 +33,7 @@ public interface IInteractionTrait extends ITraitFeature {
 
     /// Called when a player interacts with a machine with a tool.
     default Pair<GTToolType, ItemInteractionResult> onToolClick(Set<GTToolType> toolType,
-                                                                Player player, InteractionHand hand, Direction gridSide, ItemStack held,
+                                                                Player player, InteractionHand hand, Direction gridSide,
                                                                 BlockHitResult hitResult) {
         return Pair.of(null, ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
