@@ -9,5 +9,4 @@ public class GTGuis {
     public static ModularPanel<?> createPanel(MetaMachine machine, int width, int height) {
         return ModularPanel.defaultPanel(machine.getDefinition().getId().getPath(), width, height);
     }
-
 }

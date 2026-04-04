@@ -28,8 +28,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import com.mojang.datafixers.util.Pair;
 import brachy.modularui.drawable.UITexture;
+import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
@@ -160,7 +160,7 @@ public abstract class CoverBehavior implements ISyncManaged, IToolGridHighlight,
 
     public InteractionResult onScrewdriverClick(ExtendedUseOnContext context) {
         if (this instanceof IMuiCover muiCover) {
-            if (playerIn instanceof ServerPlayer serverPlayer) {
+            if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
                 CoverUIFactory.INSTANCE.open(serverPlayer, muiCover);
             }
             return InteractionResult.sidedSuccess(coverHolder.isRemote());
