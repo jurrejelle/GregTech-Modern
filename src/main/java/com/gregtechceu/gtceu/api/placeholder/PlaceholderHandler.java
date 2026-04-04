@@ -1,32 +1,13 @@
 package com.gregtechceu.gtceu.api.placeholder;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
-import com.gregtechceu.gtceu.api.mui.base.drawable.IDrawable;
-import com.gregtechceu.gtceu.api.mui.base.drawable.IKey;
-import com.gregtechceu.gtceu.api.mui.base.value.IBoolValue;
-import com.gregtechceu.gtceu.api.mui.base.value.IIntValue;
-import com.gregtechceu.gtceu.api.mui.base.value.IStringValue;
-import com.gregtechceu.gtceu.api.mui.drawable.BorderDrawable;
-import com.gregtechceu.gtceu.api.mui.utils.Alignment;
-import com.gregtechceu.gtceu.api.mui.value.StringValue;
-import com.gregtechceu.gtceu.api.mui.value.sync.*;
-import com.gregtechceu.gtceu.api.mui.widgets.ButtonWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.SortableListWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.TextWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.ToggleButton;
-import com.gregtechceu.gtceu.api.mui.widgets.layout.Flow;
-import com.gregtechceu.gtceu.api.mui.widgets.slot.ItemSlot;
-import com.gregtechceu.gtceu.api.mui.widgets.textfield.CodeEditorWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.textfield.TextFieldWidget;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.PlaceholderException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnclosedBracketException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnexpectedBracketException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnknownPlaceholderException;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
 import com.gregtechceu.gtceu.client.renderer.monitor.IMonitorRenderer;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
+import com.gregtechceu.gtceu.common.mui.drawable.BorderDrawable;
+import com.gregtechceu.gtceu.common.mui.widgets.textfield.CodeEditorWidget;
 import com.gregtechceu.gtceu.data.lang.LangHandler;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -45,6 +26,24 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import brachy.modularui.api.IPanelHandler;
+import brachy.modularui.api.drawable.IDrawable;
+import brachy.modularui.api.drawable.IKey;
+import brachy.modularui.api.value.IBoolValue;
+import brachy.modularui.api.value.IIntValue;
+import brachy.modularui.api.value.IStringValue;
+import brachy.modularui.drawable.GuiTextures;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.RichTooltip;
+import brachy.modularui.value.StringValue;
+import brachy.modularui.value.sync.*;
+import brachy.modularui.widgets.ButtonWidget;
+import brachy.modularui.widgets.SortableListWidget;
+import brachy.modularui.widgets.TextWidget;
+import brachy.modularui.widgets.ToggleButton;
+import brachy.modularui.widgets.layout.Flow;
+import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.textfield.TextFieldWidget;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.util.*;
@@ -295,7 +294,7 @@ public class PlaceholderHandler {
         syncManager.syncValue("run_code_sync_handler", runCodeOnce);
         // because the args are nullable, intellij complains about everything, even though childIf is used
         // noinspection DataFlowIssue
-        return syncManager.syncedPanel(name, true, (psm, handler) -> new ModularPanel(name)
+        return syncManager.syncedPanel(name, true, (psm, handler) -> new ModularPanel<>(name)
                 .size(400, 250)
                 .resizeableOnDrag(true)
                 .excludeAreaInRecipeViewer()
@@ -334,19 +333,19 @@ public class PlaceholderHandler {
                                                 .marginLeft(4))
                                         .childIf(pause != null, () -> new ToggleButton()
                                                 .value(pause)
-                                                .background(false, GTGuiTextures.PAUSE)
-                                                .background(true, GTGuiTextures.PLAY)
+                                                .background(false, GuiTextures.PAUSE)
+                                                .background(true, GuiTextures.PLAY)
                                                 .addTooltip(false, IKey.lang("gtceu.gui.central_monitor.pause"))
                                                 .addTooltip(true, IKey.lang("gtceu.gui.central_monitor.resume"))
                                                 .margin(4))
                                         .childIf(updateText != null, () -> new ButtonWidget<>()
-                                                .background(GTGuiTextures.RIGHTLOAD)
-                                                .hoverBackground(GTGuiTextures.RIGHTLOAD, new BorderDrawable())
+                                                .background(GuiTextures.RIGHTLOAD)
+                                                .hoverBackground(GuiTextures.RIGHTLOAD, new BorderDrawable())
                                                 .addTooltipLine(IKey.lang("gtceu.gui.central_monitor.update_once"))
                                                 .syncHandler("run_code_sync_handler"))
                                         .child(new ButtonWidget<>()
-                                                .background(GTGuiTextures.HELP)
-                                                .hoverBackground(GTGuiTextures.HELP, new BorderDrawable())
+                                                .background(GuiTextures.HELP)
+                                                .hoverBackground(GuiTextures.HELP, new BorderDrawable())
                                                 .margin(4)
                                                 .onMousePressed((mouseX, mouseY, button) -> {
                                                     helpPanel.openPanel();
@@ -368,7 +367,7 @@ public class PlaceholderHandler {
                                         .map(w -> w
                                                 .child(new TextWidget<>(w.getWidgetValue())
                                                         .sizeRel(1)
-                                                        .align(Alignment.CENTER))
+                                                        .center())
                                                 .tooltip(new RichTooltip()
                                                         .addDrawableLines(LangHandler
                                                                 .getSingleOrMultiLang(
@@ -380,8 +379,8 @@ public class PlaceholderHandler {
                                         .toList()))));
     }
 
-    public static ModularPanel createHelpPanel() {
-        return new ModularPanel("placeholder_language_help")
+    public static ModularPanel<?> createHelpPanel() {
+        return new ModularPanel<>("placeholder_language_help")
                 .size(500, 250)
                 .child(Flow.column()
                         .padding(5)

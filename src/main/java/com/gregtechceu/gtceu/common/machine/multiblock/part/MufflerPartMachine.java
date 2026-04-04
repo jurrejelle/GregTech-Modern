@@ -11,20 +11,12 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IWorkableMultiContro
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.hazard.EnvironmentalHazardEmitterTrait;
-import com.gregtechceu.gtceu.api.mui.factory.PosGuiData;
-import com.gregtechceu.gtceu.api.mui.utils.Alignment;
-import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
-import com.gregtechceu.gtceu.api.mui.widget.ParentWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.SlotGroupWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.layout.Flow;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.UISettings;
 import com.gregtechceu.gtceu.common.data.GTMedicalConditions;
 import com.gregtechceu.gtceu.common.data.GTParticleTypes;
-import com.gregtechceu.gtceu.common.data.mui.GTMuiWidgets;
+import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -34,6 +26,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import brachy.modularui.factory.PosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.utils.Alignment;
+import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
+import brachy.modularui.widgets.SlotGroupWidget;
+import brachy.modularui.widgets.layout.Flow;
 import lombok.Getter;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ import java.util.stream.IntStream;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.gregtechceu.gtceu.common.data.mui.GTMuiMachineUtil.createSquareSlotGroupFromInventory;
+import static com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil.createSquareSlotGroupFromInventory;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -178,11 +178,11 @@ public class MufflerPartMachine extends TieredPartMachine implements IMuiMachine
     // ********** GUI ***********//
     //////////////////////////////////////
     @Override
-    public @NotNull ModularPanel buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                         @NotNull UISettings settings) {
+    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
+                                            @NotNull UISettings settings) {
         int size = (int) Math.sqrt(inventory.getSlots());
 
-        return new ModularPanel(this.getDefinition().getName())
+        return new ModularPanel<>(this.getDefinition().getName())
                 .size(Math.max(176, 20 + (18 * size)), 100 + (18 * size))
                 .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
                 .child(new ParentWidget<>()
@@ -190,7 +190,7 @@ public class MufflerPartMachine extends TieredPartMachine implements IMuiMachine
                         .height(20 + 18 * size)
                         .child(Flow.row()
                                 .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .align(Alignment.CENTER)
+                                .center()
                                 .coverChildren()
                                 .child(createSquareSlotGroupFromInventory(inventory, "muffler_inventory", syncManager)
                                         .marginLeft(30)
@@ -202,7 +202,7 @@ public class MufflerPartMachine extends TieredPartMachine implements IMuiMachine
                         .height(76)
                         .child(Flow.row()
                                 .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .align(Alignment.CENTER).coverChildren().child(
+                                .center().coverChildren().child(
                                         SlotGroupWidget.playerInventory(false))));
     }
 }

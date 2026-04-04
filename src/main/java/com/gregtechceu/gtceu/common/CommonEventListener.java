@@ -27,7 +27,6 @@ import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
 import com.gregtechceu.gtceu.api.item.armor.ArmorComponentItem;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.mui.theme.ThemeManager;
 import com.gregtechceu.gtceu.api.pattern.MultiblockWorldSavedData;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.capability.EnvironmentalHazardSavedData;
@@ -261,8 +260,6 @@ public class CommonEventListener {
         event.addListener(new GTOreLoader());
         event.addListener(new BedrockFluidLoader());
         event.addListener(new BedrockOreLoader());
-        if (GTCEu.isClientThread())
-            event.addListener(new ThemeManager());
     }
 
     @SubscribeEvent

@@ -6,7 +6,7 @@ import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfigurator;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.IToolGridHighlight;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
+import com.gregtechceu.gtceu.api.mui.factory.CoverUIFactory;
 import com.gregtechceu.gtceu.api.sync_system.ISyncManaged;
 import com.gregtechceu.gtceu.api.sync_system.SyncDataHolder;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import com.mojang.datafixers.util.Pair;
+import brachy.modularui.drawable.UITexture;
 import lombok.Getter;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
@@ -159,8 +160,8 @@ public abstract class CoverBehavior implements ISyncManaged, IToolGridHighlight,
 
     public InteractionResult onScrewdriverClick(ExtendedUseOnContext context) {
         if (this instanceof IMuiCover muiCover) {
-            if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
-                com.gregtechceu.gtceu.common.mui.factory.CoverUIFactory.INSTANCE.open(serverPlayer, muiCover);
+            if (playerIn instanceof ServerPlayer serverPlayer) {
+                CoverUIFactory.INSTANCE.open(serverPlayer, muiCover);
             }
             return InteractionResult.sidedSuccess(coverHolder.isRemote());
         }

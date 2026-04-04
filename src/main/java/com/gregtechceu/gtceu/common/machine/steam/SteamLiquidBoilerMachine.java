@@ -5,18 +5,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.steam.SteamBoilerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
-import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
-import com.gregtechceu.gtceu.api.mui.factory.PosGuiData;
-import com.gregtechceu.gtceu.api.mui.utils.Alignment;
-import com.gregtechceu.gtceu.api.mui.value.sync.DoubleSyncValue;
-import com.gregtechceu.gtceu.api.mui.value.sync.FluidSlotSyncHandler;
-import com.gregtechceu.gtceu.api.mui.value.sync.PanelSyncManager;
-import com.gregtechceu.gtceu.api.mui.widgets.ProgressWidget;
-import com.gregtechceu.gtceu.api.mui.widgets.layout.Row;
-import com.gregtechceu.gtceu.api.mui.widgets.slot.FluidSlot;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.UISettings;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
@@ -29,6 +18,17 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.factory.PosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.utils.Alignment;
+import brachy.modularui.value.sync.DoubleSyncValue;
+import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widgets.ProgressWidget;
+import brachy.modularui.widgets.layout.Flow;
+import brachy.modularui.widgets.slot.FluidSlot;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 
@@ -77,7 +77,7 @@ public class SteamLiquidBoilerMachine extends SteamBoilerMachine {
     }
 
     @Override
-    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
         UITexture progressTexture = isHighPressure() ? GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_STEEL :
                 GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_BRONZE;
 
@@ -88,7 +88,7 @@ public class SteamLiquidBoilerMachine extends SteamBoilerMachine {
                 }));
 
         return super.buildUI(data, syncManager, settings)
-                .child(new Row()
+                .child(Flow.row()
                         .coverChildren()
                         .right(12).top(12)
                         .childPadding(4)
@@ -102,8 +102,7 @@ public class SteamLiquidBoilerMachine extends SteamBoilerMachine {
                         .child(new FluidSlot()
                                 .syncHandler(new FluidSlotSyncHandler(fuelTank.getStorages()[0])
                                         .canFillSlot(true).canDrainSlot(true))
-                                .size(14, 54)
-                                .displayAmount(false)));
+                                .size(14, 54)));
     }
 
     /*

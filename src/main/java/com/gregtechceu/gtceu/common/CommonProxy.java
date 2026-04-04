@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.common;
 
+import brachy.modularui.factory.GuiManager;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
@@ -18,15 +19,13 @@ import com.gregtechceu.gtceu.api.data.worldgen.generator.IndicatorGenerators;
 import com.gregtechceu.gtceu.api.data.worldgen.generator.VeinGenerators;
 import com.gregtechceu.gtceu.api.gui.factory.GTUIEditorFactory;
 import com.gregtechceu.gtceu.api.gui.factory.MachineUIFactory;
-import com.gregtechceu.gtceu.api.mui.factory.UIFactories;
-import com.gregtechceu.gtceu.api.mui.factory.inventory.InventoryTypes;
+import com.gregtechceu.gtceu.api.mui.factory.CoverUIFactory;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.ingredient.*;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.*;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.fluid.*;
 import com.gregtechceu.gtceu.api.recipe.lookup.ingredient.item.*;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
-import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import com.gregtechceu.gtceu.common.data.*;
 import com.gregtechceu.gtceu.common.data.GTPlaceholders;
 import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
@@ -35,7 +34,6 @@ import com.gregtechceu.gtceu.common.item.tool.rotation.CustomBlockRotations;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.FusionReactorMachine;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuiTheme;
 import com.gregtechceu.gtceu.common.network.GTNetwork;
 import com.gregtechceu.gtceu.common.registry.GTRegistration;
 import com.gregtechceu.gtceu.common.unification.material.MaterialRegistryManager;
@@ -72,7 +70,6 @@ import net.minecraftforge.common.crafting.IntersectionIngredient;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -104,12 +101,10 @@ public class CommonProxy {
         ConfigHolder.init();
         GTCEuAPI.initializeHighTier();
 
-        /* MUI Initialization */
-        UIFactories.init();
-        InventoryTypes.init();
-
+        // MUI stuff
         GTGuiTextures.init();
-        GTGuiTheme.registerThemes();
+        GuiManager.registerFactory(com.gregtechceu.gtceu.api.mui.factory.MachineUIFactory.INSTANCE);
+        GuiManager.registerFactory(CoverUIFactory.INSTANCE);
 
         if (GTCEu.isDev()) {
             ConfigHolder.INSTANCE.recipes.generateLowQualityGems = true;
@@ -217,6 +212,7 @@ public class CommonProxy {
         FusionReactorMachine.registerFusionTier(GTValues.UV, " (MKIII)");
     }
 
+    @SubscribeEvent
     public void preInit(FMLConstructModEvent event) {}
 
     private static void initMaterials() {
@@ -310,13 +306,6 @@ public class CommonProxy {
                 CCTweakedPlugin.init();
             }
         });
-    }
-
-    @SubscribeEvent
-    public static void onTick(TickEvent.PlayerTickEvent event) {
-        if (event.player.containerMenu instanceof ModularContainerMenu containerMenu) {
-            containerMenu.onUpdate();
-        }
     }
 
     @SubscribeEvent
