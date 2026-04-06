@@ -187,17 +187,6 @@ public class MetaMachineBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-                                       Player player) {
-        ItemStack itemStack = super.getCloneItemStack(state, target, level, pos, player);
-        MetaMachine machine = MetaMachine.getMachine(level, pos);
-        if (machine instanceof IDropSaveMachine dropSaveMachine && dropSaveMachine.savePickClone()) {
-            dropSaveMachine.saveToItem(itemStack, level.registryAccess());
-        }
-        return itemStack;
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext level, List<Component> tooltip,
                                 TooltipFlag flag) {
         definition.getTooltipBuilder().accept(stack, tooltip);
@@ -244,14 +233,12 @@ public class MetaMachineBlock extends Block implements EntityBlock {
         BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (be instanceof MetaMachine machine) {
             machine.modifyDrops(drops);
-            if (machine instanceof IDropSaveMachine dropSaveMachine && dropSaveMachine.saveBreak()) {
                 for (ItemStack drop : drops) {
                     if (drop.getItem() instanceof MetaMachineItem item && item.getBlock() == this) {
-                        dropSaveMachine.saveToItem(drop, be.getLevel().registryAccess());
+                        machine.saveToItem(drop, be.getLevel().registryAccess());
                         // break here to not dupe contents if a machine drops multiple of itself for whatever reason.
                         break;
                     }
-                }
             }
         }
         return drops;

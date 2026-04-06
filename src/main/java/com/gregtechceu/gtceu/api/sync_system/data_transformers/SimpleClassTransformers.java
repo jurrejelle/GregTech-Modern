@@ -1,10 +1,7 @@
 package com.gregtechceu.gtceu.api.sync_system.data_transformers;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.IntArrayTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -17,12 +14,14 @@ public class SimpleClassTransformers {
 
         @Override
         public Tag serializeNBT(ItemStack value, TransformerContext<ItemStack> context) {
+            if (value.isEmpty()) return new CompoundTag();
             return value.save(context.lookup());
         }
 
         @Override
         public @Nullable ItemStack deserializeNBT(Tag tag, TransformerContext<ItemStack> context) {
-            return ItemStack.parse(context.lookup(), tag).orElse(ItemStack.EMPTY);
+            if (!(tag instanceof CompoundTag compoundTag) || compoundTag.isEmpty()) return ItemStack.EMPTY;
+            return ItemStack.CODEC.parse(context.lookup().createSerializationContext(NbtOps.INSTANCE), compoundTag).getOrThrow();
         }
     }
 
@@ -30,12 +29,14 @@ public class SimpleClassTransformers {
 
         @Override
         public Tag serializeNBT(FluidStack value, TransformerContext<FluidStack> context) {
+            if (value.isEmpty()) return new CompoundTag();
             return value.save(context.lookup());
         }
 
         @Override
         public @Nullable FluidStack deserializeNBT(Tag tag, TransformerContext<FluidStack> context) {
-            return FluidStack.parse(context.lookup(), tag).orElse(FluidStack.EMPTY);
+            if (!(tag instanceof CompoundTag compoundTag) || compoundTag.isEmpty()) return FluidStack.EMPTY;
+            return FluidStack.CODEC.parse(context.lookup().createSerializationContext(NbtOps.INSTANCE), compoundTag).getOrThrow();
         }
     }
 

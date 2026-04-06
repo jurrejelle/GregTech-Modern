@@ -8,7 +8,6 @@ import com.gregtechceu.gtceu.api.gui.widget.PhantomFluidWidget;
 import com.gregtechceu.gtceu.api.gui.widget.TankWidget;
 import com.gregtechceu.gtceu.api.gui.widget.ToggleButtonWidget;
 import com.gregtechceu.gtceu.api.machine.*;
-import com.gregtechceu.gtceu.api.machine.feature.IDropSaveMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.MachineTrait;
@@ -47,7 +46,7 @@ import java.util.function.Predicate;
 
 @NotNullByDefault
 public class QuantumTankMachine extends TieredMachine implements IControllable,
-                                IDropSaveMachine, IFancyUIMachine {
+                                IFancyUIMachine {
 
     public static Object2LongMap<MachineDefinition> TANK_CAPACITY = Util.make(new Object2LongArrayMap<>(), map -> {
         map.defaultReturnValue(-1L);
@@ -102,16 +101,6 @@ public class QuantumTankMachine extends TieredMachine implements IControllable,
             syncDataHolder.markClientSyncFieldDirty("storedAmount");
             syncDataHolder.markClientSyncFieldDirty("stored");
         }
-    }
-
-    @Override
-    public boolean savePickClone() {
-        return false;
-    }
-
-    @Override
-    public boolean saveBreak() {
-        return !stored.isEmpty();
     }
 
     //////////////////////////////////////

@@ -42,6 +42,7 @@ public class MonitorGroupTransformer implements ValueTransformer<MonitorGroup> {
         ListTag list = compoundTag.getList("positions", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             int[] aint = list.getIntArray(i);
+            if (aint.length != 3) continue;
             group.add(new BlockPos(aint[0], aint[1], aint[2]));
         }
         if (compoundTag.contains("targetPos", Tag.TAG_COMPOUND)) {

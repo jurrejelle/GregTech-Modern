@@ -5,7 +5,6 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IDropSaveMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
@@ -31,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DrumMachine extends MetaMachine implements IDropSaveMachine {
+public class DrumMachine extends MetaMachine {
 
     @Getter
     private final int maxStoredFluids;
@@ -113,12 +112,7 @@ public class DrumMachine extends MetaMachine implements IDropSaveMachine {
     @Override
     public void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(GTDataComponents.FLUID_CONTENT, SimpleFluidContent.copyOf(stored));
-    }
-
-    @Override
-    public boolean savePickClone() {
-        return false;
+        if (!stored.isEmpty()) components.set(GTDataComponents.FLUID_CONTENT, SimpleFluidContent.copyOf(stored));
     }
 
     @Override
@@ -136,10 +130,5 @@ public class DrumMachine extends MetaMachine implements IDropSaveMachine {
     protected InteractionResult onScrewdriverClick(ExtendedUseOnContext context) {
         autoOutput.setAllowAutoOutputItems(!autoOutput.isAutoOutputItems());
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    public boolean saveBreak() {
-        return !stored.isEmpty();
     }
 }

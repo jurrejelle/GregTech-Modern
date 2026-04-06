@@ -11,7 +11,6 @@ import com.gregtechceu.gtceu.api.item.datacomponents.LargeItemContent;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TieredMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IDropSaveMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.MachineTrait;
@@ -52,7 +51,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public class QuantumChestMachine extends TieredMachine implements IControllable,
-                                 IDropSaveMachine, IFancyUIMachine {
+                                 IFancyUIMachine {
 
     /**
      * Sourced from FunctionalStorage's
@@ -109,16 +108,6 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
     }
 
     @Override
-    public boolean savePickClone() {
-        return false;
-    }
-
-    @Override
-    public boolean saveBreak() {
-        return !stored.isEmpty();
-    }
-
-    @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         LargeItemContent storage = componentInput.getOrDefault(GTDataComponents.LARGE_ITEM_CONTENT,
@@ -130,7 +119,7 @@ public class QuantumChestMachine extends TieredMachine implements IControllable,
     @Override
     public void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(GTDataComponents.LARGE_ITEM_CONTENT, new LargeItemContent(stored, storedAmount));
+        if (!stored.isEmpty()) components.set(GTDataComponents.LARGE_ITEM_CONTENT, new LargeItemContent(stored, storedAmount));
     }
 
     //////////////////////////////////////

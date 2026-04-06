@@ -29,7 +29,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 
 import lombok.Getter;
 
-public class CrateMachine extends MetaMachine implements IUIMachine, IDropSaveMachine {
+public class CrateMachine extends MetaMachine implements IUIMachine {
 
     @Getter
     private final Material material;
@@ -112,11 +112,6 @@ public class CrateMachine extends MetaMachine implements IUIMachine, IDropSaveMa
             components.set(GTDataComponents.TAPED, Unit.INSTANCE);
             components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory.storage.getStacks()));
         }
-    }
-
-    @Override
-    public boolean saveBreak() {
-        return isTaped;
     }
 
     @Override
