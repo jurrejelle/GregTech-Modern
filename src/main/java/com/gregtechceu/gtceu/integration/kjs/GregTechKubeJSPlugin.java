@@ -127,7 +127,7 @@ import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
 import dev.latvian.mods.rhino.Wrapper;
 import org.jetbrains.annotations.ApiStatus;
 
-public class GTKubeJSPlugin implements KubeJSPlugin {
+public class GregTechKubeJSPlugin implements KubeJSPlugin {
 
     @ApiStatus.Internal
     public static void registerWrappers(RegisterEvent event) {
