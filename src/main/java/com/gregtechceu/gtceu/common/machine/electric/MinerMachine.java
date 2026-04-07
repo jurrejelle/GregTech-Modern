@@ -17,7 +17,6 @@ import com.gregtechceu.gtceu.common.item.behavior.PortableScannerBehavior;
 import com.gregtechceu.gtceu.common.machine.trait.miner.MinerLogic;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.ISubscription;
@@ -30,11 +29,11 @@ import net.minecraft.world.InteractionResult;
 
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.utils.Color;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.TextWidget;
 import brachy.modularui.widgets.layout.Flow;
 import com.mojang.blaze3d.MethodsReturnNonnullByDefault;
@@ -216,17 +215,16 @@ public class MinerMachine extends WorkableTieredMachine
     }
 
     // TODO(Onion): fix the gui stuff for this
+
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel<>(getDefinition().getName())
-                .width(220)
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 220))
-                .bindPlayerInventory()
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget
                 .child(Flow.row()
+                        .width(220)
                         .coverChildrenHeight()
                         .margin(5)
                         .childPadding(5)
-                        .widthRel(1f)
                         .child(Flow.column()
                                 .crossAxisAlignment(Alignment.CrossAxis.START)
                                 .padding(5)
@@ -241,19 +239,6 @@ public class MinerMachine extends WorkableTieredMachine
                                             .orElse(Component.empty());
                                 })).color(Color.WHITE.main)))
                         .child(GTMuiMachineUtil.createSquareSlotGroupFromInventory(exportItems, "export_inv",
-                                syncManager)))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .excludeAreaInRecipeViewer()
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this::isWorkingEnabled, this::setWorkingEnabled,
-                                syncManager))
-                        .child(GTMuiWidgets.createBatterySlot(getChargerInventory(), 0, syncManager))
-                        .child(GTMuiWidgets.createAutoOutputItemButton(this.autoOutput, syncManager)));
+                                syncManager)));
     }
 }

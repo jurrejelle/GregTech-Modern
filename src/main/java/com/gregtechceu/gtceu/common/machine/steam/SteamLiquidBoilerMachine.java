@@ -20,12 +20,12 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
@@ -77,7 +77,10 @@ public class SteamLiquidBoilerMachine extends SteamBoilerMachine {
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        super.buildMainUI(mainWidget, guiData, syncManager, settings);
+
         UITexture progressTexture = isHighPressure() ? GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_STEEL :
                 GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_BRONZE;
 
@@ -87,34 +90,22 @@ public class SteamLiquidBoilerMachine extends SteamBoilerMachine {
                     return recipeLogic.getProgressPercent();
                 }));
 
-        return super.buildUI(data, syncManager, settings)
-                .child(Flow.row()
-                        .coverChildren()
-                        .right(12).top(12)
-                        .childPadding(4)
-                        .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                        .child(new ProgressWidget()
-                                .size(18)
-                                .texture(progressTexture, 18)
-                                .value(progressPercent)
-                                .direction(ProgressWidget.Direction.UP)
-                                .setEnabledIf((w) -> progressPercent.getFloatValue() > -1f))
-                        .child(new FluidSlot()
-                                .syncHandler(new FluidSlotSyncHandler(fuelTank.getStorages()[0])
-                                        .canFillSlot(true).canDrainSlot(true))
-                                .size(14, 54)));
+        mainWidget.child(Flow.row()
+                .coverChildren()
+                .right(12).top(12)
+                .childPadding(4)
+                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
+                .child(new ProgressWidget()
+                        .size(18)
+                        .texture(progressTexture, 18)
+                        .value(progressPercent)
+                        .direction(ProgressWidget.Direction.UP)
+                        .setEnabledIf((w) -> progressPercent.getFloatValue() > -1f))
+                .child(new FluidSlot()
+                        .syncHandler(new FluidSlotSyncHandler(fuelTank.getStorages()[0])
+                                .canFillSlot(true).canDrainSlot(true))
+                        .size(14, 54)));
     }
-
-    /*
-     * @Override
-     * public ModularUI createUI(Player entityPlayer) {
-     * return super.createUI(entityPlayer)
-     * .widget(new TankWidget(fuelTank.getStorages()[0], 119, 26, 10, 54, true, true)
-     * .setShowAmount(false)
-     * .setFillDirection(ProgressTexture.FillDirection.DOWN_TO_UP)
-     * .setBackground(GuiTextures.PROGRESS_BAR_BOILER_EMPTY.get(isHighPressure)));
-     * }
-     */
 
     @Override
     protected void randomDisplayTick(RandomSource random, float x, float y, float z) {

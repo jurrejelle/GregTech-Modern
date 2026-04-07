@@ -16,7 +16,6 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.data.GTMedicalConditions;
 import com.gregtechceu.gtceu.common.data.GTParticleTypes;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -27,16 +26,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import lombok.Getter;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.IntStream;
@@ -177,32 +171,12 @@ public class MufflerPartMachine extends TieredPartMachine implements IMuiMachine
     //////////////////////////////////////
     // ********** GUI ***********//
     //////////////////////////////////////
-    @Override
-    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                            @NotNull UISettings settings) {
-        int size = (int) Math.sqrt(inventory.getSlots());
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(Math.max(176, 20 + (18 * size)), 100 + (18 * size))
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(1)
-                        .height(20 + 18 * size)
-                        .child(Flow.row()
-                                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .center()
-                                .coverChildren()
-                                .child(createSquareSlotGroupFromInventory(inventory, "muffler_inventory", syncManager)
-                                        .marginLeft(30)
-                                        .marginRight(30)
-                                        .verticalCenter())))
-                .child(new ParentWidget<>()
-                        .bottom(7)
-                        .widthRel(1)
-                        .height(76)
-                        .child(Flow.row()
-                                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .center().coverChildren().child(
-                                        SlotGroupWidget.playerInventory(false))));
+    @Override
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget
+                .child(createSquareSlotGroupFromInventory(inventory, "muffler_inventory", syncManager).margin(10)
+                        .center());
     }
 }

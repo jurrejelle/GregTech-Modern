@@ -7,15 +7,15 @@ import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IHasBatterySlot;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanel;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
@@ -29,14 +29,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.value.sync.ItemSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.widgets.SlotGroupWidget;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.layout.Flow;
-import brachy.modularui.widgets.slot.ItemSlot;
-import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +43,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlockBreakerMachine extends TieredEnergyMachine
-                                 implements IMuiMachine, IControllable {
+                                 implements IMuiMachine, IControllable, IHasBatterySlot {
 
     @SaveField
     protected final NotifiableItemStackHandler cache;
@@ -272,116 +268,17 @@ public class BlockBreakerMachine extends TieredEnergyMachine
     //////////////////////////////////////
     // ********** GUI ***********//
     //////////////////////////////////////
-    /*
-     * public static BiFunction<ResourceLocation, Integer, EditableMachineUI> EDITABLE_UI_CREATOR = Util
-     * .memoize((path, inventorySize) -> new EditableMachineUI("misc", path, () -> {
-     * var template = createTemplate(inventorySize).createDefault();
-     * var energyBar = createEnergyBar().createDefault();
-     * var batterySlot = createBatterySlot().createDefault();
-     * var energyGroup = new WidgetGroup(0, 0, energyBar.getSize().width, energyBar.getSize().height + 20);
-     * batterySlot.setSelfPosition(
-     * new Position((energyBar.getSize().width - 18) / 2, energyBar.getSize().height + 1));
-     * energyGroup.addWidget(energyBar);
-     * energyGroup.addWidget(batterySlot);
-     * var group = new WidgetGroup(0, 0,
-     * Math.max(energyGroup.getSize().width + template.getSize().width + 4 + 8, 172),
-     * Math.max(template.getSize().height + 8, energyGroup.getSize().height + 8));
-     * var size = group.getSize();
-     * energyGroup.setSelfPosition(new Position(3, (size.height - energyGroup.getSize().height) / 2));
-     *
-     * template.setSelfPosition(new Position(
-     * (size.width - 4 - template.getSize().width) / 2 + 4,
-     * (size.height - template.getSize().height) / 2));
-     *
-     * group.addWidget(energyGroup);
-     * group.addWidget(template);
-     * return group;
-     * }, (template, machine) -> {
-     * if (machine instanceof BlockBreakerMachine blockBreakerMachine) {
-     * createTemplate(inventorySize).setupUI(template, blockBreakerMachine);
-     * createEnergyBar().setupUI(template, blockBreakerMachine);
-     * createBatterySlot().setupUI(template, blockBreakerMachine);
-     * }
-     * }));
-     *
-     * protected static EditableUI<SlotWidget, BlockBreakerMachine> createBatterySlot() {
-     * return new EditableUI<>("battery_slot", SlotWidget.class, () -> {
-     * var slotWidget = new SlotWidget();
-     * slotWidget.setBackground(GuiTextures.SLOT, GuiTextures.CHARGER_OVERLAY);
-     * return slotWidget;
-     * }, (slotWidget, machine) -> {
-     * slotWidget.setHandlerSlot(machine.chargerInventory, 0);
-     * slotWidget.setCanPutItems(true);
-     * slotWidget.setCanTakeItems(true);
-     * slotWidget.setHoverTooltips(LangHandler.getMultiLang("gtceu.gui.charger_slot.tooltip",
-     * GTValues.VNF[machine.getTier()], GTValues.VNF[machine.getTier()]).toArray(new MutableComponent[0]));
-     * });
-     * }
-     *
-     * protected static EditableUI<WidgetGroup, BlockBreakerMachine> createTemplate(int inventorySize) {
-     * return new EditableUI<>("functional_container", WidgetGroup.class, () -> {
-     * int rowSize = (int) Math.sqrt(inventorySize);
-     * WidgetGroup main = new WidgetGroup(0, 0, rowSize * 18 + 8, rowSize * 18 + 8);
-     * for (int y = 0; y < rowSize; y++) {
-     * for (int x = 0; x < rowSize; x++) {
-     * int index = y * rowSize + x;
-     * SlotWidget slotWidget = new SlotWidget();
-     * slotWidget.initTemplate();
-     * slotWidget.setSelfPosition(new Position(4 + x * 18, 4 + y * 18));
-     * slotWidget.setBackground(GuiTextures.SLOT);
-     * slotWidget.setId("slot_" + index);
-     * main.addWidget(slotWidget);
-     * }
-     * }
-     * main.setBackground(GuiTextures.BACKGROUND_INVERSE);
-     * return main;
-     * }, (group, machine) -> {
-     * WidgetUtils.widgetByIdForEach(group, "^slot_[0-9]+$", SlotWidget.class, slot -> {
-     * var index = WidgetUtils.widgetIdIndex(slot);
-     * if (index >= 0 && index < machine.cache.getSlots()) {
-     * slot.setHandlerSlot(machine.cache, index);
-     * slot.setCanTakeItems(true);
-     * slot.setCanPutItems(false);
-     * }
-     * });
-     * });
-     * }
-     */
 
     // TODO: Needs EIO type side selection widget when that's done
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel<?> panel = new ModularPanel<>(this.getDefinition().getName());
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         var slotHeight = (int) Math.sqrt(inventorySize);
-        panel
-                .size(176, 104 + 18 * slotHeight)
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 190))
+        mainWidget
                 .child(Flow.col()
-                        .coverChildren()
+                        .size(MachineUIPanel.DEFAULT_CONTENT_WIDTH, 18 * slotHeight)
+                        .margin(0, 10)
                         .child(GTMuiMachineUtil.createSquareSlotGroupFromInventory(this.cache, "output_cache",
-                                syncManager))
-                        .leftRel(0.5f)
-                        .top(10))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this::isWorkingEnabled, this::setWorkingEnabled,
-                                syncManager))
-                        .child(createBatterySlot(syncManager))
-                        .child(GTMuiWidgets.createAutoOutputItemButton(autoOutput, syncManager))
-                        .excludeAreaInRecipeViewer());
-        return panel;
-    }
-
-    public ItemSlot createBatterySlot(PanelSyncManager syncManager) {
-        ItemSlotSyncHandler battery = new ItemSlotSyncHandler(new ModularSlot(this.chargerInventory, 0));
-        syncManager.syncValue("battery", battery);
-        return new ItemSlot().syncHandler("battery").background(GTGuiTextures.SLOT, GTGuiTextures.CHARGER_OVERLAY);
+                                syncManager)));
     }
 }

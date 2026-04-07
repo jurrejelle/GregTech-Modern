@@ -9,7 +9,6 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableEnergyContainer;
 import com.gregtechceu.gtceu.api.sync_system.ClassSyncData;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.data_transformers.ValueTransformer;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHostTrait;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -20,6 +19,7 @@ import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 
 import brachy.modularui.api.drawable.IDrawable;
+import brachy.modularui.drawable.GuiTextures;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -121,6 +121,6 @@ public class HullMachine extends TieredPartMachine implements IMonitorComponent 
 
     @Override
     public IDrawable getIcon() {
-        return GTGuiTextures.CROSS;
+        return GuiTextures.CROSS;
     }
 }

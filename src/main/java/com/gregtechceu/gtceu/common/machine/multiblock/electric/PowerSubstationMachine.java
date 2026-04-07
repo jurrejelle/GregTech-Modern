@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.ConditionalSubscriptionHandler;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMaintenanceMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.IBatteryData;
@@ -17,11 +18,10 @@ import com.gregtechceu.gtceu.api.machine.trait.MachineTraitType;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
+
+import com.lowdragmc.lowdraglib.gui.widget.*;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +35,6 @@ import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.GuiTextures;
 import brachy.modularui.drawable.Icon;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.BigIntegerSyncValue;
@@ -45,7 +44,6 @@ import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widget.Widget;
 import brachy.modularui.widgets.ListWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import com.google.common.annotations.VisibleForTesting;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -61,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PowerSubstationMachine extends WorkableMultiblockMachine
-                                    implements IEnergyInfoProvider, IMuiMachine {
+                                    implements IEnergyInfoProvider, IMuiMachine, IVoidable {
 
     // Structure Constants
     public static final int MAX_BATTERY_LAYERS = 18;
@@ -265,29 +263,16 @@ public class PowerSubstationMachine extends WorkableMultiblockMachine
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 176);
-
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(0.95f)
-                        .heightRel(.45f)
-                        .margin(4, 0)
-                        .left(3).top(5)
-                        .child(Flow.row()
-                                .child(getMainTextPanel(syncManager, 170, 84))))
-                .child(Flow.column()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this, syncManager))
-                        .child(GTMuiWidgets.createVoidingButton(this, syncManager)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-        return panel;
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget.child(new ParentWidget<>()
+                .widthRel(0.95f)
+                .heightRel(.65f)
+                .margin(4, 0)
+                .left(3).top(2)
+                .horizontalCenter()
+                .child(Flow.row()
+                        .child(getMainTextPanel(syncManager, 186, 146))));
     }
 
     public Widget<?> getMainTextPanel(PanelSyncManager syncManager, int width, int height) {
@@ -298,7 +283,7 @@ public class PowerSubstationMachine extends WorkableMultiblockMachine
                 .height(height - 6)
                 .childSeparator(Icon.EMPTY_2PX)
                 .crossAxisAlignment(Alignment.CrossAxis.START)
-                .leftRel(0)
+                .posRel(Alignment.CenterLeft)
                 .left(3)
                 .top(3);
         parentWidget.size(width, height)

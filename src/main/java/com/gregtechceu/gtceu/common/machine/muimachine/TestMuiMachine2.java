@@ -5,7 +5,6 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -21,6 +20,7 @@ import brachy.modularui.utils.Color;
 import brachy.modularui.utils.math.DAM;
 import brachy.modularui.value.sync.IntSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ButtonWidget;
 import brachy.modularui.widgets.layout.Flow;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,8 @@ public class TestMuiMachine2 extends MetaMachine implements IMuiMachine {
     private int val = 0;
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         IntSyncValue valSync = new IntSyncValue(() -> this.val, (v) -> {});
         syncManager.syncValue("valSync", valSync);
 
@@ -48,7 +49,7 @@ public class TestMuiMachine2 extends MetaMachine implements IMuiMachine {
 
         // return buildAspectRatioUI();
 
-        return GTGuis.createPanel(this, 176, 168)
+        mainWidget
                 .child(new ButtonWidget<>()
                         .size(60, 18)
                         .overlay(IKey.dynamic(() -> Component

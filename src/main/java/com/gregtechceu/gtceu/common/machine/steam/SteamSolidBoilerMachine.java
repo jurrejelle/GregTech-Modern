@@ -20,10 +20,10 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
@@ -124,7 +124,10 @@ public class SteamSolidBoilerMachine extends SteamBoilerMachine {
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        super.buildMainUI(mainWidget, guiData, syncManager, settings);
+
         UITexture progressTexture = isHighPressure() ? GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_STEEL :
                 GTGuiTextures.PROGRESS_BAR_BOILER_FUEL_BRONZE;
 
@@ -134,40 +137,21 @@ public class SteamSolidBoilerMachine extends SteamBoilerMachine {
                     return recipeLogic.getProgressPercent();
                 }));
 
-        return super.buildUI(data, syncManager, settings)
-                .child(Flow.col()
-                        .coverChildren()
-                        .right(18).top(7)
-                        .childPadding(4)
-                        .reverseLayout(true)
-                        .child(new ItemSlot()
-                                .slot(new ModularSlot(this.fuelHandler, 0)))
-                        .child(new ProgressWidget()
-                                .size(18)
-                                .texture(progressTexture, 18)
-                                .value(progressPercent)
-                                .direction(ProgressWidget.Direction.UP))
-                        .child(new ItemSlot()
-                                .slot(new ModularSlot(this.ashHandler, 0))));
+        mainWidget.child(Flow.col()
+                .coverChildren()
+                .right(18).top(7)
+                .childPadding(4)
+                .reverseLayout(true)
+                .child(new ItemSlot()
+                        .slot(new ModularSlot(this.fuelHandler, 0)))
+                .child(new ProgressWidget()
+                        .size(18)
+                        .texture(progressTexture, 18)
+                        .value(progressPercent)
+                        .direction(ProgressWidget.Direction.UP))
+                .child(new ItemSlot()
+                        .slot(new ModularSlot(this.ashHandler, 0))));
     }
-
-    /*
-     * @Override
-     * public ModularUI createUI(Player entityPlayer) {
-     * return super.createUI(entityPlayer)
-     * .widget(new SlotWidget(this.fuelHandler.storage, 0, 115, 62)
-     * .setBackgroundTexture(new GuiTextureGroup(GuiTextures.SLOT_STEAM.get(isHighPressure),
-     * GuiTextures.COAL_OVERLAY_STEAM.get(isHighPressure))))
-     * .widget(new SlotWidget(this.ashHandler.storage, 0, 115, 26, true, false)
-     * .setBackgroundTexture(new GuiTextureGroup(GuiTextures.SLOT_STEAM.get(isHighPressure),
-     * GuiTextures.DUST_OVERLAY_STEAM.get(isHighPressure))))
-     * .widget(new ProgressWidget(recipeLogic::getProgressPercent, 115, 44, 18, 18)
-     * .setProgressTexture(
-     * GuiTextures.PROGRESS_BAR_BOILER_FUEL.get(isHighPressure).getSubTexture(0, 0, 1, 0.5),
-     * GuiTextures.PROGRESS_BAR_BOILER_FUEL.get(isHighPressure).getSubTexture(0, 0.5, 1, 0.5))
-     * .setFillDirection(ProgressTexture.FillDirection.DOWN_TO_UP));
-     * }
-     */
 
     @Override
     public void onMachineDestroyed() {

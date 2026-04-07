@@ -1,14 +1,16 @@
 package com.gregtechceu.gtceu.common.mui;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.cover.filter.Filter;
 import com.gregtechceu.gtceu.api.cover.filter.FilterHandler;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
-import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IHasBatterySlot;
 import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.recipe.gui.GTRecipeTypeUILayout;
 import com.gregtechceu.gtceu.common.cover.data.BucketMode;
@@ -21,7 +23,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.items.IItemHandler;
 
 import brachy.modularui.api.IPanelHandler;
 import brachy.modularui.api.drawable.IDrawable;
@@ -105,25 +106,45 @@ public class GTMuiWidgets {
                         .size(Math.min(minPanelWidth, textTitleWidth), textHeight));
     }
 
-    public static ToggleButton createPowerButton(BooleanSupplier getter, BooleanConsumer setter,
-                                                 PanelSyncManager syncManager) {
-        BooleanSyncValue power = syncManager.getOrCreateSyncHandler("workingEnabled", BooleanSyncValue.class,
-                () -> new BooleanSyncValue(getter, setter));
+    public static ToggleButton createToggleButton(BooleanSupplier getter, BooleanConsumer setter, UITexture texture,
+                                                  String langKey) {
+        var value = new BooleanSyncValue(getter, setter);
         return new ToggleButton()
-                .value(new BoolValue.Dynamic(power::getBoolValue, power::setBoolValue))
-                .selectedBackground(GTGuiTextures.BUTTON_POWER[1])
-                .background(GTGuiTextures.BUTTON_POWER[0])
+                .value(value)
+                .overlay(texture)
                 .tooltipAutoUpdate(true)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable(
-                        power.getBoolValue() ? "behaviour.soft_hammer.enabled" :
-                                "behaviour.soft_hammer.disabled"))));
+                .tooltipBuilder(
+                        (r) -> r.addLine(IKey.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
     }
 
-    public static ToggleButton createPowerButton(IRecipeLogicMachine recipeLogicMachine, PanelSyncManager syncManager) {
-        return createPowerButton(
+    public static ToggleButton createToggleButton(BooleanSupplier getter, BooleanConsumer setter, UITexture background,
+                                                  UITexture selectedBackground, String langKey) {
+        var value = new BooleanSyncValue(getter, setter);
+        return new ToggleButton()
+                .value(value)
+                .selectedBackground(selectedBackground)
+                .background(background)
+                .tooltipAutoUpdate(true)
+                .tooltipBuilder(
+                        (r) -> r.addLine(IKey.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
+    }
+
+    public static ToggleButton createPowerButton(IRecipeLogicMachine recipeLogicMachine) {
+        return createToggleButton(
                 () -> recipeLogicMachine.getRecipeLogic().isWorkingEnabled(),
                 recipeLogicMachine::setWorkingEnabled,
-                syncManager);
+                GTGuiTextures.BUTTON_POWER[0],
+                GTGuiTextures.BUTTON_POWER[1],
+                "behaviour.soft_hammer");
+    }
+
+    public static ToggleButton createPowerButton(IControllable workable) {
+        return createToggleButton(
+                workable::isWorkingEnabled,
+                workable::setWorkingEnabled,
+                GTGuiTextures.BUTTON_POWER[0],
+                GTGuiTextures.BUTTON_POWER[1],
+                "behaviour.soft_hammer");
     }
 
     public static ProgressWidget createProgressBar(IRecipeLogicMachine workableMachine, PanelSyncManager syncManager,
@@ -143,73 +164,49 @@ public class GTMuiWidgets {
         return new FluidSlot().size(20, 58).alwaysShowFull(false);
     }
 
-    public static ItemSlot createBatterySlot(SimpleTieredMachine tieredMachine, PanelSyncManager syncManager) {
-        ItemSlotSyncHandler battery = new ItemSlotSyncHandler(new ModularSlot(tieredMachine.getChargerInventory(), 0));
+    public static ItemSlot createBatterySlot(IHasBatterySlot batterySlot, PanelSyncManager syncManager) {
+        ItemSlotSyncHandler battery = new ItemSlotSyncHandler(new ModularSlot(batterySlot.getChargerInventory(), 0));
         syncManager.syncValue("battery", battery);
         return new ItemSlot().syncHandler("battery").background(GTGuiTextures.SLOT, GTGuiTextures.CHARGER_OVERLAY);
     }
 
-    public static ItemSlot createBatterySlot(IItemHandler itemHandler, int slot, PanelSyncManager syncManager) {
-        ItemSlotSyncHandler battery = new ItemSlotSyncHandler(new ModularSlot(itemHandler, slot));
-        syncManager.syncValue("battery", battery);
-        return new ItemSlot().syncHandler("battery").background(GTGuiTextures.SLOT, GTGuiTextures.CHARGER_OVERLAY);
+    public static CycleButtonWidget createVoidingButton(IVoidable voidable) {
+        var value = new EnumSyncValue<>(IVoidable.VoidingMode.class, voidable::getVoidingMode,
+                voidable::setVoidingMode);
+
+        return new CycleButtonWidget()
+                .overlay(GTGuiTextures.BUTTON_VOID_MULTIBLOCK)
+                .value(value)
+                .tooltipBuilder(
+                        r -> r.addLine(IKey.dynamic(() -> Component.translatable(value.getValue().getTooltip()))));
     }
 
-    public static ToggleButton createVoidingButton(IVoidable machine, PanelSyncManager syncManager) {
-        // TODO pull in voiding mode pr
-        return new ToggleButton();
-        // EnumSyncValue voidMode = new EnumSyncValue(IVoidable.VoidingMode.class, machine.)
+    public static ToggleButton createDistinctnessButton(IDistinctPart distinct) {
+        return createToggleButton(distinct::isDistinct, distinct::setDistinct, GTGuiTextures.BUTTON_DISTINCT[0],
+                GTGuiTextures.BUTTON_DISTINCT[1],
+                "gtceu.multiblock.universal.distinct");
     }
 
-    public static ToggleButton createAutoOutputItemButton(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
-        BooleanSyncValue itemOutputs = new BooleanSyncValue(autoOutput::isAutoOutputItems,
-                autoOutput::setAllowAutoOutputItems);
-        syncManager.syncValue("auto_output_items", itemOutputs);
-        return new ToggleButton()
-                .value(new BoolValue.Dynamic(itemOutputs::getBoolValue, itemOutputs::setBoolValue))
-                .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
-                .tooltipAutoUpdate(true)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("gtceu.gui.item_auto_output",
-                        Component.translatable(itemOutputs.getBoolValue() ? "cover.voiding.label.enabled" :
-                                "cover.voiding.label.disabled")))));
+    public static ToggleButton createAutoOutputItemButton(AutoOutputTrait autoOutput) {
+        return createToggleButton(autoOutput::isAutoOutputItems, autoOutput::setAllowAutoOutputItems,
+                GTGuiTextures.BUTTON_ITEM_OUTPUT, "gtceu.gui.item_auto_output");
     }
 
-    public static ToggleButton createAutoOutputFluidButton(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
-        BooleanSyncValue fluidOutputs = new BooleanSyncValue(autoOutput::isAutoOutputFluids,
-                autoOutput::setAllowAutoOutputFluids);
-        syncManager.syncValue("auto_output_fluids", fluidOutputs);
-        return new ToggleButton()
-                .value(new BoolValue.Dynamic(fluidOutputs::getBoolValue, fluidOutputs::setBoolValue))
-                .overlay(GTGuiTextures.BUTTON_FLUID_OUTPUT)
-                .tooltipAutoUpdate(true)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("gtceu.gui.fluid_auto_output",
-                        Component.translatable(fluidOutputs.getBoolValue() ? "cover.voiding.label.enabled" :
-                                "cover.voiding.label.disabled")))));
+    public static ToggleButton createAutoOutputFluidButton(AutoOutputTrait autoOutput) {
+        return createToggleButton(autoOutput::isAutoOutputFluids, autoOutput::setAllowAutoOutputFluids,
+                GTGuiTextures.BUTTON_FLUID_OUTPUT, "gtceu.gui.fluid_auto_output");
     }
 
-    public static ToggleButton createInputFromOutputItem(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
-        BooleanSyncValue inputFromOutputItem = new BooleanSyncValue(autoOutput::allowsItemInputFromOutputSide,
-                autoOutput::setAllowItemInputFromOutputSide);
-        syncManager.syncValue("input_from_output_item", inputFromOutputItem);
-        return new ToggleButton()
-                .value(new BoolValue.Dynamic(inputFromOutputItem::getBoolValue, inputFromOutputItem::setBoolValue))
-                .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
-                .tooltipAutoUpdate(true)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("gtceu.gui.item_input_from_output",
-                        Component.translatable(inputFromOutputItem.getBoolValue() ? "cover.voiding.label.enabled" :
-                                "cover.voiding.label.disabled")))));
+    public static ToggleButton createInputFromOutputItem(AutoOutputTrait autoOutput) {
+        return createToggleButton(autoOutput::allowsItemInputFromOutputSide,
+                autoOutput::setAllowItemInputFromOutputSide, GTGuiTextures.BUTTON_ITEM_OUTPUT,
+                "gtceu.gui.item_input_from_output");
     }
 
-    public static ToggleButton createInputFromOutputFluid(AutoOutputTrait autoOutput, PanelSyncManager syncManager) {
-        BooleanSyncValue inputFromOutputFluid = new BooleanSyncValue(autoOutput::allowsFluidInputFromOutputSide,
-                autoOutput::setAllowFluidInputFromOutputSide);
-        syncManager.syncValue("input_from_output_fluid", inputFromOutputFluid);
-        return new ToggleButton()
-                .value(new BoolValue.Dynamic(inputFromOutputFluid::getBoolValue, inputFromOutputFluid::setBoolValue))
-                .overlay(GTGuiTextures.BUTTON_FLUID_OUTPUT)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("gtceu.gui.fluid_input_from_output",
-                        Component.translatable(inputFromOutputFluid.getBoolValue() ? "cover.voiding.label.enabled" :
-                                "cover.voiding.label.disabled")))));
+    public static ToggleButton createInputFromOutputFluid(AutoOutputTrait autoOutput) {
+        return createToggleButton(autoOutput::allowsFluidInputFromOutputSide,
+                autoOutput::setAllowFluidInputFromOutputSide, GTGuiTextures.BUTTON_FLUID_OUTPUT,
+                "gtceu.gui.fluid_input_from_output");
     }
 
     private static IntSyncValue createCircuitSlotSyncValue(Consumer<ItemStack> circuitSetter,

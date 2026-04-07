@@ -13,9 +13,6 @@ import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMa
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -28,20 +25,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.block.Block;
 
 import brachy.modularui.api.drawable.IKey;
-import brachy.modularui.drawable.GuiTextures;
-import brachy.modularui.drawable.Icon;
-import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
-import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
+import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widget.Widget;
-import brachy.modularui.widgets.ListWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import org.jetbrains.annotations.NotNull;
@@ -181,47 +168,9 @@ public class ActiveTransformerMachine extends WorkableElectricMultiblockMachine
                 .or(abilities(PartAbility.OUTPUT_LASER).setPreviewCount(1));
     }
 
-    @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 176);
+    public List<IWidget> getWidgetsForDisplay(PanelSyncManager syncManager) {
+        List<IWidget> widgets = new ArrayList<>();
 
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(0.95f)
-                        .heightRel(.45f)
-                        .margin(4, 0)
-                        .left(3).top(5)
-                        .child(Flow.row()
-                                .child(getMainTextPanel(syncManager, 170, 84))))
-                .child(Flow.column()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this, syncManager))
-                        .child(GTMuiWidgets.createVoidingButton(this, syncManager))
-                        .excludeAreaInRecipeViewer())
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-        return panel;
-    }
-
-    public Widget<?> getMainTextPanel(PanelSyncManager syncManager, int width, int height) {
-        var parentWidget = new ParentWidget<>();
-        var listWidget = new ListWidget<>();
-        listWidget
-                .width(width - 6)
-                .height(height - 6)
-                .childSeparator(Icon.EMPTY_2PX)
-                .crossAxisAlignment(Alignment.CrossAxis.START)
-                .leftRel(0)
-                .left(3)
-                .top(3);
-        parentWidget.size(width, height)
-                .background(GuiTextures.DISPLAY);
-        // Machine generic sync handlers
         BooleanSyncValue isFormed = syncManager.getOrCreateSyncHandler("isFormed", BooleanSyncValue.class,
                 () -> new BooleanSyncValue(this::isFormed));
         BooleanSyncValue workingEnabled = syncManager.getOrCreateSyncHandler("workingEnabled", BooleanSyncValue.class,
@@ -251,16 +200,16 @@ public class ActiveTransformerMachine extends WorkableElectricMultiblockMachine
         LongSyncValue outputPerSec = new LongSyncValue(this.powerOutput::getOutputPerSec);
         syncManager.syncValue("outputPerSec", outputPerSec);
 
-        listWidget.child(IKey.lang(Component.translatable("gtceu.multiblock.work_paused"))
+        widgets.add(IKey.lang(Component.translatable("gtceu.multiblock.work_paused"))
                 .asWidget()
                 .setEnabledIf((widget) -> isFormed.getBoolValue() && !workingEnabled.getBoolValue()));
 
-        listWidget.child(IKey.lang(Component.translatable("gtceu.multiblock.running"))
+        widgets.add(IKey.lang(Component.translatable("gtceu.multiblock.running"))
                 .asWidget()
                 .setEnabledIf(
                         (widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() && active.getBoolValue()));
 
-        listWidget.child(IKey.dynamic(() -> Component
+        widgets.add(IKey.dynamic(() -> Component
                 .translatable("gtceu.multiblock.active_transformer.max_input",
                         FormattingUtil.formatNumbers(
                                 Math.abs(inputVoltage.getLongValue() * inputAmperage.getLongValue()))))
@@ -268,7 +217,7 @@ public class ActiveTransformerMachine extends WorkableElectricMultiblockMachine
                 .setEnabledIf(
                         (widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() && active.getBoolValue()));
 
-        listWidget.child(IKey.dynamic(() -> Component
+        widgets.add(IKey.dynamic(() -> Component
                 .translatable("gtceu.multiblock.active_transformer.max_output",
                         FormattingUtil.formatNumbers(
                                 Math.abs(outputVoltage.getLongValue() * outputAmperage.getLongValue()))))
@@ -276,31 +225,31 @@ public class ActiveTransformerMachine extends WorkableElectricMultiblockMachine
                 .setEnabledIf(
                         (widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() && active.getBoolValue()));
 
-        listWidget.child(IKey.dynamic(() -> Component
+        widgets.add(IKey.dynamic(() -> Component
                 .translatable("gtceu.multiblock.active_transformer.average_in",
                         FormattingUtil.formatNumbers(Math.abs(inputPerSec.getLongValue() / 20))))
                 .asWidget()
                 .setEnabledIf(
                         (widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() && active.getBoolValue()));
 
-        listWidget.child(IKey.dynamic(() -> Component
+        widgets.add(IKey.dynamic(() -> Component
                 .translatable("gtceu.multiblock.active_transformer.average_out",
                         FormattingUtil.formatNumbers(Math.abs(outputPerSec.getLongValue() / 20))))
                 .asWidget()
                 .setEnabledIf(
                         (widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() && active.getBoolValue()));
 
-        listWidget.child(IKey.lang(Component.translatable("gtceu.multiblock.active_transformer.danger_enabled"))
+        widgets.add(IKey.lang(Component.translatable("gtceu.multiblock.active_transformer.danger_enabled"))
                 .asWidget()
                 .setEnabledIf((widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() &&
                         active.getBoolValue() && !ConfigHolder.INSTANCE.machines.harmlessActiveTransformers));
 
-        listWidget.child(IKey.lang(Component.translatable("gtceu.multiblock.idling"))
+        widgets.add(IKey.lang(Component.translatable("gtceu.multiblock.idling"))
                 .asWidget()
                 .setEnabledIf((widget) -> isFormed.getBoolValue() && workingEnabled.getBoolValue() &&
                         !active.getBoolValue()));
 
-        listWidget.child(IKey.dynamic(() -> {
+        widgets.add(IKey.dynamic(() -> {
             Component tooltip = Component.translatable("gtceu.multiblock.invalid_structure.tooltip")
                     .withStyle(ChatFormatting.GRAY);
             return Component.translatable("gtceu.multiblock.invalid_structure")
@@ -310,7 +259,6 @@ public class ActiveTransformerMachine extends WorkableElectricMultiblockMachine
                 .asWidget()
                 .setEnabledIf((widget) -> !isFormed.getBoolValue()));
 
-        parentWidget.child(listWidget);
-        return parentWidget;
+        return widgets;
     }
 }

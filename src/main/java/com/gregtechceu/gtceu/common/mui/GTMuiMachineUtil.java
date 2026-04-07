@@ -7,9 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 import brachy.modularui.value.sync.ItemSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
-import brachy.modularui.widget.Widget;
 import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
@@ -73,14 +71,5 @@ public class GTMuiMachineUtil {
                 .key(key, i -> new FluidSlot()
                         .syncHandler(syncHandlerName, i))
                 .build();
-    }
-
-    public static Flow createColumn(boolean reverse, Widget<?>... children) {
-        var column = Flow.col();
-        column.reverseLayout(reverse);
-        for (Widget<?> child : children) {
-            column.child(child);
-        }
-        return column;
     }
 }

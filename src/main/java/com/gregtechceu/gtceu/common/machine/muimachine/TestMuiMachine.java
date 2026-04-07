@@ -6,7 +6,6 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.widgets.SimpleDialog;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -113,7 +112,8 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         // settings.customContainer(() -> new CraftingModularContainer(3, 3, this.craftingInventory));
         // settings.customGui(() -> TestGuiContainer::new);
 
@@ -133,7 +133,7 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
                 .immutableCopy()
                 .build();
         syncManager.syncValue("number_list", numberListSyncHandler);
-        syncManager.bindPlayerInventory(data.getPlayer());
+        syncManager.bindPlayerInventory(guiData.getPlayer());
 
         DynamicSyncHandler dynamicSyncHandler = new DynamicSyncHandler()
                 .widgetProvider((syncManager1, packet) -> {
@@ -172,19 +172,18 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
         IPanelHandler colorPicker = IPanelHandler.simple(panel,
                 (mainPanel, player) -> new ColorPickerDialog("color_picker", colorPickerBackground.getColor(), true)
                          .draggable(true)
-                         .relative(panel)
+                         .relative(mainWidget.getPanel())
                          .top(0)
                          .rightRel(1f),
                 true);
         PagedWidget.Controller tabController = new PagedWidget.Controller();
-        panel.resizer()                        // returns object which is responsible for sizing
-                .size(176, 220)       // set a static size for the main panel
-                .center();    // center the panel in the screen
+        mainWidget.resizer()                        // returns object which is responsible for sizing
+                .size(176, 220);       // set a static size for the main panel
 
         DoubleSyncValue progressPercent = syncManager.getOrCreateSyncHandler("progressPercent", DoubleSyncValue.class, () ->
                 new DoubleSyncValue(() -> (this.progress / (double) this.duration)));
 
-        var babyFop = new Fox(EntityType.FOX, data.getLevel());
+        var babyFop = new Fox(EntityType.FOX, guiData.getLevel());
         babyFop.setAge(-1);
         panel.child(Flow.row()
                 .name("Tab row")
@@ -482,7 +481,7 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
                                                                 .childPadding(2)
                                                                 .child(new CycleButtonWidget()
                                                                         .value(new BoolValue(false))
-                                                                        .stateOverlay(GTGuiTextures.CHECK_BOX)
+                                                                        .stateOverlay(GuiTextures.CHECK_BOX)
                                                                         .size(14, 14)
                                                                         .margin(8, 4))
                                                                 .child(IKey.str("Boolean config").asWidget().height(14)))
@@ -512,7 +511,7 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
                                                                 .childPadding(2)
                                                                 .child(new CycleButtonWidget()
                                                                         .value(new BoolValue(false))
-                                                                        .stateOverlay(GTGuiTextures.CHECK_BOX)
+                                                                        .stateOverlay(GuiTextures.CHECK_BOX)
                                                                         .size(14, 14))
                                                                 .child(IKey.str("Boolean config 3").asWidget().height(14)))))
                                         .addPage(new ParentWidget<>()
@@ -536,7 +535,7 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
                                                         .widthRel(1f)
                                                         .coverChildrenHeight()
                                                         .syncHandler(dynamicLinkedSyncHandler))*/))
-                                        .addPage(createSchemaPage(data))))
+                                        .addPage(createSchemaPage(guiData))))
                         .child(SlotGroupWidget.playerInventory(false)));
         /*
          * panel.child(new ButtonWidget<>()
@@ -551,7 +550,6 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
          * .setSynced("fluid_slot"));
          */
         // spotless:on
-        return panel;
     }
 
     private IWidget createSchemaPage(GuiData data) {
@@ -642,7 +640,7 @@ public class TestMuiMachine extends MetaMachine implements IMuiMachine {
         return panel;
     }
 
-    public void buildDialog(SimpleDialog<String, TextFieldWidget> dialog) {
+    public void buildDialog(Dialog<String, ?> dialog) {
         AtomicReference<String> value = new AtomicReference<>("");
         dialog.draggable(true);
         dialog.child(new TextFieldWidget()

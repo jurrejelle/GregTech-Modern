@@ -6,10 +6,7 @@ import com.gregtechceu.gtceu.api.machine.feature.IDataStickInteractable;
 import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
-import com.gregtechceu.gtceu.integration.ae2.gui.widget.mui.AEConfigWidget;
+import com.gregtechceu.gtceu.integration.ae2.gui.AEConfigWidget;
 import com.gregtechceu.gtceu.integration.ae2.slot.ExportOnlyAEFluidList;
 import com.gregtechceu.gtceu.integration.ae2.slot.ExportOnlyAEFluidSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.ExportOnlyAESlot;
@@ -30,15 +27,11 @@ import appeng.api.config.Actionable;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import brachy.modularui.api.drawable.IKey;
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.theme.ThemeAPI;
 import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.value.sync.SyncHandlers;
-import brachy.modularui.widgets.SlotGroupWidget;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.layout.Flow;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -132,53 +125,24 @@ public class MEInputHatchPartMachine extends MEHatchPartMachine
     ///////////////////////////////
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 192);
-        panel.child(GTMuiWidgets.createTitleBar(getDefinition(), 176));
-
-        BooleanSyncValue isOnlineValue = SyncHandlers.bool(this::isOnline, this::setOnline);
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        BooleanSyncValue isOnlineValue = new BooleanSyncValue(this::isOnline, this::setOnline);
         syncManager.syncValue("is_online", isOnlineValue);
-
-        panel.child(IKey.dynamic(() -> isOnlineValue.getBoolValue() ?
-                Component.translatable("gtceu.gui.me_network.online") :
-                Component.translatable("gtceu.gui.me_network.offline"))
-                .asWidget()
-                .top(14)
-                .left(7));
 
         registerConfigActions(syncManager);
 
-        panel.child(new AEConfigWidget(aeFluidHandler, CONFIG_SIZE, true)
+        var flow = Flow.col().coverChildren();
+
+        flow.child(IKey.dynamic(() -> isOnlineValue.getBoolValue() ?
+                Component.translatable("gtceu.gui.me_network.online") :
+                Component.translatable("gtceu.gui.me_network.offline"))
+                .asWidget().marginTop(2).marginBottom(4));
+        flow.child(new AEConfigWidget(aeFluidHandler, CONFIG_SIZE, false)
                 .syncManager(syncManager)
-                .size(8 * 18, 2 * (18 * 2 + 2))
-                .top(26)
-                .leftRel(0.5f));
+                .size(8 * 18, 2 * (18 * 2 + 2)));
 
-        var theme = this.getDefinition().getThemeId();
-        var backgroundTexture = (UITexture) ThemeAPI.INSTANCE.getTheme(theme).getPanelTheme().theme()
-                .getBackground();
-        if (backgroundTexture == null) {
-            backgroundTexture = GTGuiTextures.BACKGROUND;
-        }
-
-        panel.child(createButtonColumn(panel, syncManager, backgroundTexture));
-
-        panel.child(SlotGroupWidget.playerInventory(true).bottom(7));
-
-        return panel;
-    }
-
-    protected Flow createButtonColumn(ModularPanel<?> panel, PanelSyncManager syncManager,
-                                      UITexture backgroundTexture) {
-        return Flow.col()
-                .coverChildren()
-                .rightRel(1.0f)
-                .reverseLayout(true)
-                .bottom(16)
-                .padding(5, 2, 4, 4)
-                .childPadding(2)
-                .background(backgroundTexture.getSubArea(0.0f, 0f, 0.75f, 1.0f))
-                .child(GTMuiWidgets.createCircuitSlotPanel(this, panel, syncManager));
+        mainWidget.child(flow.center());
     }
 
     protected void registerConfigActions(PanelSyncManager syncManager) {

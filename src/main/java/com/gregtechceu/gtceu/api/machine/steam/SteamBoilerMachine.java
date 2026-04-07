@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.*;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanelBuilder;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -16,8 +17,6 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.item.behavior.PortableScannerBehavior;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.*;
 
@@ -40,13 +39,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import lombok.Getter;
@@ -311,17 +309,20 @@ public abstract class SteamBoilerMachine extends SteamWorkableMachine
     //////////////////////////////////////
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel<?> panel = GTGuis.createPanel(this, 176, 166);
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176));
+    public MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return MachineUIPanelBuilder.defaultSteamMachineBuilder(this);
+    }
 
+    @Override
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         UITexture progressTexture = isHighPressure() ? GTGuiTextures.PROGRESS_BAR_BOILER_EMPTY_STEEL :
                 GTGuiTextures.PROGRESS_BAR_BOILER_EMPTY_BRONZE;
 
         DoubleSyncValue tempPercentage = syncManager.getOrCreateSyncHandler("tempPercentage", DoubleSyncValue.class,
                 () -> new DoubleSyncValue(this::getTemperaturePercent));
 
-        panel.child(Flow.row()
+        mainWidget.child(Flow.row()
                 .top(12)
                 .left(50)
                 .coverChildren()
@@ -343,10 +344,7 @@ public abstract class SteamBoilerMachine extends SteamWorkableMachine
                         .direction(ProgressWidget.Direction.UP)
                         .tooltipAutoUpdate(true)
                         .tooltipBuilder((r) -> r.addLine(IKey
-                                .lang(Component.translatable("gtceu.fluid.temperature", getCurrentTemperature()))))))
-                .child(SlotGroupWidget.playerInventory(false).bottom(7).left(7));
-
-        return panel;
+                                .lang(Component.translatable("gtceu.fluid.temperature", getCurrentTemperature()))))));
     }
 
     //////////////////////////////////////

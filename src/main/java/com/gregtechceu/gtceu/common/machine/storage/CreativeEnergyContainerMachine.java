@@ -3,13 +3,14 @@ package com.gregtechceu.gtceu.common.machine.storage;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
+import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
 import com.gregtechceu.gtceu.api.capability.ILaserContainer;
 import com.gregtechceu.gtceu.api.machine.TieredMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanel;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanelBuilder;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -21,6 +22,7 @@ import brachy.modularui.api.IPanelHandler;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.DynamicDrawable;
+import brachy.modularui.drawable.GuiTextures;
 import brachy.modularui.drawable.Rectangle;
 import brachy.modularui.factory.PosGuiData;
 import brachy.modularui.screen.ModularPanel;
@@ -32,18 +34,22 @@ import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.IntSyncValue;
 import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ButtonWidget;
 import brachy.modularui.widgets.Dialog;
 import brachy.modularui.widgets.ListWidget;
 import brachy.modularui.widgets.ToggleButton;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.textfield.TextFieldWidget;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CreativeEnergyContainerMachine extends TieredMachine implements ILaserContainer, IMuiMachine {
+public class CreativeEnergyContainerMachine extends TieredMachine
+                                            implements ILaserContainer, IMuiMachine, IControllable {
 
     @SaveField
     private long voltage = 0;
@@ -52,7 +58,9 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
     @SaveField
     private int setTier = 0;
     @SaveField
-    private boolean active = false;
+    @Getter
+    @Setter
+    private boolean workingEnabled = false;
     @SaveField
     private boolean source = true;
     @SaveField
@@ -91,7 +99,7 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
             }
         }
         ampsReceived = 0;
-        if (!active || !source || voltage <= 0 || amps <= 0) return;
+        if (!workingEnabled || !source || voltage <= 0 || amps <= 0) return;
         int ampsUsed = 0;
         for (var facing : GTUtil.DIRECTIONS) {
             var opposite = facing.getOpposite();
@@ -114,7 +122,7 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
 
     @Override
     public long acceptEnergyFromNetwork(Direction side, long voltage, long amperage) {
-        if (source || !active || ampsReceived >= amps) {
+        if (source || !workingEnabled || ampsReceived >= amps) {
             return 0;
         }
         if (voltage > this.voltage) {
@@ -144,7 +152,7 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
 
     @Override
     public long changeEnergy(long differenceAmount) {
-        if (source || !active) {
+        if (source || !workingEnabled) {
             return 0;
         }
         energyIOPerSec += differenceAmount;
@@ -192,61 +200,50 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
     //////////////////////////////////////
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return MachineUIPanelBuilder.defaultPanelBuilder(this).attachInventory(false);
+    }
+
+    @Override
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         // syncing
         LongSyncValue voltage = new LongSyncValue(() -> this.voltage, (v) -> this.voltage = v);
-        IntSyncValue amps = new IntSyncValue(() -> this.amps, (a) -> this.amps = a < 1 ? 1 : a);
+        IntSyncValue amps = new IntSyncValue(() -> this.amps, (a) -> this.amps = Math.max(a, 1));
         IntSyncValue tier = new IntSyncValue(() -> this.tier, (t) -> this.setTier = t);
         BooleanSyncValue sourceSync = new BooleanSyncValue(() -> this.source, (b) -> this.source = b);
-        BooleanSyncValue isActive = new BooleanSyncValue(() -> this.active, (b) -> this.active = b);
         syncManager.syncValue("tier", tier);
 
         IPanelHandler panelSyncHandler = syncManager.syncedPanel("voltage popup", false,
                 (manager, handler) -> createAmpSelector(voltage, tier));
 
-        return new ModularPanel<>("main panel")
-                .coverChildrenHeight()
-                .width(166)
-                .background(GTGuiTextures.BACKGROUND)
+        mainWidget
                 .child(Flow.col()
-                        .widthRel(1)
+                        .size(MachineUIPanel.DEFAULT_CONTENT_WIDTH, 101)
                         .name("main")
                         .padding(7)
                         .mainAxisAlignment(Alignment.MainAxis.START)
-                        .coverChildrenHeight()
-                        .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
                         .child(createVoltageRow(panelSyncHandler, voltage))
                         .child(createAmpRow(amps))
                         .child(new Rectangle().color(0xFF555555).asWidget()
                                 .height(1).widthRel(0.95f).marginBottom(4).marginTop(4))
-                        .child(createSourceSelector(sourceSync))
-                        .child(new Rectangle().color(0xFF555555).asWidget()
-                                .height(1).widthRel(0.95f).marginBottom(4).marginTop(4))
-                        .child(Flow.row()
-                                .coverChildrenHeight()
-                                .name("Power")
-                                .coverChildrenHeight()
-                                .child(new ToggleButton()
-                                        .value(isActive)
-                                        .overlay(true, GTGuiTextures.BUTTON_POWER[1])
-                                        .overlay(false, GTGuiTextures.BUTTON_POWER[0]))
-                                .child(IKey.str("Enable")
-                                        .asWidget()
-                                        .paddingLeft(4)
-
-                                )));
+                        .child(createSourceSelector(sourceSync)));
     }
 
     private Flow createVoltageRow(IPanelHandler panel, LongSyncValue voltage) {
         return Flow.row()
-                .coverChildrenHeight()
-                .paddingBottom(4)
+                .height(18)
+                .marginBottom(4)
+                .child(IKey.str("Voltage").asWidget()
+                        .marginRight(4)
+                        .width(50)
+                        .verticalCenter())
                 .child(new TextFieldWidget()
                         .setTextAlignment(Alignment.CENTER)
                         .setNumbersLong(() -> 1, () -> Long.MAX_VALUE)
                         .value(voltage))
                 .child(new ButtonWidget<>()
-                        .height(16)
+                        .height(18)
                         .width(40)
                         .overlay(IKey.dynamic(
                                 () -> Component.literal(GTValues.VNF[GTUtil.getTierByVoltage(voltage.getLongValue())]))
@@ -264,29 +261,21 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
                             return true;
                         })
 
-                )
-                .child(IKey.str("Voltage").asWidget()
-                        .anchorRight(0)
-                        .paddingRight(4)
-                        .verticalCenter()
-
                 );
     }
 
     static Flow createAmpRow(IntSyncValue amps) {
         return Flow.row()
                 .coverChildrenHeight()
+                .child(IKey.lang("gtceu.creative.energy.amperage").asWidget()
+                        .marginRight(4)
+                        .verticalCenter().width(50))
                 .child(
                         new TextFieldWidget()
                                 .setTextAlignment(Alignment.CENTER)
                                 .setNumbers(1, Integer.MAX_VALUE)
                                 .value(amps)
                                 .setDefaultNumber(1))
-                .child(IKey.lang("gtceu.creative.energy.amperage")
-                        .asWidget()
-                        .anchorRight(0)
-                        .paddingRight(4)
-                        .verticalCenter())
                 .child(new ButtonWidget<>()
                         .overlay(new DynamicDrawable(() -> {
                             MouseData mouseData = MouseData.create(-1);
@@ -299,8 +288,8 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
                             }
 
                         }))
-                        .width(32)
-                        .height(16)
+                        .width(40)
+                        .height(18)
                         .tooltip(new RichTooltip().addLine("Click to Double Amperage")
                                 .addLine("Shift to half current Amperage"))
                         .onMousePressed((a, b, c) -> {
@@ -327,7 +316,7 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
                         .child(new ToggleButton()
                                 .overlay(new DynamicDrawable(() -> {
                                     if (sourceSync.getValue()) {
-                                        return GTGuiTextures.CHECK_BOX.getSubArea(0, .5f, 1, 1f);
+                                        return GuiTextures.CHECK_BOX.getSubArea(0, .5f, 1, 1f);
                                     }
                                     return IDrawable.EMPTY;
                                 }))
@@ -342,7 +331,7 @@ public class CreativeEnergyContainerMachine extends TieredMachine implements ILa
                         .child(new ToggleButton()
                                 .overlay(new DynamicDrawable(() -> {
                                     if (!sourceSync.getValue()) {
-                                        return GTGuiTextures.CHECK_BOX.getSubArea(0, .5f, 1, 1f);
+                                        return GuiTextures.CHECK_BOX.getSubArea(0, .5f, 1, 1f);
                                     }
                                     return IDrawable.EMPTY;
                                 }))

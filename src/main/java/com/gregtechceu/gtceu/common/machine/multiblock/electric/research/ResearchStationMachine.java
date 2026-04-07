@@ -14,10 +14,6 @@ import com.gregtechceu.gtceu.api.recipe.ActionResult;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ObjectHolderMachine;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
-import com.gregtechceu.gtceu.common.mui.GTMultiblockPanelUtil;
 import com.gregtechceu.gtceu.common.mui.GTMultiblockTextUtil;
 
 import net.minecraft.ChatFormatting;
@@ -25,22 +21,14 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import brachy.modularui.drawable.GuiTextures;
-import brachy.modularui.drawable.Icon;
-import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
-import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
+import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widget.Widget;
-import brachy.modularui.widgets.ListWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -116,56 +104,16 @@ public class ResearchStationMachine extends WorkableElectricMultiblockMachine
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 164);
-
-        var panelUtil = new GTMultiblockPanelUtil(this);
-
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(0.95f)
-                        .heightRel(.45f)
-                        .margin(4, 0)
-                        .left(3).top(5)
-                        .child(Flow.row()
-                                .child(getMainTextPanel(syncManager, 170, 70))))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this, syncManager))
-                        .child(GTMuiWidgets.createVoidingButton(this, syncManager)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-
-        return panel;
-    }
-
-    public Widget<?> getMainTextPanel(PanelSyncManager syncManager, int width, int height) {
-        var parentWidget = new ParentWidget<>();
-        var listWidget = new ListWidget<>()
-                .width(width - 6)
-                .height(height - 6)
-                .childSeparator(Icon.EMPTY_2PX)
-                .crossAxisAlignment(Alignment.CrossAxis.START)
-                .leftRel(0);
-        parentWidget.size(width, height)
-                .background(GuiTextures.DISPLAY);
-
-        listWidget.child(GTMultiblockTextUtil.addWorkingStatusLine(this, syncManager,
-                () -> Component.translatable("gtceu.multiblock.work_paused").withStyle(ChatFormatting.GOLD),
+    public List<IWidget> getWidgetsForDisplay(PanelSyncManager syncManager) {
+        List<IWidget> widgets = new ArrayList<>();
+        widgets.add(GTMultiblockTextUtil.addWorkingStatusLine(this, syncManager,
                 () -> Component.translatable("gtceu.multiblock.research_station.researching")
-                        .withStyle(ChatFormatting.GREEN),
-                () -> Component.translatable("gtceu.multiblock.idling").withStyle(ChatFormatting.GRAY)));
-        listWidget.child(GTMultiblockTextUtil.addEnergyTierLine(this, syncManager));
-        listWidget.child(GTMultiblockTextUtil.addEnergyUsageLine(this, syncManager));
-        listWidget.child(GTMultiblockTextUtil.addOutputLines(this, syncManager));
-        listWidget.child(GTMultiblockTextUtil.addProgressLinePercentOnly(this, syncManager));
-        parentWidget.child(listWidget.left(3).top(3));
-        return parentWidget;
+                        .withStyle(ChatFormatting.GREEN)));
+        widgets.add(GTMultiblockTextUtil.addEnergyTierLine(this, syncManager));
+        widgets.add(GTMultiblockTextUtil.addEnergyUsageLine(this, syncManager));
+        widgets.add(GTMultiblockTextUtil.addOutputLines(this, syncManager));
+        widgets.add(GTMultiblockTextUtil.addProgressLinePercentOnly(this, syncManager));
+        return widgets;
     }
 
     public static class ResearchStationRecipeLogic extends RecipeLogic {

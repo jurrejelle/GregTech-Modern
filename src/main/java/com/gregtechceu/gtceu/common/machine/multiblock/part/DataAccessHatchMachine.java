@@ -18,7 +18,6 @@ import com.gregtechceu.gtceu.common.item.behavior.PortableScannerBehavior;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.research.DataBankMachine;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.common.recipe.condition.ResearchCondition;
 import com.gregtechceu.gtceu.utils.ItemStackHashStrategy;
 import com.gregtechceu.gtceu.utils.ResearchManager;
@@ -33,17 +32,12 @@ import net.minecraftforge.items.IItemHandler;
 
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -91,29 +85,13 @@ public class DataAccessHatchMachine extends TieredPartMachine
 
     // TODO MUI: Might need EIO widget? Not sure
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager,
-                                   UISettings settings) {
-        int size = (int) Math.sqrt(getInventorySize());
-
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         var grid = GTMuiMachineUtil.createSlotGroupFromInventory(importItems, "data_inventory", getInventorySize(), 'I',
                 i -> i.background(GTGuiTextures.SLOT, GTGuiTextures.DATA_ORB_OVERLAY), syncManager,
                 GTMuiMachineUtil.createSquareMatrix(importItems.getSlots(), 'I'));
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(176, 100 + (18 * size))
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(1)
-                        .height(20 + 18 * size)
-                        .child(Flow.row()
-                                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .center()
-                                .coverChildren()
-                                .child(grid
-                                        .marginLeft(30)
-                                        .marginRight(30)
-                                        .verticalCenter())))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
+        mainWidget.child(grid.center());
     }
 
     @Override
@@ -154,7 +132,7 @@ public class DataAccessHatchMachine extends TieredPartMachine
     }
 
     @Override
-    public boolean isRecipeAvailable(GTRecipe recipe, @NotNull Collection<IDataAccessHatch> seen) {
+    public boolean isRecipeAvailable(GTRecipe recipe, Collection<IDataAccessHatch> seen) {
         seen.add(this);
         return recipe.conditions.stream().noneMatch(ResearchCondition.class::isInstance) || recipes.contains(recipe);
     }

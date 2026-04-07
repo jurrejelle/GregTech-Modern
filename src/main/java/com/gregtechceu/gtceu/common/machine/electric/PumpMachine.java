@@ -35,11 +35,9 @@ import net.minecraftforge.fluids.capability.wrappers.BucketPickupHandlerWrapper;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.*;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -533,43 +531,37 @@ public class PumpMachine extends TieredEnergyMachine implements IMuiMachine {
     //////////////////////////////////////
     // ********** Gui ***********//
     //////////////////////////////////////
+
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         IntSyncValue bucketSyncer = new IntSyncValue(() -> cache.getFluidInTank(0).getAmount(), (ignored) -> {});
         syncManager.syncValue("bucket_amount", bucketSyncer);
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .child(
-                        // Top half of the screen
-                        new ParentWidget<>()
-                                .widthRel(1)
-                                .height(20 + 60)
-                                // Box that has the display texture BG +
-                                // the buttons / text / etc
-                                .child(new ParentWidget<>()
-                                        .background(GTGuiTextures.DISPLAY)
-                                        .size(90, 63)
-                                        .center()
-                                        .child(IKey.lang("gtceu.gui.fluid_amount").asWidget()
-                                                .color(0xffffff)
-                                                .margin(8, 0, 8, 0))
-                                        .child(IKey.dynamic(
-                                                () -> Component.literal(
-                                                        FormattingUtil.formatBuckets(bucketSyncer.getIntValue())))
-                                                .asWidget()
-                                                .color(0xffffff)
-                                                .margin(8, 0, 20, 0))
-                                        .child(Flow.row()
-                                                .margin(4, 0, 41, 0)
-                                                .coverChildren()
-                                                .child(GTMuiWidgets.createAutoOutputFluidButton(autoOutput,
-                                                        syncManager)))
-                                        .child(Flow.column()
-                                                .margin(68, 0, 23, 0)
-                                                .coverChildren()
-                                                .child(createFluidSlot(syncManager)))))
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 176, GTGuiTextures.BACKGROUND))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
+        mainWidget
+                // Box that has the display texture BG +
+                // the buttons / text / etc
+                .child(new ParentWidget<>()
+                        .background(GTGuiTextures.DISPLAY)
+                        .size(90, 63)
+                        .center()
+                        .child(IKey.lang("gtceu.gui.fluid_amount").asWidget()
+                                .color(0xffffff)
+                                .margin(8, 0, 8, 0))
+                        .child(IKey.dynamic(
+                                () -> Component.literal(
+                                        FormattingUtil.formatBuckets(bucketSyncer.getIntValue())))
+                                .asWidget()
+                                .color(0xffffff)
+                                .margin(8, 0, 20, 0))
+                        .child(Flow.row()
+                                .margin(4, 0, 41, 0)
+                                .coverChildren()
+                                .child(GTMuiWidgets.createAutoOutputFluidButton(autoOutput)))
+                        .child(Flow.column()
+                                .margin(68, 0, 23, 0)
+                                .coverChildren()
+                                .child(createFluidSlot(syncManager))));
     }
 
     private IWidget createFluidSlot(PanelSyncManager syncManager) {

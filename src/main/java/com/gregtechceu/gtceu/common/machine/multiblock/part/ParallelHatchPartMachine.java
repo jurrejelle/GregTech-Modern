@@ -7,7 +7,6 @@ import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.GTMath;
 
 import net.minecraft.util.Mth;
@@ -15,17 +14,16 @@ import net.minecraft.util.Mth;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.DynamicDrawable;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.utils.MouseData;
 import brachy.modularui.value.sync.IntSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ButtonWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.textfield.TextFieldWidget;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 public class ParallelHatchPartMachine extends TieredPartMachine implements IMuiMachine {
 
@@ -52,40 +50,17 @@ public class ParallelHatchPartMachine extends TieredPartMachine implements IMuiM
         }
     }
 
-    /*
-     * @Override
-     * public Widget createUIWidget() {
-     * WidgetGroup parallelAmountGroup = new WidgetGroup(0, 0, 100, 20);
-     * parallelAmountGroup.addWidget(new IntInputWidget(this::getCurrentParallel, this::setCurrentParallel)
-     * .setMin(MIN_PARALLEL)
-     * .setMax(maxParallel));
-     *
-     * return parallelAmountGroup;
-     * }
-     */
-
     @Override
     public boolean canShared() {
         return false;
     }
 
     @Override
-    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                            @NotNull UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         IntSyncValue parallels = new IntSyncValue(this::getCurrentParallel, this::setCurrentParallel);
-        ModularPanel<?> panel = new ModularPanel<>(this.getDefinition().getName());
-        panel
+        mainWidget.child(Flow.row()
                 .size(180, 60)
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 240))
-                .child(createParallelRow(parallels));
-        return panel;
-    }
-
-    private Flow createParallelRow(IntSyncValue parallels) {
-        return Flow.row()
-                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                .center()
-                .coverChildren()
                 .child(new ButtonWidget<>()
                         .overlay(new DynamicDrawable(() -> {
                             MouseData mouseData = MouseData.create(-1);
@@ -159,6 +134,6 @@ public class ParallelHatchPartMachine extends TieredPartMachine implements IMuiM
                         .asWidget()
                         .marginLeft(4)
                         .marginRight(4)
-                        .verticalCenter());
+                        .verticalCenter()));
     }
 }

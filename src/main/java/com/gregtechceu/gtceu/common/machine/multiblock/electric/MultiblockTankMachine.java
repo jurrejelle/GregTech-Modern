@@ -9,7 +9,6 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 
@@ -21,13 +20,11 @@ import net.minecraft.world.InteractionResult;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.IntSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import lombok.Getter;
@@ -73,38 +70,30 @@ public class MultiblockTankMachine extends MultiblockControllerMachine implement
 
     /////////////////////////////////////
     // *********** GUI ***********//
+
     /////////////////////////////////////
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         IntSyncValue bucketSyncer = new IntSyncValue(() -> tank.getFluidInTank(0).getAmount(), (ignored) -> {});
         syncManager.syncValue("bucket_amount", bucketSyncer);
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .child(
-                        // Top half of the screen
-                        new ParentWidget<>()
-                                .widthRel(1)
-                                .height(20 + 60)
-                                .child(new ParentWidget<>()
-                                        .background(GTGuiTextures.DISPLAY)
-                                        .size(90, 63)
-                                        .center()
-                                        .child(IKey.lang("gtceu.gui.fluid_amount").asWidget()
-                                                .color(0xffffff)
-                                                .margin(8, 0, 8, 0))
-                                        .child(IKey.dynamic(
-                                                () -> Component.literal(
-                                                        FormattingUtil.formatBuckets(bucketSyncer.getIntValue())))
-                                                .asWidget()
-                                                .color(0xffffff)
-                                                .margin(8, 0, 20, 0))
-                                        .child(Flow.column()
-                                                .margin(68, 0, 23, 0)
-                                                .coverChildren()
-                                                .child(createFluidSlot(syncManager)))))
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 176, GTGuiTextures.BACKGROUND))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
+        mainWidget
+                .background(GTGuiTextures.DISPLAY)
+                .child(IKey.lang("gtceu.gui.fluid_amount").asWidget()
+                        .color(0xffffff)
+                        .margin(8, 0, 8, 0))
+                .child(IKey.dynamic(
+                        () -> Component.literal(
+                                FormattingUtil.formatBuckets(bucketSyncer.getIntValue())))
+                        .asWidget()
+                        .color(0xffffff)
+                        .margin(8, 0, 20, 0))
+                .child(Flow.column()
+                        .margin(68, 0, 23, 0)
+                        .coverChildren()
+                        .child(createFluidSlot(syncManager)));
     }
 
     private IWidget createFluidSlot(PanelSyncManager syncManager) {

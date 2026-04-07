@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanel;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
@@ -15,9 +16,7 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
@@ -39,15 +38,13 @@ import net.minecraftforge.fluids.FluidType;
 
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.GuiTextures;
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.theme.ThemeAPI;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.TextWidget;
 import brachy.modularui.widgets.ToggleButton;
@@ -289,50 +286,16 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IHasCi
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        int width = 176;
-        int height = Math.max(168, (int) (18 * Math.sqrt(slots)) + 78 + 19);
-        var panel = GTGuis.createPanel(this, width, height);
-
-        // magic numbers are me favorite :3
-        int topOffset = slots == 1 ? 10 : slots == 9 ? 16 : 20;
-
-        var theme = this.getDefinition().getThemeId();
-        var backgroundTexture = (UITexture) ThemeAPI.INSTANCE.getTheme(theme).getPanelTheme().theme()
-                .getBackground();
-        if (backgroundTexture == null) {
-            backgroundTexture = GTGuiTextures.BACKGROUND;
-        }
-
-        panel.child(GTMuiWidgets.createTitleBar(getDefinition(), 174))
-                .child(SlotGroupWidget.playerInventory(true)
-                        .left(7)
-                        .bottom(7))
-                .child((slots == 1 ? createSingleSlotUI(syncManager) : createMultiSlotUI(syncManager))
-                        .top(topOffset)
-                        .horizontalCenter())
-                .child(Flow.col()
-                        .coverChildren()
-                        .rightRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(8, 0, 4, 4)
-                        .childPadding(2)
-                        .background(backgroundTexture.getSubArea(0.0f, 0f, 0.75f, 1.0f))
-                        .excludeAreaInRecipeViewer()
-                        .child(GTMuiWidgets.createPowerButton(this::isWorkingEnabled, this::setWorkingEnabled,
-                                syncManager))
-                        .childIf(this.isCircuitSlotEnabled(),
-                                () -> GTMuiWidgets.createCircuitSlotPanel(this, panel, syncManager)));
-
-        return panel;
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget.child(slots == 1 ? createSingleSlotUI(syncManager) : createMultiSlotUI(syncManager));
     }
 
     protected Flow createSingleSlotUI(PanelSyncManager syncManager) {
         BooleanSyncValue locked = new BooleanSyncValue(this.tank::isLocked, this.tank::setLocked);
         syncManager.syncValue("locked", locked);
         return Flow.col()
-                .widthRel(.6f)
+                .width(MachineUIPanel.DEFAULT_CONTENT_WIDTH)
                 .height(60)
                 .mainAxisAlignment(Alignment.MainAxis.CENTER)
                 .childPadding(4)
@@ -347,7 +310,6 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IHasCi
                                 .name("lockedFluid")
                                 .syncHandler(new FluidSlotSyncHandler(tank.getLockedFluid()))
                                 .alwaysShowFull(true)
-
                                 .tooltip(t -> t.addLine("Locked Fluid")))
                         .childIf(io.support(IO.OUT), () -> new ToggleButton()
                                 .syncHandler("locked")

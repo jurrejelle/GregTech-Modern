@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.api.machine.feature;
 
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanelBuilder;
 import com.gregtechceu.gtceu.api.mui.GTGuiScreen;
 import com.gregtechceu.gtceu.api.mui.factory.MachineUIFactory;
 
@@ -15,11 +16,23 @@ import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.ModularScreen;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 
 public interface IMuiMachine extends IUIHolder<PosGuiData>, IMachineFeature {
 
     @Override
-    ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings);
+    default ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        var panelBuilder = getPanelBuilder(data, syncManager, settings);
+        panelBuilder.mainContents(parent -> buildMainUI(parent, data, syncManager, settings));
+        return panelBuilder.build(syncManager, settings);
+    }
+
+    default MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return MachineUIPanelBuilder.defaultPanelBuilder(self());
+    }
+
+    default void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                             UISettings settings) {}
 
     default boolean shouldOpenUI(Player player, InteractionHand hand, BlockHitResult hit) {
         return true;

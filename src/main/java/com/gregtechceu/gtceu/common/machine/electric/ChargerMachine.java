@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.*;
 import com.gregtechceu.gtceu.api.capability.compat.FeCompat;
 import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanel;
 import com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableEnergyContainer;
 import com.gregtechceu.gtceu.api.sync_system.annotations.RerenderOnChanged;
@@ -14,7 +15,6 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -28,10 +28,10 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.layout.Flow;
 import lombok.Getter;
@@ -126,51 +126,37 @@ public class ChargerMachine extends TieredEnergyMachine implements IControllable
     //////////////////////////////////////
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        String[] matrix = GTMuiMachineUtil.createSquareMatrix(inventorySize, 'B');
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        String[] matrix;
+        if (inventorySize == 8) matrix = new String[] { "BBBB", "BBBB" };
+        else matrix = GTMuiMachineUtil.createSquareMatrix(inventorySize, 'B');
 
         DoubleSyncValue energyPercentage = syncManager.getOrCreateSyncHandler("energyPercentage", DoubleSyncValue.class,
                 () -> new DoubleSyncValue(this::getEnergyPercentage));
 
-        return new ModularPanel<>(getDefinition().getName())
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 172))
-                .child(Flow.row()
-                        .height(90)
-                        .margin(6)
-                        .marginLeft(7)
-                        .marginTop(2)
-                        .height(80)
-                        .child(new ProgressWidget()
-                                .texture(GTGuiTextures.PROGRESS_BAR_BOILER_EMPTY_STEEL,
-                                        GTGuiTextures.PROGRESS_BAR_BOILER_HEAT, 60)
-                                .direction(ProgressWidget.Direction.UP)
-                                .value(energyPercentage)
-                                .marginRight(50)
-                                .size(18, 60)
-                                .verticalCenter()
-                                .addTooltipLine(IKey.dynamic(() -> Component.literal(
-                                        "%s/%s EU".formatted(
-                                                GTStringUtils.formatInt(energyContainer.getEnergyStored()),
-                                                GTStringUtils.formatInt(energyContainer.getEnergyCapacity()))))))
-                        .child(GTMuiMachineUtil.createSlotGroupFromInventory(
-                                chargerInventory, "charger_inv",
-                                inventorySize, 'B',
-                                slot -> slot.background(GTGuiTextures.SLOT, GTGuiTextures.CHARGER_OVERLAY),
-                                syncManager,
-                                matrix)
-                                .center()))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .excludeAreaInRecipeViewer()
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this::isWorkingEnabled, this::setWorkingEnabled,
-                                syncManager)))
-                .bindPlayerInventory();
+        var flow = Flow.row().width(MachineUIPanel.DEFAULT_CONTENT_WIDTH).height(90);
+
+        flow.child(new ProgressWidget()
+                .texture(GTGuiTextures.PROGRESS_BAR_BOILER_EMPTY_STEEL,
+                        GTGuiTextures.PROGRESS_BAR_BOILER_HEAT, 60)
+                .direction(ProgressWidget.Direction.UP)
+                .value(energyPercentage)
+                .marginLeft(5)
+                .size(18, 60)
+                .addTooltipLine(IKey.dynamic(() -> Component.literal(
+                        "%s/%s EU".formatted(
+                                GTStringUtils.formatInt(energyContainer.getEnergyStored()),
+                                GTStringUtils.formatInt(energyContainer.getEnergyCapacity()))))))
+                .child(GTMuiMachineUtil.createSlotGroupFromInventory(
+                        chargerInventory, "batteries",
+                        inventorySize, 'B',
+                        slot -> slot.background(GTGuiTextures.SLOT, GTGuiTextures.CHARGER_OVERLAY),
+                        syncManager,
+                        matrix)
+                        .center());
+
+        mainWidget.child(flow);
     }
 
     private double getEnergyPercentage() {

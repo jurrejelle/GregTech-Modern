@@ -17,7 +17,6 @@ import com.gregtechceu.gtceu.common.data.GTDamageTypes;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.item.behavior.TurbineRotorBehaviour;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
@@ -27,14 +26,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.IntSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
 import brachy.modularui.widgets.slot.SlotGroup;
@@ -242,38 +237,20 @@ public class RotorHolderPartMachine extends TieredPartMachine {
 
     // TODO MUI: Might need EIO widget? Not sure
     @Override
-    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                            @NotNull UISettings settings) {
-        SlotGroup rotorSlotGroup = new SlotGroup("rotor", 1);
-
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         var slot = new ItemSlot()
-                .slot(new ModularSlot(inventory, 0)
-                        .slotGroup(rotorSlotGroup))
-                .background(GTGuiTextures.SLOT, GTGuiTextures.TURBINE_OVERLAY)
-                .marginLeft(30)
-                .marginRight(30)
-                .verticalCenter();
+                .slot(new ModularSlot(inventory, 0).slotGroup(new SlotGroup("rotor", 1)))
+                .background(GTGuiTextures.SLOT, GTGuiTextures.TURBINE_OVERLAY).center();
 
-        var rotorSync = new IntSyncValue(this::getRotorSpeed, (speed) -> {});
+        var rotorSync = new IntSyncValue(this::getRotorSpeed);
         rotorSync.setChangeListener(() -> {
             boolean canEdit = rotorSync.getIntValue() == 0;
             slot.getSlot().accessibility(canEdit, canEdit);
         });
-
         syncManager.syncValue("rotor_speed", rotorSync);
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(176, 100 + (18 * 4))
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(1)
-                        .height(20 + 18 * 4)
-                        .child(Flow.row()
-                                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .center()
-                                .coverChildren()
-                                .child(slot)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
+        mainWidget.child(slot);
     }
 
     //////////////////////////////////////

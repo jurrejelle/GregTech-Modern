@@ -41,7 +41,7 @@ public interface IMuiCover extends IUIHolder<SidedPosGuiData> {
 
     @Override
     default ModularPanel<?> buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        ModularPanel<?> panel = ModularPanel.defaultPanel(self().coverDefinition.getId().getPath(), 176, 192 + 18);
+        ModularPanel<?> panel = ModularPanel.defaultPanel(this.self().coverDefinition.getId().getPath(), 176, 192 + 18);
 
         panel.child(GTMuiWidgets.createTitleBar(this.self().getAttachItem(), 176, GTGuiTextures.BACKGROUND));
 

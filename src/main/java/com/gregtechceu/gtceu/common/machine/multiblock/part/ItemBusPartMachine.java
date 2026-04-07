@@ -17,20 +17,14 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.GTTransferUtils;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -38,18 +32,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import brachy.modularui.api.drawable.IKey;
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.theme.ThemeAPI;
-import brachy.modularui.value.BoolValue;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.ToggleButton;
-import brachy.modularui.widgets.layout.Flow;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.layout.Grid;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.SlotGroup;
@@ -301,22 +288,17 @@ public class ItemBusPartMachine extends TieredIOPartMachine
     //////////////////////////////////////
     // ********** GUI ***********//
     //////////////////////////////////////
+
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         int rowSize = (int) Math.sqrt(getInventorySize());
 
-        int width = Math.max(176, 18 * rowSize + 14);
-        int height = Math.max(168, (18 * rowSize) + 78 + 19);
-        var panel = GTGuis.createPanel(this, width, height);
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), width));
-
-        int smallHatchOffset = tier < 2 ? 9 * (3 - rowSize) : 0;
-
         SlotGroup group = new SlotGroup("item_inv", rowSize, 0, true);
-        panel.child(new Grid()
+        mainWidget.child(new Grid()
                 .coverChildren()
-                .top(10 + smallHatchOffset)
-                .leftRel(0.5f)
+                .center()
+                .margin(7, 5)
                 .mapTo(rowSize, rowSize * rowSize, index -> new ItemSlot()
                         .slot(SyncHandlers.itemSlot(inventory, index)
                                 .slotGroup(group)
@@ -325,49 +307,6 @@ public class ItemBusPartMachine extends TieredIOPartMachine
                                         inventory.onContentsChanged();
                                     }
                                 })
-                                .accessibility(inventory.handlerIO.support(IO.IN), true))))
-
-                .child(SlotGroupWidget.playerInventory(true)
-                        // .leftRel(0.5f)
-                        .left(7)
-                        .bottom(7));
-
-        var theme = this.getDefinition().getThemeId();
-        var backgroundTexture = (UITexture) ThemeAPI.INSTANCE.getTheme(theme).getPanelTheme().theme()
-                .getBackground();
-        if (backgroundTexture == null) {
-            backgroundTexture = GTGuiTextures.BACKGROUND;
-        }
-
-        panel.child(Flow.col()
-                .coverChildren()
-                .rightRel(1.0f)
-                .reverseLayout(true)
-                .bottom(16)
-                .padding(8, 0, 4, 4)
-                .childPadding(2)
-                .background(backgroundTexture.getSubArea(0.0f, 0f, 0.75f, 1.0f))
-                .child(new ToggleButton()
-                        .value(new BoolValue.Dynamic(this::isWorkingEnabled, this::setWorkingEnabled))
-                        .selectedBackground(GTGuiTextures.BUTTON_POWER[1])
-                        .background(GTGuiTextures.BUTTON_POWER[0])
-                        .tooltipAutoUpdate(true)
-                        .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable(
-                                isWorkingEnabled() ? "behaviour.soft_hammer.enabled" :
-                                        "behaviour.soft_hammer.disabled")))))
-                .childIf(isCircuitSlotEnabled(), () -> GTMuiWidgets.createCircuitSlotPanel(this, panel, syncManager))
-                .childIf(io.support(IO.IN), () -> new ToggleButton()
-                        .value(new BoolValue.Dynamic(this::isDistinct, this::setDistinct))
-                        .stateOverlay(GTGuiTextures.BUTTON_DISTINCT)
-                        .tooltipAutoUpdate(true)
-                        .tooltipBuilder((
-                                         richTooltip) -> richTooltip
-                                                 .add(Component.translatable("gtceu.multiblock.universal.distinct")
-                                                         .setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW))
-                                                         .append(Component
-                                                                 .translatable("gtceu.multiblock.universal.distinct" +
-                                                                         (isDistinct() ? ".yes" : ".no")))))));
-
-        return panel;
+                                .accessibility(inventory.handlerIO.support(IO.IN), true))));
     }
 }

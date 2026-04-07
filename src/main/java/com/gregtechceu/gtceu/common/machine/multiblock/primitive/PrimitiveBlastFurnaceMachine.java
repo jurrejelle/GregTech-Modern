@@ -7,13 +7,13 @@ import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IFluidRenderMulti;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanelBuilder;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.api.sync_system.annotations.RerenderOnChanged;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
@@ -30,16 +30,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import brachy.modularui.api.ITheme;
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.theme.ThemeAPI;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.ItemSlotSyncHandler;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.SlotGroupWidget;
+import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
 import brachy.modularui.widgets.slot.SlotGroup;
@@ -154,7 +154,14 @@ public class PrimitiveBlastFurnaceMachine extends PrimitiveWorkableMachine imple
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return MachineUIPanelBuilder.defaultPanelBuilder(this).addTraitConfigurators(false)
+                .addDefaultConfigurators(false);
+    }
+
+    @Override
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         ITheme theme = ThemeAPI.INSTANCE.getTheme(getDefinition().getThemeId());
 
         DoubleSyncValue progressPercent = syncManager.getOrCreateSyncHandler("progressPercent", DoubleSyncValue.class,
@@ -163,21 +170,17 @@ public class PrimitiveBlastFurnaceMachine extends PrimitiveWorkableMachine imple
                     return recipeLogic.getProgressPercent();
                 }));
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(176, 166)
-                // Top half of the screen
-                .child(createImportItemSlot(syncManager, theme).margin(52, 16))
+        var row = Flow.row().coverChildren().center();
+
+        row.child(createImportItemSlot(syncManager, theme))
                 .child(new ProgressWidget()
                         .value(progressPercent)
                         .size(20, 15)
-                        .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, 0).margin(77, 35))
-                .child(createExportItemSlot(syncManager, theme).margin(104, 0, 34, 0))
+                        .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, 0)
+                        .margin(5, 5, 0, 0))
+                .child(createExportItemSlot(syncManager, theme));
 
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 176, (UITexture) theme.getPanelTheme().theme()
-                        .getBackground()))
-                .child(SlotGroupWidget
-                        .playerInventory(false).left(7)
-                        .bottom(7));
+        mainWidget.child(row);
     }
 
     private SlotGroupWidget createImportItemSlot(PanelSyncManager syncManager, ITheme theme) {

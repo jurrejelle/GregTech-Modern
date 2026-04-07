@@ -7,10 +7,7 @@ import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
-import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.widgets.PopupPanel;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.integration.ae2.machine.feature.multiblock.IMEStockingPart;
 import com.gregtechceu.gtceu.integration.ae2.slot.ExportOnlyAEItemList;
@@ -31,19 +28,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
-import brachy.modularui.api.IPanelHandler;
-import brachy.modularui.api.drawable.IKey;
-import brachy.modularui.drawable.ItemDrawable;
-import brachy.modularui.drawable.UITexture;
-import brachy.modularui.screen.ModularPanel;
-import brachy.modularui.screen.RichTooltip;
-import brachy.modularui.value.BoolValue;
-import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.value.sync.SyncHandlers;
-import brachy.modularui.widgets.ButtonWidget;
-import brachy.modularui.widgets.ToggleButton;
-import brachy.modularui.widgets.layout.Flow;
-import brachy.modularui.widgets.textfield.TextFieldWidget;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import lombok.Getter;
 import lombok.Setter;
@@ -265,47 +249,6 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
         }
 
         aeItemHandler.clearInventory(index);
-    }
-
-    ///////////////////////////////
-    // ********** GUI ***********//
-    ///////////////////////////////
-
-    @Override
-    protected Flow createButtonColumn(ModularPanel<?> panel, PanelSyncManager syncManager,
-                                      UITexture backgroundTexture) {
-        IPanelHandler settingsPanelHandler = syncManager.syncedPanel("stocking_settings", true,
-                (sm, sh) -> PopupPanel.createPopupPanel("stocking_settings_panel", 140, 70)
-                        .child(Flow.col()
-                                .coverChildren()
-                                .child(IKey.lang("gtceu.gui.me_network.min_stack_size").asWidget())
-                                .child(new TextFieldWidget()
-                                        .size(120, 18)
-                                        .value(SyncHandlers.intNumber(this::getMinStackSize, this::setMinStackSize))
-                                        .setNumbers(1, Integer.MAX_VALUE))
-                                .child(IKey.lang("gtceu.gui.me_network.ticks_per_cycle").asWidget())
-                                .child(new TextFieldWidget()
-                                        .size(120, 18)
-                                        .value(SyncHandlers.intNumber(this::getTicksPerCycle, this::setTicksPerCycle))
-                                        .setNumbers(1, 200))
-                                .margin(5)));
-
-        return super.createButtonColumn(panel, syncManager, backgroundTexture)
-                .child(new ToggleButton()
-                        .value(new BoolValue.Dynamic(this::isAutoPull, this::setAutoPull))
-                        .stateOverlay(GTGuiTextures.BUTTON_AUTO_PULL)
-                        .tooltipAutoUpdate(true)
-                        .tooltipBuilder(r -> r
-                                .addLine(IKey.lang("gtceu.gui.me_network.auto_pull_toggle"))))
-                .child(new ButtonWidget<>()
-                        .size(18)
-                        .onMousePressed((x, y, b) -> {
-                            settingsPanelHandler.openPanel();
-                            return true;
-                        })
-                        .overlay(new ItemDrawable(GTItems.TOOL_DATA_STICK.asItem()).asIcon().size(16))
-                        .tooltip(new RichTooltip()
-                                .addLine(IKey.lang("gtceu.gui.me_network.stocking_settings"))));
     }
 
     @Override

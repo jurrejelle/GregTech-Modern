@@ -11,6 +11,7 @@ import brachy.modularui.drawable.TabTexture;
 import brachy.modularui.drawable.UITexture;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class GTGuiTextures {
 
     /** Keys used for GT assets registered for use in Themes */
@@ -199,6 +200,10 @@ public class GTGuiTextures {
 
     public static final UITexture[] TRANSFER_MODE_OVERLAY = slice("textures/gui/overlay/transfer_mode_overlay.png",
             40, 40 * 3, 40, 40, ColorType.DEFAULT);
+
+    public static final UITexture[] BUTTON_DISTINCT = slice(
+            "textures/gui/widget/button_distinct_buses.png",
+            16, 32, 16, 16, ColorType.DEFAULT);
 
     public static final UITexture[] FLUID_TRANSFER_MODE_OVERLAY = slice(
             "textures/gui/overlay/fluid_transfer_mode_overlay.png",
@@ -450,11 +455,6 @@ public class GTGuiTextures {
     public static final UITexture BUTTON_PERCENT = fullImage("textures/gui/overlay/mode_percent.png");
     public static final UITexture BUTTON_MAINTENANCE = fullImage("textures/gui/widget/button_maintenance.png");
 
-    public static final UITexture BUTTON_DISTINCT = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/button_distinct_buses.png")
-            .subAreaXYWH(0, 0, 16, 16)
-            .build();
-
     public static final UITexture BUTTON_AUTO_PULL = fullImage("textures/gui/widget/button_me_auto_pull.png");
 
     // PROGRESS BARS
@@ -613,9 +613,6 @@ public class GTGuiTextures {
             .name("cycle")
             .build();
     // 16, 48, 16, 16, true);
-
-    public static final UITexture CHECK_BOX = fullImage("textures/gui/icon/mui2/toggle_config.png");
-    public static final UITexture CROSS = fullImage("textures/gui/icon/mui2/cross.png");
 
     public static final TabTexture TAB_TOP = TabTexture.of(
             fullImage("textures/gui/tab/tabs_top.png", ColorType.DEFAULT), GuiAxis.Y,

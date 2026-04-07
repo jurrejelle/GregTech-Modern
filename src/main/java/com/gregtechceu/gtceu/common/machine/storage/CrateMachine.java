@@ -5,14 +5,13 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.*;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanelBuilder;
 import com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.sync_system.annotations.RerenderOnChanged;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.data.GTItems;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -20,15 +19,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
 import brachy.modularui.widget.ParentWidget;
+import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -39,8 +37,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class CrateMachine extends MetaMachine implements IMuiMachine,
                           IDropSaveMachine {
-
-    public static final BooleanProperty TAPED_PROPERTY = GTMachineModelProperties.IS_TAPED;
 
     @Getter
     private final Material material;
@@ -66,11 +62,18 @@ public class CrateMachine extends MetaMachine implements IMuiMachine,
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return MachineUIPanelBuilder.defaultPanelBuilder(this).addTitleBar(false);
+    }
+
+    @Override
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         syncManager.registerSlotGroup("item_inv", inventorySize);
 
         int rows = inventorySize / rowLength;
         ParentWidget<?> slots = new ParentWidget<>();
+        slots.coverChildren();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < this.rowLength; j++) {
                 int index = i * rowLength + j;
@@ -81,11 +84,13 @@ public class CrateMachine extends MetaMachine implements IMuiMachine,
             }
         }
 
-        return GTGuis.createPanel(this, rowLength * 18 + 14, 18 + 4 * 18 + 5 + 14 + 18 * rows)
-                .background(GTGuiTextures.BACKGROUND)
-                .child(IKey.lang(getBlockState().getBlock().getName()).asWidget().pos(5, 5))
-                .child(slots.top(18).left(7).right(7).height(rows * 18))
-                .bindPlayerInventory();
+        var col = Flow.col()
+                .margin(5, 5, 0, 5)
+                .coverChildren();
+        col.child(
+                IKey.lang(getBlockState().getBlock().getName()).asWidget().leftRel(0).margin(0, 0, 3, 3))
+                .child(slots.height(rows * 18));
+        mainWidget.child(col);
     }
 
     @Override

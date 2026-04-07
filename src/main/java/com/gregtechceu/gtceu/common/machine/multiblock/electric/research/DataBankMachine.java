@@ -11,13 +11,8 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMaintenanceMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
-import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
-import com.gregtechceu.gtceu.common.mui.GTMultiblockPanelUtil;
 import com.gregtechceu.gtceu.common.mui.GTMultiblockTextUtil;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
@@ -28,22 +23,9 @@ import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 
-import brachy.modularui.api.drawable.IKey;
-import brachy.modularui.drawable.GuiTextures;
-import brachy.modularui.drawable.Icon;
-import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
-import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
-import brachy.modularui.value.sync.BooleanSyncValue;
+import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widget.Widget;
-import brachy.modularui.widgets.ListWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.TextWidget;
-import brachy.modularui.widgets.layout.Flow;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import lombok.Getter;
@@ -196,83 +178,18 @@ public class DataBankMachine extends WorkableElectricMultiblockMachine
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 164);
-
-        var panelUtil = new GTMultiblockPanelUtil(this);
-
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(0.95f)
-                        .heightRel(.45f)
-                        .margin(4, 0)
-                        .left(3).top(5)
-                        .child(Flow.row()
-                                .child(getMainTextPanel(syncManager, 170, 70))))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this, syncManager))
-                        .child(GTMuiWidgets.createVoidingButton(this, syncManager)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-
-        return panel;
-    }
-
-    public Widget<?> getMainTextPanel(PanelSyncManager syncManager, int width, int height) {
-        var parentWidget = new ParentWidget<>();
-        var listWidget = new ListWidget<>()
-                .width(width - 6)
-                .height(height - 6)
-                .childSeparator(Icon.EMPTY_2PX)
-                .crossAxisAlignment(Alignment.CrossAxis.START)
-                .leftRel(0);
-        parentWidget.size(width, height)
-                .background(GuiTextures.DISPLAY);
-
+    public List<IWidget> getWidgetsForDisplay(PanelSyncManager syncManager) {
         LongSyncValue energyStoredSyncValue = new LongSyncValue(this::getEnergyUsage);
         syncManager.syncValue("dataBankEnergyStored", energyStoredSyncValue);
-        listWidget.child(GTMultiblockTextUtil.addEnergyUsageExactLine(this, syncManager, energyStoredSyncValue));
-        listWidget.child(addWorkingStatusLine(this, syncManager));
-        parentWidget.child(listWidget.left(3).top(3));
-        return parentWidget;
-    }
 
-    public static TextWidget<?> addWorkingStatusLine(WorkableMultiblockMachine rlMachine,
-                                                     PanelSyncManager syncManager) {
-        BooleanSyncValue isFormed = syncManager.getOrCreateSyncHandler("isFormed", BooleanSyncValue.class,
-                () -> new BooleanSyncValue(rlMachine::isFormed));
-        BooleanSyncValue isActive = syncManager.getOrCreateSyncHandler("isActive", BooleanSyncValue.class,
-                () -> new BooleanSyncValue(() -> rlMachine.getRecipeLogic().isActive()));
-        BooleanSyncValue isWorkingEnabled = syncManager.getOrCreateSyncHandler("isWorkingEnabled",
-                BooleanSyncValue.class,
-                () -> new BooleanSyncValue(() -> rlMachine.getRecipeLogic().isWorkingEnabled()));
+        List<IWidget> widgets = new ArrayList<>();
 
-        return IKey
-                .dynamic(() -> {
-                    if (!isFormed.getBoolValue()) return Component.empty();
-                    if (!isWorkingEnabled.getBoolValue() || !isActive.getBoolValue()) {
-                        return Component.translatable("gtceu.multiblock.idling").withStyle(ChatFormatting.GRAY);
-                    }
-                    return Component.translatable("gtceu.multiblock.data_bank.providing")
-                            .withStyle(ChatFormatting.GREEN);
-                })
-                .asWidget()
-                .setEnabledIf((w) -> isFormed.getBoolValue());
+        widgets.add(GTMultiblockTextUtil.addEnergyUsageExactLine(this, syncManager, energyStoredSyncValue));
+        widgets.add(GTMultiblockTextUtil.addWorkingStatusLine(this, syncManager,
+                () -> Component.translatable("gtceu.multiblock.data_bank.providing").withStyle(ChatFormatting.GREEN)));
+
+        return widgets;
     }
-    /*
-     * @Override
-     * protected void addWarningText(List<Component> textList) {
-     * MultiblockDisplayText.builder(textList, isFormed(), false)
-     * .addLowPowerLine(hasNotEnoughEnergy)
-     * .addMaintenanceProblemLines(maintenance.getMaintenanceProblems());
-     * }
-     */
 
     @Override
     public int getProgress() {

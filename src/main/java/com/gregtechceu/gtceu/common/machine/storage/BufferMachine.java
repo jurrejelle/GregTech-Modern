@@ -9,26 +9,20 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
-import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.SlotGroupWidget;
-import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
 import brachy.modularui.widgets.slot.SlotGroup;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -85,8 +79,8 @@ public class BufferMachine extends TieredMachine implements IMuiMachine {
 
     // TODO MUI: Needs EIO widget
     @Override
-    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                            @NotNull UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         for (int i = 0; i < tank.getTanks(); i++) {
             syncManager.syncValue("fluids", i, SyncHandlers.fluidSlot(tank.getStorages()[i]));
         }
@@ -96,12 +90,8 @@ public class BufferMachine extends TieredMachine implements IMuiMachine {
         int size = tank.getTanks();
         String[] matrix = new String[size];
         for (int i = 0; i < size; i++) {
-            var row = new StringBuilder(size + 1);
-            for (int j = 0; j < size; j++) {
-                row.append("I");
-            }
-            row.append("F");
-            matrix[i] = row.toString();
+            String row = "I".repeat(size) + "F";
+            matrix[i] = row;
         }
 
         SlotGroupWidget slotWidget = SlotGroupWidget.builder()
@@ -113,63 +103,8 @@ public class BufferMachine extends TieredMachine implements IMuiMachine {
                         .syncHandler("fluids", i))
                 .build();
 
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(176, 100 + (18 * size))
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(1)
-                        .height(20 + 18 * size)
-                        .child(Flow.row()
-                                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
-                                .center()
-                                .coverChildren()
-                                .child(slotWidget
-                                        .marginLeft(30)
-                                        .marginRight(30)
-                                        .verticalCenter())))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createAutoOutputItemButton(autoOutput, syncManager))
-                        .child(GTMuiWidgets.createAutoOutputFluidButton(autoOutput, syncManager))
-                        .child(GTMuiWidgets.createInputFromOutputItem(autoOutput, syncManager))
-                        .child(GTMuiWidgets.createInputFromOutputFluid(autoOutput, syncManager))
-                        .excludeAreaInRecipeViewer());
+        mainWidget.child(slotWidget.center().margin(0, 10));
     }
-    /*
-     * @Override
-     * public Widget createUIWidget() {
-     * int invTier = getTankSize(tier);
-     * var group = new WidgetGroup(0, 0, 18 * (invTier + 1) + 16, 18 * invTier + 16);
-     * var container = new WidgetGroup(4, 4, 18 * (invTier + 1) + 8, 18 * invTier + 8);
-     *
-     * int index = 0;
-     * for (int y = 0; y < invTier; y++) {
-     * for (int x = 0; x < invTier; x++) {
-     * container.addWidget(new SlotWidget(
-     * getInventory().storage, index++, 4 + x * 18, 4 + y * 18, true, true)
-     * .setBackgroundTexture(GuiTextures.SLOT));
-     * }
-     * }
-     *
-     * index = 0;
-     * for (int y = 0; y < invTier; y++) {
-     * container.addWidget(new TankWidget(
-     * tank.getStorages()[index++], 4 + invTier * 18, 4 + y * 18, true, true)
-     * .setBackground(GuiTextures.FLUID_SLOT));
-     * }
-     *
-     * container.setBackground(GuiTextures.BACKGROUND_INVERSE);
-     * group.addWidget(container);
-     * return group;
-     * }
-     */
 
     ////////////////////////////////
     // ********** Misc ***********//

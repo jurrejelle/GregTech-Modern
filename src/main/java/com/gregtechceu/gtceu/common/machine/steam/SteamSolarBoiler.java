@@ -13,12 +13,11 @@ import net.minecraft.util.RandomSource;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -33,7 +32,7 @@ public class SteamSolarBoiler extends SteamBoilerMachine {
     }
 
     @Override
-    public @NotNull Direction getFrontFacing() {
+    public Direction getFrontFacing() {
         return Direction.UP;
     }
 
@@ -71,7 +70,10 @@ public class SteamSolarBoiler extends SteamBoilerMachine {
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        super.buildMainUI(mainWidget, guiData, syncManager, settings);
+
         UITexture progressTexture = isHighPressure() ? GTGuiTextures.PROGRESS_BAR_SOLAR_STEEL :
                 GTGuiTextures.PROGRESS_BAR_SOLAR_BRONZE;
 
@@ -81,12 +83,10 @@ public class SteamSolarBoiler extends SteamBoilerMachine {
                     return 0.0f;
                 }));
 
-        return super.buildUI(data, syncManager, settings)
-                .child(new ProgressWidget()
-                        .top(30).right(18)
-                        .size(18)
-                        .texture(progressTexture, 20)
-                        .value(canSeeSun));
+        mainWidget.child(new ProgressWidget()
+                .size(18)
+                .texture(progressTexture, 20)
+                .value(canSeeSun));
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.cover.filter.ItemFilter;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.TieredEnergyMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.mui.MachineUIPanel;
 import com.gregtechceu.gtceu.api.machine.property.GTMachineModelProperties;
 import com.gregtechceu.gtceu.api.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
@@ -18,7 +19,6 @@ import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.common.mui.GTMuiMachineUtil;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.ISubscription;
 
@@ -35,11 +35,11 @@ import net.minecraft.world.phys.Vec3;
 
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandlers;
+import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.TextWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
@@ -307,50 +307,33 @@ public class ItemCollectorMachine extends TieredEnergyMachine
     }
 
     //////////////////////////////////////
-    // ******* Rendering ********//
+    // ******* GUI ********//
     //////////////////////////////////////
     // TODO(Onion): fix the gui stuff for this
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return new ModularPanel<>(getDefinition().getName())
-                .height(220)
-                .child(GTMuiWidgets.createTitleBar(getDefinition(), 174))
-                .bindPlayerInventory()
-                .child(Flow.column()
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget.child(Flow.column()
+                .size(MachineUIPanel.DEFAULT_CONTENT_WIDTH, 150)
+                .crossAxisAlignment(Alignment.CrossAxis.START)
+                .child(Flow.row()
+                        .coverChildren()
+                        .childPadding(2)
+                        .margin(5)
+                        .horizontalCenter()
+                        .child(new TextWidget<>(IKey.lang("gtceu.gui.item_collector.range")))
+                        .child(new TextFieldWidget()
+                                .setNumbers(1, maxRange)
+                                .value(SyncHandlers.intNumber(this::getRange, this::setRange))))
+                .child(Flow.row()
                         .coverChildrenHeight()
                         .widthRel(1)
-                        .crossAxisAlignment(Alignment.CrossAxis.START)
-                        .child(Flow.row()
-                                .coverChildren()
-                                .childPadding(2)
-                                .margin(5)
-                                .horizontalCenter()
-                                .child(new TextWidget<>(IKey.lang("gtceu.gui.item_collector.range")))
-                                .child(new TextFieldWidget()
-                                        .setNumbers(1, maxRange)
-                                        .value(SyncHandlers.intNumber(this::getRange, this::setRange))))
-                        .child(Flow.row()
-                                .coverChildrenHeight()
-                                .widthRel(1)
-                                .child(new ItemSlot()
-                                        .slot(filterInventory, 0)
-                                        .background(GTGuiTextures.SLOT, GTGuiTextures.FILTER_SLOT_OVERLAY)
-                                        .margin(7))
-                                .child(GTMuiMachineUtil
-                                        .createSquareSlotGroupFromInventory(output, "main_inv", syncManager)
-                                        .horizontalCenter())))
-                .child(Flow.col()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 8, 4, 4)
-                        .childPadding(2)
-                        .excludeAreaInRecipeViewer()
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .child(GTMuiWidgets.createPowerButton(this::isWorkingEnabled, this::setWorkingEnabled,
-                                syncManager))
-                        .child(GTMuiWidgets.createBatterySlot(getChargerInventory(), 0, syncManager))
-                        .child(GTMuiWidgets.createAutoOutputItemButton(this.autoOutput, syncManager)));
+                        .child(new ItemSlot()
+                                .slot(filterInventory, 0)
+                                .background(GTGuiTextures.SLOT, GTGuiTextures.FILTER_SLOT_OVERLAY)
+                                .margin(7))
+                        .child(GTMuiMachineUtil
+                                .createSquareSlotGroupFromInventory(output, "main_inv", syncManager)
+                                .horizontalCenter())));
     }
 }

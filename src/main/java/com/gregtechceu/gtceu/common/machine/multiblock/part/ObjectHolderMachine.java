@@ -12,20 +12,15 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
-import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widget.Widget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
@@ -96,24 +91,12 @@ public class ObjectHolderMachine extends MultiblockPartMachine {
     }
 
     @Override
-    public @NotNull ModularPanel<?> buildUI(@NotNull PosGuiData data, @NotNull PanelSyncManager syncManager,
-                                            @NotNull UISettings settings) {
-        return new ModularPanel<>(this.getDefinition().getName())
-                .size(176, 166)
-                .child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(1)
-                        .heightRel(0.5f)
-                        .child(internalUI(syncManager)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-    }
-
-    private Widget<?> internalUI(PanelSyncManager syncManager) {
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
         SlotGroup objectGroup = new SlotGroup("object_slot", 1);
         SlotGroup orbGroup = new SlotGroup("orb_slot", 1);
 
-        return Flow.row()
-                .crossAxisAlignment(Alignment.CrossAxis.CENTER)
+        mainWidget.child(Flow.row()
                 .center()
                 .coverChildren()
                 .child(new ItemSlot()
@@ -132,7 +115,7 @@ public class ObjectHolderMachine extends MultiblockPartMachine {
                         .background(GTGuiTextures.SLOT, GTGuiTextures.RESEARCH_STATION_OVERLAY)
                         .marginLeft(30)
                         .marginRight(30)
-                        .verticalCenter());
+                        .verticalCenter()));
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -17,8 +18,6 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
-import com.gregtechceu.gtceu.common.mui.GTGuis;
-import com.gregtechceu.gtceu.common.mui.GTMuiWidgets;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
@@ -34,7 +33,6 @@ import net.minecraft.world.level.material.Fluids;
 import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.drawable.Icon;
 import brachy.modularui.factory.PosGuiData;
-import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.UISettings;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.utils.Color;
@@ -47,7 +45,6 @@ import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widget.Widget;
 import brachy.modularui.widgets.ButtonWidget;
 import brachy.modularui.widgets.ListWidget;
-import brachy.modularui.widgets.SlotGroupWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.textfield.TextFieldWidget;
 import lombok.Getter;
@@ -60,7 +57,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class LargeBoilerMachine extends WorkableMultiblockMachine implements IMuiMachine {
+public class LargeBoilerMachine extends WorkableMultiblockMachine implements IMuiMachine, IVoidable {
 
     public static final int TICKS_PER_STEAM_GENERATION = 5;
 
@@ -218,29 +215,16 @@ public class LargeBoilerMachine extends WorkableMultiblockMachine implements IMu
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        var panel = GTGuis.createPanel(this, 176, 176);
-
-        panel.child(GTMuiWidgets.createTitleBar(this.getDefinition(), 176))
-                .child(new ParentWidget<>()
-                        .widthRel(0.95f)
-                        .heightRel(.45f)
-                        .margin(4, 0)
-                        .left(3).top(5)
-                        .child(Flow.row()
-                                .child(getMainTextPanel(syncManager, 170, 84))))
-                .child(Flow.column()
-                        .coverChildren()
-                        .leftRel(1.0f)
-                        .reverseLayout(true)
-                        .bottom(16)
-                        .padding(0, 4, 4, 4)
-                        .childPadding(2)
-                        .background(GTGuiTextures.BACKGROUND.getSubArea(0.25f, 0f, 1.0f, 1.0f))
-                        .excludeAreaInRecipeViewer()
-                        .child(GTMuiWidgets.createPowerButton(this, syncManager)))
-                .child(SlotGroupWidget.playerInventory(false).left(7).bottom(7));
-        return panel;
+    public void buildMainUI(ParentWidget<?> mainWidget, PosGuiData guiData, PanelSyncManager syncManager,
+                            UISettings settings) {
+        mainWidget.child(new ParentWidget<>()
+                .widthRel(0.95f)
+                .heightRel(.65f)
+                .margin(4, 0)
+                .left(3).top(2)
+                .horizontalCenter()
+                .child(Flow.row()
+                        .child(getMainTextPanel(syncManager, 186, 146))));
     }
 
     public Widget<?> getMainTextPanel(PanelSyncManager syncManager, int width, int height) {
@@ -251,7 +235,7 @@ public class LargeBoilerMachine extends WorkableMultiblockMachine implements IMu
                 .height(height - 6)
                 .childSeparator(Icon.EMPTY_2PX)
                 .crossAxisAlignment(Alignment.CrossAxis.START)
-                .leftRel(0)
+                .posRel(Alignment.CenterLeft)
                 .left(3)
                 .top(3);
         parentWidget.size(width, height)
