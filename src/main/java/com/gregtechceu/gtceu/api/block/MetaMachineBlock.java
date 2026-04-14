@@ -273,13 +273,12 @@ public class MetaMachineBlock extends Block implements EntityBlock {
             machine.setOwnerUUID(sPlayer.getUUID());
         }
 
-        InteractionResult machineInteractResult;
-        if (itemStack.isEmpty()) {
-            machineInteractResult = machine.onUse(new ExtendedUseOnContext(player, hand, hit));
-        } else {
-            machineInteractResult = machine.onUseWithItem(new ExtendedUseOnContext(player, hand, hit));
-        }
+        InteractionResult machineInteractResult = InteractionResult.PASS;
 
+        if (!itemStack.isEmpty())
+            machineInteractResult = machine.onUseWithItem(new ExtendedUseOnContext(player, hand, hit));
+        if (machineInteractResult != InteractionResult.PASS) return machineInteractResult;
+        machineInteractResult = machine.onUse(new ExtendedUseOnContext(player, hand, hit));
         if (machineInteractResult != InteractionResult.PASS) return machineInteractResult;
 
         if (itemStack.getItem() instanceof IGTTool gtToolItem) {

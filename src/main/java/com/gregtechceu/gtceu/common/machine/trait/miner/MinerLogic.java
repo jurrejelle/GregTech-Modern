@@ -502,7 +502,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
             mineY = pos.getY() - 1;
         }
         syncDataHolder.markClientSyncFieldDirty("mineY");
-        onRemove();
+        removePipes();
     }
 
     /**
@@ -651,7 +651,12 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         return getMachine().getBlockPos();
     }
 
-    public void onRemove() {
+    @Override
+    public void onMachineDestroyed() {
+        removePipes();
+    }
+
+    public void removePipes() {
         pipeLength = 0;
         if (getMachine().getLevel() instanceof ServerLevel serverLevel) {
             var pos = getMiningPos().relative(dir);

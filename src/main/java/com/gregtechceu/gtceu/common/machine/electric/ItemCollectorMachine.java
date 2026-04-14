@@ -170,7 +170,6 @@ public class ItemCollectorMachine extends TieredEnergyMachine
     public void onMachineDestroyed() {
         super.onMachineDestroyed();
         chargerInventory.dropInventoryInWorld(getLevel(), getBlockPos());
-        output.dropInventoryInWorld();
     }
 
     //////////////////////////////////////

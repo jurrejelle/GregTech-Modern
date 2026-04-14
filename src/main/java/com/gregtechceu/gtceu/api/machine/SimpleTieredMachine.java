@@ -58,6 +58,7 @@ public class SimpleTieredMachine extends WorkableTieredMachine
                         GTCapabilityHelper.getForgeEnergyItem(item) != null));
 
         this.circuitInventory = attachTrait(new NotifiableItemStackHandler(1, IO.IN, IO.NONE)
+                .shouldDropInventoryInWorld(!ConfigHolder.INSTANCE.machines.ghostCircuit)
                 .setFilter(IntCircuitBehaviour::isIntegratedCircuit));
     }
 
@@ -106,9 +107,6 @@ public class SimpleTieredMachine extends WorkableTieredMachine
     public void onMachineDestroyed() {
         super.onMachineDestroyed();
         chargerInventory.dropInventoryInWorld(getLevel(), getBlockPos());
-        if (!ConfigHolder.INSTANCE.machines.ghostCircuit) {
-            circuitInventory.dropInventoryInWorld();
-        }
     }
 
     /////////////////////////////////////

@@ -98,6 +98,7 @@ public class CrateMachine extends MetaMachine implements IMuiMachine,
                     stack.shrink(1);
                 }
                 isTaped = true;
+                inventory.shouldDropInventoryInWorld(false);
                 setRenderState(getRenderState().setValue(GTMachineModelProperties.IS_TAPED, isTaped));
                 syncDataHolder.markClientSyncFieldDirty("isTaped");
                 return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
@@ -132,11 +133,5 @@ public class CrateMachine extends MetaMachine implements IMuiMachine,
     @Override
     public boolean saveBreak() {
         return isTaped;
-    }
-
-    @Override
-    public void onMachineDestroyed() {
-        super.onMachineDestroyed();
-        if (!isTaped) inventory.dropInventoryInWorld();
     }
 }
