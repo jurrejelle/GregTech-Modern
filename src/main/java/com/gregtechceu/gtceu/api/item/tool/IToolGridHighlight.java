@@ -40,7 +40,7 @@ public interface IToolGridHighlight {
      * @return The icon to be rendered, or null
      */
     default @Nullable UITexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
-                                               Direction side) {
+                                         Direction side) {
         return null;
     }
 }
