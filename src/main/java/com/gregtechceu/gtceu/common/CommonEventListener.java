@@ -179,17 +179,16 @@ public class CommonEventListener {
 
         ItemStack toolStack = event.getPlayer().getItemInHand(event.getPlayer().getUsedItemHand());
         if (toolStack.getItem() instanceof IGTTool tool) {
-            if (tool.definition$onBlockStartBreak(toolStack, event.getPos(), event.getPlayer())) {
-                event.setCanceled(true);
-            }
+            tool.definition$onBlockStartBreak(toolStack, event.getPos(), event.getPlayer());
         }
     }
 
     @SubscribeEvent
     public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
         var machine = MetaMachine.getMachine(event.getLevel(), event.getPos());
-        if (machine != null)
+        if (machine != null) {
             event.setCanceled(machine.onLeftClick(event.getEntity(), event.getHand(), event.getFace()));
+        }
     }
 
     @SubscribeEvent

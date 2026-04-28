@@ -48,7 +48,6 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -66,7 +65,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.event.EventHooks;
 
 import it.unimi.dsi.fastutil.chars.Char2ReferenceMap;
@@ -74,7 +72,6 @@ import it.unimi.dsi.fastutil.chars.Char2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.chars.CharSet;
 import it.unimi.dsi.fastutil.chars.CharSets;
 import lombok.experimental.ExtensionMethod;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -146,7 +143,7 @@ public class ToolHelper {
         return stack.getDamageValue() <= stack.getMaxDamage();
     }
 
-    public static void damageItem(@NotNull ItemStack stack, @Nullable LivingEntity user, int damage) {
+    public static void damageItem(ItemStack stack, @Nullable LivingEntity user, int damage) {
         if (!(stack.getItem() instanceof IGTTool tool)) {
             if (user != null) stack.hurtAndBreak(damage, user, EquipmentSlot.MAINHAND);
         } else {
@@ -247,10 +244,10 @@ public class ToolHelper {
         int currentDurability = stack.getDamageValue();
         int maximumDurability = stack.getMaxDamage();
         int remainingUses = maximumDurability - currentDurability;
-        var harvestableBlocks = getHarvestableBlocks(stack, player);
+        List<BlockPos> harvestableBlocks = getHarvestableBlocks(stack, player);
         if (!harvestableBlocks.isEmpty()) {
             for (BlockPos pos : harvestableBlocks) {
-                if (!destroyBlock(player, stack, pos, pos == targeted)) {
+                if (!destroyBlock(player, stack, pos, pos.equals(targeted))) {
                     return true;
                 }
 
@@ -300,7 +297,7 @@ public class ToolHelper {
         for (int depth = 0; depth <= aoeDefinition.layer(); depth++) {
             for (int top = aoeRowEnd; top >= aoeRowStart; top--) {
                 for (int side = -aoeDefinition.column(); side <= aoeDefinition.column(); side++) {
-                    var pos = context.getClickedPos()
+                    BlockPos pos = context.getClickedPos()
                             .relative(depthDirection, depth)
                             .relative(topDirection, top)
                             .relative(sideDirection, side);
@@ -406,10 +403,6 @@ public class ToolHelper {
 
     public static boolean destroyBlock(ServerPlayer player, ItemStack tool, BlockPos pos, boolean playSound) {
         DO_BLOCK_BREAK_SOUND_PARTICLES.set(playSound);
-        // This is *not* a vanilla/forge convention, Forge never added "shears" to ItemShear's tool classes.
-        if (isTool(tool, GTToolType.SHEARS) && shearBlockRoutine(player, tool, pos) == 0) {
-            return false;
-        }
         Level level = player.level();
 
         // we set this flag when firing the event so the event listener that starts this whole thing doesn't cascade
@@ -473,7 +466,7 @@ public class ToolHelper {
     public static List<BlockPos> getHarvestableBlocks(ItemStack stack, Player player) {
         if (!hasBehaviorsComponent(stack)) return Collections.emptyList();
 
-        var aoeDefinition = getAoEDefinition(stack);
+        AoESymmetrical aoeDefinition = getAoEDefinition(stack);
         if (aoeDefinition.isZero()) {
             return Collections.emptyList();
         }
@@ -566,8 +559,7 @@ public class ToolHelper {
     }
 
     // encompasses all vanilla special case tool checks for harvesting
-    public static boolean isToolEffective(ItemStack stack, BlockState state, Set<GTToolType> toolClasses,
-                                          int harvestLevel) {
+    public static boolean isToolEffective(ItemStack stack, BlockState state) {
         Tool tool = stack.get(DataComponents.TOOL);
         return tool != null && tool.isCorrectForDrops(state);
     }
@@ -579,7 +571,7 @@ public class ToolHelper {
      * @param stack  stack to be damaged
      * @param entity entity that has damaged this stack
      */
-    public static void damageItemWhenCrafting(@NotNull ItemStack stack, @Nullable LivingEntity entity) {
+    public static void damageItemWhenCrafting(ItemStack stack, @Nullable LivingEntity entity) {
         int damage = 2;
         if (stack.getItem() instanceof IGTTool) {
             damage = ((IGTTool) stack.getItem()).getToolStats().getToolDamagePerCraft(stack);
@@ -601,7 +593,7 @@ public class ToolHelper {
      * @param stack  stack to be damaged
      * @param entity entity that has damaged this stack
      */
-    public static void damageItem(@NotNull ItemStack stack, @Nullable LivingEntity entity) {
+    public static void damageItem(ItemStack stack, @Nullable LivingEntity entity) {
         damageItem(stack, entity, 1);
     }
 
@@ -615,45 +607,6 @@ public class ToolHelper {
             Block block = state.getBlock();
             if (block instanceof WebBlock) {
                 return 15.0F;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Shearing a Block.
-     *
-     * @return -1 if not shearable, otherwise return 0 or 1, 0 if tool is now broken.
-     */
-    public static int shearBlockRoutine(ServerPlayer player, ItemStack tool, BlockPos pos) {
-        if (!player.isCreative()) {
-            Level world = player.serverLevel();
-            BlockState state = world.getBlockState(pos);
-            if (state.getBlock() instanceof IShearable shearable) {
-                if (shearable.isShearable(player, tool, world, pos)) {
-                    List<ItemStack> shearedDrops = shearable.onSheared(player, tool, world, pos);
-                    boolean relocateMinedBlocks = tool.has(GTDataComponents.RELOCATE_MINED_BLOCKS);
-                    Iterator<ItemStack> iter = shearedDrops.iterator();
-                    while (iter.hasNext()) {
-                        ItemStack stack = iter.next();
-                        if (relocateMinedBlocks && player.addItem(stack)) {
-                            iter.remove();
-                        } else {
-                            float f = 0.7F;
-                            double xo = world.random.nextFloat() * f + 0.15D;
-                            double yo = world.random.nextFloat() * f + 0.15D;
-                            double zo = world.random.nextFloat() * f + 0.15D;
-                            ItemEntity entityItem = new ItemEntity(world, pos.getX() + xo, pos.getY() + yo,
-                                    pos.getZ() + zo, stack);
-                            entityItem.setDefaultPickUpDelay();
-                            world.addFreshEntity(entityItem);
-                        }
-                    }
-                    ToolHelper.damageItem(tool, player, 1);
-                    player.awardStat(Stats.BLOCK_MINED.get((Block) shearable));
-                    world.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
-                    return tool.isEmpty() ? 0 : 1;
-                }
             }
         }
         return -1;
@@ -675,8 +628,7 @@ public class ToolHelper {
      * @param state the BlockState of the block
      * @return the silk touch drop
      */
-    @NotNull
-    public static List<ItemStack> getSilkTouchDrop(ServerLevel level, BlockPos origin, @NotNull BlockState state) {
+    public static List<ItemStack> getSilkTouchDrop(ServerLevel level, BlockPos origin, BlockState state) {
         ItemStack tool = GTMaterialItems.TOOL_ITEMS.get(GTMaterials.Neutronium, GTToolType.PICKAXE).get().get();
         // oh wow, this exists now. cool!
         EnchantmentHelper.enchantItemFromProvider(

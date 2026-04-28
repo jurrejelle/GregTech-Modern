@@ -138,13 +138,11 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         return GTMaterials.Iron;
     }
 
-    @Nullable
-    default ToolProperty getToolProperty() {
+    default @Nullable ToolProperty getToolProperty() {
         return getMaterial().getProperty(PropertyKey.TOOL);
     }
 
-    @Nullable
-    default DustProperty getDustProperty(ItemStack stack) {
+    default @Nullable DustProperty getDustProperty(ItemStack stack) {
         return getToolMaterial(stack).getProperty(PropertyKey.DUST);
     }
 
@@ -257,15 +255,6 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         return getMaterialHarvestLevel() + getToolStats().getBaseQuality();
     }
 
-    // Item.class methods
-    default float definition$getDestroySpeed(ItemStack stack, BlockState state) {
-        if (isToolEffective(stack, state, getToolClasses(stack), getTotalHarvestLevel())) {
-            return getTotalToolSpeed();
-        }
-
-        return getToolStats().isToolEffective(state) ? getToolStats().getTool().getMiningSpeed(state) : 1.0F;
-    }
-
     default boolean definition$hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         getBehaviorsComponent(stack).behaviors()
                 .forEach((key, behavior) -> behavior.hitEntity(stack, target, attacker));
@@ -273,60 +262,48 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         return true;
     }
 
-    default boolean definition$onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
-        if (player.level().isClientSide) return false;
+    default void definition$onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
+        if (!(player instanceof ServerPlayer serverPlayer)) return;
+        if (player.isShiftKeyDown()) return;
+
         getBehaviorsComponent(stack).behaviors()
                 .forEach((type, behavior) -> behavior.onBlockStartBreak(stack, pos, player));
 
-        if (!player.isShiftKeyDown()) {
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-            int result = -1;
-            if (isTool(stack, GTToolType.SHEARS)) {
-                result = shearBlockRoutine(serverPlayer, stack, pos);
-            }
-            if (result != 0) {
-                // prevent exploits with instantly breakable blocks
-                BlockState state = player.level().getBlockState(pos);
-                boolean effective = isToolEffective(stack, state, getToolClasses(stack), getTotalHarvestLevel());
+        // prevent exploits with instantly breakable blocks
+        BlockState state = player.level().getBlockState(pos);
 
-                if (effective) {
-                    if (areaOfEffectBlockBreakRoutine(stack, serverPlayer, pos)) {
-                        if (playSoundOnBlockDestroy()) playSound(player);
-                    } else {
-                        if (result == -1) {
-                            var behavior = getBehaviorsComponent(stack).getBehavior(GTToolBehaviors.TREE_FELLING);
-                            if (behavior != null && behavior.isEnabled() && state.is(BlockTags.LOGS)) {
-                                TreeFellingHelper.fellTree(stack, player.level(), state, pos, player);
-                            }
-                            if (playSoundOnBlockDestroy()) playSound(player);
-                        } else {
-                            return true;
-                        }
-                    }
-                }
+        if (!isToolEffective(stack, state)) {
+            return;
+        }
+        if (!areaOfEffectBlockBreakRoutine(stack, serverPlayer, pos)) {
+            var behavior = getBehaviorsComponent(stack).getBehavior(GTToolBehaviors.TREE_FELLING);
+            if (behavior != null && behavior.isEnabled() && state.is(BlockTags.LOGS)) {
+                TreeFellingHelper.fellTree(stack, player.level(), state, pos, player);
             }
         }
-        return false;
+        if (playSoundOnBlockDestroy()) {
+            playSound(player);
+        }
     }
 
-    default boolean definition$mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos,
-                                         LivingEntity entityLiving) {
-        if (!worldIn.isClientSide) {
-            getToolStats().getBehaviors()
-                    .forEach(behavior -> behavior.onBlockDestroyed(stack, worldIn, state, pos, entityLiving));
+    default void definition$mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos,
+                                      LivingEntity entity) {
+        if (level.isClientSide) {
+            return;
+        }
+        getToolStats().getBehaviors()
+                .forEach(behavior -> behavior.onBlockDestroyed(stack, level, state, pos, entity));
 
-            if ((double) state.getDestroySpeed(worldIn, pos) != 0.0D) {
-                damageItem(stack, entityLiving, getToolStats().getToolDamagePerBlockBreak(stack));
-            }
-            if (entityLiving instanceof Player && playSoundOnBlockDestroy()) {
-                // sneaking disables AOE, which means it is okay to play the sound
-                // not checking this means the sound will play for every AOE broken block, which is very loud
-                if (entityLiving.isShiftKeyDown()) {
-                    playSound((Player) entityLiving);
-                }
+        if (state.getDestroySpeed(level, pos) != 0.0) {
+            damageItem(stack, entity, getToolStats().getToolDamagePerBlockBreak(stack));
+        }
+        if (entity instanceof Player player && playSoundOnBlockDestroy()) {
+            // sneaking disables AOE, which means it is okay to play the sound
+            // not checking this means the sound will play for every AOE broken block, which is very loud
+            if (entity.isShiftKeyDown()) {
+                playSound(player);
             }
         }
-        return true;
     }
 
     default boolean definition$isValidRepairItem(ItemStack toRepair, ItemStack repair) {
@@ -414,8 +391,7 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
                 .anyMatch(behavior -> behavior.canDisableShield(stack, shield, entity, attacker));
     }
 
-    default boolean definition$doesSneakBypassUse(@NotNull ItemStack stack, @NotNull BlockGetter world,
-                                                  @NotNull BlockPos pos, @NotNull Player player) {
+    default boolean definition$doesSneakBypassUse(ItemStack stack, BlockGetter world, BlockPos pos, Player player) {
         return getToolStats().doesSneakBypassUse();
     }
 
@@ -556,7 +532,7 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         return true;
     }
 
-    default void definition$fillItemCategory(CreativeModeTab category, @NotNull NonNullList<ItemStack> items) {
+    default void definition$fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
         if (isElectric()) {
             items.add(get(Integer.MAX_VALUE));
         } else {
@@ -564,8 +540,8 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         }
     }
 
-    default void definition$appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context,
-                                            @NotNull List<Component> tooltip, TooltipFlag flag) {
+    default void definition$appendHoverText(ItemStack stack, Item.TooltipContext context,
+                                            List<Component> tooltip, TooltipFlag flag) {
         if (!(stack.getItem() instanceof IGTTool tool)) return;
 
         IGTToolDefinition toolStats = tool.getToolStats();
@@ -749,13 +725,6 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
             ElectricStats item = ElectricStats.createElectricItem(0L, getElectricTier());
             item.attachCapabilities(event, this.asItem());
         }
-    }
-
-    default boolean definition$isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        if (stack.getItem() instanceof IGTTool gtTool) {
-            return isToolEffective(stack, state, gtTool.getToolClasses(stack), gtTool.getTotalHarvestLevel());
-        }
-        return stack.isCorrectToolForDrops(state);
     }
 
     static int tintColor(ItemStack stack, int index) {
