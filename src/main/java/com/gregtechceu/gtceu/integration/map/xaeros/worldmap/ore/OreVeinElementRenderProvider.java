@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.integration.map.xaeros.worldmap.ore;
 import com.gregtechceu.gtceu.integration.map.xaeros.XaerosRenderer;
 
 import xaero.map.WorldMap;
+import xaero.map.common.config.option.WorldMapProfiledConfigOptions;
 import xaero.map.element.MapElementRenderProvider;
 
 import java.util.Iterator;
@@ -14,12 +15,14 @@ public class OreVeinElementRenderProvider extends MapElementRenderProvider<OreVe
     public OreVeinElementRenderProvider() {}
 
     public void begin(int location, OreVeinElementContext context) {
-        if (WorldMap.settings.waypoints) {
+        if (WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(
+                WorldMapProfiledConfigOptions.WAYPOINT_BACKGROUNDS)) {
             this.iterator = XaerosRenderer.oreElements.values()
                     .stream()
                     .map(element -> new OreVeinElement(element.getVein(), element.getName()))
                     .iterator();
-            context.worldmapWaypointsScale = WorldMap.settings.worldmapWaypointsScale;
+            context.worldmapWaypointsScale = WorldMap.INSTANCE.getConfigs().getClientConfigManager()
+                    .getEffective(WorldMapProfiledConfigOptions.WAYPOINT_SCALE).floatValue();
         } else {
             this.iterator = null;
         }
