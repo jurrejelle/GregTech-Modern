@@ -6,7 +6,6 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.sound.SoundEntry;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
-import com.gregtechceu.gtceu.integration.kjs.helpers.GTResourceLocation;
 
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
 import com.lowdragmc.lowdraglib.gui.texture.ProgressTexture;
@@ -49,17 +48,14 @@ public class GTRecipeTypeBuilder extends BuilderBase<GTRecipeType> {
     protected transient int maxTooltips;
 
     @Setter
-    @Nullable
-    private transient GTRecipeType smallRecipeMap;
+    private transient @Nullable GTRecipeType smallRecipeMap;
     @Setter
-    @Nullable
-    private transient Supplier<ItemStack> iconSupplier;
-    @Nullable
+    private transient @Nullable Supplier<ItemStack> iconSupplier;
     @Setter
-    protected transient BiConsumer<GTRecipe, WidgetGroup> uiBuilder;
+    protected transient @Nullable BiConsumer<GTRecipe, WidgetGroup> uiBuilder;
 
-    public GTRecipeTypeBuilder(ResourceLocation i) {
-        super(GTResourceLocation.implicitAsGtceu(i));
+    public GTRecipeTypeBuilder(ResourceLocation id) {
+        super(id);
         name = this.id.getPath();
         category = "custom";
         maxInputs = new Object2IntOpenHashMap<>();
@@ -138,7 +134,7 @@ public class GTRecipeTypeBuilder extends BuilderBase<GTRecipeType> {
 
     @Override
     public GTRecipeType createObject() {
-        var type = GTRecipeTypes.register(name, category);
+        var type = GTRecipeTypes.register(this.id, this.category);
         type.maxInputs.putAll(maxInputs);
         type.maxOutputs.putAll(maxOutputs);
         type.getRecipeUI().getSlotOverlays().putAll(slotOverlays);

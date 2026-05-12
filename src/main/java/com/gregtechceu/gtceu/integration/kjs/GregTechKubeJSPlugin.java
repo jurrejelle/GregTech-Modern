@@ -74,8 +74,6 @@ import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 import com.gregtechceu.gtceu.common.data.models.GTMachineModels;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
 import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitiveFancyUIWorkableMachine;
-import com.gregtechceu.gtceu.data.pack.GTDynamicDataPack;
-import com.gregtechceu.gtceu.data.pack.GTDynamicResourcePack;
 import com.gregtechceu.gtceu.data.recipe.CraftingComponent;
 import com.gregtechceu.gtceu.data.recipe.GTCraftingComponents;
 import com.gregtechceu.gtceu.integration.kjs.builders.ElementBuilder;
@@ -100,17 +98,13 @@ import com.gregtechceu.gtceu.integration.kjs.recipe.GTShapedRecipeSchema;
 import com.gregtechceu.gtceu.integration.kjs.recipe.KJSHelpers;
 import com.gregtechceu.gtceu.integration.kjs.recipe.components.*;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
-import dev.latvian.mods.kubejs.DevProperties;
 import dev.latvian.mods.kubejs.block.state.BlockStatePredicate;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
@@ -122,50 +116,10 @@ import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.registry.RegistryObjectStorage;
 import dev.latvian.mods.kubejs.registry.ServerRegistryRegistry;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
-import dev.latvian.mods.kubejs.script.ConsoleJS;
 import dev.latvian.mods.kubejs.script.TypeWrapperRegistry;
 import dev.latvian.mods.rhino.Wrapper;
-import org.jetbrains.annotations.ApiStatus;
 
 public class GregTechKubeJSPlugin implements KubeJSPlugin {
-
-    @ApiStatus.Internal
-    public static void registerWrappers(RegisterEvent event) {
-        registerWrappers(event, GTRegistries.MACHINE_REGISTRY);
-        registerWrappers(event, GTRegistries.MATERIAL_REGISTRY);
-    }
-
-    private static <T> void registerWrappers(RegisterEvent event, ResourceKey<Registry<T>> registryKey) {
-        if (event.getRegistryKey() != registryKey) {
-            return;
-        }
-        var objStorage = RegistryObjectStorage.of(registryKey);
-        ResourceLocation registryLoc = registryKey.location();
-
-        int added = 0;
-
-        for (var builder : objStorage) {
-            if (builder.dummyBuilder) {
-                // don't actually register anything here, the wrapper builders register themselves with Registrate
-                builder.createTransformedObject();
-
-                if (DevProperties.get().logRegistryEventObjects) {
-                    ConsoleJS.STARTUP.info("+ " + registryLoc + " | " + builder.id);
-                }
-                added++;
-            }
-
-            // add all registry objects' namespaces to the dynamic packs so their resources are listed as expected.
-            // although usually only one namespace is used, it's easier and faster to
-            // just always add them to the set than to check if they're already added.
-            if (GTCEu.isClientSide()) GTDynamicResourcePack.addNamespace(builder.id.getNamespace());
-            GTDynamicDataPack.addNamespace(builder.id.getNamespace());
-        }
-
-        if (!objStorage.objects.isEmpty() && DevProperties.get().logRegistryEventObjects) {
-            GTCEu.LOGGER.info("Registered {}/{} objects of {}", added, objStorage.objects.size(), registryLoc);
-        }
-    }
 
     @Override
     public void registerBuilderTypes(BuilderTypeRegistry registry) {
