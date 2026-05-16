@@ -1,6 +1,5 @@
 package com.gregtechceu.gtceu.common.mui;
 
-import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.cover.filter.Filter;
@@ -11,7 +10,6 @@ import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
-import com.gregtechceu.gtceu.api.recipe.gui.GTRecipeTypeUILayout;
 import com.gregtechceu.gtceu.common.cover.data.BucketMode;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
 import com.gregtechceu.gtceu.common.machine.trait.AutoOutputTrait;
@@ -26,7 +24,7 @@ import net.minecraft.world.item.Items;
 
 import brachy.modularui.api.IPanelHandler;
 import brachy.modularui.api.drawable.IDrawable;
-import brachy.modularui.api.drawable.IKey;
+import brachy.modularui.api.drawable.Text;
 import brachy.modularui.drawable.*;
 import brachy.modularui.drawable.text.TextRenderer;
 import brachy.modularui.factory.SidedPosGuiData;
@@ -51,6 +49,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.*;
 
 public class GTMuiWidgets {
@@ -85,7 +84,7 @@ public class GTMuiWidgets {
         int textTitleWidth = TextRenderer.getFont().width(text);
 
         int textRows = (int) Math.ceil((double) textTitleWidth / minPanelWidth);
-        int textHeightPerRow = (int) (IKey.renderer.getFontHeight());
+        int textHeightPerRow = (int) (Text.renderer.getFontHeight());
         int textHeight = textHeightPerRow * textRows + borderRadius;
 
         int rowWidth = Math.min((int) (0.9 * panelWidth), (iconSize + (borderRadius * 4) + textTitleWidth));
@@ -101,7 +100,7 @@ public class GTMuiWidgets {
                 .child(icon.size(iconSize)
                         .asWidget()
                         .marginLeft(borderRadius))
-                .child(IKey.str(text)
+                .child(Text.str(text)
                         .asWidget()
                         .margin(borderRadius, borderRadius, borderRadius, 1)
                         .size(Math.min(minPanelWidth, textTitleWidth), textHeight));
@@ -109,25 +108,25 @@ public class GTMuiWidgets {
 
     public static ToggleButton createToggleButton(BooleanSupplier getter, BooleanConsumer setter, UITexture texture,
                                                   String langKey) {
-        var value = new BooleanSyncValue(getter, setter);
+        var value = new BooleanSyncValue(getter, setter).allowC2S();
         return new ToggleButton()
                 .value(value)
                 .overlay(texture)
                 .tooltipAutoUpdate(true)
                 .tooltipBuilder(
-                        (r) -> r.addLine(IKey.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
+                        (r) -> r.addLine(Text.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
     }
 
     public static ToggleButton createToggleButton(BooleanSupplier getter, BooleanConsumer setter, UITexture background,
                                                   UITexture selectedBackground, String langKey) {
-        var value = new BooleanSyncValue(getter, setter);
+        var value = new BooleanSyncValue(getter, setter).allowC2S();
         return new ToggleButton()
                 .value(value)
                 .selectedBackground(selectedBackground)
                 .background(background)
                 .tooltipAutoUpdate(true)
                 .tooltipBuilder(
-                        (r) -> r.addLine(IKey.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
+                        (r) -> r.addLine(Text.lang(langKey + (value.getBoolValue() ? ".enabled" : ".disabled"))));
     }
 
     public static ToggleButton createPowerButton(IRecipeLogicMachine recipeLogicMachine) {
@@ -173,13 +172,13 @@ public class GTMuiWidgets {
 
     public static CycleButtonWidget createVoidingButton(IVoidable voidable) {
         var value = new EnumSyncValue<>(IVoidable.VoidingMode.class, voidable::getVoidingMode,
-                voidable::setVoidingMode);
+                voidable::setVoidingMode).allowC2S();
 
         return new CycleButtonWidget()
-                .overlay(GTGuiTextures.BUTTON_VOID_MULTIBLOCK)
+                .overlay(new DynamicDrawable(() -> GTGuiTextures.BUTTON_VOID_MULTIBLOCK[value.getIntValue()]))
                 .value(value)
                 .tooltipBuilder(
-                        r -> r.addLine(IKey.dynamic(() -> Component.translatable(value.getValue().getTooltip()))));
+                        r -> r.addLine(Text.dynamic(() -> Component.translatable(value.getValue().getTooltip()))));
     }
 
     public static ToggleButton createDistinctnessButton(IDistinctPart distinct) {
@@ -217,14 +216,14 @@ public class GTMuiWidgets {
             return IntCircuitBehaviour.getCircuitConfiguration(circuitGetter.get());
         },
                 (v) -> circuitSetter.accept(v < 0 ? ItemStack.EMPTY :
-                        IntCircuitBehaviour.stack(v)));
+                        IntCircuitBehaviour.stack(v)))
+                .allowC2S();
     }
 
     public static ModularPanel<?> createCircuitSlotPanel(IntSyncValue circuitSyncValue, PanelSyncManager syncManager) {
-        syncManager.syncValue("circuit_slot", circuitSyncValue);
         Grid buttonGrid = new Grid()
                 .coverChildren()
-                .mapTo(8, 32, i -> new ToggleButton()
+                .gridOfSizeWidth(32, 8, (x, y, i) -> new ToggleButton()
                         .size(18)
                         .padding(1)
                         .overlay(new ItemDrawable().setItem(IntCircuitBehaviour.stack(i + 1)))
@@ -245,7 +244,7 @@ public class GTMuiWidgets {
                         .childPadding(7)
                         .top(3)
                         .leftRel(0.5f)
-                        .child(IKey.lang("item.gtceu.circuit.integrated.gui").asWidget())
+                        .child(Text.lang("item.gtceu.circuit.integrated.gui").asWidget())
                         .child(buttonGrid));
     }
 
@@ -253,6 +252,7 @@ public class GTMuiWidgets {
                                                          Supplier<ItemStack> circuitGetter,
                                                          PanelSyncManager syncManager) {
         IntSyncValue circuitSyncValue = createCircuitSlotSyncValue(circuitSetter, circuitGetter);
+        syncManager.syncValue("circuit_slot", circuitSyncValue);
         return createCircuitSlotPanel(circuitSyncValue, syncManager);
     }
 
@@ -261,6 +261,8 @@ public class GTMuiWidgets {
         IntSyncValue circuitSyncValue = createCircuitSlotSyncValue(
                 i -> machine.getCircuitInventory().setStackInSlot(0, i),
                 () -> machine.getCircuitInventory().getStackInSlot(0));
+
+        syncManager.syncValue("circuit_slot", circuitSyncValue);
         IPanelHandler circuitPanelHandler = syncManager.syncedPanel("circuit_panel", true,
                 (sm, sh) -> createCircuitSlotPanel(circuitSyncValue, sm)
                         .relative(parentPanel)
@@ -268,7 +270,7 @@ public class GTMuiWidgets {
 
         return new ButtonWidget<>()
                 .size(18)
-                .onMousePressed((x, y, b) -> {
+                .onMousePressed((context, b) -> {
                     if (b == InputConstants.MOUSE_BUTTON_LEFT || b == InputConstants.MOUSE_BUTTON_RIGHT) {
                         circuitPanelHandler.openPanel();
                     } else if (b == InputConstants.MOUSE_BUTTON_MIDDLE) {
@@ -276,7 +278,7 @@ public class GTMuiWidgets {
                     }
                     return true;
                 })
-                .onMouseScrolled((x, y, delta) -> {
+                .onMouseScrolled((context, delta) -> {
                     int newValue = nextCircuitValue(machine.getCircuitInventory().getStackInSlot(0),
                             circuitSyncValue.getIntValue(), delta);
                     circuitSyncValue.setValue(newValue);
@@ -291,10 +293,10 @@ public class GTMuiWidgets {
                             .asIcon().size(16);
                 }))
                 .tooltipAutoUpdate(true)
-                .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("metaitem.int_circuit.configuration",
+                .tooltipBuilder((r) -> r.addLine(Text.lang("metaitem.int_circuit.configuration",
                         (machine.getCircuitInventory().getStackInSlot(0).isEmpty() ? 0 :
                                 IntCircuitBehaviour
-                                        .getCircuitConfiguration(machine.getCircuitInventory().getStackInSlot(0)))))));
+                                        .getCircuitConfiguration(machine.getCircuitInventory().getStackInSlot(0))))));
     }
 
     private static int nextCircuitValue(ItemStack stack, int current, double delta) {
@@ -322,13 +324,6 @@ public class GTMuiWidgets {
                 return current - 1;
             }
         }
-    }
-
-    public static IDrawable.DrawableWidget createGTLogo() {
-        if (GTValues.XMAS.getAsBoolean()) {
-            return new IDrawable.DrawableWidget(GTGuiTextures.GREGTECH_LOGO_XMAS);
-        }
-        return new IDrawable.DrawableWidget(GTGuiTextures.GREGTECH_LOGO);
     }
 
     public static String[] createGrid(int amount, int rowSize, boolean output, char key) {
@@ -359,14 +354,10 @@ public class GTMuiWidgets {
         return grid;
     }
 
-    public static ParentWidget<?> createXEIWidget(GTRecipeTypeUILayout layout) {
-        return new ParentWidget<>();
-    }
-
     public static CycleButtonWidget createIOCycleButton(EnumSyncValue<IO> syncValue, boolean allowExtendedIO) {
         // Done so the cycle button doesn't create states for every IO enum entry
 
-        IntSyncValue syncVal = new IntSyncValue(syncValue::getIntValue, syncValue::setIntValue);
+        IntSyncValue syncVal = new IntSyncValue(syncValue::getIntValue, syncValue::setIntValue).allowC2S();
 
         var cycleButton = new CycleButtonWidget()
                 .stateCount(allowExtendedIO ? 4 : 2)
@@ -374,7 +365,7 @@ public class GTMuiWidgets {
                 .stateOverlay(IO.OUT, IO.OUT.getUiTexture())
                 .value(syncVal)
                 .tooltipBuilder(
-                        r -> r.addLine(IKey.dynamic(() -> Component.translatable(syncValue.getValue().getTooltip()))));
+                        r -> r.addLine(Text.dynamic(() -> Component.translatable(syncValue.getValue().getTooltip()))));
 
         if (allowExtendedIO) {
             cycleButton.stateOverlay(IO.BOTH, IO.BOTH.getUiTexture());
@@ -402,7 +393,7 @@ public class GTMuiWidgets {
                     S filter = filterHandler.loadFilter(stack);
 
                     return new ButtonWidget<>()
-                            .onMousePressed((x, y, b) -> {
+                            .onMousePressed((context, b) -> {
                                 panelHandler.openPanel();
                                 return true;
                             });
@@ -438,11 +429,11 @@ public class GTMuiWidgets {
         return adjust;
     }
 
-    private static IKey createAdjustOverlay(boolean increment) {
+    private static Text createAdjustOverlay(boolean increment) {
         return createAdjustOverlay(increment, 1);
     }
 
-    private static IKey createAdjustOverlay(boolean increment, long step) {
+    private static Text createAdjustOverlay(boolean increment, long step) {
         final StringBuilder builder = new StringBuilder();
         builder.append(increment ? '+' : '-');
         builder.append(getIncrementValue(MouseData.create(-1), step));
@@ -455,7 +446,7 @@ public class GTMuiWidgets {
         } else if (builder.length() > 4) {
             scale = 0.5f;
         }
-        return IKey.str(builder.toString())
+        return Text.str(builder.toString())
                 .color(Color.WHITE.main)
                 .scale(scale);
     }
@@ -468,12 +459,12 @@ public class GTMuiWidgets {
     public static ParentWidget<?> createIntInputWithButtons(IntSyncValue syncValue, IntSupplier minValue,
                                                             IntSupplier maxValue, int step, IDrawable background) {
         StringSyncValue formattedValue = new StringSyncValue(syncValue::getStringValue,
-                syncValue::setStringValue);
+                syncValue::setStringValue).allowC2S();
 
         var textField = new TextFieldWidget() {
 
             @Override
-            public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+            public boolean onMouseScrolled(double delta) {
                 int inc = (int) delta * getIncrementValue(MouseData.create(-1), 1);
                 int val = Mth.clamp(syncValue.getIntValue() + inc, minValue.getAsInt(),
                         maxValue.getAsInt());
@@ -492,7 +483,7 @@ public class GTMuiWidgets {
                 .widthRel(1.0f)
                 .child(new ButtonWidget<>()
                         .width(18)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             int val = syncValue.getIntValue() - getIncrementValue(MouseData.create(button), step);
                             val = Mth.clamp(val, minValue.getAsInt(), maxValue.getAsInt());
                             syncValue.setIntValue(val, true, true);
@@ -502,7 +493,7 @@ public class GTMuiWidgets {
                 .child(textField)
                 .child(new ButtonWidget<>()
                         .width(18).right(0)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             int val = syncValue.getIntValue() + getIncrementValue(MouseData.create(button), step);
                             val = Mth.clamp(val, minValue.getAsInt(), maxValue.getAsInt());
                             syncValue.setIntValue(val, true, true);
@@ -519,15 +510,13 @@ public class GTMuiWidgets {
     public static ParentWidget<?> createLongInputWithButtons(LongSyncValue syncValue, LongSupplier minValue,
                                                              LongSupplier maxValue, long step, IDrawable background) {
         StringSyncValue formattedValue = new StringSyncValue(syncValue::getStringValue,
-                syncValue::setStringValue);
+                syncValue::setStringValue).allowC2S();
 
         var textField = new TextFieldWidget() {
 
             @Override
-            public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+            public boolean onMouseScrolled(double delta) {
                 long inc = (long) delta * getIncrementValue(MouseData.create(-1), 1);
-                long min = minValue.getAsLong();
-                long max = maxValue.getAsLong();
                 long value = syncValue.getLongValue() + inc;
                 syncValue.setLongValue(GTMath.clamp(value, minValue.getAsLong(), maxValue.getAsLong()),
                         true, true);
@@ -545,7 +534,7 @@ public class GTMuiWidgets {
                 .widthRel(1.0f)
                 .child(new ButtonWidget<>()
                         .width(18)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             long value = syncValue.getLongValue() - getIncrementValue(MouseData.create(button), step);
                             syncValue.setLongValue(GTMath.clamp(value, minValue.getAsLong(), maxValue.getAsLong()),
                                     true, true);
@@ -555,7 +544,7 @@ public class GTMuiWidgets {
                 .child(textField)
                 .child(new ButtonWidget<>()
                         .width(18).right(0)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             long value = syncValue.getLongValue() + getIncrementValue(MouseData.create(button), step);
                             long min = minValue.getAsLong();
                             long max = maxValue.getAsLong();
@@ -570,12 +559,13 @@ public class GTMuiWidgets {
         StringSyncValue formattedValue = new StringSyncValue(
                 () -> String.valueOf(intSyncValue.getValue()),
                 (v) -> intSyncValue.setValue(Integer.parseInt(v), true,
-                        true));
+                        true))
+                .allowC2S();
 
         var textField = new TextFieldWidget() {
 
             @Override
-            public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+            public boolean onMouseScrolled(double delta) {
                 int inc = (int) delta * (getIncrementValue(MouseData.create(-1), 1) *
                         bucketModeSyncValue.getValue().multiplier);
                 int val = Mth.clamp(intSyncValue.getIntValue() + inc, 0, maxMB.getAsInt());
@@ -594,7 +584,7 @@ public class GTMuiWidgets {
                 .widthRel(1.0f)
                 .child(new ButtonWidget<>()
                         .width(18)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             int val = intSyncValue.getIntValue() - (getIncrementValue(MouseData.create(button), 1) *
                                     bucketModeSyncValue.getValue().multiplier);
                             val = Mth.clamp(val, 0, maxMB.getAsInt());
@@ -606,7 +596,7 @@ public class GTMuiWidgets {
                 .child(new ButtonWidget<>()
                         .right(18)
                         .width(18)
-                        .onMousePressed((x, y, button) -> {
+                        .onMousePressed((context, button) -> {
                             int val = intSyncValue.getIntValue() + (getIncrementValue(MouseData.create(button), 1) *
                                     bucketModeSyncValue.getValue().multiplier);
                             val = Mth.clamp(val, 0, maxMB.getAsInt());
@@ -625,7 +615,7 @@ public class GTMuiWidgets {
 
         private @Nullable EnumSyncValue<T> syncValue;
         private final Class<T> enumValue;
-        private @Nullable IKey lang;
+        private @Nullable Component lang;
         private IDrawable @Nullable [] background;
         private @Nullable IDrawable selectedBackground;
         private IDrawable @Nullable [] overlay;
@@ -639,7 +629,7 @@ public class GTMuiWidgets {
             return this;
         }
 
-        public EnumRowBuilder<T> lang(IKey lang) {
+        public EnumRowBuilder<T> lang(Component lang) {
             this.lang = lang;
             return this;
         }
@@ -673,10 +663,10 @@ public class GTMuiWidgets {
 
         public Flow build() {
             var row = Flow.row().coverChildrenHeight().widthRel(1f);
-            if (this.enumValue != null && this.syncValue != null) {
+            if (syncValue != null) {
                 for (var enumVal : enumValue.getEnumConstants()) {
                     var button = new ToggleButton().size(18).marginRight(2)
-                            .value(boolValueOf(this.syncValue, enumVal));
+                            .value(boolValueOf(Objects.requireNonNull(syncValue), enumVal));
 
                     if (this.background != null && this.background.length > 0)
                         button.background(this.background);
@@ -692,14 +682,14 @@ public class GTMuiWidgets {
                         button.overlay(this.overlay[enumVal.ordinal()]);
 
                     if (enumVal instanceof StringRepresentable serializable) {
-                        button.addTooltipLine(IKey.lang(serializable.getSerializedName()));
+                        button.addTooltipLine(Text.lang(serializable.getSerializedName()));
                     }
                     row.child(button);
                 }
             }
 
             if (this.lang != null)
-                row.child(this.lang.asWidget().posRel(Alignment.CenterRight).height(18));
+                row.child(Text.of(lang).asWidget().posRel(Alignment.CenterRight).height(18));
 
             return row;
         }

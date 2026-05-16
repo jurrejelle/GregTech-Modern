@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-import brachy.modularui.api.drawable.IKey;
+import brachy.modularui.api.drawable.Text;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.PosGuiData;
 import brachy.modularui.screen.UISettings;
@@ -47,7 +47,6 @@ import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.layout.Flow;
 import brachy.modularui.widgets.slot.FluidSlot;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -305,7 +304,7 @@ public abstract class SteamBoilerMachine extends SteamWorkableMachine
 
     @Override
     public MachineUIPanelBuilder getPanelBuilder(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        return MachineUIPanelBuilder.defaultSteamMachineBuilder(this);
+        return MachineUIPanelBuilder.defaultSteamMachinePanelBuilder(this);
     }
 
     @Override
@@ -338,8 +337,8 @@ public abstract class SteamBoilerMachine extends SteamWorkableMachine
                         .value(tempPercentage)
                         .direction(ProgressWidget.Direction.UP)
                         .tooltipAutoUpdate(true)
-                        .tooltipBuilder((r) -> r.addLine(IKey
-                                .lang(Component.translatable("gtceu.fluid.temperature", getCurrentTemperature()))))));
+                        .tooltipBuilder((r) -> r.addLine(Text
+                                .lang("gtceu.fluid.temperature", getCurrentTemperature())))));
     }
 
     //////////////////////////////////////
@@ -375,7 +374,6 @@ public abstract class SteamBoilerMachine extends SteamWorkableMachine
         getLevel().addParticle(ParticleTypes.FLAME, x, y, z, 0, 0, 0);
     }
 
-    @NotNull
     @Override
     public List<Component> getDataInfo(PortableScannerBehavior.DisplayMode mode) {
         if (mode == PortableScannerBehavior.DisplayMode.SHOW_ALL ||

@@ -22,8 +22,6 @@ import com.gregtechceu.gtceu.client.util.TooltipHelper;
 import com.gregtechceu.gtceu.common.data.machines.*;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
 import com.gregtechceu.gtceu.common.machine.electric.*;
-import com.gregtechceu.gtceu.common.machine.muimachine.TestMuiMachine;
-import com.gregtechceu.gtceu.common.machine.muimachine.TestMuiMachine2;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.*;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.monitor.AdvancedMonitorPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.monitor.MonitorPartMachine;
@@ -120,6 +118,7 @@ public class GTMachines {
 
     public static final Pair<MachineDefinition, MachineDefinition> STEAM_EXTRACTOR = registerSimpleSteamMachines(
             "extractor", GTRecipeTypes.EXTRACTOR_RECIPES);
+
     public static final Pair<MachineDefinition, MachineDefinition> STEAM_MACERATOR = registerSteamMachines(
             "steam_macerator", SimpleSteamMachine::new, (pressure, builder) -> builder
                     .rotationState(RotationState.NON_Y_AXIS)
@@ -127,10 +126,11 @@ public class GTMachines {
                     .recipeModifier(SimpleSteamMachine::recipeModifier)
                     .addOutputLimit(ItemRecipeCapability.CAP, 1)
                     .themeId((i) -> i > 0 ? GTGuiTheme.STEEL.getId() : GTGuiTheme.BRONZE.getId())
-                    .ui(GTSingleblockMachinePanels.STEAM_MACHINE)
+                    .ui(GTSingleblockMachinePanels.GENERAL_MACHINE)
                     .modelProperty(GTMachineModelProperties.VENT_DIRECTION, RelativeDirection.BACK)
                     .workableSteamHullModel(pressure, GTCEu.id("block/machines/macerator"))
                     .register());
+
     public static final Pair<MachineDefinition, MachineDefinition> STEAM_COMPRESSOR = registerSimpleSteamMachines(
             "compressor", GTRecipeTypes.COMPRESSOR_RECIPES);
     public static final Pair<MachineDefinition, MachineDefinition> STEAM_HAMMER = registerSimpleSteamMachines(
@@ -186,11 +186,9 @@ public class GTMachines {
     public static final MachineDefinition[] ARC_FURNACE = registerTieredMachines("arc_furnace",
             (holder, tier) -> new SimpleTieredMachine(holder, tier, defaultTankSizeFunction), (tier, builder) -> builder
                     .langValue("%s Arc Furnace %s".formatted(VLVH[tier], VLVT[tier]))
-                    .ui(GTSingleblockMachinePanels.ARC_FURNACE)
-                    // .editableUI(SimpleTieredMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("arc_furnace"),
-                    // GTRecipeTypes.ARC_FURNACE_RECIPES))
                     .rotationState(RotationState.NON_Y_AXIS)
                     .recipeType(GTRecipeTypes.ARC_FURNACE_RECIPES)
+                    .ui(GTSingleblockMachinePanels.GENERAL_MACHINE)
                     .recipeModifier(GTRecipeModifiers.OC_NON_PERFECT)
                     .workableTieredHullModel(GTCEu.id("block/machines/arc_furnace"))
                     .tooltips(workableTiered(tier, GTValues.V[tier], GTValues.V[tier] * 64,
@@ -288,7 +286,6 @@ public class GTMachines {
     public static final MachineDefinition[] MACERATOR = registerTieredMachines("macerator",
             (holder, tier) -> new SimpleTieredMachine(holder, tier, defaultTankSizeFunction), (tier, builder) -> builder
                     .langValue("%s Macerator %s".formatted(VLVH[tier], VLVT[tier]))
-                    .ui(GTSingleblockMachinePanels.MACERATOR)
                     .rotationState(RotationState.NON_Y_AXIS)
                     .recipeType(GTRecipeTypes.MACERATOR_RECIPES)
                     .addOutputLimit(ItemRecipeCapability.CAP, switch (tier) {
@@ -296,6 +293,7 @@ public class GTMachines {
                         case 3 -> 3;
                         default -> 4;
                     })
+                    .ui(GTSingleblockMachinePanels.GENERAL_MACHINE)
                     .recipeModifier(GTRecipeModifiers.OC_NON_PERFECT)
                     .workableTieredHullModel(GTCEu.id("block/machines/macerator"))
                     .tooltips(workableTiered(tier, GTValues.V[tier], GTValues.V[tier] * 64,
@@ -1151,21 +1149,6 @@ public class GTMachines {
                     GTCEu.id("block/machine/part/computer_monitor")))
             .tier(HV)
             .allowExtendedFacing(true)
-            .register();
-
-    public static final MachineDefinition MUI_TEST = REGISTRATE
-            .machine("test_mui", TestMuiMachine::new)
-            .rotationState(RotationState.ALL)
-            .model(createOverlayCasingMachineModel(GTCEu.id("block/casings/solid/machine_casing_clean_stainless_steel"),
-                    GTCEu.id("block/machine/part/computer_monitor")))
-            .register();
-
-    public static final MachineDefinition MUI_TEST_2 = REGISTRATE
-            .machine("test_mui_new", TestMuiMachine2::new)
-            .rotationState(RotationState.ALL)
-            .recipeType(GTRecipeTypes.ALLOY_SMELTER_RECIPES)
-            .model(createOverlayCasingMachineModel(GTCEu.id("block/casings/solid/machine_casing_clean_stainless_steel"),
-                    GTCEu.id("block/machine/part/computer_monitor")))
             .register();
 
     public static void init() {
