@@ -23,6 +23,8 @@ import com.gregtechceu.gtceu.utils.GTUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -82,17 +84,13 @@ public class LargeBoilerMachine extends WorkableMultiblockMachine implements IMu
     @Override
     public void onStructureFormed() {
         super.onStructureFormed();
-        if (getLevel() instanceof ServerLevel serverLevel) {
-            serverLevel.getServer().tell(new TickTask(0, this::updateSteamSubscription));
-        }
+        updateSteamSubscription();
     }
 
     @Override
     public void onStructureInvalid() {
         super.onStructureInvalid();
-        if (getLevel() instanceof ServerLevel serverLevel) {
-            serverLevel.getServer().tell(new TickTask(0, this::updateSteamSubscription));
-        }
+        updateSteamSubscription();
     }
 
     @Override
