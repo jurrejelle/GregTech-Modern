@@ -68,7 +68,7 @@ public abstract class CoverBehavior implements ISyncManaged, IToolGridHighlight,
     }
 
     @Override
-    public ISyncManaged getParentSyncObject() {
+    public @Nullable ISyncManaged getParentSyncObject() {
         return coverHolder;
     }
 
