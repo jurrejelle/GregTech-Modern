@@ -19,6 +19,7 @@ repositories {
             includeGroup("mezz.jei")
             includeGroup("org.embeddedt")
         }
+    }
 
     maven {
         name 'GTCEu Maven'
