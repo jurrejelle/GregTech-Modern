@@ -3,19 +3,20 @@ package com.gregtechceu.gtceu.integration.embeddium;
 import com.gregtechceu.gtceu.client.bloom.BloomRenderer;
 import com.gregtechceu.gtceu.client.bloom.BloomShaderManager;
 import com.gregtechceu.gtceu.client.renderer.GTRenderTypes;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import me.jellysquid.mods.sodium.client.render.texture.SpriteUtil;
 
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
+import me.jellysquid.mods.sodium.client.render.texture.SpriteUtil;
 import org.embeddedt.embeddium.api.ChunkMeshEvent;
+
 import java.util.Collection;
 
 public class GTEmbeddiumCompat {
