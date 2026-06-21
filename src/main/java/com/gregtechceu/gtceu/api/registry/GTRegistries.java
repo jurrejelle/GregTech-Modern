@@ -70,6 +70,7 @@ public final class GTRegistries {
     public static final ResourceKey<Registry<SoundEntry>> SOUND_REGISTRY = makeRegistryKey(GTCEu.id("sound"));
     public static final ResourceKey<Registry<DimensionMarker>> DIMENSION_MARKER_REGISTRY = makeRegistryKey(GTCEu.id("dimension_marker"));
     public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"));
+    public static final ResourceKey<Registry<MaterialIconSet>> MATERIAL_ICON_SET_REGISTRY = makeRegistryKey(GTCEu.id("material_icon_set"));
     // GT Registries
     public static final Registry<Element> ELEMENTS = makeRegistry(ELEMENT_REGISTRY);
     public static final MaterialRegistry MATERIALS = makeMaterialRegistry();
@@ -88,7 +89,7 @@ public final class GTRegistries {
     public static final Registry<DimensionMarker> DIMENSION_MARKERS = makeRegistry(DIMENSION_MARKER_REGISTRY, false);
     public static final Registry<MedicalCondition> MEDICAL_CONDITIONS =  makeRegistry(MEDICAL_CONDITION_REGISTRY);
     public static final Registry<Placeholder> PLACEHOLDERS = makeRegistry(PLACEHOLDER_REGISTRY);
-
+    public static final Registry<MaterialIconSet> MATERIAL_ICON_SETS = makeRegistry(MATERIAL_ICON_SET_REGISTRY);
     // spotless:on
 
     public static <T> ResourceKey<Registry<T>> makeRegistryKey(ResourceLocation registryId) {
