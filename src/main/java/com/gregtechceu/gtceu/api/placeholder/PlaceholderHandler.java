@@ -51,13 +51,9 @@ public class PlaceholderHandler {
     }
 
     public static void addPlaceholder(Placeholder placeholder) {
-        GTRegistries.PLACEHOLDERS.register(placeholder.getName(), placeholder);
+        GTRegistries.register(GTRegistries.PLACEHOLDERS, placeholder.getId(), placeholder);
     }
-
-    public static void addOrOverridePlaceholder(Placeholder placeholder) {
-        GTRegistries.PLACEHOLDERS.registerOrOverride(placeholder.getName(), placeholder);
-    }
-
+    
     @OnlyIn(Dist.CLIENT)
     public static void addRenderer(String id, IPlaceholderRenderer renderer) {
         RendererHolder.renderers.put(id, renderer);
@@ -82,12 +78,12 @@ public class PlaceholderHandler {
     public static MultiLineComponent processPlaceholder(List<MultiLineComponent> placeholder,
                                                         PlaceholderContext context,
                                                         Object2IntOpenHashMap<String> indices) throws PlaceholderException {
-        if (!GTRegistries.PLACEHOLDERS.containKey(placeholder.get(0).toString()))
-            throw new UnknownPlaceholderException(placeholder.get(0).toString());
-        String name = placeholder.get(0).toString();
+        if (!GTRegistries.PLACEHOLDERS.containsKey(GTCEu.id(placeholder.getFirst().toString())))
+            throw new UnknownPlaceholderException(placeholder.getFirst().toString());
+        String name = placeholder.getFirst().toString();
         indices.addTo(name, 1);
         context.index(indices.getInt(name));
-        return Objects.requireNonNull(GTRegistries.PLACEHOLDERS.get(name)).apply(context,
+        return Objects.requireNonNull(GTRegistries.PLACEHOLDERS.get(GTCEu.id(name))).apply(context,
                 placeholder.subList(1, placeholder.size()));
     }
 
@@ -188,7 +184,7 @@ public class PlaceholderHandler {
         Consumer<String> onSearch = (newSearch) -> {
             placeholderReference.clearAllWidgets();
             int y = 2;
-            ArrayList<String> placeholders = new ArrayList<>(GTRegistries.PLACEHOLDERS.keys());
+            ArrayList<String> placeholders = new ArrayList<>(GTRegistries.PLACEHOLDERS.keySet().stream().map(Object::toString).toList());
             placeholders.removeIf(s -> s == null || !s.contains(newSearch));
             placeholders.sort(String::compareTo);
             for (String placeholder : placeholders) {

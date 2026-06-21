@@ -40,6 +40,7 @@ import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 
@@ -330,7 +331,7 @@ public class GTCommands {
         public void run() {
             boolean first = true;
             for (ClientCacheManager.ProspectionInfo info : prospectionData) {
-                GTNetwork.sendToServer(new SCPacketShareProspection(sender, receiver, info.cacheName, info.key,
+                PacketDistributor.sendToServer(new SCPacketShareProspection(sender, receiver, info.cacheName, info.key,
                         info.isDimCache, info.dim, info.data, first));
                 first = false;
 

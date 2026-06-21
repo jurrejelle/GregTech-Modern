@@ -26,6 +26,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -187,7 +188,7 @@ public class ProspectingTexture extends AbstractTexture {
     }
 
     @Override
-    public void load(ResourceManager resourceManager) throws IOException {}
+    public void load(@NonNull ResourceManager resourceManager) throws IOException {}
 
     public void setDarkMode(boolean darkMode) {
         if (this.darkMode != darkMode) {

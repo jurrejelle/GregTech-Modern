@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.data.tag;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.block.MaterialBlock;
 import com.gregtechceu.gtceu.api.block.OreBlock;
@@ -15,6 +14,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.item.MaterialBlockItem;
 import com.gregtechceu.gtceu.api.item.TagPrefixItem;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.GTMaterialBlocks;
 import com.gregtechceu.gtceu.common.data.GTMaterialItems;
@@ -1195,7 +1195,7 @@ public class TagPrefix {
      */
     @Deprecated(since = "8.0.0")
     public static TagPrefix getPrefix(String prefixName, @Nullable TagPrefix replacement) {
-        return GTRegistries.TAG_PREFIXES.getOrDefault(GTCEu.id(prefixName), replacement);
+        return GTRegistries.TAG_PREFIXES.getOptional(GTCEu.id(prefixName)).orElse(replacement);
     }
 
     @Unmodifiable
@@ -1387,7 +1387,7 @@ public class TagPrefix {
      */
     @Deprecated(since = "8.0.0")
     public static Collection<TagPrefix> values() {
-        return GTRegistries.TAG_PREFIXES;
+        return GTRegistries.TAG_PREFIXES.stream().toList();
     }
 
     @Override

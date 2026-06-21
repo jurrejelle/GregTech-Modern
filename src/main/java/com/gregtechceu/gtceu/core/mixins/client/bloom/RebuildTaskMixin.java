@@ -29,11 +29,7 @@ import java.util.function.Supplier;
 
 @Mixin(targets = "net.minecraft.client.renderer.chunk.ChunkRenderDispatcher$RenderChunk$RebuildTask")
 public abstract class RebuildTaskMixin {
-
-    @Shadow(aliases = { "this$1", "f_290687_", "f" })
-    @Final
-    ChunkRenderDispatcher.RenderChunk this$1;
-
+    
     @Shadow
     protected abstract BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers,
                                                      SectionBufferBuilderPack sectionBufferBuilderPack,
