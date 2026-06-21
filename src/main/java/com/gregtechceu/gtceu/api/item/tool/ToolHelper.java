@@ -56,6 +56,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -607,6 +608,48 @@ public class ToolHelper {
             Block block = state.getBlock();
             if (block instanceof WebBlock) {
                 return 15.0F;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Shearing a Block.
+     *
+     * @return -1 if not shearable or if shearing gave nothing, otherwise return 0 or 1, 0 if tool is now broken.
+     */
+    public static int shearBlock(ServerPlayer player, ItemStack tool, BlockPos pos) {
+        if (!player.isCreative()) {
+            Level world = player.serverLevel();
+            BlockState state = world.getBlockState(pos);
+            if (state.getBlock() instanceof IForgeShearable shearable) {
+                if (shearable.isShearable(tool, world, pos)) {
+                    List<ItemStack> shearedDrops = shearable.onSheared(player, tool, world, pos,
+                            tool.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE));
+                    if (shearedDrops.isEmpty()) {
+                        return -1;
+                    }
+                    boolean relocateMinedBlocks = hasBehaviorsTag(tool) &&
+                            getBehaviorsTag(tool).getBoolean(RELOCATE_MINED_BLOCKS_KEY);
+                    Iterator<ItemStack> iter = shearedDrops.iterator();
+                    while (iter.hasNext()) {
+                        ItemStack stack = iter.next();
+                        if (relocateMinedBlocks && player.addItem(stack)) {
+                            iter.remove();
+                        } else {
+                            float f = 0.7F;
+                            double xo = world.random.nextFloat() * f + 0.15D;
+                            double yo = world.random.nextFloat() * f + 0.15D;
+                            double zo = world.random.nextFloat() * f + 0.15D;
+                            ItemEntity entityItem = new ItemEntity(world, pos.getX() + xo, pos.getY() + yo,
+                                    pos.getZ() + zo, stack);
+                            entityItem.setDefaultPickUpDelay();
+                            world.addFreshEntity(entityItem);
+                        }
+                    }
+                    ToolHelper.damageItem(tool, player, 1);
+                    return tool.isEmpty() ? 0 : 1;
+                }
             }
         }
         return -1;

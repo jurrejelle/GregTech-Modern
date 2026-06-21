@@ -43,21 +43,23 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class RecipeOutputProvider extends MachineTraitProvider<RecipeLogic> {
+public class RecipeOutputProvider extends MachineTraitProvider<RecipeLogic, CompoundTag> {
 
     public RecipeOutputProvider() {
         super(GTCEu.id("recipe_output_info"), RecipeLogic.TYPE);
     }
 
     @Override
-    protected void write(CompoundTag data, BlockAccessor accessor, RecipeLogic recipeLogic) {
+    protected CompoundTag write(RecipeLogic recipeLogic) {
+        CompoundTag data = new CompoundTag();
+
         if (!recipeLogic.isWorking()) {
-            return;
+            return data;
         }
         data.putBoolean("Working", recipeLogic.isWorking());
         GTRecipe recipe = recipeLogic.getLastRecipe();
         if (recipe == null) {
-            return;
+            return data;
         }
         int recipeTier = RecipeHelper.getPreOCRecipeEuTier(recipe);
         int chanceTier = recipeTier + recipe.ocLevel;
@@ -150,6 +152,8 @@ public class RecipeOutputProvider extends MachineTraitProvider<RecipeLogic> {
         if (!fluidTags.isEmpty()) {
             data.put("OutputFluids", fluidTags);
         }
+
+        return data;
     }
 
     @Override

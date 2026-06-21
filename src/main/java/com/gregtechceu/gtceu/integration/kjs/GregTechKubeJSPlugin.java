@@ -242,7 +242,6 @@ public class GregTechKubeJSPlugin implements KubeJSPlugin {
         // Material related
         event.add("GTElements", GTElements.class);
         event.add("GTMaterials", GTMaterials.class);
-        event.add("GTMaterialRegistry", GTCEuAPI.materialManager);
         event.add("TagPrefix", TagPrefix.class);
         event.add("ItemGenerationCondition", TagPrefix.Conditions.class);
         event.add("MaterialEntry", MaterialEntry.class);

@@ -124,18 +124,18 @@ public class EUToFEProvider implements IEnergyContainer {
         return FeCompat.toEu(energyStorage.getEnergyStored(), FeCompat.ratio(false));
     }
 
-    /**
-     * Most RF/FE cables blindly try to insert energy without checking if there is space, since the receiving
-     * IEnergyStorage should handle it.
-     * This simulates that behavior in most places by allowing our "is there space" checks to pass and letting the
-     * cable attempt to insert energy.
-     * If the wrapped TE actually cannot accept any more energy, the energy transfer will return 0 before any
-     * changes to our internal rf buffer.
-     */
-    @Override
-    public long getEnergyCanBeInserted() {
-        return Math.max(1, getEnergyCapacity() - getEnergyStored());
-    }
+        /**
+         * Most RF/FE cables blindly try to insert energy without checking if there is space, since the receiving
+         * IEnergyStorage should handle it.
+         * This simulates that behavior in most places by allowing our "is there space" checks to pass and letting the
+         * cable attempt to insert energy.
+         * If the wrapped BE actually cannot accept any more energy, the energy transfer will return 0 before any
+         * changes to our internal rf buffer.
+         */
+        @Override
+        public long getEnergyCanBeInserted() {
+            return Math.max(1, getEnergyCapacity() - getEnergyStored());
+        }
 
     @Override
     public long getInputAmperage() {

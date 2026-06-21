@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.cosmetics.event.RegisterGTCapesEvent;
 import com.gregtechceu.gtceu.api.item.IComponentItem;
 import com.gregtechceu.gtceu.api.item.IGTTool;
+import com.gregtechceu.gtceu.client.model.item.CustomItemRendererWrapperModel;
 import com.gregtechceu.gtceu.client.model.item.FacadeUnbakedModel;
 import com.gregtechceu.gtceu.client.model.machine.MachineModelLoader;
 import com.gregtechceu.gtceu.client.model.pipe.PipeModel;
@@ -147,6 +148,7 @@ public class ClientProxy {
         event.register(MachineModelLoader.ID, MachineModelLoader.INSTANCE);
         event.register(PipeModelLoader.ID, PipeModelLoader.INSTANCE);
         event.register(GTCEu.id("facade"), FacadeUnbakedModel.Loader.INSTANCE);
+        event.register(CustomItemRendererWrapperModel.ID, CustomItemRendererWrapperModel.Loader.INSTANCE);
     }
 
     @SubscribeEvent

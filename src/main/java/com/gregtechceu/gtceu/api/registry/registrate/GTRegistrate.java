@@ -41,6 +41,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -84,7 +85,7 @@ public class GTRegistrate extends AbstractRegistrate<GTRegistrate> {
      * @return The {@link GTRegistrate} instance
      */
     public static GTRegistrate create(String modId, boolean registerEvents) {
-        return innerCreate(modId, false, registerEvents);
+        return innerCreate(modId, registerEvents, registerEvents);
     }
 
     /**
@@ -102,10 +103,10 @@ public class GTRegistrate extends AbstractRegistrate<GTRegistrate> {
     }
 
     private static GTRegistrate innerCreate(String modId, boolean registerEvents, boolean requireValidEventBus) {
-        if (EXISTING_REGISTRATES.containsKey(modId)) {
-            return EXISTING_REGISTRATES.get(modId);
-        }
+        var existing = EXISTING_REGISTRATES.get(modId);
+        if (existing != null) return existing;
         var registrate = new GTRegistrate(modId);
+
         if (registerEvents) {
             Optional<IEventBus> modEventBus = ModList.get().getModContainerById(modId).map(ModContainer::getEventBus);
             if (requireValidEventBus) {
@@ -118,7 +119,7 @@ public class GTRegistrate extends AbstractRegistrate<GTRegistrate> {
                     GTCEu.LOGGER.fatal(hashtags);
                 });
             } else {
-                registrate.registerEventListeners(modEventBus.orElse(GTCEu.gtModBus));
+                registrate.registerEventListeners(modEventBus.orElse(FMLJavaModLoadingContext.get().getModEventBus()));
             }
         }
         EXISTING_REGISTRATES.put(modId, registrate);

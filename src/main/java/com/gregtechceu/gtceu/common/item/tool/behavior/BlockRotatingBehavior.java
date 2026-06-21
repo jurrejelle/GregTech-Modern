@@ -56,9 +56,9 @@ public class BlockRotatingBehavior implements IToolBehavior<BlockRotatingBehavio
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        BlockEntity te = level.getBlockEntity(pos);
-        // MTEs have special handling on rotation
-        if (te instanceof MetaMachine) {
+        BlockEntity be = level.getBlockEntity(pos);
+        // Machines have special handling on rotation
+        if (be instanceof MetaMachine) {
             return InteractionResult.PASS;
         }
 

@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.common.data;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.block.MaterialBlock;
 import com.gregtechceu.gtceu.api.block.MaterialPipeBlock;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
@@ -10,6 +9,7 @@ import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.item.MaterialBlockItem;
 import com.gregtechceu.gtceu.api.item.MaterialPipeBlockItem;
 import com.gregtechceu.gtceu.api.item.SurfaceRockBlockItem;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
 import com.gregtechceu.gtceu.common.block.*;
@@ -59,10 +59,10 @@ public class GTMaterialBlocks {
 
         for (TagPrefix tagPrefix : GTRegistries.TAG_PREFIXES) {
             if (!TagPrefix.ORES.containsKey(tagPrefix) && tagPrefix.doGenerateBlock()) {
-                for (Material material : GTCEuAPI.materialManager) {
-                    GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
+                for (Material material : GTRegistries.MATERIALS) {
                     if (tagPrefix.doGenerateBlock(material)) {
-                        registerMaterialBlock(tagPrefix, material, registrate);
+                        registerMaterialBlock(tagPrefix, material,
+                                GTRegistrate.createIgnoringListenerErrors(material.getModid()));
                     }
                 }
             }
@@ -92,10 +92,9 @@ public class GTMaterialBlocks {
     // Material Ore Blocks
     public static void generateOreBlocks() {
         GTCEu.LOGGER.debug("Generating GTCEu Ore Blocks...");
-        for (Material material : GTCEuAPI.materialManager) {
+        for (Material material : GTRegistries.MATERIALS) {
             if (allowOreBlock(material)) {
-                GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
-                registerOreBlock(material, registrate);
+                registerOreBlock(material, GTRegistrate.createIgnoringListenerErrors(material.getModid()));
             }
         }
         GTCEu.LOGGER.debug("Generating GTCEu Ore Blocks... Complete!");
@@ -146,10 +145,9 @@ public class GTMaterialBlocks {
     // Material Ore Indicator Piles
     public static void generateOreIndicators() {
         GTCEu.LOGGER.debug("Generating GTCEu Surface Rock Indicator Blocks...");
-        for (Material material : GTCEuAPI.materialManager) {
+        for (Material material : GTRegistries.MATERIALS) {
             if (allowOreIndicator(material)) {
-                GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
-                registerOreIndicator(material, registrate);
+                registerOreIndicator(material, GTRegistrate.createIgnoringListenerErrors(material.getModid()));
             }
         }
         SURFACE_ROCK_BLOCKS = SURFACE_ROCK_BLOCKS_BUILDER.build();
@@ -184,10 +182,10 @@ public class GTMaterialBlocks {
     public static void generateCableBlocks() {
         GTCEu.LOGGER.debug("Generating GTCEu Cable/Wire Blocks...");
         for (Insulation insulation : Insulation.values()) {
-            for (Material material : GTCEuAPI.materialManager) {
+            for (Material material : GTRegistries.MATERIALS) {
                 if (allowCableBlock(material, insulation)) {
-                    GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
-                    registerCableBlock(material, insulation, registrate);
+                    registerCableBlock(material, insulation,
+                            GTRegistrate.createIgnoringListenerErrors(material.getModid()));
                 }
             }
         }
@@ -226,10 +224,10 @@ public class GTMaterialBlocks {
     public static void generateFluidPipeBlocks() {
         GTCEu.LOGGER.debug("Generating GTCEu Fluid Pipe Blocks...");
         for (var fluidPipeType : FluidPipeType.values()) {
-            for (Material material : GTCEuAPI.materialManager) {
+            for (Material material : GTRegistries.MATERIALS) {
                 if (allowFluidPipeBlock(material, fluidPipeType)) {
-                    GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
-                    registerFluidPipeBlock(material, fluidPipeType, registrate);
+                    registerFluidPipeBlock(material, fluidPipeType,
+                            GTRegistrate.createIgnoringListenerErrors(material.getModid()));
                 }
             }
         }
@@ -273,10 +271,10 @@ public class GTMaterialBlocks {
     public static void generateItemPipeBlocks() {
         GTCEu.LOGGER.debug("Generating GTCEu Item Pipe Blocks...");
         for (var itemPipeType : ItemPipeType.values()) {
-            for (Material material : GTCEuAPI.materialManager) {
+            for (Material material : GTRegistries.MATERIALS) {
                 if (allowItemPipeBlock(material, itemPipeType)) {
-                    GTRegistrate registrate = GTRegistrate.createIgnoringListenerErrors(material.getModid());
-                    registerItemPipeBlock(material, itemPipeType, registrate);
+                    registerItemPipeBlock(material, itemPipeType,
+                            GTRegistrate.createIgnoringListenerErrors(material.getModid()));
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.recipe.DummyCraftingInput;
+import com.gregtechceu.gtceu.api.recipe.DummyCraftingInput;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderIngredient;
 import com.gregtechceu.gtceu.api.recipe.ingredient.SizedIngredientExtensions;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-@ExtensionMethod(SizedIngredientExtensions.class)
 public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<SizedIngredient>
                                         implements ICapabilityTrait, IItemHandlerModifiable {
 
@@ -55,23 +55,27 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     @Getter
     @Setter
     private boolean shouldSearchContent = true;
-    private Boolean isEmpty;
+    private @Nullable Boolean isEmpty;
+    @Accessors(fluent = true)
+    @Getter
+    @Setter
+    private boolean shouldDropInventoryInWorld = true;
 
-    public NotifiableItemStackHandler(MetaMachine machine, int slots, IO handlerIO, IO capabilityIO,
+    public NotifiableItemStackHandler(int slots, IO handlerIO, IO capabilityIO,
                                       IntFunction<CustomItemStackHandler> storageFactory) {
-        super(machine);
+        super();
         this.handlerIO = handlerIO;
         this.storage = storageFactory.apply(slots);
         this.capabilityIO = capabilityIO;
         this.storage.setOnContentsChanged(this::onContentsChanged);
     }
 
-    public NotifiableItemStackHandler(MetaMachine machine, int slots, IO handlerIO, IO capabilityIO) {
-        this(machine, slots, handlerIO, capabilityIO, CustomItemStackHandler::new);
+    public NotifiableItemStackHandler(int slots, IO handlerIO, IO capabilityIO) {
+        this(slots, handlerIO, capabilityIO, CustomItemStackHandler::new);
     }
 
-    public NotifiableItemStackHandler(MetaMachine machine, int slots, IO handlerIO) {
-        this(machine, slots, handlerIO, handlerIO);
+    public NotifiableItemStackHandler(int slots, IO handlerIO) {
+        this(slots, handlerIO, handlerIO);
     }
 
     public NotifiableItemStackHandler setFilter(Predicate<ItemStack> filter) {
@@ -86,14 +90,14 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     }
 
     @Override
-    public List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
+    public @Nullable List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
                                                    boolean simulate) {
         return handleRecipe(io, recipe, left, simulate, handlerIO, storage);
     }
 
     // TODO: See if implementable in outside callers and unstatic; or move to different common class if not
     // Notable caller is ItemRecipeHandler, used for MinerLogic
-    public static List<SizedIngredient> handleRecipe(IO io, GTRecipe recipe, List<SizedIngredient> left,
+    public static @Nullable List<SizedIngredient> handleRecipe(IO io, GTRecipe recipe, List<SizedIngredient> left,
                                                      boolean simulate,
                                                      IO handlerIO, CustomItemStackHandler storage) {
         if (io != handlerIO) return left;
@@ -117,7 +121,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
 
             ItemStack[] items;
             int amount;
-            if (ingredient.getContainedCustom() instanceof IntProviderIngredient provider) {
+            if (ingredient.ingredient() instanceof IntProviderIngredient provider) {
                 provider.setItemStacks(null);
                 provider.setSampledCount(-1);
 
@@ -214,7 +218,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     }
 
     @Override
-    public @NotNull List<Object> getContents() {
+    public List<Object> getContents() {
         List<ItemStack> stacks = new ArrayList<>();
         for (int i = 0; i < getSlots(); ++i) {
             ItemStack stack = getStackInSlot(i);
@@ -250,7 +254,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
         return isEmpty;
     }
 
-    public void exportToNearby(@NotNull Direction... facings) {
+    public void exportToNearby(Direction... facings) {
         if (isEmpty()) return;
         var level = getMachine().getLevel();
         var pos = getMachine().getBlockPos();
@@ -261,7 +265,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
         }
     }
 
-    public void importFromNearby(@NotNull Direction... facings) {
+    public void importFromNearby(Direction... facings) {
         var level = getMachine().getLevel();
         var pos = getMachine().getBlockPos();
         for (Direction facing : facings) {
@@ -274,31 +278,28 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     //////////////////////////////////////
     // ******* Capability ********//
     //////////////////////////////////////
-    @NotNull
     @Override
     public ItemStack getStackInSlot(int slot) {
         return storage.getStackInSlot(slot);
     }
 
     @Override
-    public void setStackInSlot(int index, @NotNull ItemStack stack) {
+    public void setStackInSlot(int index, ItemStack stack) {
         storage.setStackInSlot(index, stack);
     }
 
-    @NotNull
     @Override
-    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (canCapInput()) {
             return storage.insertItem(slot, stack, simulate);
         }
         return stack;
     }
 
-    public ItemStack insertItemInternal(int slot, @NotNull ItemStack stack, boolean simulate) {
+    public ItemStack insertItemInternal(int slot, ItemStack stack, boolean simulate) {
         return storage.insertItem(slot, stack, simulate);
     }
 
-    @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (canCapOutput()) {
@@ -317,12 +318,17 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot, ItemStack stack) {
         return storage.isItemValid(slot, stack);
     }
 
     public void dropInventoryInWorld() {
         storage.dropInventoryInWorld(getLevel(), getMachine().getBlockPos());
+    }
+
+    @Override
+    public void onMachineDestroyed() {
+        if (shouldDropInventoryInWorld) dropInventoryInWorld();
     }
 
     public static class KJSCallWrapper {

@@ -1,11 +1,12 @@
 package com.gregtechceu.gtceu.api.sync_system;
 
-import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -52,16 +53,38 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     }
 
     /**
-     * Loads BE data from world save or from a client update packet.
-     * Override this to add logic for modifying saved data before it is loaded (e.g. for cross-version compatibility).
-     * When overriding, {@code super.loadAdditional(tag)} must be called AFTER any custom logic.
+     * Loads BE data from world save.<br>
+     * Override this to add logic for modifying saved data before it is loaded (e.g. for cross-version
+     * compatibility).<br>
+     * When overriding, {@code super.load(tag)} must be called <b>AFTER</b> any custom logic.
+     *
+     * @param tag The tag to load
+     * @param registries Registry lookup
      */
     @Override
     @MustBeInvokedByOverriders
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        getSyncDataHolder().deserializeNBT(registries, tag,
-                (getLevel() == null ? GTCEu.isClientThread() : getLevel().isClientSide));
+        getSyncDataHolder().deserializeNBT(registries, tag, false);
+    }
+
+    /**
+     * Loads BE data from client update packet
+     */
+    @MustBeInvokedByOverriders
+    public void clientLoad(CompoundTag tag, HolderLookup.Provider registries) {
+        getSyncDataHolder().deserializeNBT(registries, tag, true);
+    }
+
+    @Override
+    public final void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        this.clientLoad(tag, lookupProvider);
+    }
+
+    @Override
+    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        CompoundTag tag = pkt.getTag();
+        clientLoad(tag, lookupProvider);
     }
 
     /**
@@ -84,11 +107,24 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     }
 
     @Override
+    public @Nullable ISyncManaged getParentSyncObject() {
+        return null;
+    }
+
+    @Override
     public final void markAsChanged() {
         isDirty = true;
     }
 
-    public final void updateTick() {
+    @Override
+    public void setChanged() {
+        if (getLevel() != null) {
+            getLevel().blockEntityChanged(getBlockPos());
+        }
+    }
+
+    @MustBeInvokedByOverriders
+    public void serverTick() {
         setChanged();
         if (isDirty) {
             Objects.requireNonNull(getLevel()).sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),

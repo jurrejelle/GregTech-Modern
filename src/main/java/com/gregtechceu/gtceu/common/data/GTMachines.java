@@ -20,6 +20,7 @@ import com.gregtechceu.gtceu.client.model.machine.MachineRenderState;
 import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderHelper;
 import com.gregtechceu.gtceu.client.util.TooltipHelper;
 import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
+import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.common.data.machines.*;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
 import com.gregtechceu.gtceu.common.machine.electric.*;
@@ -39,8 +40,10 @@ import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
@@ -882,7 +885,18 @@ public class GTMachines {
             .rotationState(RotationState.ALL)
             .abilities(PartAbility.PUMP_FLUID_HATCH)
             .modelProperty(IS_FORMED, false)
-            .model(createBasicReplaceableTextureMachineModel(GTCEu.id("block/machine/part/pump_hatch")))
+            .model(createBasicReplaceableTextureMachineModel(GTCEu.id("block/machine/part/pump_hatch"))
+                    .andThen(builder -> {
+                        // UV lock the model so the plank texture doesn't rotate weirdly
+                        builder.replaceForAllStates((state, models) -> {
+                            for (int i = 0; i < models.length; i++) {
+                                models[i] = ConfiguredModel.builder()
+                                        .modelFile(models[i].model).uvLock(true)
+                                        .buildLast();
+                            }
+                            return models;
+                        });
+                    }))
             .register();
 
     public static final MachineDefinition MAINTENANCE_HATCH = REGISTRATE

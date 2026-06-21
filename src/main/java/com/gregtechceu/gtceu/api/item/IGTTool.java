@@ -521,6 +521,18 @@ public interface IGTTool extends HeldItemUIFactory.IHeldItemUIHolder, ItemLike {
         return InteractionResultHolder.pass(stack);
     }
 
+    default InteractionResult definition$interactLivingEntity(ItemStack stack, Player player,
+                                                              LivingEntity interactionTarget,
+                                                              InteractionHand usedHand) {
+        for (IToolBehavior<?> behavior : getToolStats().getBehaviors()) {
+            if (behavior.onInteractLivingEntity(stack, player, interactionTarget, usedHand) ==
+                    InteractionResult.SUCCESS) {
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
     default boolean definition$shouldOpenUIAfterUse(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
         for (IToolBehavior<?> behavior : getBehaviorsComponent(stack).behaviors().values()) {

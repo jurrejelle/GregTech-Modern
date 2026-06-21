@@ -151,7 +151,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
     }
 
     public int addScannerInfo(Player player, Level level, BlockPos pos, DisplayMode mode, List<Component> list) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         int energyCost = 0;
 
         BlockState state = level.getBlockState(pos);
@@ -190,7 +190,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
             }
         }
 
-        if (tileEntity instanceof MetaMachine machine) {
+        if (blockEntity instanceof MetaMachine machine) {
 
             list.add(Component.translatable(state.getBlock().getDescriptionId()).withStyle(ChatFormatting.BLUE));
 
@@ -211,8 +211,8 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
                 }
 
                 // Fluid tanks
-                IFluidHandler fluidHandler = tileEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
-                        tileEntity.getBlockPos(), null);
+                IFluidHandler fluidHandler = blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                        blockEntity.getBlockPos(), null);
                 if (fluidHandler != null) {
                     list.add(Component.translatable("behavior.portable_scanner.divider"));
                     boolean allTanksEmpty = true;
@@ -254,8 +254,8 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
             if (mode == DisplayMode.SHOW_ALL || mode == DisplayMode.SHOW_ELECTRICAL_INFO) {
 
                 // Energy container
-                IEnergyContainer energyContainer = tileEntity.getLevel()
-                        .getCapability(GTCapability.CAPABILITY_ENERGY_CONTAINER, tileEntity.getBlockPos(), null);
+                IEnergyContainer energyContainer = blockEntity.getLevel()
+                        .getCapability(GTCapability.CAPABILITY_ENERGY_CONTAINER, blockEntity.getBlockPos(), null);
                 if (energyContainer != null) {
                     if (energyContainer.getInputVoltage() > 0) {
                         list.add(Component.translatable("behavior.portable_scanner.divider"));
@@ -310,8 +310,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
                 }
 
                 // Recipe logic for EU production/consumption
-                RecipeLogic recipeLogic = tileEntity.getLevel().getCapability(GTCapability.CAPABILITY_RECIPE_LOGIC,
-                        tileEntity.getBlockPos(), null);
+                RecipeLogic recipeLogic = machine.getTrait(RecipeLogic.TYPE);
                 if (recipeLogic != null) {
                     GTRecipe recipe = recipeLogic.getLastRecipe();
                     if (recipeLogic.getStatus().equals(RecipeLogic.Status.WAITING)) {
@@ -337,29 +336,29 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
 
             // machine-specific info
             IDataInfoProvider provider = null;
-            if (tileEntity instanceof IDataInfoProvider) provider = (IDataInfoProvider) tileEntity;
+            if (blockEntity instanceof IDataInfoProvider) provider = (IDataInfoProvider) blockEntity;
 
             if (provider != null) {
                 list.add(Component.translatable("behavior.portable_scanner.divider"));
                 list.addAll(provider.getDataInfo(mode));
             }
 
-        } else if (tileEntity instanceof PipeBlockEntity<?, ?> pipe) {
+        } else if (blockEntity instanceof PipeBlockEntity<?, ?> pipe) {
 
             // Pipes need special name handling
             list.add(pipe.getPipeBlock().getName().withStyle(ChatFormatting.BLUE));
 
             // Pipe-specific info
-            if (tileEntity instanceof IDataInfoProvider dataInfoProvider) {
+            if (blockEntity instanceof IDataInfoProvider dataInfoProvider) {
                 list.add(Component.translatable("behavior.portable_scanner.divider"));
                 list.addAll(dataInfoProvider.getDataInfo(mode));
             }
 
-            if (tileEntity instanceof FluidPipeBlockEntity) {
+            if (blockEntity instanceof FluidPipeBlockEntity) {
                 // Getting fluid info always costs 500
                 energyCost += 500;
             }
-        } else if (tileEntity instanceof IDataInfoProvider dataInfoProvider) {
+        } else if (blockEntity instanceof IDataInfoProvider dataInfoProvider) {
             list.add(Component.translatable("behavior.portable_scanner.divider"));
             list.addAll(dataInfoProvider.getDataInfo(mode));
         } else {
@@ -410,7 +409,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
                 var environmentHazardZone = environmental.getZoneByContainedPos(pos);
                 if (environmentHazardZone != null) {
                     list.add(Component.translatable("behavior.portable_scanner.environmental_hazard",
-                            Component.translatable("gtceu.medical_condition." + environmentHazardZone.condition().name),
+                            environmentHazardZone.condition().getTranslatableName(),
                             Component.literal(FormattingUtil.formatNumbers(environmentHazardZone.strength()))));
                 } else {
                     list.add(Component.translatable("behavior.portable_scanner.environmental_hazard.nothing"));
@@ -420,7 +419,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
                 var localHazardZone = local.getZoneByContainedPos(pos);
                 if (localHazardZone != null) {
                     list.add(Component.translatable("behavior.portable_scanner.local_hazard",
-                            Component.translatable("gtceu.medical_condition." + localHazardZone.condition().name),
+                            localHazardZone.condition().getTranslatableName(),
                             Component.literal(FormattingUtil.formatNumbers(localHazardZone.strength()))));
                 } else {
                     list.add(Component.translatable("behavior.portable_scanner.local_hazard.nothing"));
@@ -429,7 +428,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
         }
 
         // Add optional debug info
-        if (tileEntity instanceof IDataInfoProvider dataInfoProvider) {
+        if (blockEntity instanceof IDataInfoProvider dataInfoProvider) {
             List<Component> debugInfo = dataInfoProvider.getDebugInfo(player, debugLevel, mode);
             if (debugInfo != null) {
                 list.addAll(debugInfo);
@@ -437,7 +436,7 @@ public class PortableScannerBehavior implements IInteractionItem, IAddInformatio
         }
 
         if (mode == DisplayMode.SHOW_INTERNAL_JAVA_INFO &&
-                tileEntity instanceof ManagedSyncBlockEntity syncBlockEntity) {
+                blockEntity instanceof ManagedSyncBlockEntity syncBlockEntity) {
             MetaMachine machine = (syncBlockEntity instanceof MetaMachine m) ? m : null;
             PipeBlockEntity<?, ?> pipe = (syncBlockEntity instanceof PipeBlockEntity<?, ?> p) ? p : null;
 

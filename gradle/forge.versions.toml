@@ -47,7 +47,6 @@ journeyMap = "6383889"
 spark = "6225208"
 observable = "5733591"
 
-
 [libraries]
 ldlib               = { module = "com.lowdragmc.ldlib:ldlib-neoforge-1.21.1", version.ref = "ldlib" }
 registrate          = { module = "com.tterrag.registrate:Registrate", version.ref = "registrate" }

@@ -29,28 +29,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class WorkableElectricMultiblockMachine extends WorkableMultiblockMachine implements IFancyUIMachine,
                                                IDisplayUIMachine, ITieredMachine, IOverclockMachine {
 
     // runtime
-    protected EnergyContainerList energyContainer;
+    protected @Nullable EnergyContainerList energyContainer;
     @Getter
     protected int tier;
     @SaveField
     @Getter
     protected boolean batchEnabled;
 
-    public WorkableElectricMultiblockMachine(BlockEntityCreationInfo info,
-                                             Function<WorkableMultiblockMachine, RecipeLogic> recipeLogicSupplier) {
-        super(info, recipeLogicSupplier);
+    public WorkableElectricMultiblockMachine(BlockEntityCreationInfo info, RecipeLogic recipeLogic) {
+        super(info, recipeLogic);
     }
 
     public WorkableElectricMultiblockMachine(BlockEntityCreationInfo info) {
@@ -96,7 +94,7 @@ public class WorkableElectricMultiblockMachine extends WorkableMultiblockMachine
     //////////////////////////////////////
 
     @Override
-    public void addDisplayText(@NotNull List<Component> textList) {
+    public void addDisplayText(List<Component> textList) {
         int numParallels;
         int subtickParallels;
         int batchParallels;

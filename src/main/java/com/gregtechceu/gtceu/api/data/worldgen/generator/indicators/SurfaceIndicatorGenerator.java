@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.data.worldgen.generator.IndicatorGenerator;
 import com.gregtechceu.gtceu.api.data.worldgen.ores.GeneratedVeinMetadata;
 import com.gregtechceu.gtceu.api.data.worldgen.ores.OreIndicatorPlacer;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTMaterialBlocks;
 
 import net.minecraft.core.BlockPos;
@@ -59,6 +60,8 @@ public class SurfaceIndicatorGenerator extends IndicatorGenerator {
     private IntProvider radius = ConstantInt.of(5);
     private FloatProvider density = ConstantFloat.of(0.2f);
     private IndicatorPlacement placement = IndicatorPlacement.SURFACE;
+
+    public SurfaceIndicatorGenerator() {}
 
     public SurfaceIndicatorGenerator(Either<BlockState, Material> block, IntProvider radius, FloatProvider density,
                                      IndicatorPlacement placement) {
@@ -221,11 +224,11 @@ public class SurfaceIndicatorGenerator extends IndicatorGenerator {
         }
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
         }
 
-        public static @NotNull IndicatorPlacement getByName(String name) {
+        public static IndicatorPlacement getByName(String name) {
             return IndicatorPlacement.valueOf(name.toUpperCase(Locale.ROOT));
         }
     }

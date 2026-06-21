@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.data.DimensionMarker;
 import com.gregtechceu.gtceu.api.data.chemical.Element;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.registry.MaterialRegistry;
+import com.gregtechceu.gtceu.api.data.medicalcondition.MedicalCondition;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.data.worldgen.GTOreDefinition;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidDefinition;
@@ -66,10 +67,10 @@ public final class GTRegistries {
     public static final ResourceKey<Registry<ToolBehaviorType<?>>> TOOL_BEHAVIOR_REGISTRY = makeRegistryKey(GTCEu.id("tool_behavior"));
     public static final ResourceKey<Registry<SoundEntry>> SOUND_REGISTRY = makeRegistryKey(GTCEu.id("sound"));
     public static final ResourceKey<Registry<DimensionMarker>> DIMENSION_MARKER_REGISTRY = makeRegistryKey(GTCEu.id("dimension_marker"));
-
+    public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"))
     // GT Registries
     public static final Registry<Element> ELEMENTS = makeRegistry(ELEMENT_REGISTRY);
-    public static final Registry<Material> MATERIALS = makeMaterialRegistry();
+    public static final MaterialRegistry MATERIALS = makeMaterialRegistry();
     public static final Registry<TagPrefix> TAG_PREFIXES = makeRegistry(TAG_PREFIX_REGISTRY);
 
     public static final Registry<SoundEntry> SOUNDS = makeRegistry(SOUND_REGISTRY, false);
@@ -83,6 +84,7 @@ public final class GTRegistries {
 
     public static final Registry<ToolBehaviorType<?>> TOOL_BEHAVIORS = makeRegistry(TOOL_BEHAVIOR_REGISTRY);
     public static final Registry<DimensionMarker> DIMENSION_MARKERS = makeRegistry(DIMENSION_MARKER_REGISTRY, false);
+    public static final Registry<MedicalCondition> MEDICAL_CONDITIONS =  makeRegistry(MEDICAL_CONDITION_REGISTRY);
     // spotless:on
 
     public static <T> ResourceKey<Registry<T>> makeRegistryKey(ResourceLocation registryId) {

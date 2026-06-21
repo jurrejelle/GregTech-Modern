@@ -2,10 +2,7 @@ package com.gregtechceu.gtceu.data.placeholder;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
-import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
-import com.gregtechceu.gtceu.api.capability.IEnergyInfoProvider;
-import com.gregtechceu.gtceu.api.capability.IWorkable;
+import com.gregtechceu.gtceu.api.capability.*;
 import com.gregtechceu.gtceu.api.cover.filter.ItemFilter;
 import com.gregtechceu.gtceu.api.item.IComponentItem;
 import com.gregtechceu.gtceu.api.item.component.IItemComponent;
@@ -24,6 +21,8 @@ import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
 import com.gregtechceu.gtceu.common.item.datacomponents.BindingData;
 import com.gregtechceu.gtceu.common.item.datacomponents.DataItem;
 import com.gregtechceu.gtceu.common.item.datacomponents.FormatStringList;
+import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
+import com.gregtechceu.gtceu.common.item.datacomponents.DataItem;
 import com.gregtechceu.gtceu.common.item.modules.ImageModuleBehaviour;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.monitor.AdvancedMonitorPartMachine;
 import com.gregtechceu.gtceu.config.ConfigHolder;
@@ -36,6 +35,7 @@ import com.gregtechceu.gtceu.utils.GTTransferUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -115,6 +115,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 if (ctx.level().getBlockEntity(ctx.pos()) instanceof IEnergyInfoProvider energyInfoProvider) {
                     return MultiLineComponent.literal(energyInfoProvider.getEnergyInfo().stored().longValue());
                 }
@@ -149,6 +150,7 @@ public class GTPlaceholders {
             @Override
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.pos() == null) throw new NoTargetException();
                 IItemHandler itemHandler = GTCapabilityHelper.getItemHandler(ctx.level(), ctx.pos(), ctx.side());
                 if (args.isEmpty()) {
                     return MultiLineComponent.literal(countItems((ItemFilter) null, itemHandler));
@@ -177,6 +179,7 @@ public class GTPlaceholders {
             @Override
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.pos() == null) throw new NoTargetException();
                 IFluidHandler fluidHandler = GTCapabilityHelper.getFluidHandler(ctx.level(), ctx.pos(), ctx.side());
                 if (args.isEmpty()) return MultiLineComponent.literal(countFluids(null, fluidHandler));
                 if (args.size() == 1)
@@ -336,6 +339,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 IWorkable workable = GTCapabilityHelper.getWorkable(ctx.level(),
                         ctx.pos(), ctx.side());
                 if (workable == null) throw new NotSupportedException();
@@ -348,6 +352,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 IWorkable workable = GTCapabilityHelper.getWorkable(ctx.level(),
                         ctx.pos(), ctx.side());
                 if (workable == null) throw new NotSupportedException();
@@ -360,6 +365,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 IMaintenanceMachine maintenance = GTCapabilityHelper.getMaintenanceMachine(ctx.level(),
                         ctx.pos(), ctx.side());
                 if (maintenance == null) throw new NotSupportedException();
@@ -372,6 +378,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 IWorkable workable = GTCapabilityHelper.getWorkable(ctx.level(),
                         ctx.pos(), ctx.side());
                 if (workable == null) throw new NotSupportedException();
@@ -384,6 +391,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 if (ctx.level().getBlockEntity(ctx.pos()) instanceof CableBlockEntity cable) {
                     return MultiLineComponent.literal(cable.getAverageVoltage());
                 }
@@ -396,6 +404,7 @@ public class GTPlaceholders {
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
                 PlaceholderUtils.checkArgs(args, 0);
+                if (ctx.pos() == null) throw new NoTargetException();
                 if (ctx.level().getBlockEntity(ctx.pos()) instanceof CableBlockEntity cable) {
                     return MultiLineComponent.literal(cable.getAverageAmperage());
                 }
@@ -425,14 +434,21 @@ public class GTPlaceholders {
                 try {
                     int slot = PlaceholderUtils.toInt(args.get(1));
                     if (ctx.itemStackHandler() == null) throw new NotSupportedException();
-                    PlaceholderUtils.checkRange("slot index", 1, ctx.itemStackHandler().getSlots(), slot);
-                    ItemStack stack = ctx.itemStackHandler().getStackInSlot(slot - 1);
+                    PlaceholderUtils.checkRange("slot index", 0, ctx.itemStackHandler().getSlots(), slot);
+                    ItemStack stack;
+                    if (slot == 0) {
+                        if (ctx.monitorGroup() == null) throw new NotSupportedException();
+                        if (ctx.monitorGroup().getTargetRaw() == null) throw new NoTargetException();
+                        IMonitorComponent component = GTCapabilityHelper.getMonitorComponent(ctx.level(),
+                                ctx.monitorGroup().getTargetRaw(), null);
+                        if (component != null && component.getDataItems() != null) {
+                            stack = component.getDataItems().getStackInSlot(ctx.monitorGroup().getDataSlot());
+                        } else throw new NotSupportedException();
+                    } else stack = ctx.itemStackHandler().getStackInSlot(slot - 1);
+                    int capacity = -1;
                     DataItem component = stack.get(GTDataComponents.DATA_ITEM);
-                    if (component == null) {
-                        throw new MissingItemException("any data item", slot);
-                    }
-                    int capacity = component.capacity();
-
+                    if (component != null) capacity = component.capacity();
+                    if (capacity == -1) throw new MissingItemException("any data item", slot);
                     PlaceholderUtils.checkRange("index", 0, capacity - 1, PlaceholderUtils.toInt(args.get(2)));
 
                     FormatStringList immutableData = stack.get(GTDataComponents.COMPUTER_MONITOR_DATA);
@@ -762,6 +778,7 @@ public class GTPlaceholders {
             @Override
             public MultiLineComponent apply(PlaceholderContext ctx,
                                             List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.pos() == null) throw new NoTargetException();
                 if (!(MetaMachine.getMachine(ctx.level(), ctx.pos()) instanceof AdvancedMonitorPartMachine monitor))
                     throw new NotSupportedException();
                 monitor.resetClicked();
@@ -989,17 +1006,12 @@ public class GTPlaceholders {
                 return MultiLineComponent.literal(ctx.itemStackHandler().getStackInSlot(slot - 1).toString());
             }
         });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void initRenderers() {
-        PlaceholderHandler.addRenderer("module", new ModulePlaceholderRenderer());
-        PlaceholderHandler.addRenderer("rect", new RectPlaceholderRenderer());
-        PlaceholderHandler.addRenderer("quad", new QuadPlaceholderRenderer());
         PlaceholderHandler.addPlaceholder(new Placeholder("blockNbt") {
 
             @Override
-            public MultiLineComponent apply(PlaceholderContext ctx, List<MultiLineComponent> args) {
+            public MultiLineComponent apply(PlaceholderContext ctx,
+                                            List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.pos() == null) throw new NoTargetException();
                 BlockEntity blockEntity = ctx.level().getBlockEntity(ctx.pos());
                 if (blockEntity == null) return MultiLineComponent.empty();
                 Tag tag = blockEntity.saveWithFullMetadata(ctx.level().registryAccess());
@@ -1018,5 +1030,40 @@ public class GTPlaceholders {
                 return tag == null ? MultiLineComponent.empty() : MultiLineComponent.literal(tag.toString());
             }
         });
+        PlaceholderHandler.addPlaceholder(new Placeholder("setTargetSlot") {
+
+            @Override
+            public MultiLineComponent apply(PlaceholderContext ctx,
+                                            List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.monitorGroup() == null) throw new NotSupportedException();
+                PlaceholderUtils.checkArgs(args, 1);
+                int slot = PlaceholderUtils.toInt(args.get(0));
+                BlockPos dataHatchPos = ctx.monitorGroup().getTargetRaw();
+                if (dataHatchPos == null) throw new NotSupportedException();
+                IMonitorComponent dataHatch = GTCapabilityHelper.getMonitorComponent(ctx.level(), dataHatchPos, null);
+                if (dataHatch == null || dataHatch.getDataItems() == null) throw new NotSupportedException();
+                PlaceholderUtils.checkRange("slot index", 1, dataHatch.getDataItems().getSlots(), slot);
+                ctx.monitorGroup().setDataSlot(slot - 1);
+                ctx.side(ctx.monitorGroup().getTargetCoverSide());
+                ctx.pos(ctx.monitorGroup().getTarget(ctx.level()));
+                return MultiLineComponent.empty();
+            }
+        });
+        PlaceholderHandler.addPlaceholder(new Placeholder("targetSlot") {
+
+            @Override
+            public MultiLineComponent apply(PlaceholderContext ctx,
+                                            List<MultiLineComponent> args) throws PlaceholderException {
+                if (ctx.monitorGroup() == null) throw new NotSupportedException();
+                return MultiLineComponent.literal(ctx.monitorGroup().getDataSlot() + 1);
+            }
+        });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void initRenderers() {
+        PlaceholderHandler.addRenderer("module", new ModulePlaceholderRenderer());
+        PlaceholderHandler.addRenderer("rect", new RectPlaceholderRenderer());
+        PlaceholderHandler.addRenderer("quad", new QuadPlaceholderRenderer());
     }
 }

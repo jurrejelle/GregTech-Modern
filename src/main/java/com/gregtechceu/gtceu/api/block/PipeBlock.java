@@ -14,7 +14,6 @@ import com.gregtechceu.gtceu.api.pipenet.IPipeType;
 import com.gregtechceu.gtceu.api.pipenet.LevelPipeNet;
 import com.gregtechceu.gtceu.api.pipenet.PipeNet;
 import com.gregtechceu.gtceu.api.registry.registrate.provider.GTBlockstateProvider;
-import com.gregtechceu.gtceu.api.sync_system.ManagedSyncBlockEntity;
 import com.gregtechceu.gtceu.client.model.pipe.PipeModel;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.data.GTMaterialBlocks;
@@ -458,9 +457,6 @@ public abstract class PipeBlock<PipeType extends Enum<PipeType> & IPipeType<Node
                     if (pTile instanceof IPipeNode<?, ?> pipeNode) {
                         pipeNode.serverTick();
                     }
-                    if (pTile instanceof ManagedSyncBlockEntity syncObj) {
-                        syncObj.updateTick();
-                    }
                 };
             }
         }
@@ -482,9 +478,9 @@ public abstract class PipeBlock<PipeType extends Enum<PipeType> & IPipeType<Node
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         var context = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
-        BlockEntity tileEntity = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
         List<ItemStack> drops = new ArrayList<>(super.getDrops(state, builder));
-        if (tileEntity instanceof IPipeNode<?, ?> pipeTile) {
+        if (blockEntity instanceof IPipeNode<?, ?> pipeTile) {
             if (!pipeTile.getFrameMaterial().isNull()) {
                 drops.addAll(GTMaterialBlocks.MATERIAL_BLOCKS.get(TagPrefix.frameGt, pipeTile.getFrameMaterial())
                         .getDefaultState().getDrops(builder));

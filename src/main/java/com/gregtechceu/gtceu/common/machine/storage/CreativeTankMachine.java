@@ -28,10 +28,6 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class CreativeTankMachine extends QuantumTankMachine {
 
     @Getter
@@ -46,7 +42,7 @@ public class CreativeTankMachine extends QuantumTankMachine {
     }
 
     protected FluidCache createCacheFluidHandler() {
-        return new InfiniteCache(this);
+        return new InfiniteCache();
     }
 
     @Override
@@ -170,12 +166,12 @@ public class CreativeTankMachine extends QuantumTankMachine {
 
     private class InfiniteCache extends FluidCache {
 
-        public InfiniteCache(MetaMachine holder) {
-            super(holder);
+        public InfiniteCache() {
+            super();
         }
 
         @Override
-        public @NotNull FluidStack getFluidInTank(int tank) {
+        public FluidStack getFluidInTank(int tank) {
             return stored;
         }
 
@@ -200,7 +196,7 @@ public class CreativeTankMachine extends QuantumTankMachine {
         }
 
         @Override
-        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        public boolean isFluidValid(int tank, FluidStack stack) {
             return true;
         }
 

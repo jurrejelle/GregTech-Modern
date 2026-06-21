@@ -1,12 +1,11 @@
 package com.gregtechceu.gtceu.data.lang;
 
 import com.gregtechceu.gtceu.common.data.GTBlocks;
-import com.gregtechceu.gtceu.common.data.GTMaterials;
 
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import org.jetbrains.annotations.NotNull;
@@ -125,13 +124,30 @@ public class LangHandler {
         provider.add("gtceu.tool.class.shears", "Shears");
         provider.add("gtceu.tool.class.drill", "Drill");
 
-        provider.add("argument.medical_condition.id.invalid", "Unknown medical condition '%s'");
+        provider.add("command.gtceu.medical_condition.clear.everything.failed", "Target has no conditions to remove");
+        provider.add("command.gtceu.medical_condition.clear.everything.success.multiple",
+                "Removed all conditions from %s targets");
+        provider.add("command.gtceu.medical_condition.clear.everything.success.single",
+                "Removed all conditions from %s");
+        provider.add("command.gtceu.medical_condition.clear.specific.failed",
+                "Target doesn't have the requested condition");
+        provider.add("command.gtceu.medical_condition.clear.specific.success.multiple", "Removed %s from %s targets");
+        provider.add("command.gtceu.medical_condition.clear.specific.success.single", "Removed %s from %s");
 
-        provider.add("command.gtceu.medical_condition.get", "Player %s has these medical conditions:");
-        provider.add("command.gtceu.medical_condition.get.empty", "Player %s has no medical conditions.");
-        provider.add("command.gtceu.medical_condition.get.element", "Condition %s§r: %s minutes %s seconds");
+        provider.add("command.gtceu.medical_condition.give.failed", "Unable to apply this condition (invalid target)");
+        provider.add("command.gtceu.medical_condition.give.success.multiple", "Applied %s to %s targets");
+        provider.add("command.gtceu.medical_condition.give.success.single", "Applied %s to %s");
+
+        provider.add("command.gtceu.medical_condition.get", "%s has");
+        provider.add("command.gtceu.medical_condition.get.empty", "%s is perfectly healthy.");
+        provider.add("command.gtceu.medical_condition.get.element", "- %s for %s minutes %s seconds");
         provider.add("command.gtceu.medical_condition.get.element.permanent",
-                "Condition %s§r: %s minutes %s seconds (permanent)");
+                "- %s for %s minutes %s seconds (permanent)");
+
+        provider.add("command.gtceu.medical_condition.get.symptoms.empty", "%s has no symptoms.");
+        provider.add("command.gtceu.medical_condition.get.symptoms", "Currently %s has these symptoms:");
+        provider.add("command.gtceu.medical_condition.get.symptoms.element", "- %s");
+
         provider.add("command.gtceu.dump_data.success", "Dumped %s resources from registry %s to %s");
         provider.add("command.gtceu.place_vein.failure", "Failed to place vein %s at position %s");
         provider.add("command.gtceu.place_vein.success", "Placed vein %s at position %s");
@@ -148,33 +164,53 @@ public class LangHandler {
         provider.add("command.gtceu.cape.use.success", "%s is now using cape %s");
         provider.add("command.gtceu.cape.use.success.none", "%s is no longer using a cape");
 
-        provider.add("gtceu.medical_condition.description", "§l§cHAZARDOUS §7Hold Shift to show details");
-        provider.add("gtceu.medical_condition.description_shift", "§l§cHAZARDOUS:");
-        provider.add("gtceu.medical_condition.chemical_burns", "§5Chemical burns");
-        provider.add("gtceu.medical_condition.poison", "§2Poisonous");
-        provider.add("gtceu.medical_condition.weak_poison", "§aWeakly poisonous");
-        provider.add("gtceu.medical_condition.irritant", "§6Irritant");
-        provider.add("gtceu.medical_condition.nausea", "§3Nauseating");
-        provider.add("gtceu.medical_condition.carcinogen", "§eCarcinogenic");
-        provider.add("gtceu.medical_condition.asbestosis", "§dAsbestosis");
-        provider.add("gtceu.medical_condition.arsenicosis", "§bArsenicosis");
-        provider.add("gtceu.medical_condition.silicosis", "§1Silicosis");
-        provider.add("gtceu.medical_condition.berylliosis", "§5Berylliosis");
-        provider.add("gtceu.medical_condition.methanol_poisoning", "§6Methanol Poisoning");
-        provider.add("gtceu.medical_condition.carbon_monoxide_poisoning", "§7Carbon Monoxide Poisoning");
-        provider.add("gtceu.medical_condition.none", "§2Not Dangerous");
-        provider.add("gtceu.hazard_trigger.description", "Caused by:");
-        provider.add("gtceu.hazard_trigger.protection.description", "Protects from:");
-        provider.add("gtceu.hazard_trigger.inhalation", "Inhalation");
-        provider.add("gtceu.hazard_trigger.any", "Any contact");
+        provider.add("tooltip.gtceu.medical_condition.description", "§l§cHAZARDOUS §7Hold Shift to show details");
+        provider.add("tooltip.gtceu.medical_condition.description_shift", "§l§cHAZARDOUS:");
+        provider.add("medical_condition.gtceu.chemical_burns", "§5Chemical burns");
+        provider.add("medical_condition.gtceu.poison", "§2Poisonous");
+        provider.add("medical_condition.gtceu.poison.affected", "§2Poisoning");
+        provider.add("medical_condition.gtceu.weak_poison", "§aWeakly poisonous");
+        provider.add("medical_condition.gtceu.weak_poison.affected", "§aMinor poisoning");
+        provider.add("medical_condition.gtceu.irritant", "§6Irritant");
+        provider.add("medical_condition.gtceu.irritant.affected", "§6Irritation");
+        provider.add("medical_condition.gtceu.nausea", "§3Nauseating");
+        provider.add("medical_condition.gtceu.nausea.affected", "§3Nausea");
+        provider.add("medical_condition.gtceu.carcinogen", "§eCarcinogenic");
+        provider.add("medical_condition.gtceu.carcinogen.affected", "§eCancer");
+        provider.add("medical_condition.gtceu.asbestosis", "§dAsbestosis");
+        provider.add("medical_condition.gtceu.arsenicosis", "§bArsenicosis");
+        provider.add("medical_condition.gtceu.methanol_poisoning", "§6Methanol Poisoning");
+        provider.add("medical_condition.gtceu.carbon_monoxide_poisoning", "§7Carbon Monoxide Poisoning");
+        provider.add("medical_condition.gtceu.none", "§2Not Dangerous");
+        provider.add("medical_condition.gtceu.none.affected", "§2Nothing?");
 
-        provider.add("gtceu.hazard_trigger.skin_contact", "Skin contact");
-        provider.add("gtceu.hazard_trigger.none", "Nothing");
-        provider.add("gtceu.medical_condition.antidote.description", "§aAntidote §7Hold Shift to show details");
-        provider.add("gtceu.medical_condition.antidote.description_shift", "§aCures these conditions:");
-        provider.add("gtceu.medical_condition.antidote.description.effect_removed",
+        provider.add("symptom.gtceu.death", "Death");
+        provider.add("symptom.gtceu.random_damage", "Occasional damage");
+        provider.add("symptom.gtceu.health_debuff", "Lowered maximum health");
+        provider.add("symptom.gtceu.air_supply_debuff", "Lowered lung capacity");
+        provider.add("symptom.gtceu.mining_fatigue", "Fatigue");
+        provider.add("symptom.gtceu.weakness", "Weakness");
+        provider.add("symptom.gtceu.slowness", "Slowness");
+        provider.add("symptom.gtceu.blindness", "Blindness");
+        provider.add("symptom.gtceu.darkness", "Darkness");
+        provider.add("symptom.gtceu.nausea", "Nausea");
+        provider.add("symptom.gtceu.wither", "Necrosis");
+        provider.add("symptom.gtceu.weak_poisoning", "Weak poisoning");
+        provider.add("symptom.gtceu.poisoning", "Poisoning");
+        provider.add("symptom.gtceu.hunger", "Increased appetite");
+
+        provider.add("tooltip.gtceu.hazard_trigger", "Caused by:");
+        provider.add("tooltip.gtceu.hazard_trigger.protection", "Protects from:");
+        provider.add("tooltip.gtceu.hazard_trigger.inhalation", "Inhalation");
+        provider.add("tooltip.gtceu.hazard_trigger.any", "Any contact");
+        provider.add("tooltip.gtceu.hazard_trigger.skin_contact", "Skin contact");
+        provider.add("tooltip.gtceu.hazard_trigger.none", "Nothing");
+
+        provider.add("tooltip.gtceu.antidote.description", "§aAntidote §7Hold Shift to show details");
+        provider.add("tooltip.gtceu.antidote.description_shift", "§aCures these conditions:");
+        provider.add("tooltip.gtceu.antidote.description.effect_removed",
                 "Removes %s%% of current conditions' effects");
-        provider.add("gtceu.medical_condition.antidote.description.effect_removed.all",
+        provider.add("tooltip.gtceu.antidote.description.effect_removed.all",
                 "Removes all of current conditions' effects");
 
         provider.add("gtceu.multiblock.dimension", "§eDimensions: §r%sx%sx%s");
@@ -196,10 +232,13 @@ public class LangHandler {
         provider.add("item.gtceu.tool.behavior.crop_harvesting", "§aHarvester: §fHarvests Crops");
         provider.add("item.gtceu.tool.behavior.plunger", "§9Plumber: §fDrains Fluids");
         provider.add("item.gtceu.tool.behavior.block_rotation", "§2Mechanic: §fRotates Blocks");
-        provider.add("item.gtceu.tool.behavior.dowse_campfire", "§1Firefighter: §fDowses Campfires");
+        provider.add("item.gtceu.tool.behavior.dowse_campfire", "§6Firefighter: §fDowses Campfires");
         provider.add("item.gtceu.tool.behavior.damage_boost", "§4Damage Boost: §fExtra damage against %s");
+        provider.add("item.gtceu.tool.behavior.shears", "§aGardener: §fShears blocks and mobs");
+        provider.add("item.gtceu.tool.behavior.prospecting.ore", "Found ore: %s");
         provider.add("item.gtceu.tool.behavior.prospecting.air", "Found an air pocket");
-        provider.add("item.gtceu.tool.behavior.prospecting.found", "Found %s");
+        provider.add("item.gtceu.tool.behavior.prospecting.water", "Found water");
+        provider.add("item.gtceu.tool.behavior.prospecting.lava", "Found lava");
         provider.add("item.gtceu.tool.behavior.prospecting.changing", "Detected material change");
         replace(provider, "item.gtceu.tool.sword", "%s Sword");
         replace(provider, "item.gtceu.tool.pickaxe", "%s Pickaxe");
@@ -250,8 +289,8 @@ public class LangHandler {
         provider.add("item.gtceu.tool.hv_wrench.tooltip", "§8Hold left click to dismantle Machines");
         replace(provider, "item.gtceu.tool.iv_wrench", "%s Wrench (IV)");
         provider.add("item.gtceu.tool.iv_wrench.tooltip", "§8Hold left click to dismantle Machines");
-        replace(provider, "item.gtceu.tool.lv_buzzsaw", "%s Buzzsaw (LV)");
-        provider.add("item.gtceu.tool.lv_buzzsaw.tooltip", "§8Not suitable for harvesting Blocks");
+        replace(provider, "item.gtceu.tool.buzzsaw", "%s Buzzsaw (LV)");
+        provider.add("item.gtceu.tool.buzzsaw.tooltip", "§8Not suitable for harvesting Blocks");
         replace(provider, "item.gtceu.tool.lv_screwdriver", "%s Screwdriver (LV)");
         provider.add("item.gtceu.tool.lv_screwdriver.tooltip", "§8Adjusts Covers and Machines");
         replace(provider, "item.gtceu.tool.hv_screwdriver", "%s Screwdriver (HV)");
@@ -270,10 +309,11 @@ public class LangHandler {
         provider.add("item.gtceu.tool.tooltip.harvest_level", "§eHarvest Level %s");
         provider.add("item.gtceu.tool.tooltip.harvest_level_extra", "§eHarvest Level %s §f(%s§f)");
         multiLang(provider, "item.gtceu.tool.harvest_level", "§8Wood", "§7Stone", "§aIron", "§bDiamond",
-                "§dNetherite", "§9Duranium", "§cNeutronium");
+                "§dNetherite",
+                "§9Duranium", "§cNeutronium");
         provider.add("item.gtceu.tool.tooltip.repair_info", "§8Hold SHIFT to show Repair Info");
         provider.add("item.gtceu.tool.tooltip.repair_material", "§8Repair with: §f§a%s");
-        provider.add("item.gtceu.tool.tooltip.innate_enchantments", "§5Innate Enchantments:");
+        provider.add("item.gtceu.tool.tooltip.default_enchantments", "§5Default Enchantments:");
         provider.add("item.gtceu.tool.aoe.rows", "Rows");
         provider.add("item.gtceu.tool.aoe.columns", "Columns");
         provider.add("item.gtceu.tool.aoe.layers", "Layers");
@@ -382,7 +422,7 @@ public class LangHandler {
                         §6*§r for wildcard
                         §6$§r for untagged
                         §bTags come in the form 'namespace:tag/subtype'.
-                        The 'c:' namespace is assumed if one isn't provided.
+                        The 'forge:' namespace is assumed if one isn't provided.
                         §bExample: §6*dusts/gold | (gtceu:circuits & !*lv)
                         This matches all gold dusts or all circuits except LV ones""");
         provider.add("cover.tag_filter.test_slot.info",
@@ -418,11 +458,11 @@ public class LangHandler {
                 "§cWARNING!§7 Setting this to \"Enabled\" means that fluids or items WILL be voided.");
         provider.add("cover.voiding.message.disabled", "Voiding Cover Disabled");
         provider.add("cover.voiding.message.enabled", "Voiding Cover Enabled");
-        provider.add("cover.smart_item_filter.title", "Smart Item Filter");
-        provider.add("cover.smart_item_filter.filtering_mode.electrolyzer", "Electrolyzer");
-        provider.add("cover.smart_item_filter.filtering_mode.centrifuge", "Centrifuge");
-        provider.add("cover.smart_item_filter.filtering_mode.sifter", "Sifter");
-        multilineLang(provider, "cover.smart_item_filter.filtering_mode.description",
+        provider.add("cover.item_smart_filter.title", "Smart Item Filter");
+        provider.add("cover.item_smart_filter.filtering_mode.electrolyzer", "Electrolyzer");
+        provider.add("cover.item_smart_filter.filtering_mode.centrifuge", "Centrifuge");
+        provider.add("cover.item_smart_filter.filtering_mode.sifter", "Sifter");
+        multilineLang(provider, "cover.item_smart_filter.filtering_mode.description",
                 "Select Machine this Smart Filter will use for filtering.\nIt will automatically pick right portions of items for robotic arm.");
         provider.add("cover.conveyor.title", "Conveyor Cover Settings (%s)");
         provider.add("cover.conveyor.transfer_rate", "§7items/sec");
@@ -546,75 +586,13 @@ public class LangHandler {
         provider.add("cover.shutter.message.enabled", "Closed shutter");
         provider.add("cover.shutter.message.disabled", "Opened shutter");
 
-        provider.add("item.gtceu.bucket", "%s Bucket");
-        replace(provider, GTMaterials.FullersEarth.getUnlocalizedName(), "Fuller's Earth");
-        replace(provider, GTMaterials.Cooperite.getUnlocalizedName(), "Sheldonite"); // greg's humor is now on
-                                                                                     // 1.19...
-        replace(provider, GTMaterials.YellowLimonite.getUnlocalizedName(), "Yellow Limonite");
-        replace(provider, GTMaterials.HSSG.getUnlocalizedName(), "HSS-G");
-        replace(provider, GTMaterials.HSSE.getUnlocalizedName(), "HSS-E");
-        replace(provider, GTMaterials.HSSS.getUnlocalizedName(), "HSS-S");
-        replace(provider, GTMaterials.RTMAlloy.getUnlocalizedName(), "RTM Alloy");
-        replace(provider, GTMaterials.HSLASteel.getUnlocalizedName(), "HSLA Steel");
+        replace(provider, "item.gtceu.bucket", "%s Bucket");
 
-        replace(provider, GTMaterials.UUMatter.getUnlocalizedName(), "UU-Matter");
-        replace(provider, GTMaterials.PCBCoolant.getUnlocalizedName(), "PCB Coolant");
-        replace(provider, GTMaterials.TungstenSteel.getUnlocalizedName(), "Tungstensteel");
-        replace(provider, GTMaterials.Iron3Chloride.getUnlocalizedName(), "Iron III Chloride");
-        replace(provider, GTMaterials.Iron2Chloride.getUnlocalizedName(), "Iron II Chloride");
-
-        replace(provider, GTMaterials.HydroCrackedButadiene.getUnlocalizedName(), "Hydro-Cracked Butadiene");
-        replace(provider, GTMaterials.HydroCrackedButane.getUnlocalizedName(), "Hydro-Cracked Butane");
-        replace(provider, GTMaterials.HydroCrackedButene.getUnlocalizedName(), "Hydro-Cracked Butene");
-        replace(provider, GTMaterials.HydroCrackedButene.getUnlocalizedName(), "Hydro-Cracked Butene");
-        replace(provider, GTMaterials.HydroCrackedEthane.getUnlocalizedName(), "Hydro-Cracked Ethane");
-        replace(provider, GTMaterials.HydroCrackedEthylene.getUnlocalizedName(), "Hydro-Cracked Ethylene");
-        replace(provider, GTMaterials.HydroCrackedPropane.getUnlocalizedName(), "Hydro-Cracked Propane");
-        replace(provider, GTMaterials.HydroCrackedPropene.getUnlocalizedName(), "Hydro-Cracked Propene");
-        replace(provider, GTMaterials.SteamCrackedButadiene.getUnlocalizedName(), "Steam-Cracked Butadiene");
-        replace(provider, GTMaterials.SteamCrackedButane.getUnlocalizedName(), "Steam-Cracked Butane");
-        replace(provider, GTMaterials.SteamCrackedButene.getUnlocalizedName(), "Steam-Cracked Butene");
-        replace(provider, GTMaterials.SteamCrackedButene.getUnlocalizedName(), "Steam-Cracked Butene");
-        replace(provider, GTMaterials.SteamCrackedEthane.getUnlocalizedName(), "Steam-Cracked Ethane");
-        replace(provider, GTMaterials.SteamCrackedEthylene.getUnlocalizedName(), "Steam-Cracked Ethylene");
-        replace(provider, GTMaterials.SteamCrackedPropane.getUnlocalizedName(), "Steam-Cracked Propane");
-        replace(provider, GTMaterials.SteamCrackedPropene.getUnlocalizedName(), "Steam-Cracked Propene");
-        replace(provider, GTMaterials.LightlyHydroCrackedGas.getUnlocalizedName(), "Lightly Hydro-Cracked Gas");
-        replace(provider, GTMaterials.LightlyHydroCrackedHeavyFuel.getUnlocalizedName(),
-                "Lightly Hydro-Cracked Heavy Fuel");
-        replace(provider, GTMaterials.LightlyHydroCrackedLightFuel.getUnlocalizedName(),
-                "Lightly Hydro-Cracked Light Fuel");
-        replace(provider, GTMaterials.LightlyHydroCrackedNaphtha.getUnlocalizedName(),
-                "Lightly Hydro-Cracked Naphtha");
-        replace(provider, GTMaterials.LightlySteamCrackedGas.getUnlocalizedName(), "Lightly Steam-Cracked Gas");
-        replace(provider, GTMaterials.LightlySteamCrackedHeavyFuel.getUnlocalizedName(),
-                "Lightly Steam-Cracked Heavy Fuel");
-        replace(provider, GTMaterials.LightlySteamCrackedLightFuel.getUnlocalizedName(),
-                "Lightly Steam-Cracked Light Fuel");
-        replace(provider, GTMaterials.LightlySteamCrackedNaphtha.getUnlocalizedName(),
-                "Lightly Steam-Cracked Naphtha");
-        replace(provider, GTMaterials.SeverelyHydroCrackedGas.getUnlocalizedName(),
-                "Severely Hydro-Cracked Gas");
-        replace(provider, GTMaterials.SeverelyHydroCrackedHeavyFuel.getUnlocalizedName(),
-                "Severely Hydro-Cracked Heavy Fuel");
-        replace(provider, GTMaterials.SeverelyHydroCrackedLightFuel.getUnlocalizedName(),
-                "Severely Hydro-Cracked Light Fuel");
-        replace(provider, GTMaterials.SeverelyHydroCrackedNaphtha.getUnlocalizedName(),
-                "Severely Hydro-Cracked Naphtha");
-        replace(provider, GTMaterials.SeverelySteamCrackedGas.getUnlocalizedName(),
-                "Severely Steam-Cracked Gas");
-        replace(provider, GTMaterials.SeverelySteamCrackedHeavyFuel.getUnlocalizedName(),
-                "Severely Steam-Cracked Heavy Fuel");
-        replace(provider, GTMaterials.SeverelySteamCrackedLightFuel.getUnlocalizedName(),
-                "Severely Steam-Cracked Light Fuel");
-        replace(provider, GTMaterials.SeverelySteamCrackedNaphtha.getUnlocalizedName(),
-                "Severely Steam-Cracked Naphtha");
-        replace(provider, GTMaterials.LPG.getUnlocalizedName(), "LPG");
-
-        replace(provider, GTMaterials.Zeron100.getUnlocalizedName(), "Zeron-100");
-        replace(provider, GTMaterials.IncoloyMA956.getUnlocalizedName(), "Incoloy MA-956");
-        replace(provider, GTMaterials.Stellite100.getUnlocalizedName(), "Stellite-100");
-        replace(provider, GTMaterials.HastelloyC276.getUnlocalizedName(), "Hastelloy C-276");
+        replace(provider, "block.gtceu.oil_heavy", "Heavy Oil");
+        replace(provider, "block.gtceu.oil_light", "Light Oil");
+        replace(provider, "block.gtceu.oil_medium", "Raw Oil");
+        replace(provider, "block.gtceu.oil", "Oil");
+        replace(provider, "block.gtceu.creosote", "Creosote");
 
         replace(provider, GTBlocks.BATTERY_EMPTY_TIER_I.get().getDescriptionId(), "Empty Tier I Capacitor");
         replace(provider, GTBlocks.BATTERY_LAPOTRONIC_EV.get().getDescriptionId(), "EV Lapotronic Capacitor");
@@ -626,8 +604,8 @@ public class LangHandler {
         replace(provider, GTBlocks.BATTERY_LAPOTRONIC_UV.get().getDescriptionId(), "UV Lapotronic Capacitor");
         replace(provider, GTBlocks.BATTERY_ULTIMATE_UHV.get().getDescriptionId(), "UHV Ultimate Capacitor");
 
-        provider.add("block.gtceu.netherrack_nether_quartz_ore", "Nether Quartz Ore");
-        provider.add("block.gtceu.surface_rock", "%s Surface Rock");
+        provider.add("item.netherrack_nether_quartz", "Nether Quartz Ore");
+        provider.add("block.surface_rock", "%s Surface Rock");
 
         provider.add("item.gtceu.tiny_gunpowder_dust", "Tiny Pile of Gunpowder");
         provider.add("item.gtceu.small_gunpowder_dust", "Small Pile of Gunpowder");
@@ -861,7 +839,6 @@ public class LangHandler {
                 "Caused %s Lag Spike Warnings (anything taking longer than %sms) on the Server.");
         provider.add("behavior.portable_scanner.debug_machine", "Meta-ID: %s");
         provider.add("behavior.portable_scanner.debug_machine_invalid", " invalid!");
-        provider.add("behavior.portable_scanner.debug_machine_invalid_null", " invalid! MetaTileEntity = null!");
         provider.add("behavior.portable_scanner.debug_machine_valid", " valid");
         provider.add("behavior.portable_scanner.divider", "=========================");
         provider.add("behavior.portable_scanner.energy_container_in", "Max IN: %s (%s) EU at %s A");
@@ -1021,7 +998,7 @@ public class LangHandler {
         provider.add("gtceu.recipe.temperature", "Temp: %s");
         provider.add("gtceu.recipe.coil.tier", "Coil: %s");
         provider.add("gtceu.recipe.explosive", "Explosive: %s");
-        provider.add("gtceu.recipe.eu_to_start", "EU To Start: %sEU (%s)");
+        provider.add("gtceu.recipe.eu_to_start", "EU To Start: %sEU%s");
         provider.add("gtceu.recipe.dimensions", "Dimensions: %s");
         provider.add("gtceu.recipe.cleanroom", "Requires %s");
         provider.add("gtceu.recipe.environmental_hazard.reverse", "§cArea must be free of %s");
@@ -1492,8 +1469,6 @@ public class LangHandler {
                 "Binding to a transmitter cover at %s %s %s facing %s in %s");
         provider.add("gtceu.tooltip.computer_monitor_config", "Storing computer monitor cover configuration data");
         provider.add("gtceu.tooltip.computer_monitor_data", "Storing data: %s");
-        provider.add("gtceu.tooltip.player_name.placeholder_processor", "Placeholder processor");
-        provider.add("gtceu.tooltip.player_name.unknown", "Unknown player");
 
         provider.add("gtceu.display_source.computer_monitor_cover", "Computer Monitor Cover");
         provider.add("gtceu.display_target.computer_monitor_cover", "Computer Monitor Cover");
@@ -1651,6 +1626,7 @@ public class LangHandler {
         multiLang(provider, "gtceu.placeholder_info.data",
                 "Stores or retrieves some data from a data item (data stick/orb/module) in one of the slots.",
                 "If you leave the <index> argument empty, it will be replaced with the value p (p is an integer from 0 to (capacity - 1) that is stored in the data item nbt).",
+                "If the slot argument is equal to 0, this placeholder will manipulate the data stick that is currently targeted by this text module inside a data hatch.",
                 "Usage:",
                 "  {data get <slot> <index>} -> the data stored in the item in the specified slot",
                 "  {data set <slot> <index> <value>} -> sets the data stored in the item in the specified slot, returns an empty string",
@@ -1763,6 +1739,16 @@ public class LangHandler {
                 "Usage:",
                 "  {blockNbt} -> full block entity nbt",
                 "  {blockNbt [key1] [key2] ...} -> part of the nbt");
+        multiLang(provider, "gtceu.placeholder_info.targetSlot",
+                "Returns the index of the targeted data hatch slot",
+                "Usage:",
+                "  {targetSlot} -> <slot> (from 1 to 4/9/16)");
+        multiLang(provider, "gtceu.placeholder_info.setTargetSlot",
+                "Sets the index of the targeted data hatch slot.",
+                "The change will take effect immediately after this placeholder executes.",
+                "(Further placeholders will reference the new target)",
+                "Usage:",
+                "  {setTargetSlot <slot>} -> empty string");
         provider.add("gtceu.ender_item_link_cover.title", "Ender Item Link");
         provider.add("gtceu.ender_item_link_cover.tooltip",
                 "§7Transports §fItems§7 with a §fWireless §dEnder§f Connection§7 as §fCover§7.");
@@ -1790,6 +1776,8 @@ public class LangHandler {
         provider.add("gtceu.computer_monitor_cover.error.bf_invalid_num",
                 "Invalid number at index %d when processing symbol number %d");
         provider.add("gtceu.computer_monitor_cover.error.bf_invalid", "Invalid character at %d");
+        provider.add("gtceu.provider.computer_monitor_cover.error.no_target",
+                "No target selected for the monitor group");
         multiLang(provider, "gtceu.gui.computer_monitor_cover.main_textbox_tooltip",
                 "Input string to display on line %d here.",
                 "It can have placeholders, for example: 'Energy: {energy}/{energyCapacity} EU'",

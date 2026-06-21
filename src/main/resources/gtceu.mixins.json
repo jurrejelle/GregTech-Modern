@@ -23,6 +23,7 @@
         "ftbchunks.FTBChunksClientMixin",
         "ftbchunks.LargeMapScreenMixin",
         "ftbchunks.RegionMapPanelMixin",
+        "ldlib.ClickDataMixin",
         "ldlib.WorldSceneRendererMixin",
         "neoforge.BakedModelWrapperAccessor",
         "rei.FluidEntryRendererMixin",
@@ -33,6 +34,7 @@
         "xaeroworldmap.WorldMapSessionMixin"
     ],
     "mixins": [
+        "BeehiveBlockAccessor",
         "BlockBehaviourAccessor",
         "BlockEntityMixin",
         "BlockMixin",
@@ -64,6 +66,8 @@
         "TagLoaderMixin",
         "TagManagerMixin",
         "WorldLoaderMixin",
+        "client.ItemEntityMixin",
+        "dev.datagen.FixParallelKeyMappingRegistrationMixin",
         "dev.test.GameTestRegistryMixin",
         "emi.FillRecipePacketMixin",
         "emi.FluidEmiStackMixin",

@@ -3,16 +3,13 @@ package com.gregtechceu.gtceu.utils;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
-import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
-import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
-import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.core.mixins.MapColorAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -37,7 +34,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.Tags;
@@ -45,13 +41,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -341,27 +336,21 @@ public class GTUtil {
 
     public static boolean isShiftDown() {
         if (GTCEu.isClientSide()) {
-            var id = Minecraft.getInstance().getWindow().getWindow();
-            return InputConstants.isKeyDown(id, GLFW.GLFW_KEY_LEFT_SHIFT) ||
-                    InputConstants.isKeyDown(id, GLFW.GLFW_KEY_LEFT_SHIFT);
+            return Screen.hasShiftDown();
         }
         return false;
     }
 
     public static boolean isCtrlDown() {
         if (GTCEu.isClientSide()) {
-            var id = Minecraft.getInstance().getWindow().getWindow();
-            return InputConstants.isKeyDown(id, GLFW.GLFW_KEY_LEFT_CONTROL) ||
-                    InputConstants.isKeyDown(id, GLFW.GLFW_KEY_RIGHT_CONTROL);
+            return Screen.hasControlDown();
         }
         return false;
     }
 
     public static boolean isAltDown() {
         if (GTCEu.isClientSide()) {
-            var id = Minecraft.getInstance().getWindow().getWindow();
-            return InputConstants.isKeyDown(id, GLFW.GLFW_KEY_LEFT_ALT) ||
-                    InputConstants.isKeyDown(id, GLFW.GLFW_KEY_RIGHT_ALT);
+            return Screen.hasAltDown();
         }
         return false;
     }
@@ -482,19 +471,6 @@ public class GTUtil {
         return opacity << 24 | colorValue;
     }
 
-    /**
-     * @param material the material to use
-     * @return the correct "molten" fluid for a material
-     */
-    @Nullable
-    public static Fluid getMoltenFluid(@NotNull Material material) {
-        if (material.hasProperty(PropertyKey.ALLOY_BLAST))
-            return material.getProperty(PropertyKey.FLUID).getStorage().get(FluidStorageKeys.MOLTEN);
-        if (!TagPrefix.ingotHot.doGenerateItem(material) && material.hasProperty(PropertyKey.FLUID))
-            return material.getProperty(PropertyKey.FLUID).getStorage().get(FluidStorageKeys.LIQUID);
-        return null;
-    }
-
     public static int getFluidColor(FluidStack fluid) {
         return IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
     }
@@ -564,15 +540,13 @@ public class GTUtil {
         if (!ConfigHolder.INSTANCE.gameplay.hazardsEnabled || !material.hasProperty(HAZARD)) return;
 
         if (GTUtil.isShiftDown()) {
-            tooltipComponents.add(Component.translatable("gtceu.medical_condition.description_shift"));
-            tooltipComponents.add(Component
-                    .translatable("gtceu.medical_condition." + material.getProperty(HAZARD).condition.name));
-            tooltipComponents.add(Component.translatable("gtceu.hazard_trigger.description"));
-            tooltipComponents.add(Component
-                    .translatable("gtceu.hazard_trigger." + material.getProperty(HAZARD).hazardTrigger.name()));
+            tooltipComponents.add(Component.translatable("tooltip.gtceu.medical_condition.description_shift"));
+            tooltipComponents.add(material.getProperty(HAZARD).condition.getTranslatableName());
+            tooltipComponents.add(Component.translatable("tooltip.gtceu.hazard_trigger"));
+            tooltipComponents.add(material.getProperty(HAZARD).hazardTrigger.getTranslatableName());
             return;
         }
-        tooltipComponents.add(Component.translatable("gtceu.medical_condition.description"));
+        tooltipComponents.add(Component.translatable("tooltip.gtceu.medical_condition.description"));
     }
 
     public static Tuple<ItemStack, MutableComponent> getMaintenanceText(byte flag) {

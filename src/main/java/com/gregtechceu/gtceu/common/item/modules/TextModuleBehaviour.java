@@ -39,26 +39,31 @@ import java.util.stream.Collectors;
 
 public class TextModuleBehaviour implements IMonitorModuleItem, IAddInformation {
 
-    private void updateText(ItemStack stack, CentralMonitorMachine machine, MonitorGroup group) {
+    private void updateText(ItemStack stack, PlaceholderContext ctx) {
         if (!stack.has(GTDataComponents.PLACEHOLDER_UUID)) {
             stack.set(GTDataComponents.PLACEHOLDER_UUID, UUID.randomUUID());
         }
         MultiLineComponent text = PlaceholderHandler.processPlaceholders(
                 getPlaceholderText(stack),
-                new PlaceholderContext(
-                        group.getTargetLevel(machine.getLevel()),
-                        group.getTarget(machine.getLevel()),
-                        group.getTargetCoverSide(),
-                        group.getPlaceholderSlotsHandler(),
-                        group.getTargetCover(machine.getLevel()),
-                        null,
-                        stack.get(GTDataComponents.PLACEHOLDER_UUID)));
+                ctx);
         stack.update(GTDataComponents.TEXT_LINE_LIST, TextLineList.EMPTY, lines -> lines.withLines(text.toImmutable()));
+    }
+
+    private PlaceholderContext makeContext(ItemStack stack, CentralMonitorMachine machine, MonitorGroup group) {
+        return new PlaceholderContext(
+                group.getTargetLevel(machine.getLevel()),
+                group.getTarget(machine.getLevel()),
+                group.getTargetCoverSide(),
+                group.getPlaceholderSlotsHandler(),
+                group.getTargetCover(machine.getLevel()),
+                group,
+                null,
+                stack.get(GTDataComponents.PLACEHOLDER_UUID);
     }
 
     @Override
     public void tick(ItemStack stack, CentralMonitorMachine machine, MonitorGroup group) {
-        this.updateText(stack, machine, group);
+        this.updateText(stack, makeContext(stack, machine, group));
     }
 
     @Override

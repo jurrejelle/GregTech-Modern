@@ -16,6 +16,7 @@ import com.lowdragmc.lowdraglib.gui.texture.TextTexture;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,7 +40,7 @@ public class CreativeChestMachine extends QuantumChestMachine {
 
     @Override
     protected ItemCache createCacheItemHandler() {
-        return new InfiniteCache(this);
+        return new InfiniteCache();
     }
 
     private void updateStored(ItemStack item) {
@@ -123,8 +124,8 @@ public class CreativeChestMachine extends QuantumChestMachine {
 
     private class InfiniteCache extends ItemCache {
 
-        public InfiniteCache(MetaMachine holder) {
-            super(holder);
+        public InfiniteCache() {
+            super();
         }
 
         @Override

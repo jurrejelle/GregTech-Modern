@@ -6,8 +6,6 @@ import com.gregtechceu.gtceu.api.capability.recipe.*;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
-import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.IgnoreEnergyRecipeHandler;
@@ -44,7 +42,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -55,7 +52,6 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
     private static final byte POWER = 5;
     private static final byte TICK_TOLERANCE = 20;
     private static final double DIVIDEND = MAX_SPEED * Math.pow(TICK_TOLERANCE, POWER);
-    protected final IMiner miner;
     @Nullable
     private NotifiableAccountedInvWrapper cachedItemHandler = null;
     @Getter
@@ -118,8 +114,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
     private final Map<IO, List<RecipeHandlerList>> capabilitiesProxy;
     @Getter
     protected final Map<IO, Map<RecipeCapability<?>, List<IRecipeHandler<?>>>> capabilitiesFlat;
-    private final ItemRecipeHandler inputItemHandler, outputItemHandler;
-    private final IgnoreEnergyRecipeHandler inputEnergyHandler;
+    private @Nullable ItemRecipeHandler inputItemHandler, outputItemHandler;
     @Setter
     @Getter
     private Direction dir = Direction.DOWN;
@@ -127,14 +122,12 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
     /**
      * Creates the general logic for all in-world ore block miners
      *
-     * @param machine       the {@link MetaMachine} this logic belongs to
      * @param fortune       the fortune amount to apply when mining ores
      * @param speed         the speed in ticks per block mined
      * @param maximumRadius the maximum radius (square shaped) the miner can mine in
      */
-    public MinerLogic(@NotNull IRecipeLogicMachine machine, int fortune, int speed, int maximumRadius) {
-        super(machine);
-        this.miner = (IMiner) machine;
+    public MinerLogic(int fortune, int speed, int maximumRadius) {
+        super();
         this.fortune = fortune;
         this.speed = speed;
         this.currentRadius = maximumRadius;
@@ -143,13 +136,26 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         this.pickaxeTool = GTMaterialItems.TOOL_ITEMS.get(GTMaterials.Neutronium, GTToolType.PICKAXE).get().get();
         this.capabilitiesProxy = new EnumMap<>(IO.class);
         this.capabilitiesFlat = new EnumMap<>(IO.class);
-        this.inputItemHandler = new ItemRecipeHandler(IO.IN,
-                machine.getRecipeType().getMaxInputs(ItemRecipeCapability.CAP));
-        this.outputItemHandler = new ItemRecipeHandler(IO.OUT,
-                machine.getRecipeType().getMaxOutputs(ItemRecipeCapability.CAP));
-        this.inputEnergyHandler = new IgnoreEnergyRecipeHandler();
+    }
 
-        RecipeHandlerList inHandlers = RecipeHandlerList.of(IO.IN, inputItemHandler, inputEnergyHandler);
+    @Override
+    public IMiner getRLMachine() {
+        return (IMiner) super.getRLMachine();
+    }
+
+    @Override
+    protected List<Class<?>> validMachineClasses() {
+        return List.of(IMiner.class);
+    }
+
+    @Override
+    public void onMachineLoad() {
+        this.inputItemHandler = new ItemRecipeHandler(IO.IN,
+                getRLMachine().getRecipeType().getMaxInputs(ItemRecipeCapability.CAP));
+        this.outputItemHandler = new ItemRecipeHandler(IO.OUT,
+                getRLMachine().getRecipeType().getMaxOutputs(ItemRecipeCapability.CAP));
+
+        RecipeHandlerList inHandlers = RecipeHandlerList.of(IO.IN, inputItemHandler, new IgnoreEnergyRecipeHandler());
         RecipeHandlerList outHandlers = RecipeHandlerList.of(IO.OUT, outputItemHandler);
 
         addHandlerList(inHandlers);
@@ -174,8 +180,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
     }
 
     @Override
-    public void inValid() {
-        super.inValid();
+    public void onMachineUnload() {
         this.cachedItemHandler = null;
         this.pipeLength = 0;
     }
@@ -209,7 +214,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
             // the storages have already been checked earlier
             if (!isInventoryFull()) {
                 // always drain storages when working, even if blocksToMine ends up being empty
-                miner.drainInput(false);
+                getRLMachine().drainInput(false);
                 // since energy is being consumed the miner is now active
                 setStatus(Status.WORKING);
             } else {
@@ -308,7 +313,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         if (!isDone && checkCoordinatesInvalid()) {
             initPos(getMiningPos(), currentRadius);
         }
-        return !isDone && miner.drainInput(true);
+        return !isDone && getRLMachine().drainInput(true);
     }
 
     /**
@@ -366,10 +371,11 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         if (oreDrop.isEmpty()) return false;
 
         // create dummy recipe handler
-        inputItemHandler.storage.setStackInSlot(0, oreDrop);
-        outputItemHandler.storage.clear();
+        Objects.requireNonNull(inputItemHandler).storage.setStackInSlot(0, oreDrop);
+        Objects.requireNonNull(outputItemHandler).storage.clear();
 
-        var matches = machine.getRecipeType().searchRecipe(this, r -> RecipeHelper.matchContents(this, r).isSuccess());
+        var matches = getRLMachine().getRecipeType().searchRecipe(this,
+                r -> RecipeHelper.matchContents(this, r).isSuccess());
 
         GTRecipe recipe = null; // attempt ore block that has a static gt recipe
         while (matches.hasNext()) {
@@ -416,7 +422,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
 
     protected NotifiableAccountedInvWrapper getCachedItemHandler() {
         if (cachedItemHandler == null) {
-            cachedItemHandler = new NotifiableAccountedInvWrapper(machine
+            cachedItemHandler = new NotifiableAccountedInvWrapper(getRLMachine()
                     .getCapabilitiesFlat(IO.OUT, ItemRecipeCapability.CAP).stream()
                     .map(IItemHandlerModifiable.class::cast)
                     .toArray(IItemHandlerModifiable[]::new));
@@ -436,23 +442,21 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         // replace the ore block with cobblestone instead of breaking it to prevent mob spawning
         // remove the ore block's position from the mining queue
         var handler = getCachedItemHandler();
-        if (handler != null) {
-            if (GTTransferUtils.addItemsToItemHandler(handler, true, blockDrops)) {
-                GTTransferUtils.addItemsToItemHandler(handler, false, blockDrops);
-                var pos = blocksToMine.getFirst();
-                world.setBlock(pos, findMiningReplacementBlock(world, pos), 3);
-                mineX = pos.getX();
-                mineZ = pos.getZ();
-                mineY = pos.getY();
-                blocksToMine.removeFirst();
-                onMineOperation();
+        if (GTTransferUtils.addItemsToItemHandler(handler, true, blockDrops)) {
+            GTTransferUtils.addItemsToItemHandler(handler, false, blockDrops);
+            var pos = blocksToMine.getFirst();
+            world.setBlock(pos, findMiningReplacementBlock(world, pos), 3);
+            mineX = pos.getX();
+            mineZ = pos.getZ();
+            mineY = pos.getY();
+            blocksToMine.removeFirst();
+            onMineOperation();
 
-                // if the inventory was previously considered full, mark it as not since an item was able to fit
-                isInventoryFull = false;
-            } else {
-                // the ore block was not able to fit, so the inventory is considered full
-                isInventoryFull = true;
-            }
+            // if the inventory was previously considered full, mark it as not since an item was able to fit
+            isInventoryFull = false;
+        } else {
+            // the ore block was not able to fit, so the inventory is considered full
+            isInventoryFull = true;
         }
     }
 
@@ -462,7 +466,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
      * @param pos           the {@link BlockPos} of the miner itself
      * @param currentRadius the currently set mining radius
      */
-    public void initPos(@NotNull BlockPos pos, int currentRadius) {
+    public void initPos(BlockPos pos, int currentRadius) {
         x = pos.getX() - currentRadius;
         z = pos.getZ() - currentRadius;
         if (dir == Direction.UP) {
@@ -485,7 +489,8 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         } else {
             mineY = pos.getY() - 1;
         }
-        onRemove();
+
+        removePipes();
     }
 
     /**
@@ -585,7 +590,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
      * @param values to find the mean of
      * @return the mean value
      */
-    private static long mean(long @NotNull [] values) {
+    private static long mean(long[] values) {
         if (values.length == 0L)
             return 0L;
 
@@ -599,7 +604,7 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
      * @param world the {@link Level} to get the average tick time of
      * @return the mean tick time
      */
-    private static double getMeanTickTime(@NotNull Level world) {
+    private static double getMeanTickTime(Level world) {
         return mean(Objects.requireNonNull(world.getServer()).getTickTimesNanos()) * 1.0E-6D;
     }
 
@@ -631,7 +636,12 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
         return getMachine().getBlockPos();
     }
 
-    public void onRemove() {
+    @Override
+    public void onMachineDestroyed() {
+        removePipes();
+    }
+
+    public void removePipes() {
         pipeLength = 0;
         if (getMachine().getLevel() instanceof ServerLevel serverLevel) {
             var pos = getMiningPos().relative(dir);
