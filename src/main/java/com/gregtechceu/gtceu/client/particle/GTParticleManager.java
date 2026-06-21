@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.client.bloom.EffectRenderContext;
 import com.gregtechceu.gtceu.client.bloom.IRenderSetup;
 
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -17,9 +18,6 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -151,11 +149,13 @@ public final class GTParticleManager {
             IRenderSetup handler = entry.getKey();
             boolean initialized = false;
 
-            BufferBuilder buffer = Tesselator.getInstance().begin();
+            BufferBuilder buffer = null;
             for (GTParticle particle : particles) {
                 if (!particle.shouldRender(context)) {
                     continue;
                 }
+                buffer = Tesselator.getInstance()
+                        .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
                 try {
                     if (!initialized) {
                         initialized = true;

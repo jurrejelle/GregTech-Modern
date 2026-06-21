@@ -26,7 +26,6 @@
         "client.TextureAtlasMixin",
         "client.PlayerSkinAccessor",
         "client.VariantDeserializerMixin",
-        "client.VertexConsumerMixin",
         "client.bloom.GameRendererAccessor",
         "client.bloom.LevelRendererMixin",
         "client.bloom.PostChainAccessor",

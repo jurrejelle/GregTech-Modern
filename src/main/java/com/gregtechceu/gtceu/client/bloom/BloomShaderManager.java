@@ -35,7 +35,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
+import net.irisshaders.iris.api.v0.IrisApi;
 @EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT)
 @UtilityClass
 public class BloomShaderManager {
