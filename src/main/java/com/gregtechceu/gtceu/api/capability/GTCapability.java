@@ -3,7 +3,6 @@ package com.gregtechceu.gtceu.api.capability;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMaintenanceMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
-import com.gregtechceu.gtceu.common.capability.MedicalConditionTracker;
 
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;

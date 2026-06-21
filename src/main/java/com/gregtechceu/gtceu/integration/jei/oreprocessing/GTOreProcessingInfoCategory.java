@@ -8,7 +8,6 @@ import com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.lowdragmc.lowdraglib.jei.ModularUIRecipeCategory;
 
 import net.minecraft.network.chat.Component;

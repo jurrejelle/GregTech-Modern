@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -58,7 +57,7 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
      * compatibility).<br>
      * When overriding, {@code super.load(tag)} must be called <b>AFTER</b> any custom logic.
      *
-     * @param tag The tag to load
+     * @param tag        The tag to load
      * @param registries Registry lookup
      */
     @Override
@@ -82,7 +81,8 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     }
 
     @Override
-    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt,
+                                   HolderLookup.Provider lookupProvider) {
         CompoundTag tag = pkt.getTag();
         clientLoad(tag, lookupProvider);
     }

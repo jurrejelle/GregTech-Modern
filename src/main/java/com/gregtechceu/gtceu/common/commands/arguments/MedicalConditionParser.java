@@ -3,7 +3,6 @@ package com.gregtechceu.gtceu.common.commands.arguments;
 import com.gregtechceu.gtceu.api.data.medicalcondition.MedicalCondition;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

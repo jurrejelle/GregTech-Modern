@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.machine.multiblock;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.block.property.GTBlockStateProperties;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -30,8 +29,6 @@ import it.unimi.dsi.fastutil.longs.LongSets;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

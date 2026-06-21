@@ -58,7 +58,7 @@ public class TextModuleBehaviour implements IMonitorModuleItem, IAddInformation 
                 group.getTargetCover(machine.getLevel()),
                 group,
                 null,
-                stack.get(GTDataComponents.PLACEHOLDER_UUID);
+                stack.get(GTDataComponents.PLACEHOLDER_UUID));
     }
 
     @Override

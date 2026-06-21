@@ -94,8 +94,9 @@ public class NotifiableFluidTank extends NotifiableRecipeHandlerTrait<SizedFluid
     }
 
     @Override
-    public @Nullable List<SizedFluidIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedFluidIngredient> left,
-                                                        boolean simulate) {
+    public @Nullable List<SizedFluidIngredient> handleRecipeInner(IO io, GTRecipe recipe,
+                                                                  List<SizedFluidIngredient> left,
+                                                                  boolean simulate) {
         if (io != handlerIO) return left;
         if (io != IO.IN && io != IO.OUT) return left.isEmpty() ? null : left;
 

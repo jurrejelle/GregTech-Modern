@@ -54,7 +54,8 @@ public class MedicalCondition {
 
     public MedicalCondition(ResourceLocation id, int color,
                             int maxProgression, IdleProgressionType progressionType, float progressionRate,
-                            boolean canBePermanent, Holder<DamageType> damageType, Symptom.ConfiguredSymptom... symptoms) {
+                            boolean canBePermanent, Holder<DamageType> damageType,
+                            Symptom.ConfiguredSymptom... symptoms) {
         this.id = id;
         this.color = color;
         this.maxProgression = maxProgression;

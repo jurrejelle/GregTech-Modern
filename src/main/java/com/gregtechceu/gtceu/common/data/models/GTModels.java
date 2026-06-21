@@ -9,7 +9,6 @@ import com.gregtechceu.gtceu.api.fluids.store.FluidStorage;
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKey;
 import com.gregtechceu.gtceu.api.machine.multiblock.IBatteryData;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.registry.registrate.provider.GTBlockstateProvider;
 import com.gregtechceu.gtceu.common.block.*;
 import com.gregtechceu.gtceu.core.MixinHelpers;
@@ -25,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.ModelProvider;
 
@@ -128,7 +126,7 @@ public class GTModels {
             }
 
             prov.getVariantBuilder(ctx.getEntry())
-                    // spotless:off
+            // spotless:off
                     .partialState()
                         .with(LampBlock.INVERTED, false).with(LampBlock.POWERED, false)
                         .modelForState().modelFile(offModel)

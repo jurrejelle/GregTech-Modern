@@ -8,10 +8,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
@@ -20,6 +16,10 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.function.Function;
 
@@ -48,7 +48,9 @@ public class CustomItemRendererWrapperModel implements IUnbakedGeometry<CustomIt
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides itemOverrides) {
+    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
+                           Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
+                           ItemOverrides itemOverrides) {
         BlockModel owner = baseModel;
         if (context instanceof BlockGeometryBakingContext blockContext) owner = blockContext.owner;
 

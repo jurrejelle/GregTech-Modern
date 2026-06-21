@@ -7,7 +7,6 @@ import com.gregtechceu.gtceu.api.item.component.IMaterialPartItem;
 import com.gregtechceu.gtceu.api.item.component.ISubItemHandler;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

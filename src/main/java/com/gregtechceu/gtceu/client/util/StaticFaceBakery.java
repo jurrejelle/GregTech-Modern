@@ -1,6 +1,5 @@
 package com.gregtechceu.gtceu.client.util;
 
-import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.FaceInfo;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -13,6 +12,8 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.model.ExtraFaceData;
 import net.neoforged.neoforge.client.model.QuadTransformers;
+
+import com.mojang.math.Transformation;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 

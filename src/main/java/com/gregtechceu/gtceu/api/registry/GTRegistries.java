@@ -67,7 +67,7 @@ public final class GTRegistries {
     public static final ResourceKey<Registry<ToolBehaviorType<?>>> TOOL_BEHAVIOR_REGISTRY = makeRegistryKey(GTCEu.id("tool_behavior"));
     public static final ResourceKey<Registry<SoundEntry>> SOUND_REGISTRY = makeRegistryKey(GTCEu.id("sound"));
     public static final ResourceKey<Registry<DimensionMarker>> DIMENSION_MARKER_REGISTRY = makeRegistryKey(GTCEu.id("dimension_marker"));
-    public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"))
+    public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"));
     // GT Registries
     public static final Registry<Element> ELEMENTS = makeRegistry(ELEMENT_REGISTRY);
     public static final MaterialRegistry MATERIALS = makeMaterialRegistry();

@@ -40,8 +40,8 @@ public interface IToolGridHighlight {
      * @param side      The machine side which this grid segment correspond to
      * @return The icon to be rendered, or null
      */
-    default @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes
-            , ItemStack held, Direction side) {
+    default @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
+                                               ItemStack held, Direction side) {
         return null;
     }
 }

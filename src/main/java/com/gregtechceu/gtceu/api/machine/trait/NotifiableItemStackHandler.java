@@ -4,12 +4,9 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.recipe.DummyCraftingInput;
 import com.gregtechceu.gtceu.api.recipe.DummyCraftingInput;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.IntProviderIngredient;
-import com.gregtechceu.gtceu.api.recipe.ingredient.SizedIngredientExtensions;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
@@ -24,8 +21,6 @@ import dev.latvian.mods.kubejs.recipe.ingredientaction.IngredientActionHolder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.ExtensionMethod;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -91,15 +86,15 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
 
     @Override
     public @Nullable List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
-                                                   boolean simulate) {
+                                                             boolean simulate) {
         return handleRecipe(io, recipe, left, simulate, handlerIO, storage);
     }
 
     // TODO: See if implementable in outside callers and unstatic; or move to different common class if not
     // Notable caller is ItemRecipeHandler, used for MinerLogic
     public static @Nullable List<SizedIngredient> handleRecipe(IO io, GTRecipe recipe, List<SizedIngredient> left,
-                                                     boolean simulate,
-                                                     IO handlerIO, CustomItemStackHandler storage) {
+                                                               boolean simulate,
+                                                               IO handlerIO, CustomItemStackHandler storage) {
         if (io != handlerIO) return left;
         if (io != IO.IN && io != IO.OUT) return left.isEmpty() ? null : left;
 

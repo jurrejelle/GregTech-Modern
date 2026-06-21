@@ -15,11 +15,11 @@ import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialEntry;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.medicalcondition.MedicalCondition;
+import com.gregtechceu.gtceu.api.data.medicalcondition.Symptom;
 import com.gregtechceu.gtceu.api.fluids.FluidBuilder;
 import com.gregtechceu.gtceu.api.fluids.FluidState;
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
 import com.gregtechceu.gtceu.api.item.IGTTool;
-import com.gregtechceu.gtceu.api.data.medicalcondition.Symptom;
 import com.gregtechceu.gtceu.api.item.armor.ArmorComponentItem;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
@@ -449,7 +449,8 @@ public class CommonEventListener {
                 event.setNewSpeed(event.getNewSpeed() * 5);
             }
             // and also underwater debuff
-            if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) && stack.getEnchantmentLevel(event.getEntity().level().registryAccess().holderOrThrow(Enchantments.AQUA_AFFINITY)) == 0) {
+            if (player.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) && stack.getEnchantmentLevel(
+                    event.getEntity().level().registryAccess().holderOrThrow(Enchantments.AQUA_AFFINITY)) == 0) {
                 event.setNewSpeed(event.getNewSpeed() * 5);
             }
         }

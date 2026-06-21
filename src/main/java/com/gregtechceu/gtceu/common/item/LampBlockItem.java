@@ -2,11 +2,8 @@ package com.gregtechceu.gtceu.common.item;
 
 import com.gregtechceu.gtceu.client.renderer.block.LampItemRenderer;
 import com.gregtechceu.gtceu.common.block.LampBlock;
-
 import com.gregtechceu.gtceu.common.data.item.GTDataComponents;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
+
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,6 +15,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -41,7 +41,8 @@ public class LampBlockItem extends BlockItem {
         BlockState state = super.getPlacementState(context);
         if (state == null) return null;
 
-        LampBlockItem.LampData data = context.getItemInHand().getOrDefault(GTDataComponents.LAMP_DATA, LampBlockItem.LampData.EMPTY);
+        LampBlockItem.LampData data = context.getItemInHand().getOrDefault(GTDataComponents.LAMP_DATA,
+                LampBlockItem.LampData.EMPTY);
         return getBlock().defaultBlockState()
                 .setValue(LampBlock.INVERTED, data.inverted())
                 .setValue(LampBlock.BLOOM, data.bloom())

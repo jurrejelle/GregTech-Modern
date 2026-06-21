@@ -1,15 +1,12 @@
 package com.gregtechceu.gtceu.api.data.medicalcondition;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.common.capability.MedicalConditionTracker;
 import com.gregtechceu.gtceu.common.data.GTMobEffects;
 
-import net.minecraft.util.Mth;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import lombok.Getter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -20,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
-
-import java.util.function.Supplier;
 
 public class Symptom {
 
