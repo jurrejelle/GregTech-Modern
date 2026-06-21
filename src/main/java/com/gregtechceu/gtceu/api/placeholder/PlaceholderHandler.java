@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.placeholder.exceptions.PlaceholderException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnclosedBracketException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnexpectedBracketException;
 import com.gregtechceu.gtceu.api.placeholder.exceptions.UnknownPlaceholderException;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.client.renderer.monitor.IMonitorRenderer;
 import com.gregtechceu.gtceu.common.mui.widgets.textfield.CodeEditorWidget;
 import com.gregtechceu.gtceu.data.lang.LangHandler;
@@ -54,8 +55,6 @@ public class PlaceholderHandler {
     private static final char NEWLINE = '\n';
     private static final char ESCAPED_NEWLINE = 'n';
 
-    private static final Map<String, Placeholder> placeholders = new HashMap<>();
-
     public static final CodeEditorWidget.LanguageDefinition<PlaceholderContext> LANG_DEFINITION = new CodeEditorWidget.LanguageDefinition<>(
             List.of("\\\\.", "\\{", "\\}", " ", "\"", "\\['", "'\\]"),
             TokenFormatter::new);
@@ -67,15 +66,11 @@ public class PlaceholderHandler {
     }
 
     public static void addPlaceholder(Placeholder placeholder) {
-        if (placeholders.containsKey(placeholder.getName())) {
-            if (placeholders.get(placeholder.getName()).getPriority() <= placeholder.getPriority()) {
-                placeholders.put(placeholder.getName(), placeholder);
-            }
-        } else placeholders.put(placeholder.getName(), placeholder);
+        GTRegistries.PLACEHOLDERS.register(placeholder.getName(), placeholder);
     }
 
-    public static boolean placeholderExists(MultiLineComponent placeholder) {
-        return placeholders.containsKey(placeholder.toString());
+    public static void addOrOverridePlaceholder(Placeholder placeholder) {
+        GTRegistries.PLACEHOLDERS.registerOrOverride(placeholder.getName(), placeholder);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -101,12 +96,12 @@ public class PlaceholderHandler {
 
     public static MultiLineComponent processPlaceholder(List<MultiLineComponent> placeholder,
                                                         @Nullable PlaceholderContext context) throws PlaceholderException {
-        if (!placeholderExists(placeholder.get(0)))
+        if (!GTRegistries.PLACEHOLDERS.containKey(placeholder.get(0).toString()))
             throw new UnknownPlaceholderException(placeholder.get(0).toString());
         if (context != null && context.level().isClientSide &&
-                !placeholders.get(placeholder.get(0).toString()).isView())
+                !GTRegistries.PLACEHOLDERS.get(placeholder.get(0).toString()).isView())
             GTCEu.LOGGER.warn("Placeholder processing is running on client instead of server!");
-        return placeholders.get(placeholder.get(0).toString()).apply(context,
+        return GTRegistries.PLACEHOLDERS.get(placeholder.get(0).toString()).apply(context,
                 placeholder.subList(1, placeholder.size()));
     }
 
@@ -234,10 +229,6 @@ public class PlaceholderHandler {
         return out.withStyle(ChatFormatting.DARK_RED);
     }
 
-    public static Set<String> getAllPlaceholderNames() {
-        return placeholders.keySet();
-    }
-
     public static IPanelHandler createPlaceholderEditor(String name, PanelSyncManager syncManager,
                                                         PlaceholderContext ctx,
                                                         IStringValue<?> code,
@@ -332,8 +323,9 @@ public class PlaceholderHandler {
                                 .widthRel(.25f)
                                 .right(0)
                                 .paddingBottom(5)
+                                .excludeAreaInRecipeViewer()
                                 .fullHeight()
-                                .children(PlaceholderHandler.getAllPlaceholderNames()
+                                .children(GTRegistries.PLACEHOLDERS.keys()
                                         .stream()
                                         .sorted()
                                         .map(s -> (IWidget) Flow.row()
@@ -496,17 +488,17 @@ public class PlaceholderHandler {
             }
             if (prevOpenBracket) {
                 prevOpenBracket = false;
-                if (getAllPlaceholderNames().contains(s)) {
-                    if (placeholders.get(s).isPure()) {
+                if (GTRegistries.PLACEHOLDERS.containKey(s)) {
+                    if (GTRegistries.PLACEHOLDERS.get(s).isPure()) {
                         pureStarts.push(everything.length() - 1);
                     } else pureStarts.clear();
-                    if (placeholders.get(s).isView()) {
+                    if (GTRegistries.PLACEHOLDERS.get(s).isView()) {
                         viewStarts.push(everything.length() - 1);
                     } else viewStarts.clear();
                     everything.append(s);
                     openPlaceholders.push(s);
                     if (s.equals("if")) ifDepth++;
-                    else if (ifDepth > 0 && !placeholders.get(s).isView()) {
+                    else if (ifDepth > 0 && !GTRegistries.PLACEHOLDERS.get(s).isView()) {
                         return Component.literal(s)
                                 .withStyle(ChatFormatting.BLUE, ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withHoverEvent(new HoverEvent(
