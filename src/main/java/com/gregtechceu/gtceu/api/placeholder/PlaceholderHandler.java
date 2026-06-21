@@ -326,7 +326,6 @@ public class PlaceholderHandler {
                                 .excludeAreaInRecipeViewer()
                                 .fullHeight()
                                 .children(GTRegistries.PLACEHOLDERS.keys()
-                                .children(PlaceholderHandler.getAllPlaceholderNames()
                                         .stream()
                                         .sorted()
                                         .map(s -> (IWidget) Flow.row()
