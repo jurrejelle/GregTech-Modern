@@ -13,16 +13,16 @@ import net.minecraft.world.phys.Vec3;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import me.jellysquid.mods.sodium.client.model.color.ColorProvider;
-import me.jellysquid.mods.sodium.client.model.light.LightPipeline;
-import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
-import me.jellysquid.mods.sodium.client.model.quad.BakedQuadView;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildContext;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.buffers.ChunkModelBuilder;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
+import org.embeddedt.embeddium.api.render.chunk.BlockRenderContext;
+import org.embeddedt.embeddium.impl.model.color.ColorProvider;
+import org.embeddedt.embeddium.impl.model.light.LightPipeline;
+import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
+import org.embeddedt.embeddium.impl.model.quad.BakedQuadView;
+import org.embeddedt.embeddium.impl.render.chunk.compile.ChunkBuildContext;
 import org.embeddedt.embeddium.impl.render.chunk.compile.GlobalChunkBuildContext;
+import org.embeddedt.embeddium.impl.render.chunk.compile.buffers.ChunkModelBuilder;
+import org.embeddedt.embeddium.impl.render.chunk.compile.pipeline.BlockRenderer;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.material.Material;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,14 +42,7 @@ public abstract class BlockRendererMixin {
             at = @At(value = "INVOKE",
                      target = "Lme/jellysquid/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderer;writeGeometry(Lme/jellysquid/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderContext;Lme/jellysquid/mods/sodium/client/render/chunk/compile/buffers/ChunkModelBuilder;Lnet/minecraft/world/phys/Vec3;Lme/jellysquid/mods/sodium/client/render/chunk/terrain/material/Material;Lme/jellysquid/mods/sodium/client/model/quad/BakedQuadView;[ILme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V",
                      shift = At.Shift.AFTER))
-    private void gtceu$copyBloomQuads(BlockRenderContext ctx, Material material, LightPipeline lighter,
-                                      ColorProvider<BlockState> colorizer, Vec3 offset, ChunkModelBuilder builder,
-                                      List<BakedQuad> quads, Direction cullFace,
-                                      CallbackInfo ci,
-                                      @Local(name = "quad") BakedQuadView quad,
-                                      @Local(name = "vertexColors") int[] vertexColors,
-                                      @Local(name = "lightData") QuadLightData lightData,
-                                      @Share("bloomBuilder") LocalRef<ChunkModelBuilder> bloomBuilderRef) {
+    private void gtceu$copyBloomQuads(BlockRenderContext ctx, Material material, LightPipeline lighter, ColorProvider<BlockState> colorizer, Vec3 offset, ChunkModelBuilder builder, List<BakedQuad> quads, Direction cullFace, CallbackInfo ci, @Local(name = "quad") BakedQuadView quad, @Local(name = "vertexColors") int[] vertexColors, @Local(name = "lightData") QuadLightData lightData, @Share("bloomBuilder") LocalRef<ChunkModelBuilder> bloomBuilderRef) {
         ChunkBuildContext chunkContext = GlobalChunkBuildContext.get();
         if (BloomShaderManager.isBloomActive() && chunkContext != null &&
                 TextureMetadataHelper.hasBloom((BakedQuad) quad, lightData.lm)) {

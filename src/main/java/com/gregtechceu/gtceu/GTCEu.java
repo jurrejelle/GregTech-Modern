@@ -195,8 +195,8 @@ public class GTCEu {
             return isModLoaded(GTValues.MODID_KUBEJS);
         }
 
-        public static boolean isIrisLoaded() {
-            return isModLoaded(GTValues.MODID_IRIS);
+        public static boolean isIrisOculusLoaded() {
+            return isModLoaded(GTValues.MODID_IRIS) || isModLoaded(GTValues.MODID_OCULUS);
         }
 
         public static boolean isSodiumEmbeddiumLoaded() {

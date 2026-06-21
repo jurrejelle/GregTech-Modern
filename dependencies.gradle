@@ -34,9 +34,9 @@ dependencies {
     compileOnly(forge.bundles.kjs)
 
     // Performance
-    modCompileOnly(forge.embeddium)
-    modCompileOnly(forge.oculus)
-    modCompileOnly(forge.modernfix)
+    compileOnly(forge.embeddium)
+    compileOnly(forge.iris)
+    compileOnly(forge.modernfix)
 
     // Teams
     compileOnly(forge.ftblibrary)

@@ -4,8 +4,6 @@ import com.gregtechceu.gtceu.client.bloom.BloomRenderer;
 import com.gregtechceu.gtceu.client.bloom.BloomShaderManager;
 import com.gregtechceu.gtceu.client.util.TextureMetadataHelper;
 
-import net.caffeinemc.mods.sodium.api.util.ColorARGB;
-import net.caffeinemc.mods.sodium.api.util.NormI8;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.phys.Vec3;
@@ -14,13 +12,15 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
-import me.jellysquid.mods.sodium.client.model.quad.BakedQuadView;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.buffers.ChunkModelBuilder;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
-import me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkVertexEncoder;
+import org.embeddedt.embeddium.api.render.chunk.BlockRenderContext;
+import org.embeddedt.embeddium.api.util.ColorARGB;
+import org.embeddedt.embeddium.api.util.NormI8;
+import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
+import org.embeddedt.embeddium.impl.model.quad.BakedQuadView;
+import org.embeddedt.embeddium.impl.render.chunk.compile.buffers.ChunkModelBuilder;
+import org.embeddedt.embeddium.impl.render.chunk.compile.pipeline.BlockRenderer;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.material.Material;
+import org.embeddedt.embeddium.impl.render.chunk.vertex.format.ChunkVertexEncoder;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,11 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockRendererMixin {
 
     @Inject(method = "writeGeometry", at = @At(value = "HEAD"))
-    private void gtceu$copyBloomQuads$initLocals(BlockRenderContext ctx, ChunkModelBuilder builder,
-                                                 Vec3 offset, Material material, BakedQuadView quad,
-                                                 int[] colors, QuadLightData lightData,
-                                                 CallbackInfo ci,
-                                                 @Share("bloomBuffer") LocalRef<VertexConsumer> bloomBufferRef) {
+    private void gtceu$copyBloomQuads$initLocals(BlockRenderContext ctx, ChunkModelBuilder builder, Vec3 offset, Material material, BakedQuadView quad, int[] colors, QuadLightData lightData, CallbackInfo ci, @Share("bloomBuffer") LocalRef<VertexConsumer> bloomBufferRef) {
         // Check if quad is full brightness OR we have bloom enabled for the quad
         if (BloomShaderManager.isBloomActive() && TextureMetadataHelper.hasBloom((BakedQuad) quad, lightData.lm)) {
             SectionPos sectionPos = SectionPos.of(ctx.pos());
@@ -52,7 +48,7 @@ public class BlockRendererMixin {
 
     @Inject(method = "writeGeometry",
             at = @At(value = "FIELD",
-                     target = "Lme/jellysquid/mods/sodium/client/render/chunk/vertex/format/ChunkVertexEncoder$Vertex;light:I",
+                     target = "Lorg/embeddedt/embeddium/impl/render/chunk/vertex/format/ChunkVertexEncoder$Vertex;light:I",
                      opcode = Opcodes.PUTFIELD,
                      shift = At.Shift.AFTER))
     private void gtceu$copyBloomQuads(BlockRenderContext ctx, ChunkModelBuilder builder, Vec3 offset,
@@ -68,10 +64,10 @@ public class BlockRendererMixin {
         int normal = quad.getForgeNormal(srcIndex);
         if (normal == 0) normal = quad.getComputedFaceNormal();
 
-        bloomBuffer.vertex(v.x, v.y, v.z)
-                .color(ColorARGB.toABGR(v.color))
-                .uv(v.u, v.v)
-                .uv2(v.light)
-                .normal(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
+        bloomBuffer.addVertex(v.x, v.y, v.z)
+                .setColor(ColorARGB.toABGR(v.color))
+                .setUv(v.u, v.v)
+                .setLight(v.light)
+                .setNormal(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
     }
 }

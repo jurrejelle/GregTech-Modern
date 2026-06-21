@@ -13,19 +13,19 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import lombok.experimental.UtilityClass;
+import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("deprecation")
 @UtilityClass
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT)
 public class ModelEventHelper {
 
     @ApiStatus.Internal
@@ -82,7 +82,7 @@ public class ModelEventHelper {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void registerReloadListener(RegisterClientReloadListenersEvent event) {
         ((ReloadableResourceManagerAccessor) Minecraft.getInstance().getResourceManager()).getListeners()
-                .add(0, (ResourceManagerReloadListener) resourceManager -> {
+                .addFirst((ResourceManagerReloadListener) resourceManager -> {
                     if (reloadCounter.addAndGet(1) > 1) {
                         EVENT_LISTENERS.removeIf(EventListenerHolder::removeOnReload);
                     }
@@ -96,13 +96,13 @@ public class ModelEventHelper {
 
     @SuppressWarnings("unchecked")
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onAtlasStitched(TextureStitchEvent.Post event) {
+    public static void onAtlasStitched(TextureAtlasStitchedEvent event) {
         for (var listener : EVENT_LISTENERS) {
             if (!(listener.listener instanceof AssetEventListener<?> assetEventListener)) continue;
 
             Class<?> eventClass = assetEventListener.eventClass();
             if (eventClass != null && eventClass.isInstance(event)) {
-                ((AssetEventListener<TextureStitchEvent.Post>) listener.listener).accept(event);
+                ((AssetEventListener<TextureAtlasStitchedEvent>) listener.listener).accept(event);
             }
         }
     }
@@ -118,8 +118,8 @@ public class ModelEventHelper {
             // process all model replacers
             for (var listener : EVENT_LISTENERS) {
                 if (!(listener.listener instanceof AssetEventListener.BakedModelReplacement modelReplacement)) continue;
-                model = modelReplacement.modifyBakedModel(entry.getKey(), model,
-                        event.getModelBakery().getModel(entry.getKey()), event.getModelBakery());
+                model = modelReplacement.modifyBakedModel(entry.getKey().id(), model,
+                        event.getModelBakery().getModel(entry.getKey().id()), event.getModelBakery());
             }
             entry.setValue(model);
         }
@@ -146,7 +146,7 @@ public class ModelEventHelper {
             TextureAtlas atlas = event.getAtlas();
             // Cache all textures' CTM metadata
             // TODO lazy
-            for (ResourceLocation location : atlas.getTextureLocations()) {
+            for (ResourceLocation location : atlas.getTextures().keySet()) {
                 var sec = TextureMetadataHelper.getMetadataFromRelativeLocation(location);
                 sec.ifPresent(section -> {
                     if (section.connectionTexture() != null) {
@@ -171,7 +171,7 @@ public class ModelEventHelper {
                 return baked;
             }
 
-            if (!(rl instanceof ModelResourceLocation) || rootModel == null || baked instanceof CTMBakedModel<?>) {
+            if (rootModel == null || baked instanceof CTMBakedModel<?>) {
                 return baked;
             }
             Deque<ResourceLocation> dependencies = new ArrayDeque<>();

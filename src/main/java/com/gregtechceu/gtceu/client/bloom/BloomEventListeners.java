@@ -9,19 +9,19 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeRenderTypes;
-import net.minecraftforge.client.event.RegisterNamedRenderTypesEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import lombok.experimental.UtilityClass;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.NeoForgeRenderTypes;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterNamedRenderTypesEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT)
 @UtilityClass
 public class BloomEventListeners {
 
@@ -31,12 +31,12 @@ public class BloomEventListeners {
 
         BloomRenderer.renderBloom(event.getCamera(), event.getPoseStack(), event.getFrustum(),
                 event.getProjectionMatrix(),
-                event.getPartialTick(), event.getLevelRenderer(), Minecraft.getInstance().getProfiler());
+                event.getPartialTick().getGameTimeDeltaTicks(), event.getLevelRenderer(), Minecraft.getInstance().getProfiler());
     }
 
     @SubscribeEvent
-    public static void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || Minecraft.getInstance().level == null) return;
+    public static void onRenderTick(ClientTickEvent.Pre event) {
+        if (Minecraft.getInstance().level == null) return;
         if (!BloomShaderManager.isBloomActive()) return;
 
         BloomShaderManager.BLOOM_TARGET.clear(Minecraft.ON_OSX);
@@ -44,7 +44,7 @@ public class BloomEventListeners {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(ClientTickEvent event) {
         BloomShaderManager.updateShaderAvailability(event);
     }
 
@@ -62,7 +62,7 @@ public class BloomEventListeners {
         if (!BloomShaderManager.isBloomActive()) return;
 
         ChunkAccess chunk = event.getChunk();
-        LevelAccessor level = chunk.getWorldForge();
+        LevelAccessor level = chunk.getLevel();
         if (level == null) return;
 
         if (!BloomRenderer.SafeMode.enabled()) return;
@@ -74,23 +74,17 @@ public class BloomEventListeners {
         }
     }
 
-    // Merge into parent class in 1.21, event listener discovery is smarter there
-    @Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-    @UtilityClass
-    public static class ModBus {
-
-        @SubscribeEvent
-        public static void registerNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
-            RenderType block, entity;
-            if (!BloomRenderer.SafeMode.enabled() && BloomShaderManager.isBloomAvailable()) {
-                block = GTRenderTypes.bloom();
-                entity = GTRenderTypes.entityBloomBlockSheet();
-            } else {
-                // if safe mode is enabled, register the named render type as a copy of forge's 'cutout'
-                block = RenderType.cutoutMipped();
-                entity = ForgeRenderTypes.ITEM_LAYERED_CUTOUT.get();
-            }
-            event.register("bloom", block, entity);
+    @SubscribeEvent
+    public static void registerNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
+        RenderType block, entity;
+        if (!BloomRenderer.SafeMode.enabled() && BloomShaderManager.isBloomAvailable()) {
+            block = GTRenderTypes.bloom();
+            entity = GTRenderTypes.entityBloomBlockSheet();
+        } else {
+            // if safe mode is enabled, register the named render type as a copy of forge's 'cutout'
+            block = RenderType.cutoutMipped();
+            entity = NeoForgeRenderTypes.ITEM_LAYERED_CUTOUT.get();
         }
+        event.register(GTCEu.id("bloom"), block, entity);
     }
 }

@@ -1,7 +1,7 @@
 package com.gregtechceu.gtceu.core.config;
 
-import net.minecraftforge.fml.loading.FMLLoader;
-
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,7 @@ public class GTEarlyConfig {
 
         // hidden rules for dev-only mixins
         addHiddenRule("dev", !FMLLoader.isProduction());
-        addHiddenRule("dev.datagen", FMLLoader.getLaunchHandler().isData());
+        addHiddenRule("dev.datagen", DatagenModLoader.isRunningDataGen());
 
         // hidden rules for mod dependencies
         enableIfModPresent("emi", "emi");

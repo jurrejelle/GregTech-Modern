@@ -32,12 +32,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import lombok.Getter;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -235,7 +238,7 @@ public class CableBlockEntity extends PipeBlockEntity<Insulation, WireProperties
 
     public void applyHeat(int amount) {
         heatQueue += amount;
-        if (!level.isClientSide && heatSubs == null && temperature + heatQueue > getDefaultTemp()) {
+        if (!getLevel().isClientSide && heatSubs == null && temperature + heatQueue > getDefaultTemp()) {
             subscribeHeat();
         }
     }
@@ -320,7 +323,7 @@ public class CableBlockEntity extends PipeBlockEntity<Insulation, WireProperties
 
             float horizontalDirection = getLevel().random.nextFloat() * 2 * Mth.PI;
             float xSpd = Mth.sin(horizontalDirection) * 0.1f;
-            float ySpd = Direction.UP.getStepY() * 0.1f + 0.2f + 0.1f * level.random.nextFloat();
+            float ySpd = Direction.UP.getStepY() * 0.1f + 0.2f + 0.1f * getLevel().random.nextFloat();
             float zSpd = Mth.cos(horizontalDirection) * 0.1f;
 
             level.addParticle(ParticleTypes.SMOKE,

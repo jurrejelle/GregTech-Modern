@@ -32,7 +32,7 @@ xaerosWorldMap = "1.40.11"
 xaerosMinimap = "25.3.10"
 # FIXME for some reason their maven only has versions up to 1.1.10? latest on modrinth is 1.1.13
 heracles = "1.1.10"
-
+embeddium = "1.0.8-beta.367+mc1.21"
 ## modrinth maven ##
 jade = "15.10.0+neoforge"
 sodium = "mc1.21.1-0.6.13-neoforge"
@@ -96,6 +96,7 @@ xaerosworldmap      = { module = "xaero.map:xaeroworldmap-neoforge-1.21.1", vers
 xaerosminimap       = { module = "xaero.minimap:xaerominimap-neoforge-1.21.1", version.ref = "xaerosMinimap" }
 
 jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
+embeddium           = { module = "org.embeddedt:embeddium-1.21", version.ref = "embeddium" }
 sodium              = { module = "maven.modrinth:sodium", version.ref = "sodium" }
 iris                = { module = "maven.modrinth:iris", version.ref = "iris" }
 modernfix           = { module = "maven.modrinth:modernfix", version.ref = "modernfix" }

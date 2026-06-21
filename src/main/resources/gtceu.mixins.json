@@ -89,7 +89,7 @@
         "TagManagerMixin",
         "WorldLoaderMixin",
         "client.ItemEntityMixin",
-        "client.bloom.normal.embeddium.SodiumWorldRendererMixin",
+        "client.bloom.normal.embeddium.EmbeddiumWorldRendererMixin",
         "dev.datagen.FixParallelKeyMappingRegistrationMixin",
         "dev.test.GameTestRegistryMixin",
         "emi.FillRecipePacketMixin",

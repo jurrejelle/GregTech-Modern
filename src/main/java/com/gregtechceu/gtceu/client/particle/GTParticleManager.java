@@ -8,13 +8,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -129,7 +129,7 @@ public final class GTParticleManager {
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
         EffectRenderContext instance = EffectRenderContext.getInstance()
-                .update(camera, event.getFrustum(), event.getPartialTick());
+                .update(camera, event.getFrustum(), event.getPartialTick().getGameTimeDeltaTicks());
 
         if (!this.depthDisabledParticles.isEmpty()) {
             RenderSystem.depthMask(false);
@@ -151,7 +151,7 @@ public final class GTParticleManager {
             IRenderSetup handler = entry.getKey();
             boolean initialized = false;
 
-            BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+            BufferBuilder buffer = Tesselator.getInstance().begin();
             for (GTParticle particle : particles) {
                 if (!particle.shouldRender(context)) {
                     continue;
@@ -177,8 +177,8 @@ public final class GTParticleManager {
     }
 
     @SubscribeEvent
-    public void clientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || Minecraft.getInstance().isPaused()) {
+    public void clientTick(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance().isPaused()) {
             return;
         }
         if (Minecraft.getInstance().level != null) {

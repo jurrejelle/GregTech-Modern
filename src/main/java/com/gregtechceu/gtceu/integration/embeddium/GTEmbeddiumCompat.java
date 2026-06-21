@@ -7,13 +7,13 @@ import com.gregtechceu.gtceu.client.renderer.GTRenderTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.embeddedt.embeddium.api.ChunkMeshEvent;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.TerrainRenderPass;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.material.Material;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
 
 public class GTEmbeddiumCompat {
 
@@ -22,7 +22,7 @@ public class GTEmbeddiumCompat {
             AlphaCutoffParameter.ONE_TENTH, true);
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.register(GTEmbeddiumCompat.class);
+        NeoForge.EVENT_BUS.register(GTEmbeddiumCompat.class);
     }
 
     @SubscribeEvent

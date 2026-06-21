@@ -1,9 +1,8 @@
 package com.gregtechceu.gtceu.client.bloom;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public interface IRenderSetup {
 

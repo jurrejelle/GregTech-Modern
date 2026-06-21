@@ -5,20 +5,13 @@ import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.core.config.GTEarlyConfig;
 import com.gregtechceu.gtceu.core.mixins.client.bloom.GameRendererAccessor;
 
-import net.irisshaders.iris.api.v0.IrisApi;
+import dev.architectury.event.events.common.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -28,6 +21,14 @@ import dev.toma.configuration.config.validate.IValidationResult;
 import dev.toma.configuration.config.value.IConfigValueReadable;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.io.IOException;
 import java.nio.file.Path;
 
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT)
 @UtilityClass
 public class BloomShaderManager {
 
@@ -127,8 +128,7 @@ public class BloomShaderManager {
     private static boolean bloomAvailable = updateBloomShaderAvailability();
 
     @ApiStatus.Internal
-    public static void updateShaderAvailability(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
+    public static void updateShaderAvailability(ClientTickEvent event) {
 
         int tick = ((GameRendererAccessor) Minecraft.getInstance().gameRenderer).getTick();
         // only update bloom availability once a second so every frame isn't bogged down with mod loaded checks
