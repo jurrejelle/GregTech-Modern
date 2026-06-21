@@ -103,9 +103,9 @@ public class PlaceholderHandler {
         if (!GTRegistries.PLACEHOLDERS.containKey(placeholder.get(0).toString()))
             throw new UnknownPlaceholderException(placeholder.get(0).toString());
         if (context != null && context.level().isClientSide &&
-                !GTRegistries.PLACEHOLDERS.containKey(placeholder.get(0).toString()).isView())
+                !GTRegistries.PLACEHOLDERS.get(placeholder.get(0).toString()).isView())
             GTCEu.LOGGER.warn("Placeholder processing is running on client instead of server!");
-        return placeholders.get(placeholder.get(0).toString()).apply(context,
+        return GTRegistries.PLACEHOLDERS.get(placeholder.get(0).toString()).apply(context,
                 placeholder.subList(1, placeholder.size()));
     }
 
@@ -233,10 +233,6 @@ public class PlaceholderHandler {
         return out.withStyle(ChatFormatting.DARK_RED);
     }
 
-    public static Set<String> getAllPlaceholderNames() {
-        return placeholders.keySet();
-    }
-
     public static IPanelHandler createPlaceholderEditor(String name, PanelSyncManager syncManager,
                                                         PlaceholderContext ctx,
                                                         IStringValue<?> code,
@@ -318,7 +314,7 @@ public class PlaceholderHandler {
                                 .widthRel(.2f)
                                 .paddingBottom(5)
                                 .excludeAreaInRecipeViewer()
-                                .children(PlaceholderHandler.getAllPlaceholderNames()
+                                .children(GTRegistries.PLACEHOLDERS.keys()
                                         .stream()
                                         .sorted()
                                         .map(SortableListWidget.Item::new)
@@ -499,17 +495,17 @@ public class PlaceholderHandler {
             }
             if (prevOpenBracket) {
                 prevOpenBracket = false;
-                if (getAllPlaceholderNames().contains(s)) {
-                    if (placeholders.get(s).isPure()) {
+                if (GTRegistries.PLACEHOLDERS.containKey(s)) {
+                    if (GTRegistries.PLACEHOLDERS.get(s).isPure()) {
                         pureStarts.push(everything.length() - 1);
                     } else pureStarts.clear();
-                    if (placeholders.get(s).isView()) {
+                    if (GTRegistries.PLACEHOLDERS.get(s).isView()) {
                         viewStarts.push(everything.length() - 1);
                     } else viewStarts.clear();
                     everything.append(s);
                     openPlaceholders.push(s);
                     if (s.equals("if")) ifDepth++;
-                    else if (ifDepth > 0 && !placeholders.get(s).isView()) {
+                    else if (ifDepth > 0 && !GTRegistries.PLACEHOLDERS.get(s).isView()) {
                         return Component.literal(s)
                                 .withStyle(ChatFormatting.BLUE, ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withHoverEvent(new HoverEvent(
