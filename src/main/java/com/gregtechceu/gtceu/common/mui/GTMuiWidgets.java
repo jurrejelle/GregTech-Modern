@@ -606,6 +606,25 @@ public class GTMuiWidgets {
                         .stateOverlay(1, BucketMode.MILLI_BUCKET.icon.asIcon().size(16)));
     }
 
+    public static SlotGroupWidget verticalPlayerInventory(SlotGroupWidget.SlotConsumer slotConsumer) {
+        SlotGroupWidget slotGroupWidget = new SlotGroupWidget();
+        slotGroupWidget.coverChildren();
+        slotGroupWidget.name("player_inventory");
+        String key = "player";
+
+        for (int i = 0; i < 9; ++i) {
+            slotGroupWidget
+                    .child(slotConsumer.apply(i, new ItemSlot()).syncHandler(key, i).pos(0, i * 18).name("slot_" + i));
+        }
+
+        for (int i = 0; i < 27; ++i) {
+            slotGroupWidget.child(slotConsumer.apply(i + 9, new ItemSlot()).syncHandler(key, i + 9)
+                    .pos(22 + i / 9 * 18, i % 9 * 18).name("slot_" + (i + 9)));
+        }
+
+        return slotGroupWidget;
+    }
+
     public static class EnumRowBuilder<T extends Enum<T>> {
 
         private @Nullable EnumSyncValue<T> syncValue;
@@ -699,7 +718,7 @@ public class GTMuiWidgets {
                         button.overlay(this.overlay[enumVal.ordinal()]);
 
                     if (this.buttonTooltipSupplier != null) {
-                        button.addTooltipLine(Text.lang(buttonTooltipSupplier.apply(enumVal).get().getString()));
+                        button.addTooltipLine(Text.comp(buttonTooltipSupplier.apply(enumVal).get()));
                     } else if (enumVal instanceof StringRepresentable serializable) {
                         button.addTooltipLine(Text.lang(serializable.getSerializedName()));
                     }
