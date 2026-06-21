@@ -4,6 +4,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.LoadingModList;
 
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -57,7 +58,7 @@ public class GTMixinPlugin implements IMixinConfigPlugin {
             mixinClassName = mixinClassName.substring(DEV_PACKAGE.length());
             if (mixinClassName.startsWith(DATAGEN_PACKAGE)) {
                 // only load datagen mixins in datagen
-                return FMLLoader.getLaunchHandler().isData();
+                return DatagenModLoader.isRunningDataGen();
             }
             return true;
         }

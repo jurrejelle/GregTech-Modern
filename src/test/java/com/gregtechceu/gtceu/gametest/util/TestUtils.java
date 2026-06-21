@@ -27,6 +27,7 @@ import net.minecraft.gametest.framework.GameTestAssertPosException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -350,7 +351,7 @@ public class TestUtils {
     public static ServerPlayer makeMockSurvivalServerPlayer(GameTestHelper helper) {
         MinecraftServer server = helper.getLevel().getServer();
         ServerPlayer player = new ServerPlayer(server, helper.getLevel(),
-                new GameProfile(UUID.randomUUID(), "test-mock-player")) {
+                new GameProfile(UUID.randomUUID(), "test-mock-player"), ClientInformation.createDefault()) {
 
             @Override
             public void tick() {
@@ -383,7 +384,7 @@ public class TestUtils {
 
         profiler.push("tick");
         // don't tick part entities, like vanilla
-        if (!entity.isRemoved() && !(entity instanceof net.minecraftforge.entity.PartEntity)) {
+        if (!entity.isRemoved() && !(entity instanceof net.neoforged.neoforge.entity.PartEntity)) {
             level.guardEntityTick(level::tickNonPassenger, entity);
         }
         profiler.pop();

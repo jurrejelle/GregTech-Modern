@@ -18,6 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 
+import java.util.StringJoiner;
+
 public class Symptom {
 
     // spotless:off
@@ -32,7 +34,7 @@ public class Symptom {
                     Player player = tracker.getPlayer();
                     // this should replicate the logic in LivingEntity#kill, but
                     // with the medical condition's damage type instead of `generic_kill`.
-                    player.hurt(condition.getDamageSource(tracker), Float.MAX_VALUE);
+                    player.hurt(player.level().damageSources().source(condition.getDamageType()), Float.MAX_VALUE);
                 }
             });
     public static final Symptom RANDOM_DAMAGE = new Symptom(defaultKey("random_damage"), 10, 0.2f, 1.0f,
@@ -40,7 +42,7 @@ public class Symptom {
             (tracker, condition, configuredSymptom, baseSymptom, stage) -> {
                 int stages = configuredSymptom.getStages();
                 if (stage > 0 && tracker.getPlayer().getRandom().nextInt(stages * 500 / stage) == 0) {
-                    tracker.getPlayer().hurt(condition.getDamageSource(tracker), 0.5f);
+                    tracker.getPlayer().hurt(tracker.getPlayer().damageSources().source(condition.getDamageType()), 0.5f);
                 }
             });
     // default is 20, stage 10 result will be 10
@@ -55,7 +57,7 @@ public class Symptom {
                 instance.removeModifier(SYMPTOM_HEALTH_DEBUFF_ID);
 
                 if (stage != 0) {
-                    instance.addPermanentModifier(new AttributeModifier(SYMPTOM_HEALTH_DEBUFF_ID, symptom.name,
+                    instance.addPermanentModifier(new AttributeModifier(SYMPTOM_HEALTH_DEBUFF_ID,
                             -stage, AttributeModifier.Operation.ADD_VALUE));
                 }
                 // reset the health data value so the max health change is applied immediately

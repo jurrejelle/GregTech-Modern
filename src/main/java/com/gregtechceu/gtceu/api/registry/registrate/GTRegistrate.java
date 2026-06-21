@@ -23,6 +23,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -119,7 +120,7 @@ public class GTRegistrate extends AbstractRegistrate<GTRegistrate> {
                     GTCEu.LOGGER.fatal(hashtags);
                 });
             } else {
-                registrate.registerEventListeners(modEventBus.orElse(FMLJavaModLoadingContext.get().getModEventBus()));
+                registrate.registerEventListeners(Objects.requireNonNull(modEventBus.orElse(ModLoadingContext.get().getActiveContainer().getEventBus())));
             }
         }
         EXISTING_REGISTRATES.put(modId, registrate);

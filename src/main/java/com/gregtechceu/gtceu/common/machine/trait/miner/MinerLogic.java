@@ -150,6 +150,11 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
 
     @Override
     public void onMachineLoad() {
+        if (getMachine().getLevel() != null) {
+            var registry = getMachine().getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            this.pickaxeTool.enchant(registry.getHolderOrThrow(Enchantments.FORTUNE), fortune);
+        }
+
         this.inputItemHandler = new ItemRecipeHandler(IO.IN,
                 getRLMachine().getRecipeType().getMaxInputs(ItemRecipeCapability.CAP));
         this.outputItemHandler = new ItemRecipeHandler(IO.OUT,
@@ -160,15 +165,6 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
 
         addHandlerList(inHandlers);
         addHandlerList(outHandlers);
-    }
-
-    @Override
-    public void onMachineLoad() {
-        super.onMachineLoad();
-        if (getMachine().getLevel() != null) {
-            var registry = getMachine().getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-            this.pickaxeTool.enchant(registry.getHolderOrThrow(Enchantments.FORTUNE), fortune);
-        }
     }
 
     @Override

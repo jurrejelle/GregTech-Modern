@@ -75,6 +75,6 @@ public class MedicalConditionParser {
     }
 
     private CompletableFuture<Suggestions> suggestMedicalCondition(SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(GTRegistries.MEDICAL_CONDITIONS.keys(), builder);
+        return SharedSuggestionProvider.suggestResource(GTRegistries.MEDICAL_CONDITIONS.keySet(), builder);
     }
 }

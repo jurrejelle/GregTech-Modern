@@ -3,7 +3,7 @@ package com.gregtechceu.gtceu.api.sync_system;
 import com.gregtechceu.gtceu.api.sync_system.annotations.ClientFieldChangeListener;
 import com.gregtechceu.gtceu.api.sync_system.data_transformers.ValueTransformer;
 
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 /**
  * Represents a class with fields that have sync annotations. <br>

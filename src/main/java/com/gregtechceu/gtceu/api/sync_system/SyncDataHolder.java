@@ -117,7 +117,7 @@ public class SyncDataHolder {
                 return null;
             }
 
-            syncManaged.getSyncDataHolder().deserializeNBT((CompoundTag) tag, context.isClientSync());
+            syncManaged.getSyncDataHolder().deserializeNBT(context.lookup(), (CompoundTag) tag, context.isClientSync());
 
             return syncManaged;
         }

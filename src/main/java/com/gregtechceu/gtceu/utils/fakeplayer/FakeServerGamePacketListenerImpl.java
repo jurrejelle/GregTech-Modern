@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.utils.fakeplayer;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.ChatType;
@@ -10,12 +11,14 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.RelativeMovement;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -25,7 +28,7 @@ public class FakeServerGamePacketListenerImpl extends ServerGamePacketListenerIm
     private static final Connection DUMMY_CONNECTION = new Connection(PacketFlow.CLIENTBOUND);
 
     public FakeServerGamePacketListenerImpl(MinecraftServer server, ServerPlayer player) {
-        super(server, DUMMY_CONNECTION, player);
+        super(server, DUMMY_CONNECTION, player, CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), "dummy"), false));
     }
 
     @Override
@@ -89,12 +92,6 @@ public class FakeServerGamePacketListenerImpl extends ServerGamePacketListenerIm
     public void handleEditBook(ServerboundEditBookPacket packet) {}
 
     @Override
-    public void handleEntityTagQuery(ServerboundEntityTagQuery packet) {}
-
-    @Override
-    public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {}
-
-    @Override
     public void handleMovePlayer(ServerboundMovePlayerPacket packet) {}
 
     @Override
@@ -113,13 +110,7 @@ public class FakeServerGamePacketListenerImpl extends ServerGamePacketListenerIm
     public void handleTeleportToEntityPacket(ServerboundTeleportToEntityPacket packet) {}
 
     @Override
-    public void handleResourcePackResponse(ServerboundResourcePackPacket packet) {}
-
-    @Override
     public void handlePaddleBoat(ServerboundPaddleBoatPacket packet) {}
-
-    @Override
-    public void onDisconnect(Component message) {}
 
     @Override
     public void send(Packet<?> packet) {}
@@ -164,16 +155,7 @@ public class FakeServerGamePacketListenerImpl extends ServerGamePacketListenerIm
     public void handleSignUpdate(ServerboundSignUpdatePacket packet) {}
 
     @Override
-    public void handleKeepAlive(ServerboundKeepAlivePacket packet) {}
-
-    @Override
     public void handlePlayerAbilities(ServerboundPlayerAbilitiesPacket packet) {}
-
-    @Override
-    public void handleClientInformation(ServerboundClientInformationPacket packet) {}
-
-    @Override
-    public void handleCustomPayload(ServerboundCustomPayloadPacket packet) {}
 
     @Override
     public void handleChangeDifficulty(ServerboundChangeDifficultyPacket packet) {}

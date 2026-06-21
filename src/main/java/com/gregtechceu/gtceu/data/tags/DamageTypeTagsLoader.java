@@ -6,8 +6,10 @@ import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTDamageTypes;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.DamageTypeTags;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -40,7 +42,7 @@ public class DamageTypeTagsLoader extends DamageTypeTagsProvider {
         var bypassesArmor = this.tag(DamageTypeTags.BYPASSES_ARMOR)
                 .add(GTDamageTypes.HEAT, GTDamageTypes.CHEMICAL, GTDamageTypes.RADIATION, GTDamageTypes.TURBINE);
         for (MedicalCondition condition : GTRegistries.MEDICAL_CONDITIONS) {
-            bypassesArmor.add(Objects.requireNonNull(condition.getDamageType().getKey()));
+            bypassesArmor.add(condition.getDamageType());
         }
     }
 }

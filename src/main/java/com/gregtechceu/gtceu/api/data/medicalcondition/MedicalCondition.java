@@ -5,8 +5,10 @@ import com.gregtechceu.gtceu.data.recipe.misc.AirScrubberRecipes;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageType;
 
@@ -38,8 +40,6 @@ public class MedicalCondition {
     public final int color;
     public final float maxProgression; // amount of seconds until maximum progression is reached
     public final Set<Symptom.ConfiguredSymptom> symptoms = new HashSet<>();
-    @Getter
-    private final Holder<DamageType> damageType;
     public final IdleProgressionType idleProgressionType;
     public final float idleProgressionRate;
     public final boolean canBePermanent;
@@ -54,12 +54,11 @@ public class MedicalCondition {
 
     public MedicalCondition(ResourceLocation id, int color,
                             int maxProgression, IdleProgressionType progressionType, float progressionRate,
-                            boolean canBePermanent, Holder<DamageType> damageType,
+                            boolean canBePermanent,
                             Symptom.ConfiguredSymptom... symptoms) {
         this.id = id;
         this.color = color;
         this.maxProgression = maxProgression;
-        this.damageType = damageType;
 
         for (Symptom.ConfiguredSymptom symptom : symptoms) {
             symptom.addedToCondition(this, this.symptoms.size());
@@ -69,6 +68,10 @@ public class MedicalCondition {
         this.idleProgressionType = progressionType;
         this.idleProgressionRate = progressionRate;
         this.canBePermanent = canBePermanent;
+    }
+
+    public ResourceKey<DamageType> getDamageType() {
+        return ResourceKey.create(Registries.DAMAGE_TYPE, id.withPrefix("medical_condition/"));
     }
 
     public String getTranslationKey() {
@@ -94,7 +97,7 @@ public class MedicalCondition {
         stringJoiner.add("color=#" + FormattingUtil.HEX_FORMAT.toHexDigits(this.color));
         stringJoiner.add("maxProgression=" + this.maxProgression);
         stringJoiner.add("symptoms=" + this.symptoms);
-        stringJoiner.add("damageType=" + this.damageType.value());
+        stringJoiner.add("damageType=" + this.getDamageType());
         stringJoiner.add("idleProgressionType=" + this.idleProgressionType.name().toLowerCase(Locale.ROOT));
         stringJoiner.add("idleProgressionRate=" + this.idleProgressionRate);
 

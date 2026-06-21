@@ -27,6 +27,10 @@ import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.utils.Position;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import lombok.Getter;
@@ -95,12 +99,12 @@ public class BatteryBufferMachine extends TieredEnergyMachine
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains("chargerInventory"))
             tag.put("batteryInventory", Objects.requireNonNull(tag.get("chargerInventory")));
-        super.load(tag);
+        super.loadAdditional(tag, registries);
     }
-
+    
     @Override
     public int tintColor(int index) {
         if (index == 2) {

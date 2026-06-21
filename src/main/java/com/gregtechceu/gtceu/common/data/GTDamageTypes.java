@@ -11,8 +11,6 @@ import net.minecraft.world.damagesource.DamageEffects;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
-import java.util.Objects;
-
 public class GTDamageTypes {
 
     public static final ResourceKey<DamageType> HEAT = create("heat");
@@ -37,7 +35,7 @@ public class GTDamageTypes {
         for (var entry : GTRegistries.MEDICAL_CONDITIONS.entrySet()) {
             String name = entry.getKey().location().getPath();
             MedicalCondition condition = entry.getValue();
-            ctx.register(Objects.requireNonNull(condition.getDamageType().getKey()),
+            ctx.register(condition.getDamageType(),
                     new DamageType("gtceu.medical_condition." + name, DamageScaling.NEVER, 0));
         }
     }

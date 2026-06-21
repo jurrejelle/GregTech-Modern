@@ -245,10 +245,6 @@ public class CommonProxy {
                 KJSEventWrapper.materialModification();
             }
             // --spacer--
-        } else if (event.getRegistryKey() == Registries.FLUID) {
-            // Material fluids
-            GTFluids.generateMaterialFluids();
-            // --spacer--
         } else if (event.getRegistryKey() == Registries.BLOCK) {
             // Material Blocks
             REGISTRATE.creativeModeTab(GTCreativeModeTabs.MATERIAL_BLOCK);

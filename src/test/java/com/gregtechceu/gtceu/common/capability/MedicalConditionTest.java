@@ -21,8 +21,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -86,7 +86,7 @@ public class MedicalConditionTest {
                 // .thenExecuteFor(2, () -> helper.tickEntity(player))
                 // check that the slowness attribute modifier is properly applied.
                 .thenExecute(() -> {
-                    double modifier = player.getAttributes().getModifierValue(Attributes.MOVEMENT_SPEED, Symptom.SYMPTOM_SLOWNESS_UUID);
+                    double modifier = player.getAttributes().getModifierValue(Attributes.MOVEMENT_SPEED, Symptom.SYMPTOM_SLOWNESS_ID);
                     // this value is based on the slowness symptom's default stage count and multiplier (7 and 0.08 respectively)
                     helper.assertTrue(Mth.equal(modifier, -7 * 0.05f),
                             "Slowness symprom attribute modifier should have a value of " + (-7 * 0.05f) + " at 18000 counts. (is " + modifier + ")");

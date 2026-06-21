@@ -116,7 +116,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
 
             ItemStack[] items;
             int amount;
-            if (ingredient.ingredient() instanceof IntProviderIngredient provider) {
+            if (ingredient.ingredient().getCustomIngredient() instanceof IntProviderIngredient provider) {
                 provider.setItemStacks(null);
                 provider.setSampledCount(-1);
 
@@ -180,7 +180,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
             }
             // Modify ingredient if we didn't finish it off
             if (amount > 0) {
-                it.set(ingredient.copyWithCount(amount));
+                it.set(new SizedIngredient(ingredient.ingredient(), amount));
             }
         }
 

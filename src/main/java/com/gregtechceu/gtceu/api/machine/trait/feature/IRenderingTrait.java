@@ -46,7 +46,7 @@ public interface IRenderingTrait {
      * @return The icon to be rendered, or null
      */
     default @Nullable ResourceTexture getGridOverlayIcon(Player player, BlockPos pos, BlockState state,
-                                                         Set<GTToolType> toolTypes,
+                                                         Set<GTToolType> toolTypes, ItemStack held,
                                                          Direction side) {
         return null;
     }

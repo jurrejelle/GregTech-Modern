@@ -676,7 +676,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
         for (var trait : getAllTraits()) {
             if (trait instanceof IRenderingTrait renderingTrait) {
-                var result = renderingTrait.getGridOverlayIcon(player, pos, state, toolTypes, side);
+                var result = renderingTrait.getGridOverlayIcon(player, pos, state, toolTypes, held, side);
                 if (result != null) return result;
             }
         }

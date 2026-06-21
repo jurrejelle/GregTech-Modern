@@ -83,7 +83,7 @@ public class PipeBlockItem extends BlockItem {
                         }
                     }
                 } else if (!ConfigHolder.INSTANCE.machines.gt6StylePipesCables &&
-                        selfTile.getPipeBlock().canPipeConnectToBlock(selfTile, facing, be)) {
+                        selfTile.getPipeBlock().canPipeConnectToBlock(selfTile, facing, level, pos.relative(facing))) {
                             selfTile.setConnection(facing, true, false);
                         }
             }
