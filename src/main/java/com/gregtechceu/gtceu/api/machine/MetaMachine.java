@@ -29,22 +29,24 @@ import com.gregtechceu.gtceu.api.machine.trait.feature.IRedstoneSignalTrait;
 import com.gregtechceu.gtceu.api.machine.trait.feature.IRenderingTrait;
 import com.gregtechceu.gtceu.api.misc.*;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
-import com.gregtechceu.gtceu.api.sync_system.ManagedSyncBlockEntity;
 import com.gregtechceu.gtceu.api.sync_system.SyncDataHolder;
 import com.gregtechceu.gtceu.api.sync_system.annotations.RerenderOnChanged;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
+import com.gregtechceu.gtceu.api.sync_system.managed.ManagedSyncBlockEntity;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 import com.gregtechceu.gtceu.client.model.machine.MachineRenderState;
-import com.gregtechceu.gtceu.client.util.ModelUtils;
 import com.gregtechceu.gtceu.common.cover.FluidFilterCover;
 import com.gregtechceu.gtceu.common.cover.ItemFilterCover;
 import com.gregtechceu.gtceu.common.cover.data.ManualIOMode;
 import com.gregtechceu.gtceu.common.data.item.GTItemAbilities;
+import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
+import com.gregtechceu.gtceu.common.item.behavior.MachineConfigCopyBehaviour;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.common.machine.owner.PlayerOwner;
 import com.gregtechceu.gtceu.common.machine.trait.AutoOutputTrait;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
+import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.data.TagCompatibilityFixer;
 
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
@@ -52,6 +54,7 @@ import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 import com.lowdragmc.lowdraglib.utils.DummyWorld;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -77,6 +80,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -84,6 +88,7 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import com.mojang.datafixers.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -95,6 +100,8 @@ import java.util.function.Predicate;
  */
 public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBlockEntity, IToolGridHighlight,
                          IFancyTooltip, IPaintable, IMachineFeature, ICopyable {
+
+    private static final int MIN_OFFSET_BOUND = 20;
 
     @Getter
     protected final SyncDataHolder syncDataHolder = new SyncDataHolder(this);
@@ -121,8 +128,10 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
     @SyncToClient
     @RerenderOnChanged
     private MachineRenderState renderState;
+
     @Getter(value = AccessLevel.PROTECTED)
-    private final long offset = GTValues.RNG.nextInt(20);
+    @Setter(value = AccessLevel.PROTECTED)
+    private long offset = GTValues.RNG.nextInt(MIN_OFFSET_BOUND);
 
     @Getter
     @SaveField
@@ -638,6 +647,11 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
     public void onPaintingColorChanged(int color) {}
 
+    public void setOffsetBound(int offsetBound) {
+        var bound = Math.max(offsetBound, MIN_OFFSET_BOUND);
+        offset = GTValues.RNG.nextInt(bound);
+    }
+
     @Override
     public boolean shouldRenderGrid(Player player, BlockPos pos, BlockState state, ItemStack held,
                                     Set<GTToolType> toolTypes) {
@@ -696,7 +710,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         // add render state info
         MachineRenderState renderState = this.getRenderState();
         for (var property : renderState.getValues().entrySet()) {
-            lines.accept(ModelUtils.getPropertyValueString(property));
+            lines.accept(GTStringUtils.getPropertyValueString(property));
         }
     }
 
@@ -888,7 +902,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
      * @param sourceState The state of the block that is querying the appearance, or {@code null} if not applicable
      * @param sourcePos   The position of the block that is querying the appearance, or {@code null} if not applicable
      * @return The appearance of this block from the given side
-     * @see IForgeBlock#getAppearance(BlockState, BlockAndTintGetter, BlockPos, Direction, BlockState, BlockPos)
+     * @see IBlockExtension#getAppearance(BlockState, BlockAndTintGetter, BlockPos, Direction, BlockState, BlockPos)
      */
     public BlockState getBlockAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
                                          @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
@@ -1033,7 +1047,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         String mainKey = String.format("%s.machine.%s.tooltip", getDefinition().getId().getNamespace(),
                 getDefinition().getId().getPath());
         if (Language.getInstance().has(mainKey)) {
-            tooltips.add(0, Component.translatable(mainKey));
+            tooltips.addFirst(Component.translatable(mainKey));
         }
     }
 
@@ -1160,14 +1174,91 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         return cover != null ? cover.getFluidHandlerCap(handlerList) : handlerList;
     }
 
+    // NBT keys for machine config values
+    private static final String COVER = "cover";
+    private static final String FACING_DIR = "front_facing";
+
+    private static final String ITEM_OUTPUT_SIDE = "output_direction_item";
+    private static final String ITEM_AUTO_OUTPUT = "item_auto_output";
+    private static final String ALLOW_ITEM_IN_FROM_OUT = "allow_input_from_output_item";
+
+    private static final String FLUID_OUTPUT_SIDE = "output_direction_fluid";
+    private static final String FLUID_AUTO_OUTPUT = "fluid_auto_output";
+    private static final String ALLOW_FLUID_IN_FROM_OUT = "allow_input_from_output_fluid";
+
+    private static final String MUFFLED = "muffled";
+    private static final String CIRCUIT = "circuit_config";
+
     @Override
-    public CompoundTag copyConfig(CompoundTag tag) {
-        return ICopyable.super.copyConfig(tag);
+    public void copyConfig(CompoundTag tag) {
+        tag.putString(FACING_DIR, MachineConfigCopyBehaviour.directionToString(getFrontFacing()));
+
+        var outputTrait = getTrait(AutoOutputTrait.TYPE);
+        if (outputTrait != null && outputTrait.supportsAutoOutputItems() &&
+                outputTrait.getItemOutputDirection() != null) {
+            tag.putString(ITEM_OUTPUT_SIDE,
+                    MachineConfigCopyBehaviour.directionToString(outputTrait.getItemOutputDirection()));
+            tag.putBoolean(ITEM_AUTO_OUTPUT, outputTrait.isAutoOutputItems());
+            tag.putBoolean(ALLOW_ITEM_IN_FROM_OUT, outputTrait.allowsItemInputFromOutputSide());
+        }
+
+        if (outputTrait != null && outputTrait.supportsAutoOutputFluids() &&
+                outputTrait.getFluidOutputDirection() != null) {
+            tag.putString(FLUID_OUTPUT_SIDE,
+                    MachineConfigCopyBehaviour.directionToString(outputTrait.getFluidOutputDirection()));
+            tag.putBoolean(FLUID_AUTO_OUTPUT, outputTrait.isAutoOutputFluids());
+            tag.putBoolean(ALLOW_FLUID_IN_FROM_OUT, outputTrait.allowsFluidInputFromOutputSide());
+        }
+
+        if (this instanceof IMufflableMachine mufflableMachine) {
+            tag.putBoolean(MUFFLED, mufflableMachine.isMuffled());
+        }
+
+        if (this instanceof IHasCircuitSlot circuitMachine) {
+            var circuit = IntCircuitBehaviour
+                    .getCircuitConfiguration(circuitMachine.getCircuitInventory().getStackInSlot(0));
+            if (circuitMachine.isCircuitSlotEnabled() && circuit != 0) {
+                tag.putInt(CIRCUIT, circuit);
+            }
+        }
+
+        var coverTag = new CompoundTag();
+        getCoverContainer().copyConfig(coverTag);
+        tag.put(COVER, coverTag);
     }
 
     @Override
     public void pasteConfig(ServerPlayer player, CompoundTag tag) {
-        ICopyable.super.pasteConfig(player, tag);
+        var outputTrait = getTrait(AutoOutputTrait.TYPE);
+        if (outputTrait != null) {
+            if (tag.contains(ITEM_OUTPUT_SIDE))
+                outputTrait.setItemOutputDirection(
+                        MachineConfigCopyBehaviour.stringToDirection(tag.getString(ITEM_OUTPUT_SIDE)));
+            if (tag.contains(ITEM_AUTO_OUTPUT)) outputTrait.setAllowAutoOutputItems(tag.getBoolean(ITEM_AUTO_OUTPUT));
+            if (tag.contains(ALLOW_ITEM_IN_FROM_OUT))
+                outputTrait.setAllowItemInputFromOutputSide(tag.getBoolean(ALLOW_ITEM_IN_FROM_OUT));
+            if (tag.contains(FLUID_OUTPUT_SIDE))
+                outputTrait.setFluidOutputDirection(
+                        MachineConfigCopyBehaviour.stringToDirection(tag.getString(FLUID_OUTPUT_SIDE)));
+            if (tag.contains(FLUID_AUTO_OUTPUT))
+                outputTrait.setAllowAutoOutputFluids(tag.getBoolean(FLUID_AUTO_OUTPUT));
+            if (tag.contains(ALLOW_FLUID_IN_FROM_OUT))
+                outputTrait.setAllowFluidInputFromOutputSide(tag.getBoolean(ALLOW_FLUID_IN_FROM_OUT));
+        }
+
+        Direction facingDir = Direction.byName(tag.getString(FACING_DIR));
+        if (facingDir != null) setFrontFacing(facingDir);
+
+        if (this instanceof IMufflableMachine mufflableMachine) {
+            if (tag.contains(MUFFLED)) mufflableMachine.setMuffled(tag.getBoolean(MUFFLED));
+        }
+
+        if (this instanceof IHasCircuitSlot circuitMachine) {
+            if (tag.contains(CIRCUIT))
+                circuitMachine.getCircuitInventory().setStackInSlot(0, IntCircuitBehaviour.stack(tag.getInt(CIRCUIT)));
+        }
+
+        getCoverContainer().pasteConfig(player, tag.getCompound(COVER));
     }
 
     @Override

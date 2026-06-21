@@ -46,9 +46,16 @@ public interface IGTAddon {
 
     /**
      * Register Material -> Casing block mappings here
+     *
+     * @deprecated Subscribe to the {@link MaterialCasingCollectionEvent} directly.
      */
+    @Deprecated(forRemoval = true, since = "8.0.0")
     default void collectMaterialCasings(MaterialCasingCollectionEvent event) {}
 
+    /**
+     * @deprecated Subscribe to the {@link KJSRecipeKeyEvent} directly.
+     */
+    @Deprecated(forRemoval = true, since = "8.0.0")
     default void registerRecipeKeys(KJSRecipeKeyEvent event) {}
 
     /**

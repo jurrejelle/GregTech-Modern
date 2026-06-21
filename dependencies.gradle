@@ -33,10 +33,10 @@ dependencies {
     // KJS
     compileOnly(forge.bundles.kjs)
 
-    // Rendering / Optimizations
-    compileOnly(forge.sodium)
-    compileOnly(forge.iris)
-    compileOnly(forge.modernfix)
+    // Performance
+    modCompileOnly(forge.embeddium)
+    modCompileOnly(forge.oculus)
+    modCompileOnly(forge.modernfix)
 
     // Teams
     compileOnly(forge.ftblibrary)

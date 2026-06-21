@@ -12,6 +12,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public final class ProxySlotRecipeHandler {
         }
 
         @Override
-        public @Nullable List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
+        public List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
                                                                  boolean simulate) {
             if (proxy == null) return left;
             return proxy.handleRecipeInner(io, recipe, left, simulate);
@@ -187,7 +188,7 @@ public final class ProxySlotRecipeHandler {
         }
 
         @Override
-        public @Nullable List<SizedFluidIngredient> handleRecipeInner(IO io, GTRecipe recipe,
+        public List<SizedFluidIngredient> handleRecipeInner(IO io, GTRecipe recipe,
                                                                       List<SizedFluidIngredient> left,
                                                                       boolean simulate) {
             if (proxy == null) return left;

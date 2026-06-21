@@ -21,6 +21,7 @@ import dev.latvian.mods.kubejs.recipe.ingredientaction.IngredientActionHolder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -85,18 +86,18 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
     }
 
     @Override
-    public @Nullable List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
+    public List<SizedIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<SizedIngredient> left,
                                                              boolean simulate) {
         return handleRecipe(io, recipe, left, simulate, handlerIO, storage);
     }
 
     // TODO: See if implementable in outside callers and unstatic; or move to different common class if not
     // Notable caller is ItemRecipeHandler, used for MinerLogic
-    public static @Nullable List<SizedIngredient> handleRecipe(IO io, GTRecipe recipe, List<SizedIngredient> left,
+    public static List<SizedIngredient> handleRecipe(IO io, GTRecipe recipe, List<SizedIngredient> left,
                                                                boolean simulate,
                                                                IO handlerIO, CustomItemStackHandler storage) {
         if (io != handlerIO) return left;
-        if (io != IO.IN && io != IO.OUT) return left.isEmpty() ? null : left;
+        if (io != IO.IN && io != IO.OUT) return left;
 
         // Temporarily remove listener so that we can broadcast the entire set of transactions once
         Runnable listener = storage.getOnContentsChanged();
@@ -187,7 +188,7 @@ public class NotifiableItemStackHandler extends NotifiableRecipeHandlerTrait<Siz
         storage.setOnContentsChanged(listener);
         if (changed && !simulate) listener.run();
 
-        return left.isEmpty() ? null : left;
+        return left;
     }
 
     private static @Nullable ItemStack getActioned(CustomItemStackHandler storage, int index, List<?> actions) {

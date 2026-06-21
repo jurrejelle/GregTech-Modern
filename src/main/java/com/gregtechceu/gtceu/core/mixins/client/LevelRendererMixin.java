@@ -23,7 +23,6 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.BlockDestructionProgress;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -57,7 +56,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(value = LevelRenderer.class, priority = 500)
-@OnlyIn(Dist.CLIENT)
 public abstract class LevelRendererMixin {
 
     @Shadow
@@ -75,17 +73,12 @@ public abstract class LevelRendererMixin {
     @Shadow
     private @Nullable ClientLevel level;
 
-    @Unique
-    private final RandomSource gtceu$modelRandom = RandomSource.create();
-
-    @Inject(method = "renderLevel",
-            at = @At(value = "INVOKE",
-                     target = "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;long2ObjectEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;"))
+    @Inject(method = "renderLevel", at = @At("HEAD"))
     private void renderLevel(DeltaTracker partialTick, boolean renderBlockOutline, Camera camera,
                              GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f viewMatrix,
                              Matrix4f projectionMatrix, CallbackInfo ci,
                              @Local(ordinal = 0) PoseStack poseStack) {
-        if (minecraft.player == null || minecraft.level == null) return;
+        if (minecraft.player == null || level == null) return;
 
         ItemStack mainHandItem = minecraft.player.getMainHandItem();
         if (minecraft.player.isShiftKeyDown() ||

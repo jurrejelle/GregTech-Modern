@@ -17,6 +17,7 @@ import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.misc.EnergyInfoProviderList;
 import com.gregtechceu.gtceu.api.misc.LaserContainerList;
+import com.gregtechceu.gtceu.api.sync_system.managed.ManagedSyncEntityBlock;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -42,12 +43,9 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -73,7 +71,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class MetaMachineBlock extends Block implements EntityBlock {
+public class MetaMachineBlock extends Block implements ManagedSyncEntityBlock {
 
     @Getter
     public final MachineDefinition definition;
@@ -90,11 +88,6 @@ public class MetaMachineBlock extends Block implements EntityBlock {
             }
             registerDefaultState(defaultState);
         }
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return getDefinition().getBlockEntityType().create(blockPos, blockState);
     }
 
     @Override
@@ -350,17 +343,6 @@ public class MetaMachineBlock extends Block implements EntityBlock {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
     }
 
-    public static int colorTinted(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos,
-                                  int index) {
-        if (level != null && pos != null) {
-            var machine = MetaMachine.getMachine(level, pos);
-            if (machine != null) {
-                return machine.tintColor(index);
-            }
-        }
-        return -1;
-    }
-
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
                                     @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
@@ -571,25 +553,20 @@ public class MetaMachineBlock extends Block implements EntityBlock {
         return getRotationState() == RotationState.NONE ? Direction.NORTH : state.getValue(getRotationState().property);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                                  BlockEntityType<T> blockEntityType) {
-        if (blockEntityType == getDefinition().getBlockEntityType()) {
-            if (!level.isClientSide) {
-                return (pLevel, pPos, pState, pTile) -> {
-                    if (pTile instanceof MetaMachine metaMachine) {
-                        metaMachine.serverTick();
-                    }
-                };
-            } else {
-                return (pLevel, pPos, pState, pTile) -> {
-                    if (pTile instanceof MetaMachine metaMachine) {
-                        metaMachine.clientTick();
-                    }
-                };
+    public static int colorTinted(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos,
+                                  int index) {
+        if (level != null && pos != null) {
+            var machine = MetaMachine.getMachine(level, pos);
+            if (machine != null) {
+                return machine.tintColor(index);
             }
         }
-        return null;
+        return -1;
+    }
+
+    @Nullable
+    @Override
+    public final BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return getDefinition().getBlockEntityType().create(pos, state);
     }
 }

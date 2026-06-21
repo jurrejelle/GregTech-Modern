@@ -120,11 +120,11 @@ public class LargeBoilerMachine extends WorkableMultiblockMachine implements IDi
                 inputTanks.addAll(getCapabilitiesFlat(IO.BOTH, FluidRecipeCapability.CAP));
                 for (IRecipeHandler<?> tank : inputTanks) {
                     drainWater = (List<SizedFluidIngredient>) tank.handleRecipe(IO.IN, null, drainWater, false);
-                    if (drainWater == null || drainWater.isEmpty()) {
+                    if (drainWater.isEmpty()) {
                         break;
                     }
                 }
-                var drained = (drainWater == null || drainWater.isEmpty()) ? maxDrain :
+                var drained = drainWater.isEmpty() ? maxDrain :
                         maxDrain - drainWater.getFirst().amount();
 
                 steamGenerated = drained * ConfigHolder.INSTANCE.machines.largeBoilers.steamPerWater;
@@ -136,8 +136,8 @@ public class LargeBoilerMachine extends WorkableMultiblockMachine implements IDi
                     outputTanks.addAll(getCapabilitiesFlat(IO.OUT, FluidRecipeCapability.CAP));
                     outputTanks.addAll(getCapabilitiesFlat(IO.BOTH, FluidRecipeCapability.CAP));
                     for (IRecipeHandler<?> tank : outputTanks) {
-                        fillSteam = (List<SizedFluidIngredient>) tank.handleRecipe(IO.OUT, null, fillSteam, false);
-                        if (fillSteam == null) break;
+                        fillSteam = (List<SizedFluidIngredient>)tank.handleRecipe(IO.OUT, null, fillSteam, false);
+                        if (fillSteam.isEmpty()) break;
                     }
                 }
 

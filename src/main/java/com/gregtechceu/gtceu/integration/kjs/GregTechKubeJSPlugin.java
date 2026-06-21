@@ -384,7 +384,8 @@ public class GregTechKubeJSPlugin implements KubeJSPlugin {
         registry.register(MaterialIconSet.class, o -> {
             o = Wrapper.unwrapped(o);
             if (o instanceof MaterialIconSet iconSet) return iconSet;
-            if (o instanceof CharSequence chars) return MaterialIconSet.getByName(chars.toString());
+            if (o instanceof CharSequence chars) return GTRegistries.MATERIAL_ICON_SETS
+                    .get(GTCEu.id(chars.toString()));
             return null;
         });
         registry.register(MaterialStack.class, o -> {

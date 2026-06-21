@@ -51,7 +51,6 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
     @SaveField
     private int minStackSize = 1;
     @Getter
-    @Setter
     @SaveField
     private int ticksPerCycle = 40;
 
@@ -61,6 +60,7 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
     public MEStockingBusPartMachine(BlockEntityCreationInfo info) {
         super(info);
         this.autoPullTest = $ -> false;
+        setOffsetBound(ticksPerCycle);
     }
 
     /////////////////////////////////
@@ -181,6 +181,11 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
                 updateInventorySubscription();
             }
         }
+    }
+
+    public void setTicksPerCycle(int ticksPerCycle) {
+        this.ticksPerCycle = ticksPerCycle;
+        setOffsetBound(ticksPerCycle);
     }
 
     /**

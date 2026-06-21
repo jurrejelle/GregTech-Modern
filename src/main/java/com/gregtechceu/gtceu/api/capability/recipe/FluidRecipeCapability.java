@@ -159,7 +159,10 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
         List<SizedFluidIngredient> ingredients = new ArrayList<>(outputContents.size());
         for (var content : outputContents) {
             var ing = this.of(content.content);
-            maxAmount = Math.max(maxAmount, ing.amount());
+            int amount;
+            if (ing instanceof IntProviderFluidIngredient provider) amount = provider.getCountProvider().getMaxValue();
+            else amount = ing.getAmount();
+            maxAmount = Math.max(maxAmount, amount);
             ingredients.add(ing);
         }
         if (maxAmount == 0) return multiplier;
@@ -176,9 +179,9 @@ public class FluidRecipeCapability extends RecipeCapability<SizedFluidIngredient
             for (var handler : handlers) {
                 // noinspection unchecked
                 copied = (List<SizedFluidIngredient>) handler.handleRecipe(IO.OUT, recipe, copied, true);
-                if (copied == null) break;
+                if (copied.isEmpty()) break;
             }
-            int[] bin = ParallelLogic.adjustMultiplier(copied == null, minMultiplier, multiplier, maxMultiplier);
+            int[] bin = ParallelLogic.adjustMultiplier(copied.isEmpty(), minMultiplier, multiplier, maxMultiplier);
             minMultiplier = bin[0];
             multiplier = bin[1];
             maxMultiplier = bin[2];

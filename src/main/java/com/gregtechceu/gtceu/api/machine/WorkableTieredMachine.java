@@ -32,7 +32,7 @@ public abstract class WorkableTieredMachine extends TieredEnergyMachine implemen
     @SyncToClient
     public final RecipeLogic recipeLogic;
     @Getter
-    private GTRecipeType[] recipeTypes;
+    public final GTRecipeType[] recipeTypes;
     @Getter
     @Setter
     @SaveField
@@ -198,30 +198,20 @@ public abstract class WorkableTieredMachine extends TieredEnergyMachine implemen
     }
 
     public GTRecipeType getRecipeType() {
-        if (activeRecipeType >= recipeTypes.length) {
-            GTCEu.LOGGER.warn("Preventing crash from bad recipe type index!");
-            activeRecipeType = recipeTypes.length - 1;
-        }
-        return recipeTypes[activeRecipeType];
+        int index = activeRecipeType >= 0 && activeRecipeType < recipeTypes.length ? activeRecipeType : 0;
+        return recipeTypes[index];
     }
 
+    /**
+     * Sets a recipe type of the machine.
+     * FOR INTERNAL / TESTING USE ONLY!
+     * NOT SUPPORTED FOR PRODUCTION USE!
+     *
+     * @param newType The new recipe type
+     */
     @ApiStatus.Internal
     @VisibleForTesting
-    public void setRecipeType(GTRecipeType type) {
-        int recipeIndex = -1;
-        for (int i = 0; i < recipeTypes.length; i++) {
-            if (type.equals(recipeTypes[i])) {
-                recipeIndex = i;
-                break;
-            }
-        }
-        if (recipeIndex == -1) {
-            var newer = new GTRecipeType[recipeTypes.length + 1];
-            System.arraycopy(recipeTypes, 0, newer, 0, recipeTypes.length);
-            newer[recipeTypes.length] = type;
-            recipeTypes = newer;
-            recipeIndex = recipeTypes.length - 1;
-        }
-        setActiveRecipeType(recipeIndex);
+    public void setRecipeType(GTRecipeType newType) {
+        recipeTypes[activeRecipeType] = newType;
     }
 }

@@ -114,7 +114,7 @@ public class GTCEu {
 
     /**
      * A friendly reminder that the server instance is populated on the server side only, so null/side check it!
-     * 
+     *
      * @return the current minecraft server instance
      */
     public static MinecraftServer getMinecraftServer() {
@@ -131,7 +131,7 @@ public class GTCEu {
 
     /**
      * For async stuff use this, otherwise use {@link GTCEu isClientSide}
-     * 
+     *
      * @return if the current thread is the client thread
      */
     @SuppressWarnings("ConstantValue")
@@ -151,7 +151,7 @@ public class GTCEu {
 
     /**
      * This check isn't the same for client and server!
-     * 
+     *
      * @return if it's safe to access the current instance {@link net.minecraft.world.level.Level Level} on client or if
      *         it's safe to access any level on server.
      */
@@ -199,8 +199,8 @@ public class GTCEu {
             return isModLoaded(GTValues.MODID_IRIS);
         }
 
-        public static boolean isSodiumLoaded() {
-            return isModLoaded(GTValues.MODID_SODIUM);
+        public static boolean isSodiumEmbeddiumLoaded() {
+            return isModLoaded(GTValues.MODID_SODIUM) || isModLoaded(GTValues.MODID_EMBEDDIUM);
         }
 
         public static boolean isAE2Loaded() {
