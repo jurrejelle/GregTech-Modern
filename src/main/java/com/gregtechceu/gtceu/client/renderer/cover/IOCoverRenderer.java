@@ -7,8 +7,6 @@ import com.gregtechceu.gtceu.api.cover.IIOCover;
 import com.gregtechceu.gtceu.client.model.quad.StaticFaceBakery;
 import com.gregtechceu.gtceu.client.util.ModelEventHelper;
 
-import com.lowdragmc.lowdraglib.client.bakedpipeline.FaceQuad;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

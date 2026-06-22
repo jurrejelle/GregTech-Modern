@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.common.mui;
 
+import com.gregtechceu.gtceu.api.multiblock.error.PatternError;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeSerializer;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.monitor.MonitorGroup;
@@ -18,6 +19,8 @@ public class GTByteBufAdapters {
 
     // spotless:off
     public static final IByteBufAdapter<FriendlyByteBuf, MonitorGroup> MONITOR_GROUPS = makeAdapter(MonitorGroup.CODEC);
+    public static final IByteBufAdapter<FriendlyByteBuf, PatternError> PATTERN_ERRORS = makeAdapter(PatternError.CODEC);
+
     // spotless:on
 
     public static final IByteBufAdapter<RegistryFriendlyByteBuf, GTRecipe> GTRECIPE = new IByteBufAdapter<>() {

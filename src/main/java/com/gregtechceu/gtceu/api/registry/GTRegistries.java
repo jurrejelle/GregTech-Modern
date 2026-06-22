@@ -15,6 +15,7 @@ import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidDefiniti
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockore.BedrockOreDefinition;
 import com.gregtechceu.gtceu.api.item.tool.behavior.ToolBehaviorType;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.multiblock.error.PatternError;
 import com.gregtechceu.gtceu.api.placeholder.Placeholder;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
@@ -71,6 +72,7 @@ public final class GTRegistries {
     public static final ResourceKey<Registry<DimensionMarker>> DIMENSION_MARKER_REGISTRY = makeRegistryKey(GTCEu.id("dimension_marker"));
     public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"));
     public static final ResourceKey<Registry<MaterialIconSet>> MATERIAL_ICON_SET_REGISTRY = makeRegistryKey(GTCEu.id("material_icon_set"));
+    public static final ResourceKey<Registry<PatternError.PatternErrorType>> PATTERN_ERROR_REGISTRY = makeRegistryKey(GTCEu.id("pattern_error"));
     // GT Registries
     public static final Registry<Element> ELEMENTS = makeRegistry(ELEMENT_REGISTRY);
     public static final MaterialRegistry MATERIALS = makeMaterialRegistry();
@@ -90,6 +92,7 @@ public final class GTRegistries {
     public static final Registry<MedicalCondition> MEDICAL_CONDITIONS =  makeRegistry(MEDICAL_CONDITION_REGISTRY);
     public static final Registry<Placeholder> PLACEHOLDERS = makeRegistry(PLACEHOLDER_REGISTRY);
     public static final Registry<MaterialIconSet> MATERIAL_ICON_SETS = makeRegistry(MATERIAL_ICON_SET_REGISTRY);
+    public static final Registry<PatternError.PatternErrorType> PATTERN_ERRORS = makeRegistry(PATTERN_ERROR_REGISTRY);
     // spotless:on
 
     public static <T> ResourceKey<Registry<T>> makeRegistryKey(ResourceLocation registryId) {

@@ -109,8 +109,8 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
     @SaveField
     private int pipeLength = 0;
     @Getter
-    @Setter
     @SaveField
+    @SyncToClient
     private int currentRadius;
     @Getter
     @SaveField
@@ -310,6 +310,11 @@ public class MinerLogic extends RecipeLogic implements IRecipeCapabilityHolder {
                 subscription = null;
             }
         }
+    }
+
+    public void setCurrentRadius(int currentRadius) {
+        this.currentRadius = currentRadius;
+        syncDataHolder.markClientSyncFieldDirty("currentRadius");
     }
 
     /**

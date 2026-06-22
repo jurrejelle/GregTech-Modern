@@ -1,8 +1,6 @@
 [versions]
-ldlib = "1.0.35.a"
 registrate = "MC1.21-1.3.0+67"
 configuration = "3.1.1-neoforge"
-
 jei = "19.25.1.328"
 rei = "16.0.799"
 emi = "1.1.22+1.21.1"
@@ -51,7 +49,6 @@ spark = "6225208"
 observable = "5733591"
 
 [libraries]
-ldlib               = { module = "com.lowdragmc.ldlib:ldlib-neoforge-1.21.1", version.ref = "ldlib" }
 registrate          = { module = "com.tterrag.registrate:Registrate", version.ref = "registrate" }
 configuration       = { module = "dev.toma.configuration:configuration-1.21.1", version.ref = "configuration" }
 

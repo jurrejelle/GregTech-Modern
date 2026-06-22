@@ -95,7 +95,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine
     }
 
     protected NotifiableItemStackHandler createInventory() {
-        return new NotifiableItemStackHandler(getInventorySize(), io);
+        return new NotifiableItemStackHandler(getInventorySize(), io, io.support(IO.IN) ? IO.BOTH : io);
     }
 
     protected boolean matchesFilter(ItemStack stack) {
@@ -147,7 +147,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine
     }
 
     @Override
-    public void addedToController(MultiblockControllerMachine controller) {
+    public void addedToController(MultiblockControllerMachine controller, String substructureName) {
         if (hasCircuitSlot && !controller.allowCircuitSlots()) {
             if (!ConfigHolder.INSTANCE.machines.ghostCircuit) {
                 circuitInventory.dropInventoryInWorld();
@@ -156,7 +156,7 @@ public class ItemBusPartMachine extends TieredIOPartMachine
             }
             setCircuitSlotEnabled(false);
         }
-        super.addedToController(controller);
+        super.addedToController(controller, substructureName);
     }
 
     @Override

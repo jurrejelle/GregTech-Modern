@@ -3,8 +3,10 @@ package com.gregtechceu.gtceu.common.machine.multiblock.part;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.feature.IMuiMachine;
+import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.api.multiblock.pattern.PatternState;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
@@ -38,6 +40,9 @@ public class ObjectHolderMachine extends MultiblockPartMachine implements IMuiMa
     @SaveField
     @SyncToClient
     private boolean isLocked;
+
+    @Getter
+    private NotifiableItemStackHandler handler;
 
     public ObjectHolderMachine(BlockEntityCreationInfo info) {
         super(info);
@@ -107,7 +112,10 @@ public class ObjectHolderMachine extends MultiblockPartMachine implements IMuiMa
         var controllers = getControllers();
         for (var controller : controllers) {
             if (controller.isFormed()) {
-                controller.checkPatternWithLock();
+                PatternState patternState = controller.getPatternState(MultiblockControllerMachine.DEFAULT_STRUCTURE);
+                if (!patternState.getState().isValid()) {
+                    controller.checkDefaultStructurePattern();
+                }
             }
         }
     }

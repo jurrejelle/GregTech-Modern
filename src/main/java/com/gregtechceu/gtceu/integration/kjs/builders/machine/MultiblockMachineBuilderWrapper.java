@@ -11,8 +11,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
-import com.gregtechceu.gtceu.api.pattern.BlockPattern;
-import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
+import com.gregtechceu.gtceu.api.multiblock.pattern.IBlockPattern;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.modifier.RecipeModifier;
@@ -69,7 +68,7 @@ public class MultiblockMachineBuilderWrapper extends BuilderBase<MultiblockMachi
         return this;
     }
 
-    public MultiblockMachineBuilderWrapper pattern(Function<MultiblockMachineDefinition, BlockPattern> pattern) {
+    public MultiblockMachineBuilderWrapper pattern(Function<MultiblockMachineDefinition, IBlockPattern> pattern) {
         internal.pattern(pattern);
         return this;
     }
@@ -91,16 +90,6 @@ public class MultiblockMachineBuilderWrapper extends BuilderBase<MultiblockMachi
 
     public MultiblockMachineBuilderWrapper additionalDisplay(BiConsumer<MultiblockControllerMachine, List<Component>> additionalDisplay) {
         internal.additionalDisplay(additionalDisplay);
-        return this;
-    }
-
-    public MultiblockMachineBuilderWrapper shapeInfo(Function<MultiblockMachineDefinition, MultiblockShapeInfo> shape) {
-        internal.shapeInfo(shape);
-        return this;
-    }
-
-    public MultiblockMachineBuilderWrapper shapeInfos(Function<MultiblockMachineDefinition, List<MultiblockShapeInfo>> shapes) {
-        internal.shapeInfos(shapes);
         return this;
     }
 
