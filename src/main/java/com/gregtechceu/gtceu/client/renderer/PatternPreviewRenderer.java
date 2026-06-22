@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.client.renderer;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.client.mui.schema.MutableSchema;
 
+import lombok.Getter;
 import net.minecraft.CrashReport;
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
@@ -63,6 +64,8 @@ public class PatternPreviewRenderer {
     private @Nullable RenderLevel renderLevel;
     private @Nullable BlockPos controllerPos;
     private final AtomicInteger timeout = new AtomicInteger(-1);
+    @Getter
+    private final brachy.modularui.drawable.schema.Camera camera = new brachy.modularui.drawable.schema.Camera();
 
     private RenderCompileTask lastRenderCompileTask = null;
     private final SectionBufferBuilderPack sectionBufferBuilders = new SectionBufferBuilderPack();
@@ -360,11 +363,11 @@ public class PatternPreviewRenderer {
             RenderLevel fakeLevel = PatternPreviewRenderer.this.renderLevel;
 
             var blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
-            SectionBufferBuilderPack chunkBufferBuilders = PatternPreviewRenderer.this.sectionBufferBuilders;
+            SectionBufferBuilderPack sectionBufferBuilders = PatternPreviewRenderer.this.sectionBufferBuilders;
 
             RandomSource randomSource = RandomSource.create();
             PoseStack poseStack = new PoseStack();
-            Set<RenderType> startedBuffers = new ReferenceArraySet<>(RenderType.chunkBufferLayers().size());
+            Map<RenderType, BufferBuilder> bufferLayers = new Reference2ObjectArrayMap<>(RenderType.chunkBufferLayers().size());
 
             ModelBlockRenderer.enableCaching();
             for (var blockEntry : PatternPreviewRenderer.this.schema) {
@@ -382,14 +385,8 @@ public class PatternPreviewRenderer {
 
                 if (!fluidState.isEmpty()) {
                     RenderType renderType = ItemBlockRenderTypes.getRenderLayer(fluidState);
-                    BufferBuilder builder = chunkBufferBuilders.builder(renderType);
-                    if (startedBuffers.add(renderType)) {
-                        if (builder.building()) {
-                            GTCEu.LOGGER.warn("Buffer is already building for RenderType: {}!", renderType);
-                            return CompletableFuture.completedFuture(compileResults.withStatus(CompileStatus.CANCELED));
-                        }
-                        builder.begin(renderType.mode(), renderType.format());
-                    }
+
+                    BufferBuilder builder = getOrBeginLayer(bufferLayers, sectionBufferBuilders, renderType);
 
                     SectionPos sectionPos = SectionPos.of(pos);
                     VertexConsumer vertexConsumer = new LiquidVertexConsumer(builder, sectionPos);
@@ -412,10 +409,7 @@ public class PatternPreviewRenderer {
                     randomSource.setSeed(blockState.getSeed(pos));
 
                     for (RenderType renderType : model.getRenderTypes(blockState, randomSource, modelData)) {
-                        BufferBuilder builder = chunkBufferBuilders.builder(renderType);
-                        if (startedBuffers.add(renderType)) {
-                            builder.begin(renderType.mode(), renderType.format());
-                        }
+                        BufferBuilder builder = getOrBeginLayer(bufferLayers, sectionBufferBuilders, renderType);
 
                         poseStack.pushPose();
                         poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -433,19 +427,16 @@ public class PatternPreviewRenderer {
                 }
             }
 
-            if (startedBuffers.contains(RenderType.translucent())) {
-                BufferBuilder bufferBuilder = chunkBufferBuilders.builder(RenderType.translucent());
-                if (!bufferBuilder.isCurrentBatchEmpty()) {
-                    bufferBuilder.setQuadSorting(
-                            VertexSorting.byDistance((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z));
-                }
-            }
+            for (var entry : bufferLayers.entrySet()) {
+                RenderType renderType = entry.getKey();
+                MeshData meshData = entry.getValue().build();
 
-            for (RenderType renderType : startedBuffers) {
-                MeshData renderedBuffer = chunkBufferBuilders.builder(renderType)
-                        .endOrDiscardIfEmpty();
-                if (renderedBuffer != null) {
-                    compileResults.renderedLayers.put(renderType, renderedBuffer);
+                if (meshData != null) {
+                    if (renderType == RenderType.translucent()) {
+                        meshData.sortQuads(sectionBufferBuilders.buffer(RenderType.translucent()),
+                                VertexSorting.byDistance(camera.pos()));
+                    }
+                    compileResults.renderedLayers.put(renderType, meshData);
                 }
             }
             ModelBlockRenderer.clearCache();
@@ -471,6 +462,18 @@ public class PatternPreviewRenderer {
                     return compileResults.withStatus(CompileStatus.SUCCESS);
                 }
             });
+        }
+
+        protected BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers,
+                                                SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType) {
+            BufferBuilder builder = bufferLayers.get(renderType);
+            if (builder == null) {
+                ByteBufferBuilder bytebufferbuilder = sectionBufferBuilderPack.buffer(renderType);
+                builder = new BufferBuilder(bytebufferbuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+                bufferLayers.put(renderType, builder);
+            }
+
+            return builder;
         }
 
         protected CompletableFuture<Void> uploadChunkLayer(RenderCompileResults results,
