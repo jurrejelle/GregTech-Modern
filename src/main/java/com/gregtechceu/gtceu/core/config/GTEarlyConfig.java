@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.core.config;
 
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -41,25 +42,6 @@ public class GTEarlyConfig {
         // hidden rules for dev-only mixins
         addHiddenRule("dev", !FMLLoader.isProduction());
         addHiddenRule("dev.datagen", DatagenModLoader.isRunningDataGen());
-
-        // hidden rules for mod dependencies
-        enableIfModPresent("emi", "emi");
-        enableIfModPresent("jei", "jei");
-        enableIfModPresent("rei", "roughlyenoughitems");
-
-        final String[] EMBEDDIUM_MOD_IDS = { "embeddium", "sodium" };
-        final String[] OCULUS_MOD_IDS = { "oculus", "iris" };
-        enableIfModPresent("embeddium", EMBEDDIUM_MOD_IDS);
-        enableIfModPresent("oculus", OCULUS_MOD_IDS);
-        enableIfModPresent("client.bloom.normal.embeddium", EMBEDDIUM_MOD_IDS);
-        enableIfModPresent("client.bloom.normal.oculus", OCULUS_MOD_IDS);
-        enableIfModPresent("client.bloom.safemode.embeddium", EMBEDDIUM_MOD_IDS);
-
-        enableIfModPresent("top", "top");
-
-        enableIfModPresent("ftbchunks", "ftbchunks");
-        enableIfModPresent("xaerominimap", "xaerominimap");
-        enableIfModPresent("xaeroworldmap", "xaeroworldmap");
 
         // bind non-empty parents
         for (Map.Entry<String, Option> entry : this.options.entrySet()) {
