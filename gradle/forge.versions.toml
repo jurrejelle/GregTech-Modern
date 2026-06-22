@@ -7,6 +7,7 @@ jei = "19.25.1.328"
 rei = "16.0.799"
 emi = "1.1.22+1.21.1"
 ae2 = "19.2.8"
+mui = "3.3.0-SNAPSHOT"
 kubejs = "2101.7.2-build.336"
 rhino = "2101.2.7-build.81"
 architectury = "13.0.8"
@@ -52,15 +53,12 @@ observable = "5733591"
 [libraries]
 ldlib               = { module = "com.lowdragmc.ldlib:ldlib-neoforge-1.21.1", version.ref = "ldlib" }
 registrate          = { module = "com.tterrag.registrate:Registrate", version.ref = "registrate" }
-## TODO figure out why configuration maven explodes
 configuration       = { module = "dev.toma.configuration:configuration-1.21.1", version.ref = "configuration" }
 
+mui = { module = "brachy.modularui:modularui-mc1.21.1", version.ref = "mui" }
 jei-common-api      = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
 jei-neoforge-api    = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
 jei-neoforge-impl   = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
-rei-plugin          = { module = "me.shedaniel:RoughlyEnoughItems-default-plugin-neoforge", version.ref = "rei" }
-rei-api             = { module = "me.shedaniel:RoughlyEnoughItems-api-neoforge", version.ref = "rei" }
-rei-neoforge        = { module = "me.shedaniel:RoughlyEnoughItems-neoforge", version.ref = "rei" }
 emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
 
 ae2                 = { module = "org.appliedenergistics:appliedenergistics2", version.ref = "ae2" }
@@ -118,7 +116,5 @@ observable          = { module = "curse.maven:observable-509575", version.ref = 
 
 [bundles]
 jei = ["jei-common-api", "jei-neoforge-api", "jei-neoforge-impl"]
-rei = ["rei-plugin", "rei-neoforge"]
-rei-runtime = ["rei-neoforge", "architectury", "clothconfig"]
 kjs = ["kubejs", "rhino"]
 

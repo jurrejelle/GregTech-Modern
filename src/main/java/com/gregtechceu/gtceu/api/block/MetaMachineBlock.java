@@ -283,23 +283,14 @@ public class MetaMachineBlock extends Block implements ManagedSyncEntityBlock {
             shouldOpenUi = gtToolItem.definition$shouldOpenUIAfterUse(new UseOnContext(player, hand, hit));
         }
 
-        if (shouldOpenUi && machine instanceof IUIMachine uiMachine &&
-                MachineOwner.canOpenOwnerMachine(player, machine)) {
-            return uiMachine.tryToOpenUI(player, hand, hit);
+        if (shouldOpenUi && MachineOwner.canOpenOwnerMachine(player, machine)) {
+            if (machine.getDefinition().getUI() != null) {
+                return getFromInteractionResult(machine.getDefinition().getUI().tryToOpenUI(player, hand, hit));
+            } else if (machine instanceof IMuiMachine muiMachine) {
+                return getFromInteractionResult(muiMachine.tryToOpenUI(player, hand, hit));
+            }
         }
         return shouldOpenUi ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : ItemInteractionResult.CONSUME;
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
-                                               Player player, BlockHitResult hit) {
-        var machine = MetaMachine.getMachine(level, pos);
-        if (machine == null) return InteractionResult.PASS;
-        if (machine instanceof IUIMachine uiMachine &&
-                MachineOwner.canOpenOwnerMachine(player, machine)) {
-            uiMachine.tryToOpenUI(player, InteractionHand.MAIN_HAND, hit).result();
-        }
-        return machine.onUse(new ExtendedUseOnContext(player, InteractionHand.MAIN_HAND, hit));
     }
 
     //////////////////////////////////////

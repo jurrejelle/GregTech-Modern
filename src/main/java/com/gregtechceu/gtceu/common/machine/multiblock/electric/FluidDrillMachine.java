@@ -14,22 +14,19 @@ import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.GTMaterialBlocks;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.machine.trait.FluidDrillLogic;
-import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.block.Block;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class FluidDrillMachine extends WorkableElectricMultiblockMachine implements ITieredMachine {
 
     @Getter
@@ -54,44 +51,6 @@ public class FluidDrillMachine extends WorkableElectricMultiblockMachine impleme
         return Math.min(this.tier + 1, Math.max(this.tier, GTUtil.getFloorTierByVoltage(energyCont.getInputVoltage())));
     }
 
-    @Override
-    public void addDisplayText(List<Component> textList) {
-        if (isFormed()) {
-            int energyContainer = getEnergyTier();
-            long maxVoltage = GTValues.V[energyContainer];
-            String voltageName = GTValues.VNF[energyContainer];
-            textList.add(Component.translatable("gtceu.multiblock.max_energy_per_tick", maxVoltage, voltageName));
-
-            if (getRecipeLogic().getVeinFluid() != null) {
-                // Fluid name
-                Fluid drilledFluid = getRecipeLogic().getVeinFluid();
-                Component fluidInfo = drilledFluid.getFluidType().getDescription().copy()
-                        .withStyle(ChatFormatting.GREEN);
-                textList.add(Component.translatable("gtceu.multiblock.fluid_rig.drilled_fluid", fluidInfo)
-                        .withStyle(ChatFormatting.GRAY));
-
-                // Fluid amount
-                float produced = getRecipeLogic().getFluidToProduce() * getLevel().tickRateManager().tickrate();
-                produced = Mth.floor(produced / FluidDrillLogic.MAX_PROGRESS);
-                Component amountInfo = Component.literal(FormattingUtil.formatNumbers(produced) + " mB/s")
-                        .withStyle(ChatFormatting.BLUE);
-                textList.add(Component.translatable("gtceu.multiblock.fluid_rig.fluid_amount", amountInfo)
-                        .withStyle(ChatFormatting.GRAY));
-            } else {
-                Component noFluid = Component.translatable("gtceu.multiblock.fluid_rig.no_fluid_in_area")
-                        .withStyle(ChatFormatting.RED);
-                textList.add(Component.translatable("gtceu.multiblock.fluid_rig.drilled_fluid", noFluid)
-                        .withStyle(ChatFormatting.GRAY));
-            }
-        } else {
-            Component tooltip = Component.translatable("gtceu.multiblock.invalid_structure.tooltip")
-                    .withStyle(ChatFormatting.GRAY);
-            textList.add(Component.translatable("gtceu.multiblock.invalid_structure")
-                    .withStyle(Style.EMPTY.withColor(ChatFormatting.RED)
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))));
-        }
-    }
-
     public static int getDepletionChance(int tier) {
         if (tier == GTValues.MV)
             return 1;
@@ -112,7 +71,7 @@ public class FluidDrillMachine extends WorkableElectricMultiblockMachine impleme
         return 1;
     }
 
-    public static net.minecraft.world.level.block.Block getCasingState(int tier) {
+    public static Block getCasingState(int tier) {
         if (tier == GTValues.MV)
             return GTBlocks.CASING_STEEL_SOLID.get();
         if (tier == GTValues.HV)
@@ -123,7 +82,7 @@ public class FluidDrillMachine extends WorkableElectricMultiblockMachine impleme
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public static net.minecraft.world.level.block.Block getFrameState(int tier) {
+    public static Block getFrameState(int tier) {
         if (tier == GTValues.MV)
             return GTMaterialBlocks.MATERIAL_BLOCKS.get(TagPrefix.frameGt, GTMaterials.Steel).get();
         if (tier == GTValues.HV)

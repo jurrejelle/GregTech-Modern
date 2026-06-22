@@ -1,11 +1,17 @@
 package com.gregtechceu.gtceu.common.machine.multiblock.part.hpca;
 
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
-import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.common.machine.trait.hpca.HPCAComponentTrait;
+import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 
-import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
+import net.minecraft.MethodsReturnNonnullByDefault;
 
+import brachy.modularui.api.drawable.IDrawable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class HPCAEmptyPartMachine extends HPCAComponentPartMachine {
 
     public HPCAEmptyPartMachine(BlockEntityCreationInfo info) {
@@ -18,7 +24,7 @@ public class HPCAEmptyPartMachine extends HPCAComponentPartMachine {
     }
 
     @Override
-    public ResourceTexture getComponentIcon() {
-        return GuiTextures.HPCA_ICON_EMPTY_COMPONENT;
+    public IDrawable getComponentIcon() {
+        return GTGuiTextures.HPCA_EMPTY_COMPONENT;
     }
 }

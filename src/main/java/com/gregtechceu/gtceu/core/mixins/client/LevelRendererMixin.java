@@ -76,7 +76,9 @@ public abstract class LevelRendererMixin {
     @Shadow
     private @Nullable ClientLevel level;
 
-    @Definition(id = "long2ObjectEntrySet", method = "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;long2ObjectEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;", remap = false)
+    @Definition(id = "long2ObjectEntrySet",
+                method = "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;long2ObjectEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;",
+                remap = false)
     @Definition(id = "destructionProgress", field = "destructionProgress")
     @Expression("this.destructionProgress.long2ObjectEntrySet()")
     @Inject(method = "renderLevel", at = @At("MIXINEXTRAS:EXPRESSION"))

@@ -33,8 +33,8 @@ public abstract class BlockRendererMixin extends AbstractBlockRenderContext {
 
     @Inject(method = "processQuad",
             at = @At(value = "INVOKE",
-                    target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderer;shadeQuad(Lnet/caffeinemc/mods/sodium/client/render/frapi/mesh/MutableQuadViewImpl;Lnet/caffeinemc/mods/sodium/client/model/light/LightMode;ZLnet/fabricmc/fabric/api/renderer/v1/material/ShadeMode;)V",
-                    shift = At.Shift.AFTER))
+                     target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderer;shadeQuad(Lnet/caffeinemc/mods/sodium/client/render/frapi/mesh/MutableQuadViewImpl;Lnet/caffeinemc/mods/sodium/client/model/light/LightMode;ZLnet/fabricmc/fabric/api/renderer/v1/material/ShadeMode;)V",
+                     shift = At.Shift.AFTER))
     private void gtceu$copyBloomQuads$initLocals(MutableQuadViewImpl quad,
                                                  CallbackInfo ci,
                                                  @Local(name = "emissive") boolean emissive,

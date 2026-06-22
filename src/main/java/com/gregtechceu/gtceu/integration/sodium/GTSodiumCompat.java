@@ -5,16 +5,12 @@ import com.gregtechceu.gtceu.client.util.TextureMetadataHelper;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.utils.TriState;
 
-import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadView;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.material.Material;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
 import net.caffeinemc.mods.sodium.client.render.texture.SpriteFinderCache;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class GTSodiumCompat {
@@ -28,7 +24,7 @@ public class GTSodiumCompat {
         if (metadata.isPresent()) {
             TriState bloomValue = metadata.get().bloom();
             if (bloomValue == TriState.TRUE) return true;
-                // Explicitly disable bloom if it's set to FALSE in the metadata
+            // Explicitly disable bloom if it's set to FALSE in the metadata
             else if (bloomValue == TriState.FALSE) return false;
 
             // fall through to emissivity config check if default

@@ -123,7 +123,7 @@ public class DistillationTowerMachine extends WorkableElectricMultiblockMachine
         if (contents == null || contents.isEmpty()) return multiplier;
 
         int maxAmount = contents.stream()
-                .map(Content::getContent)
+                .map(Content::content)
                 .map(FluidRecipeCapability.CAP::of)
                 .filter(i -> !i.ingredient().hasNoFluids())
                 .mapToInt(SizedFluidIngredient::amount)
@@ -262,7 +262,7 @@ public class DistillationTowerMachine extends WorkableElectricMultiblockMachine
         private boolean applyFluidOutputs(GTRecipe recipe, FluidAction action, VoidingMode voidMode) {
             var fluids = recipe.getOutputContents(FluidRecipeCapability.CAP)
                     .stream()
-                    .map(Content::getContent)
+                    .map(Content::content)
                     .map(FluidRecipeCapability.CAP::of)
                     .toList();
 

@@ -13,6 +13,7 @@ import com.gregtechceu.gtceu.utils.GTMath;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class SteamEnergyRecipeHandler implements IRecipeHandler<EnergyStack> {
 
+    @Getter
     private final NotifiableFluidTank steamTank;
     private final double conversionRate; // mB steam per EU
 

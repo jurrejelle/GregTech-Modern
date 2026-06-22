@@ -209,7 +209,7 @@ public class GrowingPlantRender extends DynamicRender<IRecipeLogicMachine, Growi
                 allItemContents.addAll(recipe.getOutputContents(ItemRecipeCapability.CAP));
                 allItemContents.addAll(recipe.getTickOutputContents(ItemRecipeCapability.CAP));
                 return allItemContents.stream()
-                        .map(Content::getContent).map(ItemRecipeCapability.CAP::of)
+                        .map(Content::content).map(ItemRecipeCapability.CAP::of)
                         .map(SizedIngredient::getItems).flatMap(Arrays::stream)
                         .map(ItemStack::getItem)
                         .filter(BlockItem.class::isInstance)

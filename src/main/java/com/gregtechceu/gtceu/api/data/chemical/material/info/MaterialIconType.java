@@ -4,8 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
 import com.gregtechceu.gtceu.integration.kjs.GTCEuStartupEvents;
 import com.gregtechceu.gtceu.integration.kjs.events.MaterialIconInfoEventJS;
-
-import com.lowdragmc.lowdraglib.utils.ResourceHelper;
+import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -168,7 +167,7 @@ public record MaterialIconType(String name) {
             while (iconSet != null && !iconSet.isRootIconset) {
                 ResourceLocation location = iconSet.id.withPath(String
                         .format("textures/block/material_sets/%s/%s%s.png", iconSet.getName(), this.name, suffix));
-                if (ResourceHelper.isResourceExist(location) || ResourceHelper.isResourceExistRaw(location))
+                if (GTUtil.resourceExists(location))
                     break;
                 iconSet = iconSet.parentIconset;
             }
@@ -179,8 +178,7 @@ public record MaterialIconType(String name) {
         ResourceLocation location = iconSet.id.withPath(
                 String.format("textures/block/material_sets/%s/%s%s.png", iconSet.getName(), this.name, suffix));
 
-        if (!suffix.isEmpty() && !ResourceHelper.isResourceExist(location) &&
-                !ResourceHelper.isResourceExistRaw(location)) {
+        if (!suffix.isEmpty() && !GTUtil.resourceExists(location)) {
             return GTModels.BLANK_TEXTURE;
         }
         location = iconSet.id
@@ -210,7 +208,7 @@ public record MaterialIconType(String name) {
             while (iconSet != null && !iconSet.isRootIconset) {
                 ResourceLocation location = iconSet.id
                         .withPath(String.format("models/block/material_sets/%s/%s.json", iconSet.getName(), this.name));
-                if (ResourceHelper.isResourceExist(location) || ResourceHelper.isResourceExistRaw(location))
+                if (GTUtil.resourceExists(location))
                     break;
                 iconSet = iconSet.parentIconset;
             }
@@ -241,7 +239,7 @@ public record MaterialIconType(String name) {
                 ResourceLocation location = iconSet.id
                         .withPath(String.format("models/item/material_sets/%s/%s.json", iconSet.getName(), this.name));
 
-                if (ResourceHelper.isResourceExist(location) || ResourceHelper.isResourceExistRaw(location))
+                if (GTUtil.resourceExists(location))
                     break;
                 iconSet = iconSet.parentIconset;
             }
@@ -285,7 +283,7 @@ public record MaterialIconType(String name) {
                 ResourceLocation location = iconSet.id.withPath(
                         String.format("textures/item/material_sets/%s/%s%s.png", iconSet.getName(), this.name, suffix));
 
-                if (ResourceHelper.isResourceExist(location) || ResourceHelper.isResourceExistRaw(location))
+                if (GTUtil.resourceExists(location))
                     break;
                 iconSet = iconSet.parentIconset;
             }
@@ -296,8 +294,7 @@ public record MaterialIconType(String name) {
         ResourceLocation location = iconSet.id.withPath(
                 String.format("textures/item/material_sets/%s/%s%s.png", iconSet.getName(), this.name, suffix));
 
-        if (!suffix.isEmpty() && !ResourceHelper.isResourceExist(location) &&
-                !ResourceHelper.isResourceExistRaw(location)) {
+        if (!suffix.isEmpty() && !GTUtil.resourceExists(location)) {
             return null;
         }
         location = iconSet.id

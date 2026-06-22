@@ -1564,11 +1564,11 @@ public class GTRecipeBuilder {
         var itemOutputs = output.getOrDefault(ItemRecipeCapability.CAP, new ArrayList<>());
         var itemInputs = input.getOrDefault(ItemRecipeCapability.CAP, new ArrayList<>());
         if (itemOutputs.size() == 1 && (!itemInputs.isEmpty() || !tempFluidStacks.isEmpty())) {
-            var currOutput = ItemRecipeCapability.CAP.of(itemOutputs.getFirst().content);
+            var currOutput = ItemRecipeCapability.CAP.of(itemOutputs.getFirst().content());
             Item out = null;
             int outputCount = 0;
 
-            if (currOutput.getContainedCustom() instanceof IntProviderIngredient intProvider) {
+            if (currOutput.ingredient().getCustomIngredient() instanceof IntProviderIngredient intProvider) {
                 ItemStack[] items = intProvider.getInner().getItems();
                 if (items.length > 0) {
                     out = items[0].getItem();
@@ -1615,11 +1615,11 @@ public class GTRecipeBuilder {
     private void removeExistingMaterialInfo() {
         var itemOutputs = output.get(ItemRecipeCapability.CAP);
         if (itemOutputs.size() == 1) {
-            var currOutput = ItemRecipeCapability.CAP.of(itemOutputs.getFirst().content);
+            var currOutput = ItemRecipeCapability.CAP.of(itemOutputs.getFirst().content());
             Item out = null;
             int outputCount = 0;
 
-            if (currOutput.getContainedCustom() instanceof IntProviderIngredient intProvider) {
+            if (currOutput.ingredient().getCustomIngredient() instanceof IntProviderIngredient intProvider) {
                 ItemStack[] items = intProvider.getInner().getItems();
                 if (items.length > 0) {
                     out = items[0].getItem();
@@ -1700,7 +1700,7 @@ public class GTRecipeBuilder {
     public EnergyStack EUt() {
         if (!tickInput.containsKey(EURecipeCapability.CAP)) return EnergyStack.EMPTY;
         if (tickInput.get(EURecipeCapability.CAP).isEmpty()) return EnergyStack.EMPTY;
-        return EURecipeCapability.CAP.of(tickInput.get(EURecipeCapability.CAP).getFirst().content);
+        return EURecipeCapability.CAP.of(tickInput.get(EURecipeCapability.CAP).getFirst().content());
     }
 
     public int getSolderMultiplier() {

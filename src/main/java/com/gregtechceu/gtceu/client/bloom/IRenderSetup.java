@@ -12,7 +12,8 @@ public interface IRenderSetup {
      * Run any pre render GL code here.
      */
     @OnlyIn(Dist.CLIENT)
-    @Nullable BufferBuilder preDraw();
+    @Nullable
+    BufferBuilder preDraw();
 
     /**
      * Run any post render gl code here.

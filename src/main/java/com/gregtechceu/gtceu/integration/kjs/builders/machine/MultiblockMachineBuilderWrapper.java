@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
 import com.gregtechceu.gtceu.api.data.RotationState;
-import com.gregtechceu.gtceu.api.gui.editor.EditableMachineUI;
 import com.gregtechceu.gtceu.api.item.MetaMachineItem;
 import com.gregtechceu.gtceu.api.machine.*;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
@@ -388,11 +387,6 @@ public class MultiblockMachineBuilderWrapper extends BuilderBase<MultiblockMachi
 
     public MultiblockMachineBuilderWrapper regressWhenWaiting(boolean regressWhenWaiting) {
         internal.regressWhenWaiting(regressWhenWaiting);
-        return this;
-    }
-
-    public MultiblockMachineBuilderWrapper editableUI(@Nullable EditableMachineUI editableUI) {
-        internal.editableUI(editableUI);
         return this;
     }
 

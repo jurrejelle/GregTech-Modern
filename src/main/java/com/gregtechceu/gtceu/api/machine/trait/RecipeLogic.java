@@ -5,8 +5,6 @@ import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.capability.recipe.EURecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.gui.GuiTextures;
-import com.gregtechceu.gtceu.api.gui.fancy.IFancyTooltip;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
@@ -25,10 +23,9 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
 import com.gregtechceu.gtceu.api.sync_system.data_transformers.ValueTransformer;
 import com.gregtechceu.gtceu.common.cover.MachineControllerCover;
-import com.gregtechceu.gtceu.core.MixinHelpers;
 import com.gregtechceu.gtceu.utils.GTMath;
 
-import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
+import com.lowdragmc.lowdraglib.utils.DummyWorld;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -49,7 +46,7 @@ import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.*;
 
-public class RecipeLogic extends MachineTrait implements IWorkable, IFancyTooltip {
+public class RecipeLogic extends MachineTrait implements IWorkable {
 
     public static final MachineTraitType<RecipeLogic> TYPE = new MachineTraitType<>(RecipeLogic.class, false);
 
@@ -304,6 +301,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
                 }
                 progress++;
                 totalContinuousRunningTime++;
+                syncDataHolder.markClientSyncFieldDirty("progress");
             } else {
                 setWaiting(handleTick.reason());
 
@@ -344,6 +342,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
     protected void regressRecipe() {
         if (progress > 0 && getRLMachine().regressWhenWaiting()) {
             this.progress = 1;
+            syncDataHolder.markClientSyncFieldDirty("progress");
         }
     }
 
@@ -367,6 +366,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             lastOriginRecipe = null;
             handleSearchingRecipes(searchRecipe());
         }
+        syncDataHolder.markClientSyncFieldDirty("lastRecipe");
         recipeDirty = false;
     }
 
@@ -410,6 +410,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             progress = 0;
             duration = 0;
             isActive = false;
+            syncDataHolder.resyncAllFields();
             return;
         }
         var handledIO = handleRecipeIO(recipe, IO.IN);
@@ -424,10 +425,12 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             progress = 0;
             duration = recipe.duration;
             isActive = true;
+            syncDataHolder.resyncAllFields();
         }
     }
 
     public void setStatus(Status status) {
+        if (isRemote() && !(getLevel() instanceof DummyWorld)) return;
         if (this.status != status) {
             if (this.status == Status.WORKING) {
                 this.totalContinuousRunningTime = 0;
@@ -443,6 +446,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             updateTickSubscription();
             if (this.status != Status.WAITING) {
                 waitingReason = null;
+                syncDataHolder.markClientSyncFieldDirty("waitingReason");
             }
         }
     }
@@ -450,6 +454,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
     public void setWaiting(@Nullable Component reason) {
         setStatus(Status.WAITING);
         waitingReason = reason;
+        syncDataHolder.markClientSyncFieldDirty("waitingReason");
         getRLMachine().onWaiting();
     }
 
@@ -483,6 +488,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
 
     @Override
     public void setWorkingEnabled(boolean isWorkingAllowed) {
+        if (isRemote() && !(getLevel() instanceof DummyWorld)) return;
         if (!isWorkingAllowed && getStatus() == Status.IDLE) {
             setStatus(Status.SUSPEND);
         } else {
@@ -538,6 +544,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
                 isActive = false;
                 // Force a recipe recheck.
                 lastRecipe = null;
+                syncDataHolder.resyncAllFields();
                 return;
             }
             if (getRLMachine().alwaysTryModifyRecipe()) {
@@ -547,6 +554,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
                         markLastRecipeDirty();
                     } else {
                         lastRecipe = modified;
+                        syncDataHolder.markClientSyncFieldDirty("lastRecipe");
                     }
                 } else {
                     markLastRecipeDirty();
@@ -562,6 +570,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
                 progress = 0;
                 duration = 0;
                 isActive = false;
+                syncDataHolder.resyncAllFields();
             }
         }
     }
@@ -583,6 +592,8 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             setStatus(Status.IDLE);
             progress = 0;
             duration = 0;
+            syncDataHolder.markClientSyncFieldDirty("progress");
+            syncDataHolder.markClientSyncFieldDirty("duration");
         }
     }
 
@@ -614,16 +625,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
         }
     }
 
-    @Override
-    public IGuiTexture getFancyTooltipIcon() {
-        if (showFancyTooltip()) {
-            return GuiTextures.INSUFFICIENT_INPUT;
-        }
-        return IGuiTexture.EMPTY;
-    }
-
-    @Override
-    public List<Component> getFancyTooltip() {
+    public List<Component> getWaitingReasons() {
         if (isWaiting() && waitingReason != null) {
             return List.of(waitingReason);
         }
@@ -631,11 +633,6 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
             return failureReasons;
         }
         return Collections.emptyList();
-    }
-
-    @Override
-    public boolean showFancyTooltip() {
-        return waitingReason != null || !failureReasons.isEmpty();
     }
 
     protected IdentityHashMap<RecipeCapability<?>, Object2IntMap<?>> makeChanceCaches() {
@@ -661,7 +658,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable, IFancyToolti
                                     ListTag cacheTag = new ListTag();
                                     for (var entry : cache.object2IntEntrySet()) {
                                         CompoundTag compoundTag = new CompoundTag();
-                                        var obj = cap.toNbt(entry.getKey(), MixinHelpers.getCurrentBERegistries());
+                                        var obj = cap.toNbt(entry.getKey(), context.lookup());
                                         compoundTag.put("entry", obj);
                                         compoundTag.putInt("cached_chance", entry.getIntValue());
                                         cacheTag.add(compoundTag);

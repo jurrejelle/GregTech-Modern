@@ -5,7 +5,6 @@ import com.gregtechceu.gtceu.api.data.worldgen.GTOreDefinition;
 import com.gregtechceu.gtceu.api.data.worldgen.ores.GeneratedVeinMetadata;
 import com.gregtechceu.gtceu.api.data.worldgen.ores.OreGenerator;
 import com.gregtechceu.gtceu.api.data.worldgen.ores.OrePlacer;
-import com.gregtechceu.gtceu.api.gui.factory.GTUIEditorFactory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.network.packets.SCPacketShareProspection;
 import com.gregtechceu.gtceu.core.mixins.ResourceKeyArgumentAccessor;
@@ -70,12 +69,6 @@ public class GTCommands {
     // spotless:off
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         dispatcher.register(literal("gtceu")
-                .then(literal("ui_editor")
-                        .requires(ctx -> ctx.hasPermission(LEVEL_ADMINS))
-                        .executes(context -> {
-                            GTUIEditorFactory.INSTANCE.openUI(GTUIEditorFactory.INSTANCE, context.getSource().getPlayerOrException());
-                            return 1;
-                        }))
                 .then(literal("place_vein")
                         .requires(ctx -> ctx.hasPermission(LEVEL_ADMINS))
                         .then(argument("vein", ResourceKeyArgument.key(GTRegistries.ORE_VEIN_REGISTRY))

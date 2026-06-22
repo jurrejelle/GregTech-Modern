@@ -34,7 +34,6 @@ import com.gregtechceu.gtceu.api.fluids.FluidBuilder;
 import com.gregtechceu.gtceu.api.fluids.FluidState;
 import com.gregtechceu.gtceu.api.fluids.attribute.FluidAttributes;
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
-import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.SimpleGeneratorMachine;
@@ -73,7 +72,6 @@ import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 import com.gregtechceu.gtceu.common.data.models.GTMachineModels;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
-import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitiveFancyUIWorkableMachine;
 import com.gregtechceu.gtceu.data.recipe.CraftingComponent;
 import com.gregtechceu.gtceu.data.recipe.GTCraftingComponents;
 import com.gregtechceu.gtceu.integration.kjs.builders.ElementBuilder;
@@ -139,16 +137,14 @@ public class GregTechKubeJSPlugin implements KubeJSPlugin {
         registry.of(GTRegistries.MACHINE_REGISTRY, reg -> {
             reg.addDefault(KJSWrappingMachineBuilder.class,
                     (id) -> new KJSWrappingMachineBuilder(id,
-                            new KJSTieredMachineBuilder(id, SimpleTieredMachine::new,
-                                    SimpleTieredMachine.EDITABLE_UI_CREATOR, false)));
+                            new KJSTieredMachineBuilder(id, SimpleTieredMachine::new, false)));
 
             reg.add(GTCEu.id("custom"), KJSWrappingMachineBuilder.class,
                     (id) -> new KJSWrappingMachineBuilder(id, new KJSTieredMachineBuilder(id)));
             reg.add(GTCEu.id("steam"), KJSSteamMachineBuilder.class, KJSSteamMachineBuilder::new);
             reg.add(GTCEu.id("generator"), KJSWrappingMachineBuilder.class,
                     (id) -> new KJSWrappingMachineBuilder(id,
-                            new KJSTieredMachineBuilder(id, SimpleGeneratorMachine::new,
-                                    SimpleGeneratorMachine.EDITABLE_UI_CREATOR, true)));
+                            new KJSTieredMachineBuilder(id, SimpleGeneratorMachine::new, true)));
 
             reg.add(GTCEu.id("multiblock"), MultiblockMachineBuilderWrapper.class,
                     MultiblockMachineBuilderWrapper::createKJSMulti);
@@ -294,8 +290,6 @@ public class GregTechKubeJSPlugin implements KubeJSPlugin {
         // Sound related
         event.add("GTSoundEntries", GTSoundEntries.class);
         event.add("SoundType", SoundType.class);
-        // GUI related
-        event.add("GuiTextures", GuiTextures.class);
         // Client/Server data related
         event.add("GTModels", GTModels.class);
         event.add("GTMachineModels", GTMachineModels.class);

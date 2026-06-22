@@ -18,6 +18,7 @@
         "client.GuiGraphicsAccessor",
         "client.GuiGraphicsMixin",
         "client.ItemEntityMixin",
+        "client.KeyboardHandlerMixin",
         "client.LevelRendererMixin",
         "client.ModelBakerImplMixin",
         "client.ModelManagerMixin",
@@ -40,9 +41,9 @@
     ],
     "mixins": [
         "BlockBehaviourAccessor",
-        "BlockEntityMixin",
         "BlockMixin",
         "BlockPropertiesAccessor",
+        "BlockStateAccessor",
         "ChunkGeneratorMixin",
         "EntityMixin",
         "FluidStackAccessor",

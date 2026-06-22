@@ -1,8 +1,6 @@
 package com.gregtechceu.gtceu.api.machine.feature.multiblock;
 
-import com.gregtechceu.gtceu.api.gui.fancy.TooltipsPanel;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
@@ -12,7 +10,6 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -22,7 +19,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.util.List;
 import java.util.SortedSet;
 
-public interface IMultiPart extends IMachineFeature, IFancyUIMachine {
+public interface IMultiPart extends IMachineFeature {
 
     /**
      * @return If this multi part can be shared between multiple multiblocks.
@@ -137,16 +134,4 @@ public interface IMultiPart extends IMachineFeature, IFancyUIMachine {
     default GTRecipe modifyRecipe(GTRecipe recipe) {
         return recipe;
     }
-
-    /**
-     * Add text to the multiblock's screen.
-     * 
-     * @param textList the text list to add to.
-     */
-    default void addMultiText(List<Component> textList) {}
-
-    /**
-     * Attach part's tooltips to the controller.
-     */
-    default void attachFancyTooltipsToController(MultiblockControllerMachine controller, TooltipsPanel tooltipsPanel) {}
 }

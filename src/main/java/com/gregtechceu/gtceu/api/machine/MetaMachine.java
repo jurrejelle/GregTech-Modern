@@ -13,8 +13,6 @@ import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.data.RotationState;
-import com.gregtechceu.gtceu.api.gui.GuiTextures;
-import com.gregtechceu.gtceu.api.gui.fancy.IFancyTooltip;
 import com.gregtechceu.gtceu.api.item.tool.GTToolType;
 import com.gregtechceu.gtceu.api.item.tool.IToolGridHighlight;
 import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
@@ -45,12 +43,11 @@ import com.gregtechceu.gtceu.common.item.behavior.MachineConfigCopyBehaviour;
 import com.gregtechceu.gtceu.common.machine.owner.MachineOwner;
 import com.gregtechceu.gtceu.common.machine.owner.PlayerOwner;
 import com.gregtechceu.gtceu.common.machine.trait.AutoOutputTrait;
+import com.gregtechceu.gtceu.common.mui.GTGuiTextures;
 import com.gregtechceu.gtceu.utils.ExtendedUseOnContext;
 import com.gregtechceu.gtceu.utils.GTStringUtils;
 import com.gregtechceu.gtceu.utils.data.TagCompatibilityFixer;
 
-import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
-import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 import com.lowdragmc.lowdraglib.utils.DummyWorld;
 
 import net.minecraft.ChatFormatting;
@@ -59,7 +56,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.TickTask;
@@ -85,6 +81,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
+import brachy.modularui.drawable.UITexture;
 import com.mojang.datafixers.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -99,7 +96,7 @@ import java.util.function.Predicate;
  * The base BlockEntity for all GT machines.
  */
 public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBlockEntity, IToolGridHighlight,
-                         IFancyTooltip, IPaintable, IMachineFeature, ICopyable {
+                         IPaintable, IMachineFeature, ICopyable {
 
     private static final int MIN_OFFSET_BOUND = 20;
 
@@ -561,8 +558,11 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
      */
     public InteractionResult onUse(ExtendedUseOnContext context) {
         if (context.getPlayer().isShiftKeyDown()) {
-            var cover = coverContainer.getCoverAtSide(context.getClickedFace());
-            if (cover != null) cover.onScrewdriverClick(context);
+            var cover = coverContainer.getCoverAtSide(context.getGridSide());
+            if (cover != null) {
+                var result = cover.onScrewdriverClick(context);
+                if (result == InteractionResult.CONSUME) return result;
+            }
         }
 
         for (var trait : getAllTraits()) {
@@ -571,6 +571,7 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
                 if (result != InteractionResult.PASS) return result;
             }
         }
+
         return InteractionResult.PASS;
     }
 
@@ -670,21 +671,21 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
     }
 
     @Override
-    public @Nullable ResourceTexture sideTips(Player player, BlockPos pos, BlockState state,
-                                              Set<GTToolType> toolTypes, ItemStack held, Direction side) {
+    public @Nullable UITexture sideTips(Player player, BlockPos pos, BlockState state, Set<GTToolType> toolTypes,
+                                        ItemStack held, Direction side) {
         if (toolTypes.contains(GTToolType.WRENCH) || held.canPerformAction(GTItemAbilities.WRENCH_ROTATE)) {
             if (player.isShiftKeyDown()) {
                 if (isFacingValid(side) || (allowExtendedFacing() && hasFrontFacing() && side == getFrontFacing())) {
-                    return GuiTextures.TOOL_FRONT_FACING_ROTATION;
+                    return GTGuiTextures.TOOL_FRONT_FACING_ROTATION;
                 }
             }
         } else if (toolTypes.contains(GTToolType.SOFT_MALLET) || held.canPerformAction(GTItemAbilities.MALLET_PAUSE)) {
             if (this instanceof IControllable controllable) {
-                return controllable.isWorkingEnabled() ? GuiTextures.TOOL_START : GuiTextures.TOOL_PAUSE;
+                return controllable.isWorkingEnabled() ? GTGuiTextures.TOOL_START : GTGuiTextures.TOOL_PAUSE;
             }
         } else if (toolTypes.contains(GTToolType.HARD_HAMMER) || held.canPerformAction(GTItemAbilities.HAMMER_MUTE)) {
             if (this instanceof IMufflableMachine mufflableMachine) {
-                return mufflableMachine.isMuffled() ? GuiTextures.TOOL_SOUND : GuiTextures.TOOL_MUTE;
+                return mufflableMachine.isMuffled() ? GTGuiTextures.TOOL_SOUND : GTGuiTextures.TOOL_MUTE;
             }
         }
 
@@ -926,11 +927,6 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
         return server.getTickCount() + getOffset();
     }
 
-    @Override
-    public boolean isRemote() {
-        return IGregtechBlockEntity.super.isRemote();
-    }
-
     ////////////////////////////////
     // ***** Redstone Signals ****//
     ////////////////////////////////
@@ -1020,35 +1016,6 @@ public class MetaMachine extends ManagedSyncBlockEntity implements IGregtechBloc
 
     public @Nullable PlayerOwner getPlayerOwner() {
         return MachineOwner.getPlayerOwner(ownerUUID);
-    }
-
-    //////////////////////////////////////
-    // ******** GUI *********//
-    //////////////////////////////////////
-    @Override
-    public IGuiTexture getFancyTooltipIcon() {
-        return GuiTextures.INFO_ICON;
-    }
-
-    @Override
-    public final List<Component> getFancyTooltip() {
-        var tooltips = new ArrayList<Component>();
-        onAddFancyInformationTooltip(tooltips);
-        return tooltips;
-    }
-
-    @Override
-    public boolean showFancyTooltip() {
-        return !getFancyTooltip().isEmpty();
-    }
-
-    public void onAddFancyInformationTooltip(List<Component> tooltips) {
-        getDefinition().getTooltipBuilder().accept(getDefinition().asStack(), tooltips);
-        String mainKey = String.format("%s.machine.%s.tooltip", getDefinition().getId().getNamespace(),
-                getDefinition().getId().getPath());
-        if (Language.getInstance().has(mainKey)) {
-            tooltips.addFirst(Component.translatable(mainKey));
-        }
     }
 
     @Override

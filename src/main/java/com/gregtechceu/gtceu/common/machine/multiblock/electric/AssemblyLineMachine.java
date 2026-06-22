@@ -80,7 +80,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
 
         for (int i = 0; i < inputsSize; i++) {
             var itemStack = itemInventory.get(i);
-            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content);
+            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content());
             if (!recipeStack.test(itemStack)) {
                 return false;
             }
@@ -103,7 +103,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
         if (itemInventory.size() < inputsSize) return ActionResult.FAIL_NO_REASON;
 
         for (int i = 0; i < inputsSize; i++) {
-            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content);
+            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content());
             var currentBus = itemInventory.get(i);
             if (!(currentBus instanceof NotifiableItemStackHandler itemBus)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's ItemRecipeCapability.IN was not of type NotifiableItemStackHandler");
@@ -114,7 +114,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
         // If we get here, the recipe should be consumable
 
         for (int i = 0; i < inputsSize; i++) {
-            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content);
+            SizedIngredient recipeStack = ItemRecipeCapability.CAP.of(itemInputs.get(i).content());
             var currentBus = itemInventory.get(i);
             if (!(currentBus instanceof NotifiableItemStackHandler itemBus)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's ItemRecipeCapability.IN was not of type NotifiableItemStackHandler");
@@ -153,7 +153,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
 
         for (int i = 0; i < inputsSize; i++) {
             var fluidStack = fluidInventory.get(i);
-            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content);
+            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content());
             if (!recipeStack.test(fluidStack)) {
                 return false;
             }
@@ -175,7 +175,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
         if (fluidInventory.size() < fluidsSize) return ActionResult.FAIL_NO_REASON;
 
         for (int i = 0; i < fluidsSize; i++) {
-            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content);
+            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content());
             var currentBus = fluidInventory.get(i);
             if (!(currentBus instanceof NotifiableFluidTank fluidTank)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's FluidRecipeCapability.IN was not of type NotifiableFluidTank");
@@ -186,7 +186,7 @@ public class AssemblyLineMachine extends WorkableElectricMultiblockMachine {
         // If we get here, the recipe should be consumable
 
         for (int i = 0; i < fluidsSize; i++) {
-            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content);
+            SizedFluidIngredient recipeStack = FluidRecipeCapability.CAP.of(fluidInputs.get(i).content());
             var currentBus = fluidInventory.get(i);
             if (!(currentBus instanceof NotifiableFluidTank fluidTank)) throw new RuntimeException(
                     "Handler in Assline.consumeItemContent's FluidRecipeCapability.IN was not of type NotifiableFluidTank");
