@@ -26,7 +26,7 @@ public interface IItemUIHolder extends IUIHolder<PlayerInventoryGuiData<?>>, IIn
     }
 
     @Override
-    default InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand usedHand) {
+    default InteractionResultHolder<ItemStack> use(ItemStack item, Level level, Player player, InteractionHand usedHand) {
         if (!shouldOpenUI()) return IInteractionItem.super.use(item, level, player, usedHand);
 
         if (!level.isClientSide) {

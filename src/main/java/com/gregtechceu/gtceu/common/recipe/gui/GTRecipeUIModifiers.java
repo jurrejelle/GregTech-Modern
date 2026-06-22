@@ -60,7 +60,7 @@ public class GTRecipeUIModifiers {
                     row.child(RecipeViewerSlotWidget.create()
                             .marginLeft(2)
                             .recipeSlotRole(RecipeSlotRole.CATALYST)
-                            .value(researchItem.getDataItem()));
+                            .value(researchItem.dataItem()));
                 }
                 widget.child(row.name("research_info"));
             }

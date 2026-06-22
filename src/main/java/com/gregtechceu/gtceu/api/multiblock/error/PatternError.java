@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.multiblock.predicates.BasePredicate;
 import com.gregtechceu.gtceu.api.multiblock.util.BlockInfo;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 public abstract class PatternError {
 
-    public static final Codec<PatternError> CODEC = GTRegistries.PATTERN_ERRORS.codec()
+    public static final Codec<PatternError> CODEC = GTRegistries.PATTERN_ERRORS.byNameCodec()
             .dispatch(PatternError::type, PatternErrorType::codec);
 
     @Getter
@@ -42,5 +43,5 @@ public abstract class PatternError {
 
     public abstract PatternErrorUI getPatternErrorUIModifier();
 
-    public record PatternErrorType(ResourceLocation id, Codec<? extends PatternError> codec) {}
+    public record PatternErrorType(ResourceLocation id, MapCodec<? extends PatternError> codec) {}
 }

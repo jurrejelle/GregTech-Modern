@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 
 import com.gregtechceu.gtceu.GTCEu;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 public class BlockMatchingError extends PatternError {
 
-    public static final Codec<BlockMatchingError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<BlockMatchingError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             Codec.list(BuiltInRegistries.BLOCK.byNameCodec()).fieldOf("blocks")
                     .forGetter(BlockMatchingError::getBlocks))

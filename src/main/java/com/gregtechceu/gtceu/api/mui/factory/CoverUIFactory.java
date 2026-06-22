@@ -2,13 +2,16 @@ package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.capability.GTCapability;
+import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.cover.IMuiCover;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -50,8 +53,7 @@ public class CoverUIFactory extends AbstractUIFactory<SidedPosGuiData> {
         if (be == null) {
             throw new IllegalStateException("Could not get gui for null BlockEntity!");
         }
-        ICoverable coverHolder = be.getCapability(GTCapability.CAPABILITY_COVERABLE, data.getSide())
-                .resolve().orElse(null);
+        ICoverable coverHolder = GTCapabilityHelper.getCoverable(data.getLevel(), data.getBlockPos(), data.getSide());
         if (coverHolder == null) {
             throw new IllegalStateException("Could not get CoverHolder for found BlockEntity!");
         }
@@ -71,14 +73,15 @@ public class CoverUIFactory extends AbstractUIFactory<SidedPosGuiData> {
         return guiData.getSquaredDistance(player) <= 8 * 8;
     }
 
+
     @Override
-    public void writeGuiData(SidedPosGuiData guiData, FriendlyByteBuf buffer) {
+    public void writeGuiData(SidedPosGuiData guiData, RegistryFriendlyByteBuf buffer) {
         buffer.writeBlockPos(guiData.getBlockPos());
         buffer.writeByte(guiData.getSide().get3DDataValue());
     }
 
     @Override
-    public @NotNull SidedPosGuiData readGuiData(Player player, FriendlyByteBuf buffer) {
+    public @NotNull SidedPosGuiData readGuiData(Player player, RegistryFriendlyByteBuf buffer) {
         return new SidedPosGuiData(player, buffer.readBlockPos(), Direction.from3DDataValue(buffer.readByte()));
     }
 }

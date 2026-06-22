@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
 
 public class FilterMatchingError extends PatternError {
 
-    public static Codec<FilterMatchingError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static MapCodec<FilterMatchingError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             CleanroomType.CODEC.fieldOf("coilType1").forGetter(FilterMatchingError::getFilterType1),
             CleanroomType.CODEC.fieldOf("coilType2").forGetter(FilterMatchingError::getFilterType2))

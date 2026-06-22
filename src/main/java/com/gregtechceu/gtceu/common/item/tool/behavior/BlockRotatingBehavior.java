@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -108,7 +109,7 @@ public class BlockRotatingBehavior implements IToolBehavior<BlockRotatingBehavio
 
         Vec3 startVec = new Vec3(playerX, playerY, playerZ);
 
-        double reachDistance = ToolHelper.getPlayerBlockReach(player);
+        double reachDistance = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
 
         float playerXRot = player.getXRot();
         float playerYRot = player.getYRot();

@@ -67,8 +67,8 @@ public class IOCoverRenderer implements ICoverRenderer {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderCover(List<BakedQuad> quads, @Nullable Direction side, RandomSource rand,
-                            @NotNull CoverBehavior coverBehavior, BlockPos pos, BlockAndTintGetter level,
-                            @NotNull ModelData modelData, @Nullable RenderType renderType) {
+                            CoverBehavior coverBehavior, BlockPos pos, BlockAndTintGetter level,
+                            ModelData modelData, @Nullable RenderType renderType) {
         if ((side == null || side == coverBehavior.attachedSide) && coverBehavior instanceof IIOCover ioCover) {
             boolean isInverted = ioCover.getIo() != IO.OUT;
 
@@ -80,10 +80,10 @@ public class IOCoverRenderer implements ICoverRenderer {
                         overlaySprite));
             }
             if (isInverted && invertedEmissiveOverlaySprite != null) {
-                quads.add(FaceQuad.bakeFace(StaticFaceBakery.COVER_OVERLAY, coverBehavior.attachedSide,
+                quads.add(StaticFaceBakery.bakeFace(StaticFaceBakery.COVER_OVERLAY, coverBehavior.attachedSide,
                         invertedEmissiveOverlaySprite, BlockModelRotation.X0_Y0, -101, 15, true, false));
             } else if (emissiveOverlaySprite != null) {
-                quads.add(FaceQuad.bakeFace(StaticFaceBakery.COVER_OVERLAY, coverBehavior.attachedSide,
+                quads.add(StaticFaceBakery.bakeFace(StaticFaceBakery.COVER_OVERLAY, coverBehavior.attachedSide,
                         emissiveOverlaySprite, BlockModelRotation.X0_Y0, -101, 15, true, false));
             }
         }

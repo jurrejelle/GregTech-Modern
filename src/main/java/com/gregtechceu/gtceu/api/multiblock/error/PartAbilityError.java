@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 
@@ -20,7 +21,7 @@ import java.util.Collections;
 
 public class PartAbilityError extends PatternError {
 
-    public static Codec<PartAbilityError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static MapCodec<PartAbilityError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             Codec.STRING.fieldOf("name").forGetter(PartAbilityError::getPartAbilityName))
             .apply(instance, (a, b) -> new PartAbilityError(a, PartAbility.VALUES.get(b))));

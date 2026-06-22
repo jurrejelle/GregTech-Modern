@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.multiblock.predicates.BasePredicate;
 import com.gregtechceu.gtceu.api.multiblock.util.BlockInfo;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class SinglePredicateError extends PatternError {
 
-    public static final Codec<SinglePredicateError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<SinglePredicateError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             SinglePredicateError.ErrorType.CODEC.fieldOf("error_type").forGetter(e -> e.type),
             Codec.INT.fieldOf("actual_count").forGetter(e -> e.actualCount),
             Codec.INT.fieldOf("pred_min_count").forGetter(e -> e.predMinCount),

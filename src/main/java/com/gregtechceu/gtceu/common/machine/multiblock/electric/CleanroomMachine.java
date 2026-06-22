@@ -534,7 +534,7 @@ public class CleanroomMachine extends WorkableElectricMultiblockMachine
 
         StringSyncValue cleanroomTranslationKey = new StringSyncValue(() -> {
             if (this.cleanroomType == null) return "";
-            return this.cleanroomType.translationKey();
+            return this.cleanroomType.getTranslationKey();
         });
         syncManager.syncValue("cleanroomTranslationKey", cleanroomTranslationKey);
 

@@ -998,7 +998,7 @@ public class GTMachines {
                     Component.translatable("gtceu.machine.maintenance_hatch_cleanroom_auto.tooltip.1"))
             .tooltipBuilder((stack, tooltips) -> {
                 tooltips.add(Component.literal("  ").append(Component
-                        .translatable(CleanroomType.CLEANROOM.translationKey()).withStyle(ChatFormatting.GREEN)));
+                        .translatable(CleanroomType.CLEANROOM.getTranslationKey()).withStyle(ChatFormatting.GREEN)));
             })
             .overlayTieredHullModel(GTCEu.id("block/machine/part/cleaning_maintenance_hatch"))
             .tier(HV)

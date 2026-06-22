@@ -177,9 +177,8 @@ public class MEInputBusPartMachine extends MEBusPartMachine
             if (slot.getStock() != null && slot.getStock().what() instanceof AEItemKey key) {
                 var player = syncManager.getPlayer();
                 if (!player.containerMenu.getCarried().isEmpty()) return;
-                ItemStack stack = new ItemStack(key.getItem());
+                ItemStack stack = key.toStack();
                 stack.setCount(Math.min((int) slot.getStock().amount(), stack.getMaxStackSize()));
-                if (key.hasTag()) stack.setTag(key.getTag().copy());
                 player.containerMenu.setCarried(stack);
                 GenericStack remaining = ExportOnlyAESlot.copy(slot.getStock(),
                         Math.max(0, slot.getStock().amount() - stack.getCount()));
@@ -192,7 +191,7 @@ public class MEInputBusPartMachine extends MEBusPartMachine
             if (index < 0 || index >= CONFIG_SIZE) return;
             boolean isFluid = packet.readBoolean();
             if (!isFluid) {
-                ItemStack item = packet.readItem();
+                ItemStack item = ItemStack.STREAM_CODEC.decode(packet);
                 if (!item.isEmpty()) {
                     aeItemHandler.getInventory()[index].setConfig(GenericStack.fromItemStack(item));
                 }

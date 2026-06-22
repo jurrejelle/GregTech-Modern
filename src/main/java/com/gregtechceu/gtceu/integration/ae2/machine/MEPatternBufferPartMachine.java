@@ -544,7 +544,7 @@ public class MEPatternBufferPartMachine extends MEBusPartMachine
 
         private final Object2LongOpenCustomHashMap<ItemStack> itemInventory = new Object2LongOpenCustomHashMap<>(
                 ItemStackHashStrategy.comparingAllButCount());
-        private final Object2LongOpenCustomHashMap<FluidStack> fluidInventory = new Object2LongOpenCustomHashMap<>();
+        private final Object2LongOpenHashMap<FluidStack> fluidInventory = new Object2LongOpenHashMap<>();
         private @Nullable List<ItemStack> itemStacks = null;
         private @Nullable List<FluidStack> fluidStacks = null;
 

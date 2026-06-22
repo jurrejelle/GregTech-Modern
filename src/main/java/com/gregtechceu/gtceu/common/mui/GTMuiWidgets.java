@@ -269,12 +269,13 @@ public class GTMuiWidgets {
                     }
                     return true;
                 })
-                .onMouseScrolled((context, delta) -> {
+                .onMouseScrolled(((context, scrollX, scrollY) -> {
                     int newValue = nextCircuitValue(machine.getCircuitInventory().getStackInSlot(0),
-                            circuitSyncValue.getIntValue(), delta);
+                            circuitSyncValue.getIntValue(), scrollY);
                     circuitSyncValue.setValue(newValue);
                     return true;
-                })
+
+                }))
                 .overlay(new DynamicDrawable(() -> {
                     if (machine.getCircuitInventory().getStackInSlot(0).isEmpty()) {
                         return new DrawableStack(new ItemDrawable(IntCircuitBehaviour.stack(0)),
@@ -456,10 +457,9 @@ public class GTMuiWidgets {
                 syncValue::setStringValue).allowC2S();
 
         var textField = new TextFieldWidget() {
-
             @Override
-            public boolean onMouseScrolled(double delta) {
-                int inc = (int) delta * getIncrementValue(MouseData.create(-1), 1);
+            public boolean onMouseScrolled(double scrollX, double scrollY) {
+                int inc = (int) scrollY * getIncrementValue(MouseData.create(-1), 1);
                 int val = Mth.clamp(syncValue.getIntValue() + inc, minValue.getAsInt(),
                         maxValue.getAsInt());
                 syncValue.setIntValue(val, true, true);
@@ -509,8 +509,8 @@ public class GTMuiWidgets {
         var textField = new TextFieldWidget() {
 
             @Override
-            public boolean onMouseScrolled(double delta) {
-                long inc = (long) delta * getIncrementValue(MouseData.create(-1), 1);
+            public boolean onMouseScrolled(double scrollX, double scrollY) {
+                long inc = (long) (scrollY * getIncrementValue(MouseData.create(-1), 1));
                 long value = syncValue.getLongValue() + inc;
                 syncValue.setLongValue(GTMath.clamp(value, minValue.getAsLong(), maxValue.getAsLong()),
                         true, true);
@@ -557,10 +557,9 @@ public class GTMuiWidgets {
                 .allowC2S();
 
         var textField = new TextFieldWidget() {
-
             @Override
-            public boolean onMouseScrolled(double delta) {
-                int inc = (int) delta * (getIncrementValue(MouseData.create(-1), 1) *
+            public boolean onMouseScrolled(double scrollX, double scrollY) {
+                int inc = (int) scrollY * (getIncrementValue(MouseData.create(-1), 1) *
                         bucketModeSyncValue.getValue().multiplier);
                 int val = Mth.clamp(intSyncValue.getIntValue() + inc, 0, maxMB.getAsInt());
                 intSyncValue.setIntValue(val, true, true);

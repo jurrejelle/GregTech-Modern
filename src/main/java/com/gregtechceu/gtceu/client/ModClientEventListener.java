@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.client;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.common.data.GTMenuTypes;
 
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -14,11 +13,6 @@ import brachy.modularui.screen.ContainerScreenWrapper;
 
 @EventBusSubscriber(modid = GTCEu.MOD_ID, value = Dist.CLIENT)
 public class ModClientEventListener {
-
-    @SubscribeEvent
-    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
-        event.register(GTMenuTypes.MODULAR_CONTAINER.get(), ContainerScreenWrapper::new);
-    }
 
     @SubscribeEvent
     public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {

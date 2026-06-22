@@ -73,20 +73,6 @@ public class BlockInfo {
         return itemStack == null ? new ItemStack(blockState.getBlock()) : itemStack;
     }
 
-    public ItemStack getItemStackForm(BlockAndTintGetter level, BlockPos pos) {
-        if (itemStack != null) return itemStack;
-
-        BlockAndTintGetter oldParent = FAKE_LEVEL.parent;
-        try {
-            FAKE_LEVEL.setParent(level);
-            FAKE_LEVEL.setState(this.blockState);
-            FAKE_LEVEL.setPos(pos);
-            return blockState.getBlock().getCloneItemStack(FAKE_LEVEL, pos, this.blockState);
-        } finally {
-            FAKE_LEVEL.setParent(oldParent);
-        }
-    }
-
     public void apply(Level level, BlockPos pos) {
         level.setBlockAndUpdate(pos, blockState);
         if (blockEntity != null) {

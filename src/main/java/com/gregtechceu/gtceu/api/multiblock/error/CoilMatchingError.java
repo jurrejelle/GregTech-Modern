@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.block.ICoilType;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
 
 public class CoilMatchingError extends PatternError {
 
-    public static Codec<CoilMatchingError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static MapCodec<CoilMatchingError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             ICoilType.CODEC.fieldOf("coilType1").forGetter(CoilMatchingError::getCoilType1),
             ICoilType.CODEC.fieldOf("coilType2").forGetter(CoilMatchingError::getCoilType2))

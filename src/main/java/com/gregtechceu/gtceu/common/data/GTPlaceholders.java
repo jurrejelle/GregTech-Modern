@@ -973,7 +973,7 @@ public class GTPlaceholders {
                             }
                             int power = PlaceholderUtils.toInt(args.get(4));
                             PlaceholderUtils.checkRange("redstone signal", 0, 15, power);
-                            ender.getEntry(owner, EntryTypes.ENDER_REDSTONE, channel).setSignal(uuid, power);
+                            //ender.getEntry(owner, EntryTypes.ENDER_REDSTONE, channel).setSignal(uuid, power);
                             return MultiLineComponent.empty();
                         }
                         return MultiLineComponent

@@ -41,8 +41,8 @@ public class SimpleItemFilter implements ItemFilter {
     @Getter
     protected ItemStack[] matches = new ItemStack[9];
 
-    protected Consumer<ItemFilter> itemWriter = filter -> {};
-    protected Consumer<ItemFilter> onUpdated = filter -> itemWriter.accept(filter);
+    protected Consumer<SimpleItemFilter> itemWriter = filter -> {};
+    protected Consumer<SimpleItemFilter> onUpdated = filter -> itemWriter.accept(filter);
 
     @Getter
     protected int maxStackSize;

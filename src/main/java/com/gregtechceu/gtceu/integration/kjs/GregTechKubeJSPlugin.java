@@ -71,6 +71,7 @@ import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 import com.gregtechceu.gtceu.common.data.models.GTMachineModels;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
+import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitiveWorkableMachine;
 import com.gregtechceu.gtceu.data.recipe.CraftingComponent;
 import com.gregtechceu.gtceu.data.recipe.GTCraftingComponents;
 import com.gregtechceu.gtceu.integration.kjs.builders.ElementBuilder;
@@ -150,7 +151,7 @@ public class GregTechKubeJSPlugin implements KubeJSPlugin {
             reg.add(GTCEu.id("tiered_multiblock"), KJSWrappingMultiblockBuilder.class,
                     KJSWrappingMultiblockBuilder::new);
             reg.add(GTCEu.id("primitive"), MultiblockMachineBuilderWrapper.class,
-                    (id) -> MultiblockMachineBuilderWrapper.createKJSMulti(id, PrimitiveFancyUIWorkableMachine::new));
+                    (id) -> MultiblockMachineBuilderWrapper.createKJSMulti(id, PrimitiveWorkableMachine::new));
         });
 
         registry.of(Registries.BLOCK, reg -> {

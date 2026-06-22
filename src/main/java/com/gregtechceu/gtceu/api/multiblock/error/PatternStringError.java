@@ -2,7 +2,9 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 
 import com.gregtechceu.gtceu.GTCEu;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.util.ExtraCodecs;
 
 import brachy.modularui.api.drawable.Text;
@@ -14,8 +16,8 @@ import java.util.Collections;
 
 public class PatternStringError extends PatternError {
 
-    public static Codec<PatternStringError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.COMPONENT.fieldOf("component").forGetter(PatternStringError::getComponent))
+    public static MapCodec<PatternStringError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ComponentSerialization.CODEC.fieldOf("component").forGetter(PatternStringError::getComponent))
             .apply(instance, PatternStringError::new));
 
     public static final PatternErrorType TYPE = new PatternErrorType(GTCEu.id("pattern_string_error"), CODEC);

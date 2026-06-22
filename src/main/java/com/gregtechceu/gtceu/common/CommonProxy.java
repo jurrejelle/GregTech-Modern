@@ -191,8 +191,6 @@ public class CommonProxy {
         GTCovers.init();
         GTCreativeModeTabs.init();
 
-        GTMenuTypes.init(modBus);
-
         GTBlocks.init();
         GTFluids.init();
 

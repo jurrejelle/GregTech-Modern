@@ -23,6 +23,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import appeng.api.config.Actionable;
@@ -179,7 +181,7 @@ public class MEInputHatchPartMachine extends MEHatchPartMachine
             if (index < 0 || index >= CONFIG_SIZE) return;
             boolean isFluidGhost = packet.readBoolean();
             if (isFluidGhost) {
-                FluidStack fluid = FluidStack.readFromPacket(packet);
+                FluidStack fluid = FluidStack.STREAM_CODEC.decode(packet);
                 if (!fluid.isEmpty()) {
                     aeFluidHandler.getInventory()[index].setConfig(AEUtil.fromFluidStack(fluid));
                 }

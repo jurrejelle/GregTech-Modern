@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.multiblock.util.BlockInfo;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 
 import brachy.modularui.api.drawable.Text;
@@ -11,10 +12,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class PlaceholderError extends PatternError {
 
-    public static Codec<PlaceholderError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static MapCodec<PlaceholderError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             Codec.list(Codec.list(BlockInfo.CODEC)).fieldOf("candidates").forGetter(PatternError::getCandidates))
             .apply(instance, PlaceholderError::new));

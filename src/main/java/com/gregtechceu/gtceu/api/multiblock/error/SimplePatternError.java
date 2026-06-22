@@ -3,6 +3,7 @@ package com.gregtechceu.gtceu.api.multiblock.error;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.multiblock.util.BlockInfo;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class SimplePatternError extends PatternError {
 
-    public static Codec<SimplePatternError> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static MapCodec<SimplePatternError> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(PatternError::getPos),
             Codec.list(Codec.list(BlockInfo.CODEC)).fieldOf("candidates").forGetter(PatternError::getCandidates))
             .apply(instance, SimplePatternError::new));

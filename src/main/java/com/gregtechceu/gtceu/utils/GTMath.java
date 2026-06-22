@@ -47,7 +47,8 @@ public class GTMath {
             .structuresAllowed(false)
             .stripTrailingZeros(true)
             .build()
-            .withAdditionalOperators(Pair.of("%", new PostfixPercentOperator()));
+            .withAdditionalOperators()
+            .withAdditionalOperators(org.apache.commons.lang3.tuple.Pair.of("%", new PostfixPercentOperator()));
 
     public static ParseResult parseExpression(String expression) {
         return parseExpression(expression, Double.NaN, false);

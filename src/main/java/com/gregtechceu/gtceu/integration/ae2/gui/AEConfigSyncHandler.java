@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlotList;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -78,9 +79,8 @@ public class AEConfigSyncHandler extends SyncHandler<AEConfigSyncHandler> {
         });
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
+    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
         if (id == SYNC_SLOTS) {
             if (clientConfig == null) initClient();
             if (clientStock == null) initClient();
@@ -94,18 +94,20 @@ public class AEConfigSyncHandler extends SyncHandler<AEConfigSyncHandler> {
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {}
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
+
+    }
 
     private static @Nullable GenericStack copy(@Nullable GenericStack stack) {
         return stack != null ? new GenericStack(stack.what(), stack.amount()) : null;
     }
 
-    private static void writeStack(FriendlyByteBuf buf, @Nullable GenericStack stack) {
+    private static void writeStack(RegistryFriendlyByteBuf buf, @Nullable GenericStack stack) {
         buf.writeBoolean(stack != null);
         if (stack != null) GenericStack.writeBuffer(stack, buf);
     }
 
-    private static @Nullable GenericStack readStack(FriendlyByteBuf buf) {
+    private static @Nullable GenericStack readStack(RegistryFriendlyByteBuf buf) {
         return buf.readBoolean() ? GenericStack.readBuffer(buf) : null;
     }
 

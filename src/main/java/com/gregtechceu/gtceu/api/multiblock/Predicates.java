@@ -334,7 +334,6 @@ public class Predicates {
         var frameBlocks = Arrays.stream(frameMaterials)
                 .map(m -> GTMaterialBlocks.MATERIAL_BLOCKS.get(TagPrefix.frameGt, m))
                 .filter(Objects::nonNull)
-                .filter(RegistryEntry::isPresent)
                 .map(RegistryEntry::get)
                 .toArray(Block[]::new);
         return blocks(frameBlocks)
