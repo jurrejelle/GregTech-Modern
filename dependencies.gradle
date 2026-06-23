@@ -15,9 +15,6 @@ dependencies {
     // MUI
     jarJar(implementation(forge.mui.get()))
 
-    // Mixin (& Extras)
-    annotationProcessor(variantOf(libs.mixin) { classifier("processor") })
-
     // Recipe Viewers
     compileOnly(forge.bundles.jei)
     compileOnly(forge.emi)
