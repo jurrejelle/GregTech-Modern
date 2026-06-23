@@ -1,7 +1,6 @@
 package com.gregtechceu.gtceu.api.mui.factory;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.capability.GTCapability;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
@@ -9,8 +8,6 @@ import com.gregtechceu.gtceu.api.cover.IMuiCover;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -72,7 +69,6 @@ public class CoverUIFactory extends AbstractUIFactory<SidedPosGuiData> {
     public boolean canInteractWith(Player player, SidedPosGuiData guiData) {
         return guiData.getSquaredDistance(player) <= 8 * 8;
     }
-
 
     @Override
     public void writeGuiData(SidedPosGuiData guiData, RegistryFriendlyByteBuf buffer) {

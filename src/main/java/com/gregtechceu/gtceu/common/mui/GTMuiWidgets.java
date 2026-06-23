@@ -457,6 +457,7 @@ public class GTMuiWidgets {
                 syncValue::setStringValue).allowC2S();
 
         var textField = new TextFieldWidget() {
+
             @Override
             public boolean onMouseScrolled(double scrollX, double scrollY) {
                 int inc = (int) scrollY * getIncrementValue(MouseData.create(-1), 1);
@@ -557,6 +558,7 @@ public class GTMuiWidgets {
                 .allowC2S();
 
         var textField = new TextFieldWidget() {
+
             @Override
             public boolean onMouseScrolled(double scrollX, double scrollY) {
                 int inc = (int) scrollY * (getIncrementValue(MouseData.create(-1), 1) *

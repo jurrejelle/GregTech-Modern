@@ -88,5 +88,4 @@ public final class GTHashMaps {
         ItemStackHashStrategy strategy = ItemStackHashStrategy.comparingAllButCount();
         return linked ? new Object2IntLinkedOpenCustomHashMap<>(strategy) : new Object2IntOpenCustomHashMap<>(strategy);
     }
-
 }

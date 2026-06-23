@@ -654,7 +654,7 @@ public interface GTGuiTextures {
             28, 32, 4);
 
     UITexture MONITOR = UITexture.fullImage(GTCEu.id("item/computer_monitor_cover"));
-    UITexture DATA_HATCH = UITexture.fullImage(GTCEu.id( "textures/item/data_module.png"))
+    UITexture DATA_HATCH = UITexture.fullImage(GTCEu.id("textures/item/data_module.png"))
             .getSubArea(0, 0, 1, 1 / 13f);
 
     UITexture SEPERATOR_SIMPLE = UITexture.builder()

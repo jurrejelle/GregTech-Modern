@@ -4,7 +4,6 @@ import com.gregtechceu.gtceu.api.multiblock.pattern.PatternState;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -19,7 +18,8 @@ public class MultiblockWorldSavedData extends SavedData {
 
     public static MultiblockWorldSavedData getOrCreate(ServerLevel serverLevel) {
         return serverLevel.getDataStorage()
-                .computeIfAbsent(new Factory<MultiblockWorldSavedData>(MultiblockWorldSavedData::new, MultiblockWorldSavedData::new), "gtceu_multiblock");
+                .computeIfAbsent(new Factory<MultiblockWorldSavedData>(MultiblockWorldSavedData::new,
+                        MultiblockWorldSavedData::new), "gtceu_multiblock");
     }
 
     /**

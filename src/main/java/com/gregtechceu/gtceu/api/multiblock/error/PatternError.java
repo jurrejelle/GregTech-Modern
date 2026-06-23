@@ -5,11 +5,11 @@ import com.gregtechceu.gtceu.api.multiblock.predicates.BasePredicate;
 import com.gregtechceu.gtceu.api.multiblock.util.BlockInfo;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 

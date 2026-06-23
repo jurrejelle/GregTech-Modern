@@ -16,7 +16,6 @@ import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.common.mui.GTMultiblockTextUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 
 import brachy.modularui.api.widget.IWidget;

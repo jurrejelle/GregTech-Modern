@@ -3,7 +3,6 @@ package com.gregtechceu.gtceu.integration.ae2.gui;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlotList;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -94,9 +93,7 @@ public class AEConfigSyncHandler extends SyncHandler<AEConfigSyncHandler> {
     }
 
     @Override
-    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
-
-    }
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {}
 
     private static @Nullable GenericStack copy(@Nullable GenericStack stack) {
         return stack != null ? new GenericStack(stack.what(), stack.amount()) : null;

@@ -109,7 +109,7 @@ public class SimpleCookingRecipeBuilder<T extends AbstractCookingRecipe> {
     }
 
     public void save(RecipeOutput consumer) {
-        consumer.accept( id == null ? defaultId() : id.withPrefix(folder + "/"), create(), null);
+        consumer.accept(id == null ? defaultId() : id.withPrefix(folder + "/"), create(), null);
     }
 
     @FunctionalInterface

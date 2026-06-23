@@ -1,9 +1,7 @@
 package com.gregtechceu.gtceu.client.renderer;
 
-import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.client.mui.schema.MutableSchema;
 
-import lombok.Getter;
 import net.minecraft.CrashReport;
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
@@ -23,6 +21,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
 import brachy.modularui.ModularUI;
 import brachy.modularui.drawable.schema.*;
@@ -34,9 +34,7 @@ import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -367,7 +365,8 @@ public class PatternPreviewRenderer {
 
             RandomSource randomSource = RandomSource.create();
             PoseStack poseStack = new PoseStack();
-            Map<RenderType, BufferBuilder> bufferLayers = new Reference2ObjectArrayMap<>(RenderType.chunkBufferLayers().size());
+            Map<RenderType, BufferBuilder> bufferLayers = new Reference2ObjectArrayMap<>(
+                    RenderType.chunkBufferLayers().size());
 
             ModelBlockRenderer.enableCaching();
             for (var blockEntry : PatternPreviewRenderer.this.schema) {
@@ -465,7 +464,8 @@ public class PatternPreviewRenderer {
         }
 
         protected BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers,
-                                                SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType) {
+                                                SectionBufferBuilderPack sectionBufferBuilderPack,
+                                                RenderType renderType) {
             BufferBuilder builder = bufferLayers.get(renderType);
             if (builder == null) {
                 ByteBufferBuilder bytebufferbuilder = sectionBufferBuilderPack.buffer(renderType);
