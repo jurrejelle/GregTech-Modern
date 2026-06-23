@@ -19,7 +19,7 @@ public interface IGTAddon {
 
     /**
      * This runs after GTCEu has set up it's content. Set up GT loading-dependent (but NOT ones dependent on
-     * 
+     *
      * @apiNote DO NOT REGISTER ANY OF YOUR OWN CONTENT HERE, AS IF YOU DO, IT'LL REGISTER AS IF GTCEu REGISTERED IT
      *          AND YOUR DATAGEN AND EVENTS WILL <b><i>NOT</i></b> WORK AS EXPECTED, IF AT ALL.
      */
@@ -46,9 +46,16 @@ public interface IGTAddon {
 
     /**
      * Register Material -> Casing block mappings here
+     *
+     * @deprecated Subscribe to the {@link MaterialCasingCollectionEvent} directly.
      */
+    @Deprecated(forRemoval = true, since = "8.0.0")
     default void collectMaterialCasings(MaterialCasingCollectionEvent event) {}
 
+    /**
+     * @deprecated Subscribe to the {@link KJSRecipeKeyEvent} directly.
+     */
+    @Deprecated(forRemoval = true, since = "8.0.0")
     default void registerRecipeKeys(KJSRecipeKeyEvent event) {}
 
     /**
