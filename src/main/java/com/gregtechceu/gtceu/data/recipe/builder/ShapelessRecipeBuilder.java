@@ -20,7 +20,7 @@ public class ShapelessRecipeBuilder {
 
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     @Setter
-    protected String group;
+    protected String group = "";
     @Setter
     private CraftingBookCategory category = CraftingBookCategory.MISC;
 
