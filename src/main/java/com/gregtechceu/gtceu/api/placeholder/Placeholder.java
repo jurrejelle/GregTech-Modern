@@ -20,12 +20,12 @@ public abstract class Placeholder {
     public abstract MultiLineComponent apply(PlaceholderContext ctx,
                                              List<MultiLineComponent> args) throws PlaceholderException;
 
-    public Placeholder(ResourceLocation id) {
-        this.id = id;
+    public Placeholder(String str) {
+        this(GTCEu.id(str));
     }
 
-    public Placeholder(String name) {
-        this(GTCEu.id(name));
+    public Placeholder(ResourceLocation id) {
+        this.id = id;
     }
 
     public String getName() {

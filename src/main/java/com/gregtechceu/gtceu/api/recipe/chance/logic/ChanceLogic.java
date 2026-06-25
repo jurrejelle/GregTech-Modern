@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.api.recipe.content.ContentModifier;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -275,8 +276,12 @@ public abstract class ChanceLogic {
         }
     };
 
-    public ChanceLogic(String id) {
-        GTRegistries.register(GTRegistries.CHANCE_LOGICS, GTCEu.id(id), this);
+    public ChanceLogic(ResourceLocation id) {
+        GTRegistries.register(GTRegistries.CHANCE_LOGICS, id, this);
+    }
+
+    private ChanceLogic(String id) {
+        this(GTCEu.id(id));
     }
 
     /**

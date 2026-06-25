@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.registry.MaterialRegistr
 import com.gregtechceu.gtceu.api.data.medicalcondition.MedicalCondition;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.data.worldgen.GTOreDefinition;
+import com.gregtechceu.gtceu.api.data.worldgen.IWorldGenLayer;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidDefinition;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockore.BedrockOreDefinition;
 import com.gregtechceu.gtceu.api.item.tool.behavior.ToolBehaviorType;
@@ -73,26 +74,38 @@ public final class GTRegistries {
     public static final ResourceKey<Registry<MedicalCondition>> MEDICAL_CONDITION_REGISTRY = makeRegistryKey(GTCEu.id("medical_condition"));
     public static final ResourceKey<Registry<MaterialIconSet>> MATERIAL_ICON_SET_REGISTRY = makeRegistryKey(GTCEu.id("material_icon_set"));
     public static final ResourceKey<Registry<PatternError.PatternErrorType>> PATTERN_ERROR_REGISTRY = makeRegistryKey(GTCEu.id("pattern_error"));
+    public static final ResourceKey<Registry<IWorldGenLayer>> WORLD_GEN_LAYER_REGISTRY = makeRegistryKey(GTCEu.id("world_gen_layer"));
+
     // GT Registries
+
+    // Material related registries
+
     public static final Registry<Element> ELEMENTS = makeRegistry(ELEMENT_REGISTRY);
     public static final MaterialRegistry MATERIALS = makeMaterialRegistry();
     public static final Registry<TagPrefix> TAG_PREFIXES = makeRegistry(TAG_PREFIX_REGISTRY);
+    public static final Registry<MaterialIconSet> MATERIAL_ICON_SETS = makeRegistry(MATERIAL_ICON_SET_REGISTRY);
 
-    public static final Registry<SoundEntry> SOUNDS = makeRegistry(SOUND_REGISTRY, false);
-    public static final Registry<ChanceLogic> CHANCE_LOGICS = makeRegistry(CHANCE_LOGIC_REGISTRY);
+    // Recipe related registries
+
+    public static final Registry<GTRecipeCategory> RECIPE_CATEGORIES = makeRegistry(RECIPE_CATEGORY_REGISTRY);
     public static final Registry<RecipeCapability<?>> RECIPE_CAPABILITIES = makeRegistry(RECIPE_CAPABILITY_REGISTRY);
     public static final Registry<RecipeConditionType<?>> RECIPE_CONDITIONS = makeRegistry(RECIPE_CONDITION_REGISTRY);
-    public static final Registry<GTRecipeCategory> RECIPE_CATEGORIES = makeRegistry(RECIPE_CATEGORY_REGISTRY);
+    public static final Registry<ChanceLogic> CHANCE_LOGICS = makeRegistry(CHANCE_LOGIC_REGISTRY);
+
+    // Other registries
 
     public static final Registry<MachineDefinition> MACHINES = makeRegistry(MACHINE_REGISTRY);
     public static final Registry<CoverDefinition> COVERS = makeRegistry(COVER_REGISTRY);
+
+    public static final Registry<IWorldGenLayer> WORLD_GEN_LAYERS = makeRegistry(WORLD_GEN_LAYER_REGISTRY);
 
     public static final Registry<ToolBehaviorType<?>> TOOL_BEHAVIORS = makeRegistry(TOOL_BEHAVIOR_REGISTRY);
     public static final Registry<DimensionMarker> DIMENSION_MARKERS = makeRegistry(DIMENSION_MARKER_REGISTRY, false);
     public static final Registry<MedicalCondition> MEDICAL_CONDITIONS =  makeRegistry(MEDICAL_CONDITION_REGISTRY);
     public static final Registry<Placeholder> PLACEHOLDERS = makeRegistry(PLACEHOLDER_REGISTRY);
-    public static final Registry<MaterialIconSet> MATERIAL_ICON_SETS = makeRegistry(MATERIAL_ICON_SET_REGISTRY);
     public static final Registry<PatternError.PatternErrorType> PATTERN_ERRORS = makeRegistry(PATTERN_ERROR_REGISTRY);
+    public static final Registry<SoundEntry> SOUNDS = makeRegistry(SOUND_REGISTRY, false);
+
     // spotless:on
 
     public static <T> ResourceKey<Registry<T>> makeRegistryKey(ResourceLocation registryId) {

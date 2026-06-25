@@ -2,6 +2,7 @@ package com.gregtechceu.gtceu.integration.kjs.builders;
 
 import com.gregtechceu.gtceu.api.capability.recipe.*;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
+import com.gregtechceu.gtceu.api.recipe.gui.GTRecipeTypeUILayout;
 import com.gregtechceu.gtceu.api.sound.SoundEntry;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 
@@ -14,6 +15,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -30,6 +32,7 @@ public class GTRecipeTypeBuilder extends BuilderBase<GTRecipeType> {
 
     private GTRecipeType smallRecipeMap;
     private Supplier<ItemStack> iconSupplier;
+    private Consumer<GTRecipeTypeUILayout.Builder> layout;
 
     public GTRecipeTypeBuilder(ResourceLocation id) {
         super(id);
@@ -46,6 +49,11 @@ public class GTRecipeTypeBuilder extends BuilderBase<GTRecipeType> {
 
     public GTRecipeTypeBuilder category(String category) {
         this.category = category;
+        return this;
+    }
+
+    public GTRecipeTypeBuilder ui(Consumer<GTRecipeTypeUILayout.Builder> builder) {
+        this.layout = builder;
         return this;
     }
 
@@ -106,6 +114,11 @@ public class GTRecipeTypeBuilder extends BuilderBase<GTRecipeType> {
         var type = GTRecipeTypes.register(this.id, this.category);
         type.maxInputs.putAll(maxInputs);
         type.maxOutputs.putAll(maxOutputs);
+        if (this.layout != null) {
+            var builder = new GTRecipeTypeUILayout.Builder(type);
+            this.layout.accept(builder);
+            type.setUiLayout(builder.build());
+        }
         type.setSound(sound);
         type.setHasResearchSlot(hasResearchSlot);
         type.setMaxTooltips(maxTooltips);

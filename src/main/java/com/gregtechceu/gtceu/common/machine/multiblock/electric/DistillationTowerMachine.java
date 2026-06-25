@@ -13,6 +13,7 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.content.ContentModifier;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IRangedIngredient;
 import com.gregtechceu.gtceu.api.recipe.modifier.ParallelLogic;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SaveField;
 import com.gregtechceu.gtceu.api.sync_system.annotations.SyncToClient;
@@ -24,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.templates.VoidFluidHandler;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
@@ -141,7 +141,8 @@ public class DistillationTowerMachine extends WorkableElectricMultiblockMachine
                 .map(Content::content)
                 .map(FluidRecipeCapability.CAP::of)
                 .filter(i -> !i.ingredient().hasNoFluids())
-                .mapToInt(SizedFluidIngredient::amount)
+                .mapToInt(
+                        (i -> i.ingredient() instanceof IRangedIngredient ranged ? (ranged).getMaxRoll() : i.amount()))
                 .max()
                 .orElse(0);
 
