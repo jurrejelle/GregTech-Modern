@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.EnergyStack;
 import com.gregtechceu.gtceu.api.recipe.ingredient.ExDataComponentFluidIngredient;
+import com.gregtechceu.gtceu.api.recipe.ingredient.IRangedIngredient;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.recipe.builder.GTRecipeBuilder;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -226,6 +227,9 @@ public class RecipeHelper {
                                             Map<RecipeCapability<?>, List<Content>> contents,
                                             Map<RecipeCapability<?>, Object2IntMap<?>> chanceCaches,
                                             boolean isTick, boolean simulated) {
+        if (contents.isEmpty()) {
+            return ActionResult.PASS_NO_CONTENTS;
+        }
         RecipeRunner runner = new RecipeRunner(recipe, io, isTick, holder, chanceCaches, simulated);
         var result = runner.handle(contents);
 
@@ -404,6 +408,8 @@ public class RecipeHelper {
     }
 
     public static boolean isFluidStackDivisibleForDistillery(SizedFluidIngredient fluidStack, int divisor) {
+        int amount = (fluidStack.ingredient() instanceof IRangedIngredient ranged ? ranged.getMaxRoll() :
+                fluidStack.amount());
         return fluidStack.amount() % divisor == 0 && fluidStack.amount() / divisor >= 25;
     }
 

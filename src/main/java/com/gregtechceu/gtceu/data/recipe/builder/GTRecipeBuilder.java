@@ -1667,7 +1667,7 @@ public class GTRecipeBuilder {
         if (table.getOrDefault(capability, List.of()).size() + addedEntries > max) {
             String io = isInput ? "inputs" : "outputs";
             GTCEu.LOGGER.warn("Recipe {} is trying to add more {} than its recipe type can support, Max {} {}: {}",
-                    id, io, capability.name, io, max);
+                    id, io, capability.id, io, max);
         }
     }
 
@@ -1679,7 +1679,7 @@ public class GTRecipeBuilder {
                 io = "Tick " + io.toLowerCase(Locale.ROOT);
             }
             int size = (perTick ? tickOutput : output).getOrDefault(cap, List.of()).size();
-            GTCEu.LOGGER.error("{} {} {} of recipe {} is empty", io, cap.name, size + index, id);
+            GTCEu.LOGGER.error("{} {} {} of recipe {} is empty", io, cap.id, size + index, id);
             return true;
         }
         return false;

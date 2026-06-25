@@ -29,7 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -661,7 +660,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable {
                                         compoundTag.putInt("cached_chance", entry.getIntValue());
                                         cacheTag.add(compoundTag);
                                     }
-                                    chanceCache.put(cap.name, cacheTag);
+                                    chanceCache.put(cap.id.toString(), cacheTag);
                                 });
 
                                 return chanceCache;
@@ -675,7 +674,7 @@ public class RecipeLogic extends MachineTrait implements IWorkable {
                                 if (context.currentValue() != null) {
                                     for (String key : chanceCache.getAllKeys()) {
                                         RecipeCapability<?> cap = GTRegistries.RECIPE_CAPABILITIES
-                                                .get(ResourceLocation.parse(key));
+                                                .get(GTCEu.id(key));
                                         // Necessary since a RecipeCapability was removed when removing Create support,
                                         // and for future
                                         // removals

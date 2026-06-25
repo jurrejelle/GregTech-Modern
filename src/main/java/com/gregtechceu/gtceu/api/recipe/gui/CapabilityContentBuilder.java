@@ -118,7 +118,7 @@ public interface CapabilityContentBuilder {
                 TooltipsHandler.appendFluidTooltips(stack, tooltip::addLine, TooltipFlag.NORMAL,
                         Item.TooltipContext.EMPTY);
             }
-            if (ingredient.ingredient() instanceof IntProviderFluidIngredient provider) {
+            if (ingredient.ingredient() instanceof IRangedIngredient provider) {
                 IntProvider countProvider = provider.getCountProvider();
                 tooltip.addLine(Component.translatable("gtceu.gui.content.fluid_range",
                         countProvider.getMinValue(), countProvider.getMaxValue())

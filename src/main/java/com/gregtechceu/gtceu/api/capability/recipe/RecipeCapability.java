@@ -17,6 +17,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.connection.ConnectionType;
 
 import com.mojang.serialization.Codec;
@@ -35,33 +36,34 @@ import java.util.*;
 public abstract class RecipeCapability<T> {
 
     // spotless:off
-    public static final Codec<RecipeCapability<?>> DIRECT_CODEC = GTCEu.GTCEU_ID
-                    .comapFlatMap(
-                            id -> GTRegistries.RECIPE_CAPABILITIES.getHolder(id)
-                                    .map(DataResult::success)
-                                    .orElseGet(() -> DataResult.error(() -> "Unknown registry key in " + GTRegistries.RECIPE_CAPABILITY_REGISTRY + ": " + id)),
-                            (Holder.Reference<RecipeCapability<?>> holder) -> holder.key().location()
-                    )
-            .flatComapMap(Holder.Reference::value, cap -> safeReference(GTRegistries.RECIPE_CAPABILITIES.wrapAsHolder(cap)));
     public static final Codec<Map<RecipeCapability<?>, List<Content>>> CODEC = new DispatchedMapCodec<>(
-            RecipeCapability.DIRECT_CODEC,
+            GTRegistries.RECIPE_CAPABILITIES.byNameCodec(),
             RecipeCapability::contentCodec);
     public static final Comparator<RecipeCapability<?>> COMPARATOR = Comparator.comparingInt(o -> o.sortIndex);
     // spotless:on
 
-    public final String name;
+    public final ResourceLocation id;
     public final int color;
     public final boolean doRenderSlot;
     public final int sortIndex;
     public final IContentSerializer<T> serializer;
 
-    protected RecipeCapability(String name, int color, boolean doRenderSlot, int sortIndex,
+    protected RecipeCapability(ResourceLocation id, int color, boolean doRenderSlot, int sortIndex,
                                IContentSerializer<T> serializer) {
-        this.name = name;
+        this.id = id;
         this.color = color;
         this.doRenderSlot = doRenderSlot;
         this.sortIndex = sortIndex;
         this.serializer = serializer;
+    }
+
+    /**
+     * @deprecated Use {@link #RecipeCapability(ResourceLocation, int, boolean, int, IContentSerializer)}
+     */
+    @Deprecated(forRemoval = true, since = "8.0.0")
+    protected RecipeCapability(String name, int color, boolean doRenderSlot, int sortIndex,
+                               IContentSerializer<T> serializer) {
+        this(GTCEu.id(name), color, doRenderSlot, sortIndex, serializer);
     }
 
     public static Codec<List<Content>> contentCodec(RecipeCapability<?> capability) {
@@ -111,15 +113,15 @@ public abstract class RecipeCapability<T> {
     }
 
     public String slotName(IO io) {
-        return "%s_%s".formatted(name, io.name().toLowerCase(Locale.ROOT));
+        return "%s_%s".formatted(id, io.name().toLowerCase(Locale.ROOT));
     }
 
     public String slotName(IO io, int index) {
-        return "%s_%s_%s".formatted(name, io.name().toLowerCase(Locale.ROOT), index);
+        return "%s_%s_%s".formatted(id, io.name().toLowerCase(Locale.ROOT), index);
     }
 
     public MutableComponent getName() {
-        return Component.translatable("recipe.capability.%s.name".formatted(name));
+        return Component.translatable("recipe.capability.%s.name".formatted(id.getPath()));
     }
 
     public MutableComponent getColoredName() {
@@ -202,6 +204,15 @@ public abstract class RecipeCapability<T> {
      */
     public boolean shouldBypassDistinct() {
         return true;
+    }
+
+    /**
+     * Should handlers of this capability be tried even when {@link IRecipeHandler#getTotalContentAmount()} is zero?
+     * E.g. should this capability bypass the empty handler optimization for rate-based capabilities.
+     * for example: CWU, where stored amount is zero but the handler can still provide computation.
+     */
+    public boolean skipEmptyContentCheck() {
+        return false;
     }
 
     /**

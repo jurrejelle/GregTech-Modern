@@ -221,11 +221,11 @@ public class CommonProxy {
         GTCommandArguments.COMMAND_ARGUMENT_TYPES.register(modBus);
         GTMobEffects.MOB_EFFECTS.register(modBus);
         GTParticleTypes.PARTICLE_TYPES.register(modBus);
+        WorldGenLayers.init();
 
         GregTechDatagen.initPost();
         GTValueProviderTypes.init(modBus);
         GTFeatures.register(modBus);
-        WorldGenLayers.registerAll();
         VeinGenerators.registerAddonGenerators();
         IndicatorGenerators.registerAddonGenerators();
         WaypointManager.init();
