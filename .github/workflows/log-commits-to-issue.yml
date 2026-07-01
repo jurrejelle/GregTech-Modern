@@ -25,6 +25,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
           AFTER: ${{ github.event.after }}
+          HEAD_COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMITS_JSON: ${{ toJSON(github.event.commits) }}
         run: |
           set -euo pipefail
@@ -101,8 +102,9 @@ jobs:
           # create a single issue for this push
           BODY="$(printf 'Commits pushed to `%s` (up to `%s`):\n\n%s\n' \
             "$BRANCH" "${AFTER:0:7}" "$(cat "$LINES_FILE")")"
+          HEAD_TITLE="$(printf '%s' "$HEAD_COMMIT_MSG" | head -n1)"
           ISSUE_URL="$(gh issue create --repo "$REPO" \
-            --title "[$BRANCH] $COUNT commit(s) to sync (${AFTER:0:7})" \
+            --title "$HEAD_TITLE" \
             --body "$BODY")"
           echo "Created issue $ISSUE_URL"
 
