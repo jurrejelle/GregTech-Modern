@@ -1,8 +1,4 @@
-# Appends a link to every pushed commit to the bottom of the list in the
-# tracking issue for that branch:
-#   1.20.1 -> issue #2 (1.20 into 1.21)
-#   1.21   -> issue #3 (1.21 into 1.20)
-name: Log Commits to Issue
+name: Log Commits for Version Sync
 
 on:
   push:
@@ -13,8 +9,8 @@ on:
 permissions:
   issues: write
   contents: read
+  pull-requests: read
 
-# Avoid concurrent edits to the same issue body racing each other
 concurrency:
   group: log-commits-to-issue
   cancel-in-progress: false
@@ -29,8 +25,8 @@ jobs:
           script: |
             // Map the pushed branch to its tracking issue
             const issueByBranch = {
-              '1.20.1': 2,
-              '1.21': 3,
+              '1.20.1': 5041,
+              '1.21': 5040,
             };
             const branch = context.ref.replace('refs/heads/', '');
             const issueNumber = issueByBranch[branch];
@@ -40,15 +36,31 @@ jobs:
               return;
             }
 
-            // Build a markdown list item for each commit in this push
-            const lines = context.payload.commits.map((c) => {
+            // Build a markdown list item for each commit in this push, skipping
+            // any commit whose associated PR carries the "Ignore Version Sync" label
+            const lines = [];
+            for (const c of context.payload.commits) {
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: c.id,
+              });
+
+              const ignored = prs.some((pr) =>
+                (pr.labels || []).some((l) => l.name === 'Ignore Version Sync')
+              );
+              if (ignored) {
+                core.info(`Commit ${c.id.substring(0, 7)} belongs to a PR labeled 'Ignore Version Sync', skipping.`);
+                continue;
+              }
+
               const shortSha = c.id.substring(0, 7);
               const title = c.message.split('\n')[0];
-              return `- [\`${shortSha}\`](${c.url}) ${title}`;
-            });
+              lines.push(`- [\`${shortSha}\`](${c.url}) ${title}`);
+            }
 
             if (lines.length === 0) {
-              core.info('No commits in this push, nothing to append.');
+              core.info('No commits to append.');
               return;
             }
 
@@ -70,3 +82,4 @@ jobs:
             });
 
             core.info(`Appended ${lines.length} commit link(s) to issue #${issueNumber}.`);
+
